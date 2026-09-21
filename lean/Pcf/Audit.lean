@@ -13,6 +13,7 @@ import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
+import Pcf.Examples.CofiniteWitness
 
 /-!
 # Trust audit
@@ -75,7 +76,8 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 
 #print axioms Pcf.Ramification.ramificationIdx_eq_one_of_bijective
 #print axioms Pcf.LocalModel.restrictionMap_bijective
-#print axioms Pcf.LocalModel.isNilpotent_root_mod_algebraMap
+#print axioms Pcf.LocalModel.root_ne_zero_mod_algebraMap
+#print axioms Pcf.nonempty_unramifiedWitness_iff
 #print axioms Pcf.UnramifiedWitness.eq_one
 #print axioms Pcf.LocalModel.unramifiedWitness
 #print axioms Pcf.Prop41Data.notMem_branch
@@ -84,6 +86,17 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.Prop41Data.finite_branch
 #print axioms Pcf.Prop41Data.finite_sing_subtype
 #print axioms Pcf.Prop41Data.finite_meets_subtype
+
+/-! ## §4→§5: the join -/
+
+#print axioms Pcf.UnramifiedWitness.trivial
+#print axioms Pcf.divDynOfGeometry
+#print axioms Pcf.PcfGeometry.sing_finite
+#print axioms Pcf.PcfGeometry.meets_finite
+#print axioms Pcf.PcfGeometry.key
+#print axioms Pcf.PcfGeometry.toPcfSetup
+#print axioms Pcf.PcfGeometry.res_pcf
+#print axioms Pcf.PcfGeometry.res_pcf_of_iter
 
 /-! ## §6: Examples 6.1 and 6.2, and the non-vacuity witness -/
 
@@ -105,6 +118,14 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.Examples.Cusp.cusp_inter_branch
 #print axioms Pcf.Examples.Cusp.coneParam
 #print axioms Pcf.Examples.Cusp.coneMap_restrict
+
+/-! ## The join is inhabited with genuine ramification -/
+
+#print axioms Pcf.Examples.isPrime_iff_singleton
+#print axioms Pcf.Examples.noetherianSpace_cofNat
+#print axioms Pcf.Examples.cofiniteGeometry
+#print axioms Pcf.Examples.resDyn_branch
+#print axioms Pcf.Examples.resDyn_pcf
 
 /-! ## §7: Example 7.4, the wild counterexample -/
 

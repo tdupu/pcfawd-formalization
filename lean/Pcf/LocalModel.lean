@@ -43,8 +43,14 @@ additionally records that the standard piece is free over the base with basis
   that the restriction map `V(z) → V(a)` is an isomorphism *as a map*.
 * `Pcf.LocalModel.root_mem_nonZeroDivisors` : `z` is a nonzerodivisor whenever `a` is.
 * `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` : `z` is nilpotent in `C/(a)`, the
-  scheme-theoretic fibre of the cover over the divisor.  This is the ramification of the
-  *cover*, which the results above do not contradict; see the warning below.
+  scheme-theoretic fibre of the cover over the divisor.  This carries no hypothesis on `e`
+  and holds in the unramified cases `e = 0, 1` as well, so on its own it is *not* a
+  ramification statement.
+* `Pcf.LocalModel.root_ne_zero_mod_algebraMap` /
+  `Pcf.LocalModel.isNilpotent_root_mod_algebraMap_ne_zero` : for `2 ≤ e` over a nontrivial
+  ring `R` and with `a` a non-unit, that nilpotent is *nonzero*, so the scheme-theoretic
+  fibre `C/(a)` is non-reduced.  This is the ramification of the *cover*, which the results
+  above do not contradict; see the warning below.
 
 ## Ramification of the cover versus the restriction: a warning
 
@@ -61,12 +67,21 @@ index of the cover at that prime is `2`, not `1`.  An abstract isomorphism of th
 rings is simply not a statement about ramification indices.
 
 The manuscript agrees that the cover is ramified — that is the whole point of the standard
-tame local model, whose ramification index along the divisor is `e`.  This is recorded here
-by `Pcf.LocalModel.isNilpotent_root_mod_algebraMap`: modulo the image of `a`, the element
-`z` is nilpotent (`z ^ e = u * a ≡ 0`).  For `e ≥ 2` that nilpotent is in general nonzero —
-in the example above, `√2` is a nonzero nilpotent of `ℤ[√2]/(2)` — so the scheme-theoretic
-fibre of the cover over the divisor is non-reduced.  The cover really is ramified with
-index `e`.
+tame local model, whose ramification index along the divisor is `e`.  What is recorded here
+is that the cover is ramified, in the form "the fibre is non-reduced":
+`Pcf.LocalModel.isNilpotent_root_mod_algebraMap_ne_zero` says that for `2 ≤ e` over a
+nontrivial ring `R` and with `a` a non-unit, the image of `z` in `C/(a)` is a **nonzero**
+nilpotent, so the scheme-theoretic fibre of the cover over the divisor is non-reduced.  In
+the example above this nilpotent is `√2 ∈ ℤ[√2]/(2)`.  (That the ramification index is
+*exactly* `e` is a finer statement, and it is not formalized in this file.)
+
+The weaker `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` asserts nilpotency only, and it
+must **not** be quoted as a ramification statement: it has no hypothesis on `e` whatsoever
+and holds verbatim at `e = 0` and at `e = 1`, precisely the unramified cases — at `e = 1`
+the element it exhibits as nilpotent is literally `0`, because `z = u * a` there.  It is
+non-reducedness, not bare nilpotency, that distinguishes the ramified case, and that is
+what the `_ne_zero` forms supply.  All three of their hypotheses are needed: for `e ≤ 1`,
+for `a` a unit, and over the zero ring the image of `z` in `C/(a)` really is `0`.
 
 What Step 4 of the proof of Proposition 4.1 in `pcf.tex` actually uses is a statement about
 a *different* map: the restriction `g = f|_A`.  Its ramification index along the divisor
@@ -390,13 +405,17 @@ theorem root_pow_mem_span_algebraMap :
   rw [root_pow_eq, map_mul]
   exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)
 
-/-- **The cover is ramified: `z` is nilpotent modulo `a`.**  In `C/(a)`, the fibre of the
-standard piece `C = R[z]/(z ^ e - u * a)` over the divisor `V(a)`, the image of `z` is
-nilpotent (indeed `z ^ e = u * a = 0` there).
+/-- **`z` is nilpotent modulo `a`.**  In `C/(a)`, the fibre of the standard piece
+`C = R[z]/(z ^ e - u * a)` over the divisor `V(a)`, the image of `z` is nilpotent (indeed
+`z ^ e = u * a = 0` there).
 
-This is the companion to `Pcf.LocalModel.restrictionMap_bijective`: the *restriction to the
-divisor* is an isomorphism, but the *cover* is ramified along the divisor with index `e`.
-See the module documentation. -/
+This statement carries **no hypothesis on `e`**, and it is therefore *not* on its own a
+statement about ramification: it holds verbatim at `e = 0` and at `e = 1`, precisely the
+unramified cases, and at `e = 1` the element it exhibits as nilpotent is literally `0`,
+because `z = u * a` there.  What witnesses ramification is the *nonvanishing* of this
+nilpotent, which requires genuine hypotheses; see
+`Pcf.LocalModel.root_ne_zero_mod_algebraMap` and
+`Pcf.LocalModel.isNilpotent_root_mod_algebraMap_ne_zero`. -/
 theorem isNilpotent_root_mod_algebraMap :
     IsNilpotent (Ideal.Quotient.mk
       (Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
@@ -405,6 +424,64 @@ theorem isNilpotent_root_mod_algebraMap :
   refine ⟨e, ?_⟩
   rw [← map_pow]
   exact Ideal.Quotient.eq_zero_iff_mem.mpr (root_pow_mem_span_algebraMap u a)
+
+/-- **The nilpotent is nonzero.**  For `2 ≤ e` over a nontrivial ring `R`, and with `a` a
+non-unit, the image of `z` in `C/(a)` is nonzero, where `C = R[z]/(z ^ e - u * a)`.
+
+Together with `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` this exhibits a *nonzero*
+nilpotent of `C/(a)`, so the scheme-theoretic fibre of the cover over the divisor `V(a)` is
+non-reduced: the *cover* `R → C` really is ramified along the divisor, in contrast with its
+restriction to the divisor, which is an isomorphism
+(`Pcf.LocalModel.restrictionMap_bijective`).
+
+The proof uses that `C` is free over `R` with basis `1, z, …, z ^ (e - 1)`
+(`Pcf.LocalModel.basis`): if the class of `z` vanished then `z = a * c` in `C`, and reading
+off the coefficient of the basis vector `z` — a genuine basis vector, distinct from `1`,
+precisely because `2 ≤ e` — gives `a * c₁ = 1`, making `a` a unit.
+
+Every hypothesis is needed: for `e ≤ 1` and for `a` a unit the image of `z` in `C/(a)` is
+genuinely `0`, and over the zero ring everything is `0`. -/
+theorem root_ne_zero_mod_algebraMap [Nontrivial R] (he : 2 ≤ e) (ha : ¬ IsUnit a) :
+    Ideal.Quotient.mk
+        (Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
+          Set (AdjoinRoot (localPoly u a e))))
+        (AdjoinRoot.root (localPoly u a e)) ≠ 0 := by
+  have he1 : 1 ≤ e := le_trans one_le_two he
+  have hlt : (1 : ℕ) < e := he
+  intro hzero
+  rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hzero
+  obtain ⟨c, hc⟩ := hzero
+  have hroot : basis u a he1 ⟨1, hlt⟩ = AdjoinRoot.root (localPoly u a e) := by
+    rw [basis_apply]; simp
+  have h1 : (basis u a he1).repr (AdjoinRoot.root (localPoly u a e)) ⟨1, hlt⟩ = 1 := by
+    rw [← hroot, Module.Basis.repr_self, Finsupp.single_eq_same]
+  have h2 : (basis u a he1).repr
+        (algebraMap R (AdjoinRoot (localPoly u a e)) a * c) ⟨1, hlt⟩
+      = a * (basis u a he1).repr c ⟨1, hlt⟩ := by
+    rw [← Algebra.smul_def, map_smul, Finsupp.smul_apply, smul_eq_mul]
+  exact ha (IsUnit.of_mul_eq_one _ (by rw [← h2, ← hc, h1]))
+
+/-- **The cover is ramified: `C/(a)` carries a nonzero nilpotent.**  For `2 ≤ e` over a
+nontrivial ring `R`, and with `a` a non-unit, the image of `z` in the scheme-theoretic
+fibre `C/(a)` of the standard piece `C = R[z]/(z ^ e - u * a)` over the divisor `V(a)` is a
+nilpotent *and* is nonzero; equivalently, that fibre is non-reduced.
+
+This is the ramification statement for the local model of Proposition 4.1 of `pcf.tex`, and
+the companion to `Pcf.LocalModel.restrictionMap_bijective`: the *restriction to the divisor*
+is an isomorphism, while the *cover* is ramified along the divisor.  (That the ramification
+index is exactly `e` is a finer statement, not formalized here.)  See the module
+documentation. -/
+theorem isNilpotent_root_mod_algebraMap_ne_zero [Nontrivial R] (he : 2 ≤ e)
+    (ha : ¬ IsUnit a) :
+    IsNilpotent (Ideal.Quotient.mk
+        (Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
+          Set (AdjoinRoot (localPoly u a e))))
+        (AdjoinRoot.root (localPoly u a e)))
+      ∧ Ideal.Quotient.mk
+        (Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
+          Set (AdjoinRoot (localPoly u a e))))
+        (AdjoinRoot.root (localPoly u a e)) ≠ 0 :=
+  ⟨isNilpotent_root_mod_algebraMap u a, root_ne_zero_mod_algebraMap u a he ha⟩
 
 end Ramification
 
@@ -464,3 +541,5 @@ end Pcf.LocalModel
 #print axioms Pcf.LocalModel.quotientRootEquiv
 #print axioms Pcf.LocalModel.restrictionMap_bijective
 #print axioms Pcf.LocalModel.root_mem_nonZeroDivisors
+#print axioms Pcf.LocalModel.root_ne_zero_mod_algebraMap
+#print axioms Pcf.LocalModel.isNilpotent_root_mod_algebraMap_ne_zero

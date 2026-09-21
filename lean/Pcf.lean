@@ -8,4 +8,5 @@ import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
+import Pcf.Examples.CofiniteWitness
 import Pcf.Audit

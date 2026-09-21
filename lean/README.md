@@ -22,16 +22,24 @@ classical literature*, which are assumed rather than proved.
   Step 3, the fact that `k[t]` is the normalization of the cuspidal cubic's
   coordinate ring, and the computations behind Examples 4.4, 4.5, 6.1, 6.2
   and 7.4.
-  Proposition 4.1 is **also proved**, from Zariski–Nagata purity and Abhyankar's
-  lemma alone, and the *global* form of purity is derived from the *local* form
-  exactly as the manuscript argues.
-* **Assumed in Lean.** Zariski–Nagata purity in its local form (Stacks Tag 0BMB),
-  Abhyankar's lemma together with the étale-local descent that puts the cover in
-  standard tame form (Stacks Tags 0EYF/0EYG), lying-over, and the
-  scheme-theoretic meaning of "prime", "ramification index" and "singular locus".
-  See [AXIOMS.md](AXIOMS.md) — in particular §B.1, which records that Theorem A's
-  own route still consumes Proposition 4.1 as a hypothesis because the geometric
-  layer is not yet wired into it.
+  Proposition 4.1's **finiteness** statements are also proved, and the *global*
+  form of purity is derived from the *local* form exactly as the manuscript argues.
+* **Assumed in Lean.** Zariski–Nagata purity (in a form *stronger* than Stacks Tag
+  0BMB — see AXIOMS.md §B.2), **Proposition 4.1(2) itself**, lying-over, finiteness
+  of the branch divisor, and the scheme-theoretic meaning of "prime", "ramification
+  index" and "singular locus".
+
+  On Proposition 4.1(2): it is stated as a hypothesis (`standardForm`) in a form that
+  names purity and Abhyankar's lemma as its intended justification, but
+  `Pcf.nonempty_unramifiedWitness_iff` proves that form is **logically equivalent to
+  its own conclusion**. So it is assumed, not derived. An earlier version of this file
+  and of the manuscript claimed otherwise; an adversarial review caught it, and the
+  review is retained at `../ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+  See [AXIOMS.md](AXIOMS.md). The two layers are joined:
+  `Pcf.PcfGeometry.toPcfSetup` builds the structure Theorem A consumes with
+  `sing_finite`, `meets_finite` and `key` proved, so `Pcf.PcfGeometry.res_pcf`
+  reaches Theorem A assuming only purity, Abhyankar, lying over, and the
+  properness of the three correction loci.
 
 There is **no `sorry`, no `axiom`, no `admit` and no `native_decide`** in
 `Pcf/`. The assumed inputs are structure fields, so `#print axioms` reports
@@ -54,6 +62,7 @@ lean/
 │   ├── Audit.lean         ← `#print axioms` for every headline result
 │   └── Examples/
 │       ├── Squaring.lean  ← §6: Examples 6.1, 6.2; witness that the setup is inhabited
+│       ├── CofiniteWitness.lean ← a complete `PcfGeometry` with genuine ramification
 │       ├── Cusp.lean      ← §4: Examples 4.4, 4.5
 │       └── CharP.lean     ← §7: Examples 7.1, 7.4 (the wild counterexample)
 ├── AXIOMS.md              ← axiom census: everything assumed
@@ -89,17 +98,19 @@ orbit characterization of PCF.
 | Proposition 3.3 | `Pcf.DivDyn.mem_branch_iter_iff` | proved |
 | Proposition 3.4 | `Pcf.DivDyn.mem_branch_iter_succ` | proved |
 | Proposition 3.5 | `Pcf.DivDyn.pcSet_iter`, `Pcf.DivDyn.pcf_iter_iff` | proved |
-| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` | proved |
+| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` | proved, but *not wired in* — `DivDyn.branch_finite'` is still a field |
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` | proved |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
-| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | proved from purity + Abhyankar |
+| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | **assumed** via `standardForm`, which is equivalent to it |
 | Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_branch` | proved |
 | Proposition 4.1, Step 3 (as a map) | `Pcf.LocalModel.restrictionMap_bijective` | proved |
 | Proposition 4.1, Step 4's inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
-| purity, local form | `Pcf.PurityData.localPurity` | **assumed** (Stacks 0BMB) |
-| Abhyankar + étale descent | `Pcf.Prop41Data.standardForm` | **assumed** (Stacks 0EYF/0EYG) |
-| Theorem A's own copy of 4.1 | `Pcf.PcfSetup.key` | **assumed** (not yet wired to the above) |
+| purity | `Pcf.PurityData.localPurity` | **assumed**; stronger than Stacks 0BMB |
+| Proposition 4.1(2) as a hypothesis | `Pcf.Prop41Data.standardForm` | **assumed**; names Stacks 0EYF/0EYG as its justification |
+| Theorem A via geometry | `Pcf.PcfGeometry.res_pcf` | proved; `sing_finite`/`meets_finite` discharged, `key` restated |
+| the join | `Pcf.PcfGeometry.toPcfSetup`, `Pcf.divDynOfGeometry` | proved |
+| the join is inhabited | `Pcf.Examples.cofiniteGeometry`, `Pcf.Examples.resDyn_branch` | proved (toy space; see AXIOMS.md) |
 | Example 4.4 (cusp) | `Pcf.Examples.Cusp` | normalization, parametrization, Jacobian and `B ∩ Z` proved; `Branch(g) = ∅` not stated (no scheme-level `Branch`) |
 | Example 4.5 (quadric cone) | `Pcf.Examples.Cusp` | parametrization and restriction proved; normality/étaleness not formalized |
 | Theorem 5.1 = Theorem A | `Pcf.PcfSetup.res_pcf` | proved from the above |

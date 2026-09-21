@@ -56,21 +56,45 @@ The development has **two layers**, and it matters which one a statement lives i
   `Pcf/Ramification.lean`, `Pcf/LocalModel.lean`, `Pcf/Geometry.lean`) proves
   Proposition 4.1 and the finiteness statements outright, from strictly smaller inputs.
 
-The geometric layer **is not yet wired into** the abstract layer: nothing constructs a
-`Pcf.PcfSetup` from a `Pcf.Prop41Data`. So the fields below are still hypotheses *of the
-structures that Theorem A consumes*, even where the corresponding mathematical statement
-is now a theorem elsewhere in the development. That gap is recorded honestly in the last
-column, and closing it is the obvious next task.
+The two layers **are now joined**. `Pcf.PcfGeometry.toPcfSetup` constructs a
+`Pcf.PcfSetup` from geometric data with `sing_finite`, `meets_finite` and `key` **proved**,
+and `Pcf.PcfGeometry.res_pcf` is Theorem A on that route. `Pcf.divDynOfGeometry` likewise
+constructs a `Pcf.DivDyn` with `branch_finite'` proved.
+
+So there are two routes to Theorem A:
+
+* **Abstract route** — `Pcf.PcfSetup.res_pcf` on a hand-built `PcfSetup`. Assumes B1–B5.
+* **Geometric route** — `Pcf.PcfGeometry.res_pcf`. Assumes B1 and B2 (they are fields of
+  the two `DivDyn`s inside `PcfGeometry`, so they must be supplied twice), P1 and P3–P6,
+  and **P2, which is equivalent to B5** — see the warning below. What it genuinely no
+  longer assumes is B3 and B4.
+
+**The headline claim in earlier versions of this file was wrong.** It said Proposition
+4.1(2) is *proved* from purity and Abhyankar. It is not. `Pcf.nonempty_unramifiedWitness_iff`
+proves that `UnramifiedWitness n` is inhabited exactly when `n = 1` — the inhabitant can be
+taken to be the identity map `ℤ → ℤ`, with no geometry in it at all. So P2
+(`standardForm`) carries exactly the information "the ramification index is `1` at every
+prime over a good prime", which *is* the conclusion of Proposition 4.1(2), and the step
+from P2 to `notMem_branch` is a one-line repackaging. Proposition 4.1(2) is **assumed**.
+
+What the repackaging is worth: it states the assumption in a form that names its intended
+justification, and `Pcf.LocalModel.unramifiedWitness` exhibits the standard tame local
+model as a source of such witnesses. That is documentation value, not a theorem.
+
+This correction was produced by an adversarial review of the development; the review is
+retained at `ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+
+The table below describes what the *structures* demand.
 
 ### B.1 Fields of `DivDyn` and `PcfSetup` (what Theorem A still assumes)
 
 | ID | Lean field | Statement assumed | Now proved elsewhere? |
 | --- | --- | --- | --- |
-| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | No. |
-| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **Yes** — `Pcf.PurityData.finite_isPrime_subset_nonEtale`, given only that the non-étale locus is a *proper closed subset*. |
-| B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Yes** — `Pcf.Prop41Data.finite_sing_subtype`. |
-| B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Yes** — `Pcf.Prop41Data.finite_meets_subtype`. |
-| B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **Yes** — `Pcf.Prop41Data.notMem_branch`, from purity and Abhyankar alone. |
+| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | No — assumed on both routes. |
+| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **No — assumed on both routes.** `Pcf.divDynOfGeometry` shows how it *could* be discharged, trading it for a hypothesis `hbranch` plus properness; but nothing in the development is built through it, and `Pcf.PurityData.finite_isPrime_subset_nonEtale` is about primes *inside the source's non-étale locus*, a different set from the image set `branch_finite'` constrains. |
+| B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.sing_finite`, from properness plus Noetherianness. |
+| B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.meets_finite`, from properness plus Noetherianness. |
+| B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **No — restated, not discharged.** `Pcf.PcfGeometry.key` follows from `standardForm`, which is logically equivalent to it. |
 
 ### B.2 What the geometric layer actually assumes
 
@@ -79,8 +103,8 @@ literature rather than derived.
 
 | ID | Lean field | Statement assumed | Source |
 | --- | --- | --- | --- |
-| P1 | `PurityData.localPurity` | **Zariski–Nagata purity, local form.** If a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there. | Stacks Tag 0BMB |
-| P2 | `Prop41Data.standardForm` | **Abhyankar's lemma plus étale-local descent.** At a prime satisfying (a), (b), (c), each prime above admits an `UnramifiedWitness`: étale-locally the restriction of the cover to the divisor is an isomorphism. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
+| P1 | `PurityData.localPurity` | **More than Stacks Tag 0BMB.** The field says: if a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there — quantified over *every* such point, with none of 0BMB's hypotheses (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) the dimension equality. Those hold throughout §4's application and are absorbed into the field rather than carried as data, so the field is 0BMB *plus* the standing hypotheses of §4. Separately, substituting "étale at `x'`" for 0BMB's "unramified at `x'`" strengthens the hypothesis and so weakens the implication — that substitution alone is harmless. | Stacks Tag 0BMB plus §4's standing hypotheses |
+| P2 | `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Abhyankar's lemma plus étale-local descent.** At a prime satisfying (a), (b), (c), each prime above admits an `UnramifiedWitness`: étale-locally the restriction of the cover to the divisor is an isomorphism. The `PcfGeometry` form is quantified over every iterate `m`, with the three loci **independent of `m`** — that independence is the crux of Theorem 5.1 and is visible in the type. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
 | P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. | Bookkeeping; true in an irreducible scheme |
 | P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). | §4, and §2's separability hypothesis |
 | P5 | `Prop41Data.singSelf_isClosed`, `singSelf_ne_univ` | `Sing(B)` is a proper closed subset — a variety in characteristic zero is generically regular. | Proposition 4.1(1) |
@@ -91,9 +115,30 @@ local form by hand, remarking that the SGA reference was "difficult to parse for
 present application". That derivation is now machine-checked:
 `Pcf.PurityData.codim_eq_one`.
 
-**Non-vacuity of P2.** `Pcf.LocalModel.unramifiedWitness` constructs an `UnramifiedWitness`
-from an honest standard tame local model `R[z]/(z^e − ua)`, for **every** `e ≥ 1`. So P2
-is satisfiable, and satisfiable with the cover genuinely ramified.
+**Non-vacuity of P2.** Two witnesses, for two different objections:
+
+* `Pcf.UnramifiedWitness.trivial` shows `UnramifiedWitness 1` is inhabited at all, so the
+  witness type is not empty and P2 is not unsatisfiable-by-construction.
+* `Pcf.LocalModel.unramifiedWitness` constructs a witness from a standard tame local model
+  `R[z]/(z^e − ua)`, for every `e ≥ 1`. **The two `e`s are different quantities.** The `e`
+  in the local model is the degree of the *cover*; the index parameter of
+  `UnramifiedWitness` is the ramification index of the *restriction*, and that is `1` in
+  every case — which is exactly what Step 3 says. So this shows the *source* of a witness
+  can be a tame cover of any degree; it does **not** make the witness type inhabited at any
+  index other than `1`.
+
+**Non-vacuity of the join.** `Pcf/Examples/CofiniteWitness.lean` builds a complete
+`Pcf.PcfGeometry` over `ℕ` with the cofinite topology, in which
+`Pcf.IsPrime s ↔ ∃ x, s = {x}` is proved, the restricted system **genuinely ramifies**
+(`resDyn_branch : resDyn.branch = {zeroPrime}` with `ram zeroPrime = 2`), the ramified
+prime sits inside a correction locus exactly as Proposition 4.1 permits, and `res.PCF` is
+obtained by *applying* `Pcf.PcfGeometry.res_pcf`. So the join is not vacuous.
+
+That witness is deliberately cheap in one respect, and the file says so: because its
+restricted system is the identity with `ram ≡ 1` away from the ramified prime, its
+`standardForm` is discharged by `UnramifiedWitness.trivial` and exercises **no** purity or
+Abhyankar content. It establishes consistency and inhabitation of `PcfGeometry`, not the
+geometric substance. `CofNat` is a toy space, not a variety.
 
 ## B.3 A trap this layer closes
 
@@ -114,8 +159,20 @@ The formalization now pins both halves so the confusion cannot recur:
 
 * `Pcf.LocalModel.restrictionMap_bijective` — the named map `R/(a) → C/(z)` is bijective.
   This, not the abstract isomorphism `quotientRootEquiv`, is what Step 4 consumes.
-* `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` — `z` is nilpotent modulo the image of
-  `a`, recording affirmatively that the cover *is* ramified along the divisor.
+* `Pcf.LocalModel.root_ne_zero_mod_algebraMap` — under `2 ≤ e`, `Nontrivial R` and
+  `¬ IsUnit a`, the class of `z` in `C ⧸ (a)` is a **nonzero** nilpotent, so the fibre of
+  the cover over the divisor is genuinely non-reduced. This is the ramification direction,
+  and it is proved.
+
+  An earlier version of this file pointed instead at
+  `Pcf.LocalModel.isNilpotent_root_mod_algebraMap`, which was wrong: that lemma carries no
+  hypothesis on `e`, holds at `e = 0` and `e = 1`, and at `e = 1` exhibits the nilpotent
+  `0`, since `z = ua` there. A statement true of the unramified case is not evidence of
+  ramification. The adversarial review caught this; the three hypotheses above are what it
+  takes to exclude those cases.
+
+  Note what is still *not* proved: that the ramification index of the cover is exactly `e`.
+  Non-reducedness of the fibre is weaker than that, and nothing here computes the index.
 
 ## C. What is proved outright (no assumption beyond A and B)
 
@@ -141,16 +198,16 @@ And, in the geometric layer, all of §4 except P1–P6:
 
 | Manuscript | Lean declaration |
 | --- | --- |
-| Definition 2.1 (prime), topologically | `Pcf.IsPrime` |
+| Definition 2.1 (prime), topologically | `Pcf.IsPrime` — **correct only in an irreducible ambient space.** In any space, "no irreducible closed set strictly between `P` and `X`" is exactly codimension one; but `Pcf.IsPrime` is stated for an arbitrary space, where it also holds of the irreducible *components*, which have codimension zero. `IrreducibleSpace` is never assumed. A variety is irreducible by the manuscript's Conventions, so this is a fidelity gap in the abstraction, not an error. |
 | primes are incomparable | `Pcf.IsPrime.eq_of_subset_of_isPrime` |
-| Proposition 4.1(1), the `Z` term | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.IsPrime.inter_sUnion_ne_self` |
-| Proposition 4.1(1), the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` |
+| Proposition 4.1(1), the `Z` term | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.IsPrime.inter_sUnion_ne_self` — *available, not wired in*: `Prop41Data` still takes `interOther_ne_univ` as a field |
+| Proposition 4.1(1), the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` — *available, not wired in*, and weaker than it looks: `codim` there is an arbitrary `X → ℕ` unconnected to `IsPrime` or to the topology, so it also needs "`B` has codimension 1", which `IsPrime` does not supply. The two notions cannot currently be composed. |
 | Proposition 4.1(2), first paragraph (finiteness) | `Pcf.finite_isPrime_subset` |
-| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` |
+| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` — *available, not wired in*, and about primes inside the **source's** non-étale locus, not about the image set `DivDyn.branch_finite'` constrains |
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` |
 | §4, the inner maximality step | `Pcf.PurityData.notMem_nonEtale_of_specializes` |
 | Proposition 4.1, Step 3 (as a *map*) | `Pcf.LocalModel.restrictionMap_bijective` |
-| the cover is ramified along the divisor | `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` |
+
 | Proposition 4.1, Step 4's final inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective`, `Pcf.UnramifiedWitness.eq_one` |
 | Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` |
 | Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_bound`, `Pcf.Prop41Data.finite_branch` |
@@ -182,8 +239,19 @@ And, in the geometric layer, all of §4 except P1–P6:
 * The identification of `Ideal.ramificationIdx` with the manuscript's `e(𝔮/𝔪)` from
   Definition 2.2 for extensions of discrete valuation rings. Mathlib relates its two
   ramification-index definitions only under Dedekind hypotheses.
-* The wiring of the geometric layer into `Pcf.PcfSetup`: nothing yet builds a
-  `PcfSetup` from a `Prop41Data`, so Theorem A still consumes B1–B5 as fields.
+* A *scheme-theoretic* construction of a `Pcf.PcfGeometry`. The join
+  (`Pcf.PcfGeometry.toPcfSetup`) exists, but nothing derives its data from an actual
+  morphism of varieties — that bridge is assumption A1/A2.
+* **Any part of Zariski–Nagata purity or Abhyankar's lemma.** P1 assumes purity (in a
+  form stronger than Tag 0BMB, see §B.2) and P2 assumes Proposition 4.1(2) outright.
+  Nothing about either theorem is machine-checked. What *is* machine-checked is the
+  manuscript's own deduction of the global purity form **from** the local form
+  (`Pcf.PurityData.codim_eq_one`), which is a different and smaller claim.
+* **The ramification index of the cover.** `Pcf.LocalModel.root_ne_zero_mod_algebraMap`
+  establishes that the fibre of `R → R[z]/(z^e − ua)` over the divisor is non-reduced for
+  `2 ≤ e`, which witnesses that the cover ramifies; but no statement computes the index and
+  shows it equals `e`. `Ideal.ramificationIdx` is never applied to a cover in this
+  development — only to maps that are already isomorphisms.
 * The `Ω_{Ã/B̃}` coherence argument showing the non-étale locus is a *proper closed
   subset* (the input to P4); only the finiteness consequence is proved.
 * The Proposition of §5 that the induced dynamical system `(Ã, g̃)` is finite,
@@ -209,18 +277,25 @@ Using the vocabulary of the formalization-evidence contract:
 * `Pcf/Dynamics.lean`, `Pcf/Restriction.lean`, `Pcf/LocalModel.lean`,
   `Pcf/Examples/*` — **LEAN-PROVED**: they compile, and `#print axioms`
   reports only standard logical axioms.
-* Theorem A (manuscript Theorem 5.1) — **CONDITIONAL** on A1–A5 and B1–B5.
-  The dynamical and combinatorial half of the manuscript's proof is
-  machine-checked; Theorem A's own route still consumes Proposition 4.1 as the
-  field `PcfSetup.key`.
-* Proposition 4.1 (manuscript §4) — **CONDITIONAL** on P1–P6 only. Its statement
-  (1), (2) and (3) are proved in `Pcf/Geometry.lean` from Zariski–Nagata purity
-  and Abhyankar's lemma, exactly as the manuscript argues.
+* Theorem A via `Pcf.PcfSetup.res_pcf` — **CONDITIONAL** on A1–A5 and B1–B5,
+  because those are fields of the structure it takes as input.
+* Theorem A via `Pcf.PcfGeometry.res_pcf` — **CONDITIONAL** on A1–A5, B1, B2 and
+  P1–P6. B3 and B4 are genuinely discharged; B5 is *restated* as P2, not discharged.
+* Proposition 4.1(1) and (3) — the finiteness half is **proved**; the properness half
+  is assumed (P5, P6).
+* Proposition 4.1(2) — **ASSUMED** (P2). It is stated in a form that names purity and
+  Abhyankar as its justification, and that form is logically equivalent to the
+  statement itself (`Pcf.nonempty_unramifiedWitness_iff`).
+* The global form of Zariski–Nagata purity, given the local form — **PROVED**
+  (`Pcf.PurityData.codim_eq_one`). This is the strongest piece of new work in §4.
 
 This is not a machine verification of "PCF All the Way Down". It is a
 machine-checked derivation of Theorem A, Corollary 5.2 and Corollary 5.5 from
-Proposition 4.1 and the divisorial bookkeeping; a machine-checked derivation of
-Proposition 4.1 itself from purity and Abhyankar's lemma; a machine-checked
-derivation of the global form of purity from the local form; and machine-checked
-proofs of the supporting examples. The remaining gap between the two is the
-constructor that has not been written.
+Proposition 4.1 and the divisorial bookkeeping; a machine-checked derivation of the
+global form of purity from the local form; machine-checked finiteness statements;
+machine-checked proofs of the supporting examples; and a constructor joining the
+geometric data to the structure Theorem A consumes.
+
+Proposition 4.1(2) itself is **assumed**, and so is purity. Two gaps remain at the
+bottom: no Lean code derives a `Pcf.PcfGeometry` from an actual morphism of schemes
+(assumptions A1–A5), and no part of purity or Abhyankar's lemma is machine-checked.
