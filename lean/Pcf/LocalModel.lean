@@ -27,6 +27,9 @@ additionally records that the standard piece is free over the base with basis
 * `Pcf.LocalModel.localPoly u a e` : the polynomial `X ^ e - C (u * a)` cutting out a
   standard piece of a tame cyclic cover.
 * `Pcf.LocalModel.basis` : the `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece.
+* `Pcf.LocalModel.restrictionMap` : the restriction map `R/(a) → C/(z)` along the divisor,
+  i.e. the algebraic form of `V(z) → V(a)`.
+* `Pcf.LocalModel.restrictionEquiv` : that map packaged as an `R`-algebra isomorphism.
 
 ## Main results
 
@@ -36,7 +39,42 @@ additionally records that the standard piece is free over the base with basis
 * `Pcf.LocalModel.quotientRootEquiv` : **the main result**, the `R`-algebra isomorphism
   `R[z]/(z ^ e - u * a, z) ≃ₐ[R] R/(a)`.  This is the statement
   `O[z]/(z^e - ua, z) = O/(a)` from Step 3 of Proposition 4.1.
+* `Pcf.LocalModel.restrictionMap_bijective` : **the form of Step 3 that Step 4 uses**, namely
+  that the restriction map `V(z) → V(a)` is an isomorphism *as a map*.
 * `Pcf.LocalModel.root_mem_nonZeroDivisors` : `z` is a nonzerodivisor whenever `a` is.
+* `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` : `z` is nilpotent in `C/(a)`, the
+  scheme-theoretic fibre of the cover over the divisor.  This is the ramification of the
+  *cover*, which the results above do not contradict; see the warning below.
+
+## Ramification of the cover versus the restriction: a warning
+
+The results here are about the map obtained by **restricting to the divisor**.  They say
+nothing whatsoever about the ramification of the cover `R → C` itself, and must not be
+quoted as if they did.
+
+`Pcf.LocalModel.quotientRootEquiv` produces an isomorphism of the two quotient *rings*
+`C/(z)` and `R/(a)`.  On its own, the bare existence of such an isomorphism carries no
+information about how `R → C` ramifies.  The standard example: take `R = ℤ`, `a = 2`,
+`u = 1`, `e = 2`, so that `C = ℤ[√2]` and `z = √2`.  Then indeed `C/(z) ≅ ℤ/2 ≅ R/(a)`, and
+yet `2` is *totally ramified* in `ℤ[√2]`: as ideals `(2) = (√2) ^ 2`, so the ramification
+index of the cover at that prime is `2`, not `1`.  An abstract isomorphism of the residue
+rings is simply not a statement about ramification indices.
+
+The manuscript agrees that the cover is ramified — that is the whole point of the standard
+tame local model, whose ramification index along the divisor is `e`.  This is recorded here
+by `Pcf.LocalModel.isNilpotent_root_mod_algebraMap`: modulo the image of `a`, the element
+`z` is nilpotent (`z ^ e = u * a ≡ 0`).  For `e ≥ 2` that nilpotent is in general nonzero —
+in the example above, `√2` is a nonzero nilpotent of `ℤ[√2]/(2)` — so the scheme-theoretic
+fibre of the cover over the divisor is non-reduced.  The cover really is ramified with
+index `e`.
+
+What Step 4 of the proof of Proposition 4.1 in `pcf.tex` actually uses is a statement about
+a *different* map: the restriction `g = f|_A`.  Its ramification index along the divisor
+is `1` because the natural map `V(z) → V(a)` — the map induced by the structure map
+`R → C`, not any abstractly chosen isomorphism — is an isomorphism.  That is
+`Pcf.LocalModel.restrictionMap_bijective`, and that is the lemma to cite when the argument
+needs "the restriction to the divisor is unramified".  Citing
+`Pcf.LocalModel.quotientRootEquiv` for that purpose would be a genuine mathematical error.
 
 ## Implementation notes
 
@@ -263,7 +301,112 @@ noncomputable def quotientRootEquiv (he : 1 ≤ e) :
       rw [hsub]
       exact neg_mem (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)))
 
+/-- **The restriction map `V(z) → V(a)`, algebraically.**  The `R`-algebra map
+`R/(a) → C/(z)`, `C = R[z]/(z ^ e - u * a)`, induced by the structure map `R → C`.
+On spectra this is the map `V(z) → V(a)` of Step 3 of the proof of Proposition 4.1 in
+`pcf.tex`: the restriction `g = f|_A` of the cover to the (reduced preimage of the) branch
+divisor.  It is a synonym for `Pcf.LocalModel.fromQuotient`, named for the role it plays in
+Steps 3 and 4 of the proof.
+
+Note that this is the map *along the divisor*, not the cover `R → C` itself; see the
+section *Ramification of the cover versus the restriction* in the module documentation. -/
+noncomputable def restrictionMap (he : 1 ≤ e) :
+    R ⧸ Ideal.span ({a} : Set R) →ₐ[R]
+      AdjoinRoot (localPoly u a e) ⧸
+        Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
+          Set (AdjoinRoot (localPoly u a e))) :=
+  fromQuotient u a he
+
+@[simp]
+theorem restrictionMap_mk (he : 1 ≤ e) (r : R) :
+    restrictionMap u a he (Ideal.Quotient.mk (Ideal.span ({a} : Set R)) r)
+      = Ideal.Quotient.mk _ (algebraMap R (AdjoinRoot (localPoly u a e)) r) :=
+  rfl
+
+/-- `Pcf.LocalModel.restrictionMap` is the inverse of the isomorphism
+`Pcf.LocalModel.quotientRootEquiv` of Step 3 of Proposition 4.1 in `pcf.tex`. -/
+theorem coe_quotientRootEquiv_symm (he : 1 ≤ e) :
+    ⇑(quotientRootEquiv u a he).symm = ⇑(restrictionMap u a he) := by
+  rw [quotientRootEquiv, AlgEquiv.ofAlgHom_symm]
+  rfl
+
+/-- **`V(z) → V(a)` is an isomorphism.**  The restriction map `R/(a) → C/(z)` induced by
+`R → C = R[z]/(z ^ e - u * a)` is bijective, for `u` a unit and `e ≥ 1`.
+
+This is the precise content of "so `V(z) → V(a)` is an isomorphism" in Step 3 of the proof
+of Proposition 4.1 of `pcf.tex`, in the form used in Step 4: it is a statement about the
+*specific map* `V(z) → V(a)`, not merely about the existence of some abstract isomorphism
+between the two rings.  In particular it is this statement, and not
+`Pcf.LocalModel.quotientRootEquiv` on its own, that says the restriction `g = f|_A` is
+unramified along the divisor.  It says nothing about the ramification of the cover `R → C`,
+which really does have ramification index `e`; see the module documentation. -/
+theorem restrictionMap_bijective (he : 1 ≤ e) : Function.Bijective (restrictionMap u a he) := by
+  rw [← coe_quotientRootEquiv_symm]
+  exact (quotientRootEquiv u a he).symm.bijective
+
+/-- **Restriction to the divisor is an isomorphism**, packaged as an `R`-algebra
+isomorphism `R/(a) ≃ₐ[R] C/(z)` whose underlying map is
+`Pcf.LocalModel.restrictionMap`.  Step 3 of the proof of Proposition 4.1 of `pcf.tex`. -/
+noncomputable def restrictionEquiv (he : 1 ≤ e) :
+    (R ⧸ Ideal.span ({a} : Set R)) ≃ₐ[R]
+      AdjoinRoot (localPoly u a e) ⧸
+        Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
+          Set (AdjoinRoot (localPoly u a e))) :=
+  AlgEquiv.ofBijective (restrictionMap u a he) (restrictionMap_bijective u a he)
+
+@[simp]
+theorem restrictionEquiv_apply (he : 1 ≤ e) (x : R ⧸ Ideal.span ({a} : Set R)) :
+    restrictionEquiv u a he x = restrictionMap u a he x :=
+  rfl
+
+/-- The inverse of `Pcf.LocalModel.restrictionEquiv` is the map `C/(z) → R/(a)` sending
+`z` to `0`, i.e. `Pcf.LocalModel.quotientRootEquiv`.  Step 3 of Proposition 4.1 of
+`pcf.tex`. -/
+theorem restrictionEquiv_symm_apply (he : 1 ≤ e)
+    (x : AdjoinRoot (localPoly u a e) ⧸
+      Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
+        Set (AdjoinRoot (localPoly u a e)))) :
+    (restrictionEquiv u a he).symm x = quotientRootEquiv u a he x := by
+  rw [AlgEquiv.symm_apply_eq, restrictionEquiv_apply, ← coe_quotientRootEquiv_symm]
+  exact ((quotientRootEquiv u a he).symm_apply_apply x).symm
+
 end Restriction
+
+section Ramification
+
+variable (u : Rˣ) (a : R) {e : ℕ}
+
+/-- `z ^ e` lies in the ideal generated by the image of `a`: in the *scheme-theoretic*
+fibre of the cover over the divisor `V(a)`, the element `z` is nilpotent.  Together with
+`Pcf.LocalModel.restrictionMap_bijective` this is the precise separation between the two
+statements of Step 3 of Proposition 4.1 of `pcf.tex`: the *reduced* preimage `V(z)` maps
+isomorphically to `V(a)`, while the *scheme-theoretic* fibre `C/(a)` of the cover carries a
+nilpotent `z`, which for `e ≥ 2` is the non-reducedness expressing the ramification of the
+cover. -/
+theorem root_pow_mem_span_algebraMap :
+    AdjoinRoot.root (localPoly u a e) ^ e
+      ∈ Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
+          Set (AdjoinRoot (localPoly u a e))) := by
+  rw [root_pow_eq, map_mul]
+  exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)
+
+/-- **The cover is ramified: `z` is nilpotent modulo `a`.**  In `C/(a)`, the fibre of the
+standard piece `C = R[z]/(z ^ e - u * a)` over the divisor `V(a)`, the image of `z` is
+nilpotent (indeed `z ^ e = u * a = 0` there).
+
+This is the companion to `Pcf.LocalModel.restrictionMap_bijective`: the *restriction to the
+divisor* is an isomorphism, but the *cover* is ramified along the divisor with index `e`.
+See the module documentation. -/
+theorem isNilpotent_root_mod_algebraMap :
+    IsNilpotent (Ideal.Quotient.mk
+      (Ideal.span ({algebraMap R (AdjoinRoot (localPoly u a e)) a} :
+        Set (AdjoinRoot (localPoly u a e))))
+      (AdjoinRoot.root (localPoly u a e))) := by
+  refine ⟨e, ?_⟩
+  rw [← map_pow]
+  exact Ideal.Quotient.eq_zero_iff_mem.mpr (root_pow_mem_span_algebraMap u a)
+
+end Ramification
 
 section NonZeroDivisor
 
@@ -319,4 +462,5 @@ end Pcf.LocalModel
 #print axioms Pcf.LocalModel.free
 #print axioms Pcf.LocalModel.finrank_eq
 #print axioms Pcf.LocalModel.quotientRootEquiv
+#print axioms Pcf.LocalModel.restrictionMap_bijective
 #print axioms Pcf.LocalModel.root_mem_nonZeroDivisors

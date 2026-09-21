@@ -48,26 +48,74 @@ nothing is lost for Theorem A and nothing is claimed beyond it.
 
 ## B. Assumed theorems (the interfaces to the literature)
 
-These are proved in the manuscript or quoted from the literature there, and
-are hypotheses in Lean. Each is a field of a structure, listed with the
-declaration that carries it.
+The development has **two layers**, and it matters which one a statement lives in.
 
-| ID | Lean field | Statement assumed | Manuscript / literature source |
+* The **abstract layer** (`Pcf/Dynamics.lean`, `Pcf/Restriction.lean`) proves Theorem A
+  from structure fields. It is what §C below describes.
+* The **geometric layer** (`Pcf/Noetherian.lean`, `Pcf/Purity.lean`,
+  `Pcf/Ramification.lean`, `Pcf/LocalModel.lean`, `Pcf/Geometry.lean`) proves
+  Proposition 4.1 and the finiteness statements outright, from strictly smaller inputs.
+
+The geometric layer **is not yet wired into** the abstract layer: nothing constructs a
+`Pcf.PcfSetup` from a `Pcf.Prop41Data`. So the fields below are still hypotheses *of the
+structures that Theorem A consumes*, even where the corresponding mathematical statement
+is now a theorem elsewhere in the development. That gap is recorded honestly in the last
+column, and closing it is the obvious next task.
+
+### B.1 Fields of `DivDyn` and `PcfSetup` (what Theorem A still assumes)
+
+| ID | Lean field | Statement assumed | Now proved elsewhere? |
 | --- | --- | --- | --- |
-| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime. Proved in the manuscript from lying-over, going-down for a finite extension of a normal domain, and incomparability. | Proof of Lemma 3.2; Stacks Tag 00HS / 00H8 |
-| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components. Proved in the manuscript from coherence of `Ω` and Noetherianness. | §2, paragraph after Definition 2.3 |
-| B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` are proper closed in `B`, hence contain finitely many primes of `B`. | Proposition 4.1(1) |
-| B4 | `PcfSetup.meets_finite` | `B ∩ Z` is proper closed in `B` for `Z` a union of primes `≠ B`, hence contains finitely many primes of `B`. | Proposition 4.1(1) |
-| B5 | `PcfSetup.key` | **Proposition 4.1(2), the key proposition**, applied to every iterate `fᵐ`: a prime `Q'` of `B` whose generic point lies outside `Sing(Y)`, outside `Sing(B)` and outside `Z` is not a branch prime of `g = f|_A`. | Proposition 4.1(2); proved there from Zariski–Nagata purity (Stacks Tag 0BMB) and Abhyankar's lemma for a regular divisor (Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2) |
+| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | No. |
+| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **Yes** — `Pcf.PurityData.finite_isPrime_subset_nonEtale`, given only that the non-étale locus is a *proper closed subset*. |
+| B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Yes** — `Pcf.Prop41Data.finite_sing_subtype`. |
+| B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Yes** — `Pcf.Prop41Data.finite_meets_subtype`. |
+| B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **Yes** — `Pcf.Prop41Data.notMem_branch`, from purity and Abhyankar alone. |
 
-B5 is the whole geometric content of §4. Its proof — Steps 1–4 of the
-manuscript — is *not* formalized, with one exception: the algebraic core of
-Step 3 is proved outright in `Pcf/LocalModel.lean` (see §D below).
+### B.2 What the geometric layer actually assumes
 
-**Non-vacuity.** B1–B5 are simultaneously satisfiable with nontrivial branch
-data: `Pcf/Examples/Squaring.lean` builds an explicit `PcfSetup` whose `key`
-field is *proved*, not assumed, and derives the conclusion of Theorem A on it
-by applying `Pcf.PcfSetup.res_pcf`.
+These are the irreducible inputs — the statements that are genuinely quoted from the
+literature rather than derived.
+
+| ID | Lean field | Statement assumed | Source |
+| --- | --- | --- | --- |
+| P1 | `PurityData.localPurity` | **Zariski–Nagata purity, local form.** If a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there. | Stacks Tag 0BMB |
+| P2 | `Prop41Data.standardForm` | **Abhyankar's lemma plus étale-local descent.** At a prime satisfying (a), (b), (c), each prime above admits an `UnramifiedWitness`: étale-locally the restriction of the cover to the divisor is an isomorphism. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
+| P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. | Bookkeeping; true in an irreducible scheme |
+| P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). | §4, and §2's separability hypothesis |
+| P5 | `Prop41Data.singSelf_isClosed`, `singSelf_ne_univ` | `Sing(B)` is a proper closed subset — a variety in characteristic zero is generically regular. | Proposition 4.1(1) |
+| P6 | `Prop41Data.singAmbient_*`, `interOther_*` | The other two loci are proper closed. For `B ∩ Z` this is **proved** by `Pcf.IsPrime.inter_sUnion_ne_self`; for `Sing(Y) ∩ B` it follows from `Pcf.not_subset_of_two_le_codim` given that `Sing(Y)` has codimension ≥ 2 (normality of `Y`). | Proposition 4.1(1) |
+
+**The global form of purity is no longer assumed.** The manuscript derives it from the
+local form by hand, remarking that the SGA reference was "difficult to parse for the
+present application". That derivation is now machine-checked:
+`Pcf.PurityData.codim_eq_one`.
+
+**Non-vacuity of P2.** `Pcf.LocalModel.unramifiedWitness` constructs an `UnramifiedWitness`
+from an honest standard tame local model `R[z]/(z^e − ua)`, for **every** `e ≥ 1`. So P2
+is satisfiable, and satisfiable with the cover genuinely ramified.
+
+## B.3 A trap this layer closes
+
+An independent check of this development produced the following, as a purported
+counterexample to Step 3:
+
+> Take `R = ℤ`, `a = 2`, `u = 1`, `e = 2`, so `C = ℤ[√2]` and `z = √2`. Then
+> `C/(z) ≅ ℤ/2 ≅ R/(a)`, yet `2` is totally ramified in `ℤ[√2]`: `(2) = (√2)²`,
+> ramification index `2`.
+
+The computation is correct, and it refutes the claim "the two quotient *rings* are
+isomorphic, therefore the ramification index is 1" — a claim the manuscript never makes.
+Step 4 is about the **restriction** `g = f|_A`, whose local model is the specific map
+`R/(a) → C/(z)`; the *cover* `R → C` really is ramified with index `e`, and the manuscript
+says so.
+
+The formalization now pins both halves so the confusion cannot recur:
+
+* `Pcf.LocalModel.restrictionMap_bijective` — the named map `R/(a) → C/(z)` is bijective.
+  This, not the abstract isomorphism `quotientRootEquiv`, is what Step 4 consumes.
+* `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` — `z` is nilpotent modulo the image of
+  `a`, recording affirmatively that the cover *is* ramified along the divisor.
 
 ## C. What is proved outright (no assumption beyond A and B)
 
@@ -89,6 +137,24 @@ Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
 | Corollary 5.5, normalized form | `Pcf.PcfSetup.normalization_pcf` |
 | Corollary 5.5, descent | `Pcf.pcf_descent` |
 
+And, in the geometric layer, all of §4 except P1–P6:
+
+| Manuscript | Lean declaration |
+| --- | --- |
+| Definition 2.1 (prime), topologically | `Pcf.IsPrime` |
+| primes are incomparable | `Pcf.IsPrime.eq_of_subset_of_isPrime` |
+| Proposition 4.1(1), the `Z` term | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.IsPrime.inter_sUnion_ne_self` |
+| Proposition 4.1(1), the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` |
+| Proposition 4.1(2), first paragraph (finiteness) | `Pcf.finite_isPrime_subset` |
+| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` |
+| §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` |
+| §4, the inner maximality step | `Pcf.PurityData.notMem_nonEtale_of_specializes` |
+| Proposition 4.1, Step 3 (as a *map*) | `Pcf.LocalModel.restrictionMap_bijective` |
+| the cover is ramified along the divisor | `Pcf.LocalModel.isNilpotent_root_mod_algebraMap` |
+| Proposition 4.1, Step 4's final inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective`, `Pcf.UnramifiedWitness.eq_one` |
+| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` |
+| Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_bound`, `Pcf.Prop41Data.finite_branch` |
+
 ## D. Supporting formalizations
 
 | Manuscript | Lean file | Status |
@@ -105,10 +171,21 @@ Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
 
 * Definition 2.1 (prime of a variety) and the definition of `Crit`/`Branch` as
   divisors on schemes.
-* The proof of Proposition 4.1: the purity step (Step 1), the Abhyankar step
-  (Step 2), the regularity remark, and the strict-henselization/étale-base-change
-  invariance of ramification indices (Step 4).
-* The finiteness-of-`Branch` argument via `Ω_{Ã/B̃}` (assumed as B2).
+* The **scheme-theoretic** halves of Steps 1 and 2 of the proof of Proposition 4.1:
+  choosing the affine open `U`, verifying purity's hypotheses pointwise, and the
+  étale-local descent that puts the cover in standard tame form. These are P1 and P2.
+  The *reasoning* that joins them to the conclusion is now proved (§C).
+* The regularity remark inside the proof of Proposition 4.1, and the
+  strict-henselization / étale-base-change invariance of ramification indices. In the
+  Lean development that invariance is folded into P2, which delivers the witness
+  directly rather than delivering a pre-base-change extension.
+* The identification of `Ideal.ramificationIdx` with the manuscript's `e(𝔮/𝔪)` from
+  Definition 2.2 for extensions of discrete valuation rings. Mathlib relates its two
+  ramification-index definitions only under Dedekind hypotheses.
+* The wiring of the geometric layer into `Pcf.PcfSetup`: nothing yet builds a
+  `PcfSetup` from a `Prop41Data`, so Theorem A still consumes B1–B5 as fields.
+* The `Ω_{Ã/B̃}` coherence argument showing the non-étale locus is a *proper closed
+  subset* (the input to P4); only the finiteness consequence is proved.
 * The Proposition of §5 that the induced dynamical system `(Ã, g̃)` is finite,
   surjective and projective on a normal variety.
 * Example 4.4's conclusion `Branch(g) = ∅` *as a statement about a branch
@@ -134,9 +211,16 @@ Using the vocabulary of the formalization-evidence contract:
   reports only standard logical axioms.
 * Theorem A (manuscript Theorem 5.1) — **CONDITIONAL** on A1–A5 and B1–B5.
   The dynamical and combinatorial half of the manuscript's proof is
-  machine-checked; the geometric half (Proposition 4.1) is assumed.
+  machine-checked; Theorem A's own route still consumes Proposition 4.1 as the
+  field `PcfSetup.key`.
+* Proposition 4.1 (manuscript §4) — **CONDITIONAL** on P1–P6 only. Its statement
+  (1), (2) and (3) are proved in `Pcf/Geometry.lean` from Zariski–Nagata purity
+  and Abhyankar's lemma, exactly as the manuscript argues.
 
 This is not a machine verification of "PCF All the Way Down". It is a
 machine-checked derivation of Theorem A, Corollary 5.2 and Corollary 5.5 from
-Proposition 4.1 and the divisorial bookkeeping, together with machine-checked
-proofs of the supporting examples.
+Proposition 4.1 and the divisorial bookkeeping; a machine-checked derivation of
+Proposition 4.1 itself from purity and Abhyankar's lemma; a machine-checked
+derivation of the global form of purity from the local form; and machine-checked
+proofs of the supporting examples. The remaining gap between the two is the
+constructor that has not been written.

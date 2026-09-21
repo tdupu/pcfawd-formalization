@@ -1,6 +1,10 @@
 import Pcf.Dynamics
 import Pcf.Restriction
+import Pcf.Noetherian
+import Pcf.Purity
+import Pcf.Ramification
 import Pcf.LocalModel
+import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp

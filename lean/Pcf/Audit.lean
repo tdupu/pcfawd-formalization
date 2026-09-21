@@ -6,6 +6,10 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Pcf.Dynamics
 import Pcf.Restriction
 import Pcf.LocalModel
+import Pcf.Noetherian
+import Pcf.Purity
+import Pcf.Ramification
+import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
@@ -56,6 +60,30 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.LocalModel.free
 #print axioms Pcf.LocalModel.quotientRootEquiv
 #print axioms Pcf.LocalModel.root_mem_nonZeroDivisors
+
+/-! ## §4: the finiteness engine and Zariski–Nagata purity -/
+
+#print axioms Pcf.IsPrime.not_subset_sUnion
+#print axioms Pcf.IsPrime.inter_sUnion_ne_self
+#print axioms Pcf.not_subset_of_two_le_codim
+#print axioms Pcf.finite_isPrime_subset
+#print axioms Pcf.PurityData.notMem_nonEtale_of_specializes
+#print axioms Pcf.PurityData.codim_eq_one
+#print axioms Pcf.PurityData.finite_isPrime_subset_nonEtale
+
+/-! ## §4: Proposition 4.1 -/
+
+#print axioms Pcf.Ramification.ramificationIdx_eq_one_of_bijective
+#print axioms Pcf.LocalModel.restrictionMap_bijective
+#print axioms Pcf.LocalModel.isNilpotent_root_mod_algebraMap
+#print axioms Pcf.UnramifiedWitness.eq_one
+#print axioms Pcf.LocalModel.unramifiedWitness
+#print axioms Pcf.Prop41Data.notMem_branch
+#print axioms Pcf.Prop41Data.branch_subset_bound
+#print axioms Pcf.Prop41Data.finite_bound
+#print axioms Pcf.Prop41Data.finite_branch
+#print axioms Pcf.Prop41Data.finite_sing_subtype
+#print axioms Pcf.Prop41Data.finite_meets_subtype
 
 /-! ## §6: Examples 6.1 and 6.2, and the non-vacuity witness -/
 

@@ -22,11 +22,16 @@ classical literature*, which are assumed rather than proved.
   Step 3, the fact that `k[t]` is the normalization of the cuspidal cubic's
   coordinate ring, and the computations behind Examples 4.4, 4.5, 6.1, 6.2
   and 7.4.
-* **Assumed in Lean.** Proposition 4.1 itself — whose proof uses Zariski–Nagata
-  purity and Abhyankar's lemma, neither of which exists in Mathlib — together
-  with the finiteness statements of Proposition 4.1(1), the finiteness of the
-  branch divisor, lying-over, and the scheme-theoretic meaning of "prime",
-  "ramification index" and "singular locus". See [AXIOMS.md](AXIOMS.md).
+  Proposition 4.1 is **also proved**, from Zariski–Nagata purity and Abhyankar's
+  lemma alone, and the *global* form of purity is derived from the *local* form
+  exactly as the manuscript argues.
+* **Assumed in Lean.** Zariski–Nagata purity in its local form (Stacks Tag 0BMB),
+  Abhyankar's lemma together with the étale-local descent that puts the cover in
+  standard tame form (Stacks Tags 0EYF/0EYG), lying-over, and the
+  scheme-theoretic meaning of "prime", "ramification index" and "singular locus".
+  See [AXIOMS.md](AXIOMS.md) — in particular §B.1, which records that Theorem A's
+  own route still consumes Proposition 4.1 as a hypothesis because the geometric
+  layer is not yet wired into it.
 
 There is **no `sorry`, no `axiom`, no `admit` and no `native_decide`** in
 `Pcf/`. The assumed inputs are structure fields, so `#print axioms` reports
@@ -41,6 +46,10 @@ lean/
 ├── Pcf/
 │   ├── Dynamics.lean      ← §2–§3: divisorial dynamics, ramification of iterates
 │   ├── Restriction.lean   ← §5: Theorem A and its corollaries
+│   ├── Noetherian.lean    ← §4: primes of a Noetherian space; the finiteness engine
+│   ├── Purity.lean        ← §4: Zariski–Nagata purity, local form ⟹ global form
+│   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
+│   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
 │   ├── LocalModel.lean    ← §4 Step 3: the standard tame local model
 │   ├── Audit.lean         ← `#print axioms` for every headline result
 │   └── Examples/
@@ -80,9 +89,17 @@ orbit characterization of PCF.
 | Proposition 3.3 | `Pcf.DivDyn.mem_branch_iter_iff` | proved |
 | Proposition 3.4 | `Pcf.DivDyn.mem_branch_iter_succ` | proved |
 | Proposition 3.5 | `Pcf.DivDyn.pcSet_iter`, `Pcf.DivDyn.pcf_iter_iff` | proved |
-| Proposition 4.1(1) | `Pcf.PcfSetup.sing_finite`, `Pcf.PcfSetup.meets_finite` | **assumed** |
-| Proposition 4.1(2) | `Pcf.PcfSetup.key` | **assumed** |
-| Proposition 4.1, Step 3 | `Pcf.LocalModel` (see file) | proved |
+| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` | proved |
+| §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` | proved |
+| Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
+| Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
+| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | proved from purity + Abhyankar |
+| Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_branch` | proved |
+| Proposition 4.1, Step 3 (as a map) | `Pcf.LocalModel.restrictionMap_bijective` | proved |
+| Proposition 4.1, Step 4's inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
+| purity, local form | `Pcf.PurityData.localPurity` | **assumed** (Stacks 0BMB) |
+| Abhyankar + étale descent | `Pcf.Prop41Data.standardForm` | **assumed** (Stacks 0EYF/0EYG) |
+| Theorem A's own copy of 4.1 | `Pcf.PcfSetup.key` | **assumed** (not yet wired to the above) |
 | Example 4.4 (cusp) | `Pcf.Examples.Cusp` | normalization, parametrization, Jacobian and `B ∩ Z` proved; `Branch(g) = ∅` not stated (no scheme-level `Branch`) |
 | Example 4.5 (quadric cone) | `Pcf.Examples.Cusp` | parametrization and restriction proved; normality/étaleness not formalized |
 | Theorem 5.1 = Theorem A | `Pcf.PcfSetup.res_pcf` | proved from the above |
