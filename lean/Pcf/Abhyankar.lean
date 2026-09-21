@@ -3,6 +3,7 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
+import Mathlib.FieldTheory.Separable
 import Mathlib.RingTheory.Etale.StandardEtale
 import Mathlib.RingTheory.RamificationInertia.Ramification
 
@@ -28,7 +29,8 @@ Tag 0EYF makes **three** assertions about `C = A[x]/(x^e - f)`, and they are not
 within reach:
 
 1. `Spec(C) → Spec(A)` is **finite locally free** — proved here, in the stronger form
-   "free of rank `e`": `Abhyankar.free`, `Abhyankar.finite`, `Abhyankar.finrank`.
+   "free of rank `e`": `Abhyankar.finrank`, with freeness and finiteness supplied directly
+   by Mathlib's `Polynomial.Monic.free_adjoinRoot` and `Monic.finite_adjoinRoot`.
 2. it is **étale over `Spec(A_f)`** — proved here: `Abhyankar.etale` (with `u` the image
    of `f`, a unit after inverting it) and `Abhyankar.etale_ramifiedPoly_general`.
 3. `Spec(C_f) → Spec(A_f)` is **tamely ramified over `Spec(A)` in codimension one** —
@@ -68,13 +70,15 @@ unit constant term (`u` invertible) are exactly the two hypotheses that make `c`
 
 ## Main results
 
-* `Abhyankar.kummerPair` — the `StandardEtalePair` cutting out `R[y]/(y ^ e - u)`.
+* `Abhyankar.isStandardEtale_adjoinRoot_of_separable` — **the general statement**: a monic
+  separable polynomial has standard étale root algebra. The Kummer results are its
+  specialization along Mathlib's `Polynomial.separable_X_pow_sub_C_unit`.
 * `Abhyankar.etale` — `R[y]/(y ^ e - u)` is étale over `R`.
 * `Abhyankar.ramificationIdx_eq_one` — every prime of the Kummer algebra has
   `Ideal.ramificationIdx` equal to `1` over `R`. **Caveat:** this is Mathlib's
   `Ideal.ramificationIdx` (a `Module.length`); identifying it with Definition 2.2 of
   `latex/pcf.tex` is *not* formalized anywhere in this development. See `AXIOMS.md` §E.
-* `Abhyankar.free`, `Abhyankar.finite`, `Abhyankar.finrank` — clause 1 of Tag 0EYF.
+* `Abhyankar.finrank` — clause 1 of Tag 0EYF (freeness and finiteness are Mathlib's).
 * `Abhyankar.etale_ramifiedPoly_general` — clause 2 in the form matching "invert `f`".
 * `Abhyankar.not_etale_wild`, `Abhyankar.not_etale_of_not_isUnit` — both hypotheses are
   necessary, proved.
@@ -100,10 +104,6 @@ noncomputable def kummerPoly (u : Rˣ) (e : ℕ) : R[X] := X ^ e - C (u : R)
 theorem kummerPoly_monic (u : Rˣ) {e : ℕ} (he : e ≠ 0) : (kummerPoly u e).Monic :=
   monic_X_pow_sub_C _ he
 
-theorem derivative_kummerPoly (u : Rˣ) (e : ℕ) :
-    derivative (kummerPoly u e) = C (e : R) * X ^ (e - 1) := by
-  rw [kummerPoly, derivative_sub, derivative_X_pow, derivative_C, sub_zero]
-
 /-- The root of the Kummer polynomial satisfies `y ^ e = u`. -/
 theorem root_pow (u : Rˣ) (e : ℕ) :
     AdjoinRoot.root (kummerPoly u e) ^ e
@@ -113,50 +113,19 @@ theorem root_pow (u : Rˣ) (e : ℕ) :
   rw [kummerPoly, map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at h
   exact h
 
-/-! ### The Bézout identity making the derivative a unit -/
+/-! ### Separability is Mathlib's
 
-/-- **The identity behind Abhyankar's lemma.** If `e` is invertible in `R` and `u` is a
-unit, then `derivative (X ^ e - u)` divides `1` modulo `X ^ e - u`.
+The identity that makes this work — `derivative (X ^ e - u)` invertible modulo
+`X ^ e - u` when `e` and `u` are units — is exactly `Polynomial.Separable`, and Mathlib
+already proves it for this polynomial under exactly these hypotheses:
 
-Tameness is the hypothesis `hu : IsUnit (e : R)`; in characteristic `p` dividing `e` the
-element `c` below does not exist, and indeed the cover is wildly ramified. -/
-theorem bezout (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
-    ∃ p₁ p₂ : R[X], derivative (kummerPoly u e) * p₁ + kummerPoly u e * p₂ = 1 := by
-  set c : Rˣ := (hu.unit * u)⁻¹ with hc
-  have hu' : ((hu.unit : Rˣ) : R) = (e : R) := hu.unit_spec
-  have hcu : (c : R) * (e : R) * (u : R) = 1 := by
-    have h : (c : R) * ((hu.unit : Rˣ) : R) * (u : R) = 1 := by
-      rw [hc, mul_assoc, ← Units.val_mul, ← Units.val_mul]
-      simp
-    rwa [hu'] at h
-  refine ⟨C (c : R) * X, -(C (c : R) * C ((e : R))), ?_⟩
-  have hx : (X : R[X]) ^ (e - 1) * X = X ^ e := by
-    rw [← pow_succ]; congr 1; omega
-  have key : derivative (kummerPoly u e) * (C (c : R) * X)
-      + kummerPoly u e * (-(C (c : R) * C ((e : R))))
-      = C ((c : R) * (e : R) * (u : R)) := by
-    rw [derivative_kummerPoly, kummerPoly, map_mul, map_mul]
-    linear_combination (C (c : R) * C ((e : R))) * hx
-  rw [key, hcu, map_one]
+`Polynomial.separable_X_pow_sub_C_unit (u : Rˣ) (hn : IsUnit ((n : R))) :
+  Separable (X ^ n - C (u : R))`
 
-/-- The standard étale pair cutting out the Kummer algebra `R[y]/(y ^ e - u)`.
-
-The localization polynomial `g` is `1`: by `Abhyankar.bezout` the derivative is already
-invertible in `R[X]/(X ^ e - u)`, so no localization is required. -/
-noncomputable def kummerPair (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
-    StandardEtalePair R where
-  f := kummerPoly u e
-  monic_f := kummerPoly_monic u he
-  g := 1
-  cond := by
-    obtain ⟨p₁, p₂, h⟩ := bezout u he hu
-    exact ⟨p₁, p₂, 1, by simpa using h⟩
-
-@[simp] theorem kummerPair_f (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
-    (kummerPair u he hu).f = kummerPoly u e := rfl
-
-@[simp] theorem kummerPair_g (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
-    (kummerPair u he hu).g = 1 := rfl
+An earlier version of this file rebuilt that identity by hand as `Abhyankar.bezout`,
+together with a `StandardEtalePair` constructed from it. Both were redundant and have been
+removed; `Polynomial.Separable f` unfolds to `IsCoprime f (derivative f)`, which *is* the
+Bézout identity, and Mathlib's version is the more general one — it needs no `e ≠ 0`. -/
 
 /-! ### The Kummer algebra is étale
 
@@ -178,10 +147,29 @@ theorem _root_.StandardEtalePair.isStandardEtale_adjoinRoot (P : StandardEtalePa
       ((IsLocalization.algEquiv (Submonoid.powers (AdjoinRoot.mk P.f P.g))
         (Localization.Away (AdjoinRoot.mk P.f P.g)) (AdjoinRoot P.f)).restrictScalars R))
 
+/-- **A monic separable polynomial has standard étale root algebra.**
+
+This is the general statement; the Kummer case below is the special case supplied by
+`Polynomial.separable_X_pow_sub_C_unit`. `Polynomial.Separable f` is `IsCoprime f
+(derivative f)`, which is equivalent to `derivative f` being a unit in `AdjoinRoot f`, so
+the standard étale pair can take localization polynomial `1`.
+
+Neither Mathlib nor Tau Ceti appears to connect `Polynomial.Separable` to
+`Algebra.IsStandardEtale`; both notions are present, and a search of
+`Mathlib/RingTheory/{Etale,Unramified,Smooth}`, `Mathlib/FieldTheory/{Separable,
+KummerExtension}` and of the Tau Ceti tree found no lemma in this direction. That is the
+evidence available, not a claim of novelty. -/
+theorem isStandardEtale_adjoinRoot_of_separable {f : R[X]} (hf : f.Monic) (hs : f.Separable) :
+    Algebra.IsStandardEtale R (AdjoinRoot f) := by
+  obtain ⟨a, b, hab⟩ := hs
+  exact StandardEtalePair.isStandardEtale_adjoinRoot
+    ⟨f, hf, 1, ⟨b, a, 1, by rw [pow_one]; linear_combination hab⟩⟩ rfl
+
 /-- **The Kummer algebra is standard étale.** -/
 theorem isStandardEtale (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
     Algebra.IsStandardEtale R (AdjoinRoot (kummerPoly u e)) :=
-  (kummerPair u he hu).isStandardEtale_adjoinRoot rfl
+  isStandardEtale_adjoinRoot_of_separable (kummerPoly_monic u he)
+    (Polynomial.separable_X_pow_sub_C_unit u hu)
 
 /-- **Abhyankar's lemma, verification half.** If `e` is invertible in `R` and `u` is a
 unit, the Kummer algebra `R[y]/(y ^ e - u)` is étale over `R`.
@@ -234,14 +222,14 @@ Tag 0EYF asserts three things about `C = A[x]/(x^e - f)`. This is the first: the
 `Spec(C) → Spec(A)` is finite locally free. Over the Kummer polynomial it is free, of rank
 exactly `e`. -/
 
-theorem free (u : Rˣ) {e : ℕ} (he : e ≠ 0) :
-    Module.Free R (AdjoinRoot (kummerPoly u e)) :=
-  .of_basis (AdjoinRoot.powerBasis' (kummerPoly_monic u he)).basis
+/-! Freeness and finiteness are Mathlib's, for any monic polynomial:
+`Polynomial.Monic.free_adjoinRoot` and `Polynomial.Monic.finite_adjoinRoot`, applied to
+`Abhyankar.kummerPoly_monic`. An earlier version of this file restated both; they have
+been removed. What is left is the rank computation, which is specific to `X ^ e - u`. -/
 
-theorem finite (u : Rˣ) {e : ℕ} (he : e ≠ 0) :
-    Module.Finite R (AdjoinRoot (kummerPoly u e)) :=
-  .of_basis (AdjoinRoot.powerBasis' (kummerPoly_monic u he)).basis
-
+/-- The Kummer algebra is free of rank exactly `e` — clause 1 of Stacks Tag 0EYF. A short
+composition of `PowerBasis.finrank`, `AdjoinRoot.powerBasis'_dim` and
+`Polynomial.natDegree_X_pow_sub_C`. -/
 theorem finrank [Nontrivial R] (u : Rˣ) {e : ℕ} (he : e ≠ 0) :
     Module.finrank R (AdjoinRoot (kummerPoly u e)) = e := by
   rw [(AdjoinRoot.powerBasis' (kummerPoly_monic u he)).finrank,
@@ -305,8 +293,9 @@ theorem not_etale_of_not_isUnit {k : Type*} [Field k] (u : kˣ) {e : ℕ} (he : 
 `k[y]/(y² - 1)` is `k[t]/(t²)` with `t = y - 1`: it has the nonzero nilpotent `y - 1`, so
 it is not reduced and therefore not étale.
 
-Here `e = 2` is not invertible, the element `c = (e·u)⁻¹` of `Abhyankar.bezout` does not
-exist, and the cover is wildly ramified. So the conclusion of `Abhyankar.etale` genuinely
+Here `e = 2` is not invertible, so `X ^ 2 - 1` is not separable over `k` and
+`Polynomial.separable_X_pow_sub_C_unit` does not apply; the cover is wildly ramified. So
+the conclusion of `Abhyankar.etale` genuinely
 fails without tameness — it is not merely this file's proof that breaks. -/
 theorem not_etale_wild {k : Type*} [Field k] (h2 : (2 : k) = 0) :
     ¬ Algebra.Etale k (AdjoinRoot (kummerPoly (1 : kˣ) 2)) := by

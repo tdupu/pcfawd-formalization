@@ -146,7 +146,8 @@ orbit characterization of PCF.
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
 | Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | **assumed** via `standardForm`, which is equivalent to it |
-| Stacks Tag 0EYF, clauses 1–2 | `Abhyankar.free`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one` | **proved**, but consumed by nothing |
+| Stacks Tag 0EYF, clauses 1–2 | `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one` | **proved**, but consumed by nothing |
+| monic + separable ⟹ standard étale | `Abhyankar.isStandardEtale_adjoinRoot_of_separable` | proved; the one declaration a library-fit assessment flagged as an upstream candidate |
 | necessity of Tag 0EYF(2)'s hypotheses | `Abhyankar.not_etale_wild`, `Abhyankar.not_etale_of_not_isUnit` | proved |
 | Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_branch` | proved |
 | Proposition 4.1, Step 3 (as a map) | `Pcf.LocalModel.restrictionMap_bijective` | proved |

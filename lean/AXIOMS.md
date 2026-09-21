@@ -84,7 +84,7 @@ of them is now machine-checked:
 * **Assumed** (P2, Stacks Tag 0EYG) — the cover is, étale-locally, a disjoint union of
   standard tamely ramified pieces. Scheme-theoretic; a field.
 * **Proved** (Stacks Tag 0EYF, *clauses 1 and 2 only*) — such a piece is finite free, and
-  is étale where the divisor equation is invertible: `Abhyankar.free`, `Abhyankar.etale`,
+  is étale where the divisor equation is invertible: `Abhyankar.finrank`, `Abhyankar.etale`,
   `Abhyankar.ramificationIdx_eq_one`. Clause 3, tameness in codimension one, is not
   stated anywhere. See §B.4.
 
@@ -215,7 +215,7 @@ assertions about `C = A[x]/(x^e − f)`; this file addresses two.
 
 | Tag 0EYF clause | Status | Lean declaration |
 | --- | --- | --- |
-| 1. `Spec(C) → Spec(A)` finite locally free | **proved**, as free of rank `e` | `Abhyankar.free`, `Abhyankar.finite`, `Abhyankar.finrank` |
+| 1. `Spec(C) → Spec(A)` finite locally free | **proved**, as free of rank `e` | `Abhyankar.finrank`; freeness and finiteness are Mathlib's `Polynomial.Monic.free_adjoinRoot` / `Monic.finite_adjoinRoot` |
 | 2. étale over `Spec(A_f)` | **proved** | `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.etale_ramifiedPoly_general` |
 | 3. tamely ramified over `Spec(A)` in codimension 1 | **not proved, not stated** — no tameness predicate, no codimension, no `Spec(A)` in the file | — |
 
@@ -226,7 +226,8 @@ Supporting results:
 
 | Statement | Lean declaration |
 | --- | --- |
-| the Bézout identity `f' · p₁ + f · p₂ = 1` for `f = X^e − u` | `Abhyankar.bezout` |
+| the Bézout identity `f' · p₁ + f · p₂ = 1` for `f = X^e − u` | **Mathlib's** `Polynomial.separable_X_pow_sub_C_unit` (this is `Polynomial.Separable`, which unfolds to `IsCoprime f (derivative f)`) |
+| monic + separable ⟹ standard étale root algebra | `Abhyankar.isStandardEtale_adjoinRoot_of_separable` — **the general form**, and the one genuine library gap found |
 | `R[y]/(y^e − u)` is a standard étale `R`-algebra | `Abhyankar.isStandardEtale` |
 | it is nontrivial and has primes | `Abhyankar.nontrivial_adjoinRoot`, `Abhyankar.exists_isPrime` |
 | **tameness is necessary** — in characteristic 2 with `e = 2` the conclusion fails | `Abhyankar.not_etale_wild` |
@@ -462,7 +463,7 @@ And, in the geometric layer, all of §4 except P1–P6:
 | the `ZariskiNagata`/`PurityData` roundtrip is the identity | `Pcf.PurityData.ofZariskiNagata_toZariskiNagata` — a **negative** result (§B.5) |
 | §4, the inner maximality step | `Pcf.PurityData.notMem_nonEtale_of_specializes` |
 | Proposition 4.1, Step 3 (as a *map*) | `Pcf.LocalModel.restrictionMap_bijective` |
-| Stacks Tag 0EYF, clauses 1–2 only | `Abhyankar.free`, `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.etale_ramifiedPoly_general` — see §B.4. **Not consumed by any assumption of the development.** |
+| Stacks Tag 0EYF, clauses 1–2 only | `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.etale_ramifiedPoly_general` — see §B.4. **Not consumed by any assumption of the development.** |
 | necessity of both hypotheses of Tag 0EYF(2) | `Abhyankar.not_etale_wild`, `Abhyankar.not_etale_of_not_isUnit` |
 
 | Proposition 4.1, Step 4's final inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective`, `Pcf.UnramifiedWitness.eq_one` |

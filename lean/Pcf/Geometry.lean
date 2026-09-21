@@ -59,7 +59,7 @@ new mathematics in `Pcf/Abhyankar.lean` is real, but it is **not load-bearing he
   (generic regularity in characteristic zero) |
 | 4.1(2), Steps 1–2 (Tag 0EYG) | **assumed** — `Prop41Data.standardForm` |
 | Tag 0EYF clauses 1–2, standalone | **proved** —
-  `Abhyankar.free`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`.
+  `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`.
   *Not consumed load-bearingly by anything below* |
 | Tag 0EYF clause 3 (tameness in codim 1) | not stated |
 | 4.1(2) as a whole | **assumed** — `Prop41Data.standardForm`, equivalent to its own
@@ -81,7 +81,8 @@ prime of `A` above it carries a `Pcf.KummerWitness` — a tame Kummer presentati
 What is *not* assumed, and is the new content of this development, is that such a
 presentation forces the ramification index to be `1`. That is
 `Abhyankar.ramificationIdx_eq_one`, and it rests on the Bézout identity
-`Abhyankar.bezout`: when `e` is invertible and `u` is a unit, `derivative (X ^ e − u)` is
+Mathlib's `Polynomial.separable_X_pow_sub_C_unit`: when `e` is invertible and `u` is a
+unit, `X ^ e − u` is separable, i.e. `derivative (X ^ e − u)` is
 already invertible modulo `X ^ e − u`, so the Kummer algebra is étale over its base
 outright.
 -/
@@ -221,8 +222,9 @@ structure KummerWitness (n : ℕ) where
   /-- A cover has positive degree. -/
   deg_ne_zero : deg ≠ 0
   /-- **Tameness.** The degree is invertible in the base. This is the hypothesis of
-  Stacks Tag 0EYF, and it is exactly what makes the Bézout identity `Abhyankar.bezout`
-  exist; in residue characteristic dividing `deg` the cover is wildly ramified and the
+  Stacks Tag 0EYF, and it is exactly the hypothesis of Mathlib's
+  `Polynomial.separable_X_pow_sub_C_unit`, which supplies the Bézout identity; in residue
+  characteristic dividing `deg` the cover is wildly ramified and the
   conclusion is false. -/
   deg_isUnit : IsUnit ((deg : Base))
   /-- The unit of the Kummer equation `y ^ deg = u`. -/
