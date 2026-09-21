@@ -9,6 +9,7 @@ import Pcf.LocalModel
 import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Wiring
+import Pcf.AllTheWayDown
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp

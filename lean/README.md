@@ -10,6 +10,27 @@ A Lean 4 + Mathlib formalization of `../latex/pcf.tex`.
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
 | Provenance | [`../ai/ai-usage.md`](../ai/ai-usage.md), [`../ai/tokens.md`](../ai/tokens.md) |
 
+## The conjecture
+
+> **PCF all the way down.** Let `X` be a normal projective variety over an algebraically
+> closed field of characteristic zero and `f : X → X` a finite surjective post-critically
+> finite morphism. Then for every prime `A` of `X` periodic under `f`, say `fⁿ(A) = A`,
+> the restriction `fⁿ|_A` is post-critically finite — and the same holds recursively for
+> the induced maps on normalizations of periodic primes, all the way down to dimension
+> zero.
+
+Conjecture 2.6 of `../latex/pcf.tex`. It is due to the authors and is quoted on page 2 of
+
+> A. Bridy, P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
+> J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
+> morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.00194`.
+
+**Both paragraphs are formalized**, in [`Pcf/AllTheWayDown.lean`](Pcf/AllTheWayDown.lean):
+`Pcf.pcf_periodic_prime` for the first and `Pcf.pcf_all_the_way_down` for the descent,
+whose proof is a genuine induction. Read that file's header before quoting this: the
+statements are about the abstract `DivDyn`/`PcfSetup` layer, nothing constructs a `DivDyn`
+from a morphism of schemes, and Proposition 4.1(2) is assumed.
+
 ## What is and is not claimed
 
 This is a **conditional** formalization in the style of the `gq2` project: the

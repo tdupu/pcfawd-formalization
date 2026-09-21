@@ -416,6 +416,15 @@ the spectrum route so far is `Pcf.purityDataOfEtale` with `E = ∅`.
 
 ## C. What is proved outright (no assumption beyond A and B)
 
+The conjecture the project is named after — Conjecture 2.6 of `latex/pcf.tex`, due to the
+authors and quoted on p. 2 of Bridy–Ingram–Jones–Juul–Levy–Manes–Rubinstein-Salzedo–Silverman,
+*Finite ramification for preimage fields of post-critically finite morphisms*, Math. Res.
+Lett. **24** (2017), no. 6, 1633–1647, `arXiv:1511.00194` — has **both** of its paragraphs
+proved in this layer. See `lean/Pcf/AllTheWayDown.lean`, and read its header for the
+conditionality: these are theorems about `Pcf.DivDyn` and `Pcf.PcfSetup`, not about
+varieties, and Proposition 4.1(2) is assumed (P2).
+
+
 Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
 
 | Manuscript | Lean declaration |
@@ -432,7 +441,8 @@ Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
 | uniformity of `Σ` in `m` (the crux) | `Pcf.PcfSetup.branch_iter_subset_bound` |
 | Corollary 5.2 | `Pcf.PcfSetup.res_pcf_of_iter` |
 | Corollary 5.5, normalized form | `Pcf.PcfSetup.normalization_pcf` |
-| Corollary 5.5, descent | `Pcf.pcf_descent` |
+| Corollary 5.5, descent (**"PCF all the way down"**, Conjecture 2.6 second paragraph) | `Pcf.pcf_descent`, restated as `Pcf.pcf_all_the_way_down` |
+| Corollary 5.2 (Conjecture 2.6 first paragraph) | `Pcf.PcfSetup.res_pcf_of_iter`, restated as `Pcf.pcf_periodic_prime` |
 
 And, in the geometric layer, all of §4 except P1–P6:
 

@@ -135,6 +135,16 @@ end PcfSetup
 
 /-- **Corollary 5.5** ("PCF all the way down").
 
+This is the second paragraph of Conjecture 2.6 of `latex/pcf.tex`, the conjecture the
+project is named after. It is due to the authors and is quoted on page 2 of A. Bridy,
+P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
+J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
+morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647, `arXiv:1511.00194`.
+
+See `Pcf/AllTheWayDown.lean` for the conjecture stated in full, under conjecture-facing
+names, together with an explicit account of what the formalization does and does not
+establish. `Pcf.pcf_all_the_way_down` is this theorem.
+
 Along any chain of periodic-prime restrictions — at each stage `i` one chooses a prime
 that is periodic with some return time `n ≥ 1`, and passes to the induced system on it —
 every stage is a post-critically finite system, given that the first one is.

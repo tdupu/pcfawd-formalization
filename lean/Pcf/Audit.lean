@@ -14,6 +14,7 @@ import Pcf.Ramification
 import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Wiring
+import Pcf.AllTheWayDown
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
@@ -38,6 +39,18 @@ The one place where that conditionality is discharged is
 assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 `Pcf.PcfSetup.res_pcf` is not vacuous.
 -/
+
+/-! ## The conjecture the project is named after
+
+Conjecture 2.6 of `latex/pcf.tex` ("PCF all the way down"), due to the authors and quoted
+on p. 2 of Bridy–Ingram–Jones–Juul–Levy–Manes–Rubinstein-Salzedo–Silverman, *Finite
+ramification for preimage fields of post-critically finite morphisms*, Math. Res. Lett.
+**24** (2017), 1633–1647, `arXiv:1511.00194`. Both paragraphs are proved here, in the
+abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
+
+#print axioms Pcf.pcf_periodic_prime
+#print axioms Pcf.pcf_all_the_way_down
+#print axioms Pcf.pcSet_finite_all_the_way_down
 
 /-! ## §2–§3: divisorial dynamics -/
 
