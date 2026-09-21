@@ -1,0 +1,84 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
+-/
+import Pcf.Dynamics
+import Pcf.Restriction
+import Pcf.LocalModel
+import Pcf.Examples.Squaring
+import Pcf.Examples.CharP
+import Pcf.Examples.Cusp
+
+/-!
+# Trust audit
+
+`#print axioms` for every headline result of the development, in one place.
+
+**Read `lean/AXIOMS.md` before drawing conclusions from the output below.**
+Every line reports only `propext`, `Classical.choice`, `Quot.sound` — the
+standard logical axioms of Lean and Mathlib. That is *not* a claim that the
+development assumes nothing. The assumed mathematics of the manuscript
+(Proposition 4.1, finiteness of the branch divisor, lying over, and the
+scheme-theoretic meaning of "prime" and "ramification index") is carried in
+*fields* of `Pcf.DivDyn` and `Pcf.PcfSetup` — that is, in hypotheses — and
+hypotheses are invisible to `#print axioms` by construction.
+
+The one place where that conditionality is discharged is
+`Pcf.Examples.diagonalSquaring`, whose `key` field is proved rather than
+assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
+`Pcf.PcfSetup.res_pcf` is not vacuous.
+-/
+
+/-! ## §2–§3: divisorial dynamics -/
+
+#print axioms Pcf.DivDyn.IsChain.extend
+#print axioms Pcf.DivDyn.exists_isChain_iff
+#print axioms Pcf.DivDyn.iterRam_add
+#print axioms Pcf.DivDyn.mem_branch_iter_iff
+#print axioms Pcf.DivDyn.mem_branch_iter_succ
+#print axioms Pcf.DivDyn.pcSet_iter
+#print axioms Pcf.DivDyn.pcf_iter_iff
+#print axioms Pcf.DivDyn.pcf_iff_forall_orbit_finite
+#print axioms Pcf.DivDyn.pcf_of_finite_cover
+
+/-! ## §5: Theorem A and its corollaries -/
+
+#print axioms Pcf.PcfSetup.branch_iter_subset_bound
+#print axioms Pcf.PcfSetup.res_pcf
+#print axioms Pcf.PcfSetup.res_pcf_of_iter
+#print axioms Pcf.PcfSetup.normalization_pcf
+#print axioms Pcf.pcf_descent
+
+/-! ## §4 Step 3: the standard tame local model -/
+
+#print axioms Pcf.LocalModel.localPoly_monic
+#print axioms Pcf.LocalModel.free
+#print axioms Pcf.LocalModel.quotientRootEquiv
+#print axioms Pcf.LocalModel.root_mem_nonZeroDivisors
+
+/-! ## §6: Examples 6.1 and 6.2, and the non-vacuity witness -/
+
+#print axioms Pcf.Examples.squaringP1_branch
+#print axioms Pcf.Examples.squaringP1_pcf
+#print axioms Pcf.Examples.squaringP1_branch_iter
+#print axioms Pcf.Examples.diagonalSquaring_bound
+#print axioms Pcf.Examples.diagonalSquaring_res_pcf
+
+/-! ## §4: Examples 4.4 and 4.5 -/
+
+#print axioms Pcf.Examples.Cusp.cuspParam
+#print axioms Pcf.Examples.Cusp.jacobian_cuspSource
+#print axioms Pcf.Examples.Cusp.mem_cuspAlg_iff
+#print axioms Pcf.Examples.Cusp.X_not_mem_cuspAlg
+#print axioms Pcf.Examples.Cusp.isFractionRing_cuspAlg
+#print axioms Pcf.Examples.Cusp.isIntegralClosure_cuspAlg
+#print axioms Pcf.Examples.Cusp.integralClosure_cuspAlg_eq_top
+#print axioms Pcf.Examples.Cusp.cusp_inter_branch
+#print axioms Pcf.Examples.Cusp.coneParam
+#print axioms Pcf.Examples.Cusp.coneMap_restrict
+
+/-! ## §7: Example 7.4, the wild counterexample -/
+
+#print axioms Pcf.Examples.CharP.orbit_natDegree
+#print axioms Pcf.Examples.CharP.orbit_infinite
