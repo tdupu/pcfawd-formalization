@@ -5,7 +5,7 @@
 | Repo | `pcf` |
 | Scope | `lean/` |
 | Status | Draft |
-| Date | `2026-09-20` |
+| Date | `2026-09-21` |
 | Manuscript | `latex/pcf.tex` |
 | Toolchain | Lean `4.34.0`, Mathlib `v4.34.0` (`5ed296525643`) |
 
@@ -69,20 +69,38 @@ So there are two routes to Theorem A:
   and **P2, which is equivalent to B5** — see the warning below. What it genuinely no
   longer assumes is B3 and B4.
 
-**The headline claim in earlier versions of this file was wrong.** It said Proposition
-4.1(2) is *proved* from purity and Abhyankar. It is not. `Pcf.nonempty_unramifiedWitness_iff`
-proves that `UnramifiedWitness n` is inhabited exactly when `n = 1` — the inhabitant can be
-taken to be the identity map `ℤ → ℤ`, with no geometry in it at all. So P2
-(`standardForm`) carries exactly the information "the ramification index is `1` at every
-prime over a good prime", which *is* the conclusion of Proposition 4.1(2), and the step
-from P2 to `notMem_branch` is a one-line repackaging. Proposition 4.1(2) is **assumed**.
+**A correction, retained.** An earlier version of this file claimed Proposition 4.1(2) is
+*proved* from purity and Abhyankar's lemma. It was not.
+`Pcf.nonempty_unramifiedWitness_iff` proves that the interface then in use,
+`UnramifiedWitness n`, is inhabited exactly when `n = 1`, and that an inhabitant can be
+taken to be the identity map `ℤ → ℤ`, with no geometry in it at all. So that interface
+carried exactly the conclusion of Proposition 4.1(2), and the step to `notMem_branch` was
+a one-line repackaging. The correction was produced by an adversarial review of the
+development, retained at `ai/2026-09-21-prop41-formalization/adversarial-review.md`.
 
-What the repackaging is worth: it states the assumption in a form that names its intended
-justification, and `Pcf.LocalModel.unramifiedWitness` exhibits the standard tame local
-model as a source of such witnesses. That is documentation value, not a theorem.
+**What has since changed.** Abhyankar's lemma has two halves, and they are now treated
+differently:
 
-This correction was produced by an adversarial review of the development; the review is
-retained at `ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+* **Assumed** (P2, Stacks Tag 0EYG) — the cover is, étale-locally, a disjoint union of
+  standard tamely ramified pieces `y ^ e = u`. This is scheme-theoretic and is a field.
+* **Proved** (Stacks Tag 0EYF) — such a piece is étale over its base, hence unramified at
+  every prime: `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, from Mathlib's
+  theory of standard étale algebras. See §B.4.
+
+The interface is accordingly now `Pcf.KummerWitness`, whose fields are a degree `e ≥ 1`,
+the tameness hypothesis that `e` is invertible in the base, and a unit `u`. No field
+asserts that anything is unramified or bijective. `Pcf.KummerWitness.eq_one` is therefore
+a theorem about explicit polynomial algebras rather than a field projection.
+
+**Proposition 4.1(2) remains conditional** — on Tag 0EYG. What is no longer assumed is
+that the standard tame form is unramified.
+
+`Pcf.nonempty_kummerWitness_iff` records that `KummerWitness n` is still inhabited exactly
+when `n = 1`. That is automatic for *any* interface sufficient for Proposition 4.1(2) and
+is not the earlier defect. The operative difference is what an inhabitant must supply: the
+old interface demanded a bijection — the conclusion restated — while the new one demands a
+tame Kummer presentation, and `Pcf.KummerWitness.cubic`, built from `ℚ[y]/(y³ − 1)`, is an
+inhabitant of degree `3`.
 
 The table below describes what the *structures* demand.
 
@@ -94,7 +112,7 @@ The table below describes what the *structures* demand.
 | B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **No — assumed on both routes.** `Pcf.divDynOfGeometry` shows how it *could* be discharged, trading it for a hypothesis `hbranch` plus properness; but nothing in the development is built through it, and `Pcf.PurityData.finite_isPrime_subset_nonEtale` is about primes *inside the source's non-étale locus*, a different set from the image set `branch_finite'` constrains. |
 | B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.sing_finite`, from properness plus Noetherianness. |
 | B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.meets_finite`, from properness plus Noetherianness. |
-| B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **No — restated, not discharged.** `Pcf.PcfGeometry.key` follows from `standardForm`, which is logically equivalent to it. |
+| B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **No — still conditional, but on less.** `Pcf.PcfGeometry.key` follows from `standardForm` (= P2 = Tag 0EYG), which remains logically equivalent to it. What moved out of the assumption is Tag 0EYF, now proved in §B.4. |
 
 ### B.2 What the geometric layer actually assumes
 
@@ -104,7 +122,7 @@ literature rather than derived.
 | ID | Lean field | Statement assumed | Source |
 | --- | --- | --- | --- |
 | P1 | `PurityData.localPurity` | **More than Stacks Tag 0BMB.** The field says: if a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there — quantified over *every* such point, with none of 0BMB's hypotheses (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) the dimension equality. Those hold throughout §4's application and are absorbed into the field rather than carried as data, so the field is 0BMB *plus* the standing hypotheses of §4. Separately, substituting "étale at `x'`" for 0BMB's "unramified at `x'`" strengthens the hypothesis and so weakens the implication — that substitution alone is harmless. | Stacks Tag 0BMB plus §4's standing hypotheses |
-| P2 | `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Abhyankar's lemma plus étale-local descent.** At a prime satisfying (a), (b), (c), each prime above admits an `UnramifiedWitness`: étale-locally the restriction of the cover to the divisor is an isomorphism. The `PcfGeometry` form is quantified over every iterate `m`, with the three loci **independent of `m`** — that independence is the crux of Theorem 5.1 and is visible in the type. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
+| P2 | `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Abhyankar's structure theorem plus étale-local descent, and nothing more.** At a prime satisfying (a), (b), (c), each prime above admits a `Pcf.KummerWitness`: étale-locally the local extension is the standard tame model `y ^ e = u`, with `e` invertible and `u` a unit. That this model is *unramified* is no longer part of the assumption — it is proved (§B.4). The `PcfGeometry` form is quantified over every iterate `m`, with the three loci **independent of `m`** — that independence is the crux of Theorem 5.1 and is visible in the type. | Stacks Tag 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
 | P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. | Bookkeeping; true in an irreducible scheme |
 | P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). | §4, and §2's separability hypothesis |
 | P5 | `Prop41Data.singSelf_isClosed`, `singSelf_ne_univ` | `Sing(B)` is a proper closed subset — a variety in characteristic zero is generically regular. | Proposition 4.1(1) |
@@ -174,6 +192,32 @@ The formalization now pins both halves so the confusion cannot recur:
   Note what is still *not* proved: that the ramification index of the cover is exactly `e`.
   Non-reducedness of the fibre is weaker than that, and nothing here computes the index.
 
+## B.4 Abhyankar's lemma: what is now proved
+
+`lean/Pcf/Abhyankar.lean` imports nothing outside Mathlib and proves the following.
+
+| Statement | Lean declaration | Source |
+| --- | --- | --- |
+| The Bézout identity `f' · p₁ + f · p₂ = 1` for `f = X^e − u`, given `e` invertible and `u` a unit | `Abhyankar.bezout` | the mechanism |
+| `R[y]/(y^e − u)` is a standard étale `R`-algebra | `Abhyankar.isStandardEtale` | Stacks Tag 0EYF |
+| `R[y]/(y^e − u)` is étale over `R` | `Abhyankar.etale` | Stacks Tag 0EYF |
+| every prime of it has ramification index `1` over `R` | `Abhyankar.ramificationIdx_eq_one` | the form Prop. 4.1(2) consumes |
+| it is a genuine degree-`e` extension (nontrivial, has primes) | `Abhyankar.nontrivial_adjoinRoot`, `Abhyankar.exists_isPrime` | non-vacuity |
+| the substitution `x ↦ t·y` from the ramified model `x^e = u·t^e` to `y^e = u` | `Abhyankar.subst` | the Abhyankar base change |
+| that substitution is an isomorphism when `t` is a unit | `Abhyankar.substEquiv` | "étale away from the divisor" |
+| hence the ramified model is étale once `t` is invertible | `Abhyankar.etale_ramifiedPoly` | Stacks Tag 0EYF, `Spec(C_f) → Spec(A_f)` |
+
+Both hypotheses are load-bearing and neither can be dropped. `e` invertible is
+**tameness**: in residue characteristic dividing `e` the element `c = (e·u)⁻¹` of
+`Abhyankar.bezout` does not exist, and the cover really is wildly ramified. `u` a unit is
+the statement that the equation of the divisor has been inverted; at `u = 0` the algebra
+`R[y]/(y^e)` is as ramified as possible.
+
+**What is still not proved here.** The structure theorem, Stacks Tag 0EYG — that a tamely
+ramified cover is étale-locally a disjoint union of such pieces — needs schemes, effective
+Cartier divisors and tame ramification in codimension one, none of which is available.
+That half stays in the census as P2.
+
 ## C. What is proved outright (no assumption beyond A and B)
 
 Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
@@ -207,6 +251,8 @@ And, in the geometric layer, all of §4 except P1–P6:
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` |
 | §4, the inner maximality step | `Pcf.PurityData.notMem_nonEtale_of_specializes` |
 | Proposition 4.1, Step 3 (as a *map*) | `Pcf.LocalModel.restrictionMap_bijective` |
+| Abhyankar's lemma, Stacks Tag 0EYF | `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.substEquiv`, `Abhyankar.etale_ramifiedPoly` — see §B.4 |
+| Proposition 4.1(2), Step 4 | `Pcf.KummerWitness.eq_one` — from the standard tame form, via `Abhyankar.ramificationIdx_eq_one` |
 
 | Proposition 4.1, Step 4's final inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective`, `Pcf.UnramifiedWitness.eq_one` |
 | Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` |

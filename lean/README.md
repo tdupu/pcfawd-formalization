@@ -24,22 +24,35 @@ classical literature*, which are assumed rather than proved.
   and 7.4.
   Proposition 4.1's **finiteness** statements are also proved, and the *global*
   form of purity is derived from the *local* form exactly as the manuscript argues.
+  **Half of Abhyankar's lemma** is proved: Stacks Tag 0EYF, that the standard tamely
+  ramified model `R[y]/(y^e − u)` is étale over `R` when `e` is invertible and `u` is
+  a unit, hence unramified at every prime (`Pcf/Abhyankar.lean`).
 * **Assumed in Lean.** Zariski–Nagata purity (in a form *stronger* than Stacks Tag
-  0BMB — see AXIOMS.md §B.2), **Proposition 4.1(2) itself**, lying-over, finiteness
-  of the branch divisor, and the scheme-theoretic meaning of "prime", "ramification
-  index" and "singular locus".
+  0BMB — see AXIOMS.md §B.2), **Abhyankar's structure theorem** (Stacks Tag 0EYG),
+  lying-over, finiteness of the branch divisor, and the scheme-theoretic meaning of
+  "prime", "ramification index" and "singular locus".
 
-  On Proposition 4.1(2): it is stated as a hypothesis (`standardForm`) in a form that
-  names purity and Abhyankar's lemma as its intended justification, but
-  `Pcf.nonempty_unramifiedWitness_iff` proves that form is **logically equivalent to
-  its own conclusion**. So it is assumed, not derived. An earlier version of this file
-  and of the manuscript claimed otherwise; an adversarial review caught it, and the
-  review is retained at `../ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+  On Proposition 4.1(2): it is still conditional, but on less than before. The
+  hypothesis `standardForm` now asks for a `Pcf.KummerWitness` — a tame Kummer
+  presentation `y^e = u`, which is what Abhyankar's lemma *outputs* — and the step
+  from there to "ramification index `1`" is the theorem
+  `Pcf.KummerWitness.eq_one`, proved via `Abhyankar.etale`. What remains assumed is
+  Tag 0EYG, that the cover is étale-locally of that shape.
+
+  An earlier version used `Pcf.UnramifiedWitness`, whose `bijective` field made the
+  hypothesis **logically equivalent to its own conclusion**; this file and the
+  manuscript claimed a derivation that did not exist. An adversarial review caught it,
+  and the review is retained at
+  `../ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+  `Pcf.nonempty_unramifiedWitness_iff` keeps that fact stated in Lean, and
+  `Pcf.nonempty_kummerWitness_iff` records the analogous — and unavoidable —
+  equivalence for the new interface, alongside `Pcf.KummerWitness.cubic`, a
+  degree-`3` inhabitant built from `ℚ[y]/(y³ − 1)`.
   See [AXIOMS.md](AXIOMS.md). The two layers are joined:
   `Pcf.PcfGeometry.toPcfSetup` builds the structure Theorem A consumes with
   `sing_finite`, `meets_finite` and `key` proved, so `Pcf.PcfGeometry.res_pcf`
-  reaches Theorem A assuming only purity, Abhyankar, lying over, and the
-  properness of the three correction loci.
+  reaches Theorem A assuming only purity, Abhyankar's structure theorem, lying over,
+  and the properness of the three correction loci.
 
 There is **no `sorry`, no `axiom`, no `admit` and no `native_decide`** in
 `Pcf/`. The assumed inputs are structure fields, so `#print axioms` reports
@@ -59,6 +72,7 @@ lean/
 │   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
 │   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
 │   ├── LocalModel.lean    ← §4 Step 3: the standard tame local model
+│   ├── Abhyankar.lean     ← Abhyankar's lemma, Stacks Tag 0EYF (Mathlib-only)
 │   ├── Audit.lean         ← `#print axioms` for every headline result
 │   └── Examples/
 │       ├── Squaring.lean  ← §6: Examples 6.1, 6.2; witness that the setup is inhabited
@@ -102,12 +116,14 @@ orbit characterization of PCF.
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` | proved |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
-| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | **assumed** via `standardForm`, which is equivalent to it |
+| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | conditional on `standardForm` (= Stacks Tag 0EYG); the passage from the tame form is proved |
+| Abhyankar's lemma, Stacks Tag 0EYF | `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one` | **proved** |
+| Proposition 4.1(2), Step 4 | `Pcf.KummerWitness.eq_one` | proved |
 | Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_branch` | proved |
 | Proposition 4.1, Step 3 (as a map) | `Pcf.LocalModel.restrictionMap_bijective` | proved |
 | Proposition 4.1, Step 4's inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
 | purity | `Pcf.PurityData.localPurity` | **assumed**; stronger than Stacks 0BMB |
-| Proposition 4.1(2) as a hypothesis | `Pcf.Prop41Data.standardForm` | **assumed**; names Stacks 0EYF/0EYG as its justification |
+| Abhyankar's structure theorem | `Pcf.Prop41Data.standardForm` | **assumed**; Stacks Tag 0EYG. Tag 0EYF is no longer assumed — it is proved |
 | Theorem A via geometry | `Pcf.PcfGeometry.res_pcf` | proved; `sing_finite`/`meets_finite` discharged, `key` restated |
 | the join | `Pcf.PcfGeometry.toPcfSetup`, `Pcf.divDynOfGeometry` | proved |
 | the join is inhabited | `Pcf.Examples.cofiniteGeometry`, `Pcf.Examples.resDyn_branch` | proved (toy space; see AXIOMS.md) |

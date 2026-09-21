@@ -4,6 +4,7 @@ import Pcf.Noetherian
 import Pcf.Purity
 import Pcf.Ramification
 import Pcf.LocalModel
+import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP

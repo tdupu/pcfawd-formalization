@@ -52,8 +52,11 @@ This is a toy topological space, not a variety. `CofNat` is one-dimensional in t
 sense that its proper closed subsets are finite, and its "primes" are points; there is no
 scheme, no cover, no ring of functions, and nothing here is a model of an actual finite
 separable self-map. The `standardForm` field is discharged cheaply, because away from
-`{0}` the restricted ramification index is literally `1`, so
-`Pcf.UnramifiedWitness.trivial` suffices; no purity or Abhyankar input is exercised.
+`{0}` the restricted ramification index is literally `1`, so any witness of index `1`
+suffices — here `Pcf.KummerWitness.cubic`, the Kummer algebra `ℚ[y]/(y³ - 1)`. No purity
+input is exercised, and while the Kummer witness does carry genuine Abhyankar content
+(`Abhyankar.ramificationIdx_eq_one`), this example does not *need* it: the index is known
+to be `1` on other grounds.
 
 What the file does show is precisely this: `Pcf.PcfGeometry` is consistent, its fields can
 be satisfied simultaneously, and they can be satisfied with `res.branch ≠ ∅`. That is the
@@ -213,10 +216,11 @@ theorem resDyn_iterRam_eq_one (m : ℕ) {Q : {s : Set CofNat // Pcf.IsPrime s}}
   refine Finset.prod_eq_one fun i _ => ?_
   rw [resDyn_step, Function.iterate_id, id_eq, resDyn_ram, resRam_of_ne h]
 
-/-- Transport the trivial unramified witness along an identification of the index with
-`1`. This is the only glue needed to discharge `standardForm` below. -/
-noncomputable def unramifiedWitnessOfEqOne {n : ℕ} (h : n = 1) : UnramifiedWitness n :=
-  cast (congrArg UnramifiedWitness h).symm UnramifiedWitness.trivial
+/-- Transport the concrete degree-`3` Kummer witness `Pcf.KummerWitness.cubic` along an
+identification of the index with `1`. This is the only glue needed to discharge
+`standardForm` below. -/
+noncomputable def kummerWitnessOfEqOne {n : ℕ} (h : n = 1) : KummerWitness n :=
+  cast (congrArg KummerWitness h).symm KummerWitness.cubic
 
 /-- **The witness.** A `Pcf.PcfGeometry` on the cofinite space, with a trivial ambient
 system and a restricted system that genuinely ramifies at the prime `{0}`.
@@ -246,7 +250,7 @@ noncomputable def cofiniteGeometry : PcfGeometry Unit CofNat where
     have hne : (Q' : Set CofNat) ≠ {pt} := by
       rw [hQeq]
       exact fun h => hsa (le_of_eq h)
-    exact unramifiedWitnessOfEqOne (resDyn_iterRam_eq_one m hne)
+    exact kummerWitnessOfEqOne (resDyn_iterRam_eq_one m hne)
 
 /-! ### Step 5: the payoff -/
 

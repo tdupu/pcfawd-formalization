@@ -9,6 +9,7 @@ import Pcf.LocalModel
 import Pcf.Noetherian
 import Pcf.Purity
 import Pcf.Ramification
+import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
@@ -126,6 +127,27 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.Examples.cofiniteGeometry
 #print axioms Pcf.Examples.resDyn_branch
 #print axioms Pcf.Examples.resDyn_pcf
+
+/-! ## Abhyankar's lemma: the standard tamely ramified model
+
+These are the newly discharged half of Stacks Tag 0EYF. The structure theorem
+(Tag 0EYG) remains assumed; see `lean/AXIOMS.md`, entry B2. -/
+
+#print axioms Abhyankar.bezout
+#print axioms Abhyankar.kummerPair
+#print axioms Abhyankar.isStandardEtale
+#print axioms Abhyankar.etale
+#print axioms Abhyankar.ramificationIdx_eq_one
+#print axioms Abhyankar.nontrivial_adjoinRoot
+#print axioms Abhyankar.exists_isPrime
+#print axioms Abhyankar.subst
+#print axioms Abhyankar.substEquiv
+#print axioms Abhyankar.etale_ramifiedPoly
+#print axioms Pcf.KummerWitness.eq_one
+#print axioms Pcf.KummerWitness.ofKummer
+#print axioms Pcf.KummerWitness.ofTame
+#print axioms Pcf.KummerWitness.cubic
+#print axioms Pcf.nonempty_kummerWitness_iff
 
 /-! ## §7: Example 7.4, the wild counterexample -/
 
