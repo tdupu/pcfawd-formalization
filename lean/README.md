@@ -31,8 +31,9 @@ classical literature*, which are assumed rather than proved.
   is consumed by any assumption of the development** — see below.
 * **Assumed in Lean.** Zariski–Nagata purity (in a form *stronger* than Stacks Tag
   0BMB — see AXIOMS.md §B.2), **Abhyankar's structure theorem** (Stacks Tag 0EYG),
-  lying-over, finiteness of the branch divisor, and the scheme-theoretic meaning of
-  "prime", "ramification index" and "singular locus".
+  lying-over, finiteness of the branch divisor **for the ambient system** (for the restricted system it is now
+  derived — see `Pcf/Wiring.lean` and AXIOMS.md §B.6), and the scheme-theoretic meaning
+  of "prime", "ramification index" and "singular locus".
 
   On Proposition 4.1(2): it is **assumed**. The hypothesis `standardForm` asks for a
   `Pcf.KummerWitness`, which names Abhyankar's lemma as its intended justification but
@@ -69,6 +70,7 @@ lean/
 │   ├── Noetherian.lean    ← §4: primes of a Noetherian space; the finiteness engine
 │   ├── Purity.lean        ← §4: Zariski–Nagata purity, local form ⟹ global form
 │   ├── NonEtaleLocus.lean ← purity on Spec S; two PurityData fields discharged
+│   ├── Wiring.lean        ← purity ⟹ branch_finite' for the restricted system
 │   ├── ZariskiNagata.lean ← Tag 0BMB restated (interderivable — discharges nothing)
 │   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
 │   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
@@ -118,6 +120,7 @@ orbit characterization of PCF.
 | `E` is closed | `Pcf.isClosed_nonEtaleLocus` | proved from Mathlib's `isOpen_etaleLocus` — discharges a `PurityData` field, but `PurityData` is *not wired in* to Theorem A |
 | height-zero points are generic | `Pcf.closure_eq_univ_of_specCodim_eq_zero` | proved — same status, *not wired in* |
 | purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` | proved |
+| finiteness of `Branch(g)` for the restriction | `Pcf.resDivDynOfPurity` | **proved** from purity — `DivDyn.branch_finite'` is no longer a field on this route. Still a field for the *ambient* system, and on the plain `PcfGeometry`/`PcfSetup` routes |
 | Stacks Tag 0BMB | `Pcf.ZariskiNagata` | **assumed**; restated with all five hypotheses but *interderivable* with the old field (`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`), so nothing is reduced |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |

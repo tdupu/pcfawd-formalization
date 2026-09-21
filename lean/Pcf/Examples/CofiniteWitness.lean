@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Pcf.Geometry
+import Pcf.Wiring
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.NoetherianSpace
 import Mathlib.Topology.Irreducible
@@ -284,5 +285,73 @@ theorem resDyn_pcf : resDyn.PCF :=
 #print axioms resDyn_branch
 #print axioms resDyn_branch_nonempty
 #print axioms resDyn_pcf
+
+
+/-! ### The same witness, with `branch_finite'` derived from purity
+
+`Pcf/Wiring.lean` routes the geometric input to Theorem A through a `Pcf.PurityData`, so
+that `Pcf.DivDyn.branch_finite'` for the restricted system is *proved* rather than supplied.
+This section exhibits an inhabitant of that route, so the wiring is not vacuous.
+
+`resDyn` above supplies `branch_finite'` by hand. `resDynOfPurity` below does not: it is
+built by `Pcf.resDivDynOfPurity`, whose `branch_finite'` comes from the non-étale locus
+being a proper closed subset of a Noetherian space. -/
+
+/-- A purity datum on `CofNat` with non-étale locus `{0}`.
+
+Every point has codimension one here, so `Pcf.localPurity_of_codim_le_one` supplies the
+`localPurity` field with no purity input at all — which is exactly the phenomenon that
+lemma records. Nothing about Zariski–Nagata is exercised; what is exercised is the
+*finiteness* half of the wiring. -/
+noncomputable def cofinitePurityData : PurityData CofNat :=
+  PurityData.ofCodimLeOne (fun _ => 1) {pt}
+    (isClosed_cofNat_iff.mpr (Or.inr (Set.finite_singleton pt)))
+    (ne_univ_of_finite (Set.finite_singleton pt))
+    (fun _ h => absurd h (by omega))
+    (fun _ _ => le_refl 1)
+
+@[simp] theorem cofinitePurityData_nonEtale : cofinitePurityData.nonEtale = {pt} := rfl
+
+/-- Ramified primes of the restricted system land in the non-étale locus. -/
+theorem resRam_branch_subset (Q : {s : Set CofNat // Pcf.IsPrime s}) (h : 1 < resRam Q) :
+    ((id Q : {s : Set CofNat // Pcf.IsPrime s}) : Set CofNat) ⊆ cofinitePurityData.nonEtale := by
+  rw [cofinitePurityData_nonEtale, id_eq, eq_zeroPrime_of_one_lt_resRam h]
+  exact le_of_eq zeroPrime_coe
+
+/-- The restricted system with `branch_finite'` **proved** from the purity datum. -/
+noncomputable def resDynOfPurity : DivDyn {s : Set CofNat // Pcf.IsPrime s} :=
+  resDivDynOfPurity id resRam resRam_pos Function.surjective_id cofinitePurityData
+    resRam_branch_subset
+
+@[simp] theorem resDynOfPurity_step : resDynOfPurity.step = id := rfl
+
+@[simp] theorem resDynOfPurity_ram : resDynOfPurity.ram = resRam := rfl
+
+/-- It is the same system as `resDyn`: only the *provenance* of `branch_finite'` differs,
+and `DivDyn` is a structure whose proof fields are propositions. -/
+theorem resDynOfPurity_branch : resDynOfPurity.branch = {zeroPrime} := by
+  rw [show resDynOfPurity.branch = resDyn.branch from rfl]
+  exact resDyn_branch
+
+/-- **The payoff.** The restricted system is post-critically finite, obtained by applying
+`Pcf.PcfGeometry.res_pcf` to a `Pcf.PcfGeometry` whose restricted system's branch-finiteness
+was derived from purity rather than assumed. -/
+theorem resDynOfPurity_pcf : resDynOfPurity.PCF := by
+  refine PcfGeometry.res_pcf_of_purityData ambDyn () rfl id resRam resRam_pos
+    Function.surjective_id cofinitePurityData resRam_branch_subset {pt} ∅
+    (fun _ => ∅)
+    (isClosed_cofNat_iff.mpr (Or.inr (Set.finite_singleton pt)))
+    (ne_univ_of_finite (Set.finite_singleton pt))
+    isClosed_empty (ne_univ_of_finite Set.finite_empty)
+    (fun _ _ => isClosed_empty) (fun _ _ => ne_univ_of_finite Set.finite_empty)
+    ?_ ambDyn_pcf
+  intro m Q hsa _ _ Q' hQ'
+  have hQeq : Q' = Q := by
+    rw [Function.iterate_id, id_eq] at hQ'
+    exact hQ'
+  have hne : (Q' : Set CofNat) ≠ {pt} := by
+    rw [hQeq]
+    exact fun h => hsa (le_of_eq h)
+  exact kummerWitnessOfEqOne (resDyn_iterRam_eq_one m hne)
 
 end Pcf.Examples

@@ -13,6 +13,7 @@ import Pcf.ZariskiNagata
 import Pcf.Ramification
 import Pcf.Abhyankar
 import Pcf.Geometry
+import Pcf.Wiring
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
@@ -129,6 +130,19 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.Examples.cofiniteGeometry
 #print axioms Pcf.Examples.resDyn_branch
 #print axioms Pcf.Examples.resDyn_pcf
+
+/-! ## The purity layer wired into Theorem A
+
+`branch_finite'` for the restricted system is no longer a field on this route. -/
+
+#print axioms Pcf.resDivDynOfPurity
+#print axioms Pcf.resDivDynOfAlgebra
+#print axioms Pcf.PcfGeometry.ofPurityData
+#print axioms Pcf.PcfGeometry.res_pcf_of_purityData
+#print axioms Pcf.exists_nonEtale_of_branch_finite
+#print axioms Pcf.Examples.resDynOfPurity
+#print axioms Pcf.Examples.resDynOfPurity_branch
+#print axioms Pcf.Examples.resDynOfPurity_pcf
 
 /-! ## Zariski–Nagata purity
 
