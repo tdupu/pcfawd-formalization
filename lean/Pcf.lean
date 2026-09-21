@@ -2,6 +2,8 @@ import Pcf.Dynamics
 import Pcf.Restriction
 import Pcf.Noetherian
 import Pcf.Purity
+import Pcf.NonEtaleLocus
+import Pcf.ZariskiNagata
 import Pcf.Ramification
 import Pcf.LocalModel
 import Pcf.Abhyankar

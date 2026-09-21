@@ -68,6 +68,8 @@ lean/
 │   ├── Restriction.lean   ← §5: Theorem A and its corollaries
 │   ├── Noetherian.lean    ← §4: primes of a Noetherian space; the finiteness engine
 │   ├── Purity.lean        ← §4: Zariski–Nagata purity, local form ⟹ global form
+│   ├── NonEtaleLocus.lean ← purity on Spec S; two PurityData fields discharged
+│   ├── ZariskiNagata.lean ← Tag 0BMB restated (interderivable — discharges nothing)
 │   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
 │   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
 │   ├── LocalModel.lean    ← §4 Step 3: the standard tame local model
@@ -113,6 +115,10 @@ orbit characterization of PCF.
 | Proposition 3.5 | `Pcf.DivDyn.pcSet_iter`, `Pcf.DivDyn.pcf_iter_iff` | proved |
 | §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` | proved, but *not wired in* — `DivDyn.branch_finite'` is still a field |
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` | proved |
+| `E` is closed | `Pcf.isClosed_nonEtaleLocus` | proved from Mathlib's `isOpen_etaleLocus` — discharges a `PurityData` field, but `PurityData` is *not wired in* to Theorem A |
+| height-zero points are generic | `Pcf.closure_eq_univ_of_specCodim_eq_zero` | proved — same status, *not wired in* |
+| purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` | proved |
+| Stacks Tag 0BMB | `Pcf.ZariskiNagata` | **assumed**; restated with all five hypotheses but *interderivable* with the old field (`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`), so nothing is reduced |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
 | Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | **assumed** via `standardForm`, which is equivalent to it |

@@ -8,6 +8,8 @@ import Pcf.Restriction
 import Pcf.LocalModel
 import Pcf.Noetherian
 import Pcf.Purity
+import Pcf.NonEtaleLocus
+import Pcf.ZariskiNagata
 import Pcf.Ramification
 import Pcf.Abhyankar
 import Pcf.Geometry
@@ -127,6 +129,27 @@ assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
 #print axioms Pcf.Examples.cofiniteGeometry
 #print axioms Pcf.Examples.resDyn_branch
 #print axioms Pcf.Examples.resDyn_pcf
+
+/-! ## Zariski–Nagata purity
+
+Two fields of `Pcf.PurityData` are discharged for an actual algebra, and the assumed
+local form is restated so that it matches Stacks Tag 0BMB rather than exceeding it.
+Purity itself is still assumed; see `lean/AXIOMS.md`, entry P1. -/
+
+#print axioms Pcf.isClosed_nonEtaleLocus
+#print axioms Pcf.closure_eq_univ_of_specCodim_eq_zero
+#print axioms Pcf.nonEtaleLocus_eq_empty_iff
+#print axioms Pcf.purityDataOfAlgebra
+#print axioms Pcf.purityDataOfEtale
+#print axioms Pcf.codim_eq_one_of_algebra
+#print axioms Pcf.finite_isPrime_subset_nonEtaleLocus
+#print axioms Pcf.ZariskiNagata.etale_of_codim_one_etale
+#print axioms Pcf.PurityData.ofZariskiNagata
+#print axioms Pcf.ZariskiNagata.codim_eq_one
+#print axioms Pcf.PurityData.toZariskiNagata
+#print axioms Pcf.PurityData.ofZariskiNagata_toZariskiNagata
+#print axioms Pcf.localPurity_of_codim_le_one
+#print axioms Pcf.PurityData.ofCodimLeOne
 
 /-! ## Abhyankar's lemma: the standard tamely ramified model
 

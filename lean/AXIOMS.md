@@ -133,10 +133,10 @@ literature rather than derived.
 
 | ID | Lean field | Statement assumed | Source |
 | --- | --- | --- | --- |
-| P1 | `PurityData.localPurity` | **More than Stacks Tag 0BMB.** The field says: if a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there — quantified over *every* such point, with none of 0BMB's hypotheses (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) the dimension equality. Those hold throughout §4's application and are absorbed into the field rather than carried as data, so the field is 0BMB *plus* the standing hypotheses of §4. Separately, substituting "étale at `x'`" for 0BMB's "unramified at `x'`" strengthens the hypothesis and so weakens the implication — that substitution alone is harmless. | Stacks Tag 0BMB plus §4's standing hypotheses |
+| P1 | `PurityData.localPurity` | **More than Stacks Tag 0BMB.** `Pcf.ZariskiNagata` (§B.5) restates the tag with all five hypotheses, but is *interderivable* with this field and so does not reduce it. The field says: if a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there — quantified over *every* such point, with none of 0BMB's hypotheses (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) the dimension equality. Those hold throughout §4's application and are absorbed into the field rather than carried as data, so the field is 0BMB *plus* the standing hypotheses of §4. Separately, substituting "étale at `x'`" for 0BMB's "unramified at `x'`" strengthens the hypothesis and so weakens the implication — that substitution alone is harmless. | Stacks Tag 0BMB plus §4's standing hypotheses |
 | P2 | `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Proposition 4.1(2) itself.** Phrased as: at a prime satisfying (a), (b), (c), each prime above admits a `Pcf.KummerWitness` — a tame Kummer presentation `y ^ e = u`. The phrasing names Abhyankar's lemma as its intended justification but is **logically equivalent to its own conclusion** (`Pcf.nonempty_kummerWitness_iff`) and interderivable with the earlier `UnramifiedWitness` phrasing (`Pcf.kummerWitness_iff_unramifiedWitness`). The `PcfGeometry` form is quantified over every iterate `m`, with the three loci **independent of `m`** — that independence is the crux of Theorem 5.1 and is visible in the type. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
-| P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. | Bookkeeping; true in an irreducible scheme |
-| P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). | §4, and §2's separability hypothesis |
+| P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. **Discharged** for `Pcf.purityDataOfAlgebra` (§B.5); still a field of the abstract structure. | Bookkeeping; true in an irreducible scheme |
+| P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). The **first is discharged** for `Pcf.purityDataOfAlgebra` from `Algebra.isOpen_etaleLocus` (§B.5); the second remains assumed. | §4, and §2's separability hypothesis |
 | P5 | `Prop41Data.singSelf_isClosed`, `singSelf_ne_univ` | `Sing(B)` is a proper closed subset — a variety in characteristic zero is generically regular. | Proposition 4.1(1) |
 | P6 | `Prop41Data.singAmbient_*`, `interOther_*` | The other two loci are proper closed. For `B ∩ Z` this is **proved** by `Pcf.IsPrime.inter_sUnion_ne_self`; for `Sing(Y) ∩ B` it follows from `Pcf.not_subset_of_two_le_codim` given that `Sing(Y)` has codimension ≥ 2 (normality of `Y`). | Proposition 4.1(1) |
 
@@ -257,6 +257,98 @@ prime as data of `Prop41Data` / `PcfGeometry` and having `standardForm` supply a
 non-vacuity witness in `Pcf/Examples/CofiniteWitness.lean` to exhibit genuine ring
 extensions of ramification index `2^m` at every iterate, which it cannot.
 
+## B.5 Zariski–Nagata purity: two fields discharged, and the tag stated faithfully
+
+`lean/Pcf/NonEtaleLocus.lean` and `lean/Pcf/ZariskiNagata.lean` address entries P1, P3 and
+P4. **Purity itself is still assumed** — Mathlib does not have it — but two of the four
+fields of `Pcf.PurityData` become theorems once the abstraction is instantiated at the
+spectrum of an actual algebra, and the assumed field is restated so that it matches Stacks
+Tag 0BMB instead of exceeding it.
+
+### Discharged
+
+| Field | Was | Now | Why |
+| --- | --- | --- | --- |
+| `nonEtale_isClosed` (part of P4) | assumed | **proved** for `Pcf.purityDataOfAlgebra` | `Algebra.isOpen_etaleLocus`: Mathlib proves the étale locus is open, so its complement is closed |
+| `closure_eq_univ_of_codim_eq_zero` (P3) | assumed | **proved** for `Pcf.purityDataOfAlgebra` | over a domain a prime of height zero is `⊥`, and `V(⊥) = Spec S` |
+
+Both are consumed by the manuscript's own deduction:
+`Pcf.PurityData.notMem_nonEtale_of_specializes` uses the first and
+`Pcf.PurityData.one_le_codim` uses the second. So within the purity layer these are real
+discharges, not decoration.
+
+The truncation `Pcf.specCodim p = (p.asIdeal.height).toNat` from `ℕ∞` to `ℕ` is a junk-value
+hazard — a prime of infinite height would read as codimension zero — so
+`Pcf.purityDataOfAlgebra` takes finiteness of heights as an explicit hypothesis rather than
+hiding it behind Noetherianness.
+
+### Not made faithful — a retraction
+
+`Pcf.ZariskiNagata` states Tag 0BMB with all five of its hypotheses present, and
+`Pcf.PurityData.ofZariskiNagata` derives `localPurity` from it plus four standing
+hypotheses. An earlier version of this section claimed that this made P1 match the
+literature instead of exceeding it, and that "the assumption is now exactly the cited
+theorem".
+
+**That is false and is retracted.** The hypothesis fields `normal`, `regularBelow`,
+`quasiFinite` are bare `X → Prop` and `codimTarget` a bare `X → ℕ`, tied to no morphism,
+no local ring and no scheme. `Pcf.PurityData.toZariskiNagata` therefore builds a
+`ZariskiNagata` from *any* `PurityData` by instantiating them at `True`, and
+`Pcf.PurityData.ofZariskiNagata_toZariskiNagata` proves the roundtrip is the identity —
+**definitionally**; the proof is `cases D; rfl`. The two are interderivable, so nothing was
+reduced.
+
+This is the third time in this repository that an interface decorated with content-free
+predicates has been presented as an axiom reduction. The first two were
+`Pcf.UnramifiedWitness` and `Pcf.KummerWitness` (§B.2). The corresponding refutations are
+now all stated as Lean theorems: `Pcf.nonempty_unramifiedWitness_iff`,
+`Pcf.kummerWitness_iff_unramifiedWitness`, and
+`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`.
+
+A related claim is also retracted: the docstring of `ofZariskiNagata` said requiring the
+standing hypotheses at every point was "much less than the previous field, which required
+none of them". By the roundtrip it is *exactly* the previous field. Its `hdim` field
+additionally asks for global equidimensionality, which is **more** than §4 uses.
+
+What the structure is actually worth: a caller holding genuine normality, regularity and
+quasi-finiteness predicates can state the tag with them rather than absorbing them
+silently. That is expressive value, not a theorem.
+
+### A sharper fact, found by the same review
+
+`Pcf.localPurity_of_codim_le_one` proves that the `localPurity` field holds **for free**
+when every point of the non-étale locus has codimension at most one, because `Specializes`
+is reflexive and the field's own hypothesis applied at the point itself closes the goal.
+
+So all of the content of Tag 0BMB, as this development uses it, lies at points of
+codimension at least two — which is exactly where the manuscript applies it
+(`Pcf.PurityData.notMem_nonEtale_of_specializes` assumes `2 ≤ codim η`).
+`Pcf.PurityData.ofCodimLeOne` packages this.
+
+A practical consequence, not yet exploited: a non-degenerate example with `E ≠ ∅` but `E`
+of pure codimension one would need **no purity input at all**. The only obstacle to
+building one is computing a non-étale locus in Mathlib, not purity.
+
+### Not discharged, and not claimed
+
+* **Purity itself** (`ZariskiNagata.purity`, Stacks Tag 0BMB) is a field. Nothing here
+  proves any part of it.
+* **`nonEtale_ne_univ`** — generic étaleness — remains a hypothesis. In the manuscript it
+  is the separability of the function-field extension; it is a real condition on `S`.
+* **Non-vacuity is degenerate.** `Pcf.purityDataOfEtale` inhabits the datum, but only with
+  `E = ∅`, where there are no components of `E` and `Pcf.codim_eq_one_of_algebra` has no
+  instances. No example with `E ≠ ∅` is built, so global purity is not exercised
+  non-trivially on any concrete algebra.
+* **`Pcf.PurityData` is not consumed by Theorem A.** This was already the case and is
+  already recorded in §C: the purity layer is a side branch, and `DivDyn.branch_finite'`
+  is still a field on both routes. Discharging fields *of* `PurityData` therefore improves
+  the purity layer without changing what Theorem A assumes.
+* **The two new files do not talk to each other.** `Pcf/NonEtaleLocus.lean` does not
+  import `Pcf/ZariskiNagata.lean`, and `Pcf.purityDataOfAlgebra` takes the plain
+  `localPurity`-shaped hypothesis, not a `Pcf.ZariskiNagata`. Nothing outside
+  `Pcf/ZariskiNagata.lean` references that structure except the audit. They are two
+  separate pieces of work on the same layer, not a chain.
+
 ## C. What is proved outright (no assumption beyond A and B)
 
 Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
@@ -287,7 +379,11 @@ And, in the geometric layer, all of §4 except P1–P6:
 | Proposition 4.1(1), the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` — *available, not wired in*, and weaker than it looks: `codim` there is an arbitrary `X → ℕ` unconnected to `IsPrime` or to the topology, so it also needs "`B` has codimension 1", which `IsPrime` does not supply. The two notions cannot currently be composed. |
 | Proposition 4.1(2), first paragraph (finiteness) | `Pcf.finite_isPrime_subset` |
 | §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` — *available, not wired in*, and about primes inside the **source's** non-étale locus, not about the image set `DivDyn.branch_finite'` constrains |
-| §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` |
+| §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one`. `Pcf.codim_eq_one_of_algebra` and `Pcf.ZariskiNagata.codim_eq_one` are *restatements* of it at a spectrum and through `ZariskiNagata`; no result combines them |
+| the étale locus is open ⟹ `E` is closed | `Pcf.isClosed_nonEtaleLocus` — **discharges a field** of `PurityData`, which is itself not consumed by Theorem A (§B.5) |
+| height-zero points are generic | `Pcf.closure_eq_univ_of_specCodim_eq_zero` — same status |
+| purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` |
+| the `ZariskiNagata`/`PurityData` roundtrip is the identity | `Pcf.PurityData.ofZariskiNagata_toZariskiNagata` — a **negative** result (§B.5) |
 | §4, the inner maximality step | `Pcf.PurityData.notMem_nonEtale_of_specializes` |
 | Proposition 4.1, Step 3 (as a *map*) | `Pcf.LocalModel.restrictionMap_bijective` |
 | Stacks Tag 0EYF, clauses 1–2 only | `Abhyankar.free`, `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.etale_ramifiedPoly_general` — see §B.4. **Not consumed by any assumption of the development.** |
