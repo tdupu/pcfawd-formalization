@@ -23,29 +23,28 @@ The manuscript's proof runs in four steps. Steps 1 and 2 invoke Zariski–Nagata
 that, étale-locally over a neighbourhood of a good prime, the cover is a disjoint union of
 **standard tame pieces** `𝒪[z]/(z^e − ua)`. Steps 3 and 4 then compute.
 
-Abhyankar's lemma splits into two halves, and this development now treats them
-differently.
+Abhyankar's lemma splits into two halves.
 
 * **The structure theorem** (Stacks Tag 0EYG) — that the cover really is étale-locally a
   union of standard tame pieces — is scheme-theoretic and remains **assumed**, as the
   field `Prop41Data.standardForm`.
-* **The verification** (Stacks Tag 0EYF) — that a standard tame piece is unramified away
-  from the divisor — is **proved**, in `Pcf/Abhyankar.lean`, from Mathlib's theory of
-  standard étale algebras. See `Abhyankar.etale` and `Abhyankar.ramificationIdx_eq_one`.
+* **The verification** (Stacks Tag 0EYF) — clauses 1 and 2 of it, that a standard tame
+  piece is finite free and is étale where the divisor equation is invertible — is
+  **proved**, in `Pcf/Abhyankar.lean`. Clause 3, tameness in codimension one, is not
+  stated anywhere. See that file's header for the clause-by-clause account.
 
-So Proposition 4.1(2) is still conditional, but on a strictly smaller statement than
-before. Earlier versions of this file took the witness interface to be
-`Pcf.UnramifiedWitness`, whose `bijective` field asserts outright that the extension is
-trivial; `Pcf.nonempty_unramifiedWitness_iff` records that this is equivalent to its own
-conclusion, so nothing was derived. The interface is now `Pcf.KummerWitness`, whose fields
-are a degree `e ≥ 1`, the tameness hypothesis that `e` is invertible, and a unit `u` — the
-output of Abhyankar's lemma, not its consequence. The passage to "ramification index `1`"
-is `Pcf.KummerWitness.eq_one`, a theorem.
+**Proposition 4.1(2) is nevertheless still assumed, not derived, and the assumption has
+not shrunk.** `Pcf.kummerWitness_iff_unramifiedWitness` proves that the current interface
+`Pcf.KummerWitness` and the earlier `Pcf.UnramifiedWitness` are interderivable with no
+hypotheses, and `Pcf.nonempty_kummerWitness_iff` proves the current one is inhabited
+exactly when `n = 1`. An earlier version of this header claimed the assumption had been
+weakened to "strictly smaller than before"; **that claim is retracted**, and an adversarial
+review of the development produced the refutation.
 
-`Pcf.nonempty_kummerWitness_iff` records that `KummerWitness n` is still inhabited exactly
-when `n = 1`. That is automatic for any interface sufficient for Proposition 4.1(2) and is
-not the earlier defect; the difference is what an inhabitant must supply, and
-`Pcf.KummerWitness.cubic` — a prime of `ℚ[y]/(y³ − 1)` — is an inhabitant of degree `3`.
+The reason is structural: nothing in `KummerWitness` ties its `Base`, `deg`, `unit` or
+`prime` to the prime whose ramification index is `ram q`, so the Abhyankar theorem proved
+in `Pcf/Abhyankar.lean` is applied to an algebra the supplier of the witness invented. The
+new mathematics in `Pcf/Abhyankar.lean` is real, but it is **not load-bearing here**.
 
 **What is genuinely proved:**
 
@@ -59,9 +58,12 @@ not the earlier defect; the difference is what an inhabitant must supply, and
 | 4.1(1), the `Sing(B)` term | assumed as "proper closed"
   (generic regularity in characteristic zero) |
 | 4.1(2), Steps 1–2 (Tag 0EYG) | **assumed** — `Prop41Data.standardForm` |
-| 4.1(2), the tame model is unramified (Tag 0EYF) | **proved** —
-  `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one` |
-| 4.1(2), Step 4 | proved — `Pcf.KummerWitness.eq_one` |
+| Tag 0EYF clauses 1–2, standalone | **proved** —
+  `Abhyankar.free`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`.
+  *Not consumed load-bearingly by anything below* |
+| Tag 0EYF clause 3 (tameness in codim 1) | not stated |
+| 4.1(2) as a whole | **assumed** — `Prop41Data.standardForm`, equivalent to its own
+  conclusion; see `Pcf.nonempty_kummerWitness_iff` |
 | 4.1(2), Step 3 | proved — `Pcf.LocalModel.restrictionMap_bijective`
   (no longer on the path to 4.1(2), retained as the manuscript's own route) |
 | 4.1(3), the inclusion | proved — `Pcf.Prop41Data.branch_subset_bound` |
@@ -188,9 +190,15 @@ noncomputable def LocalModel.unramifiedWitness {R : Type} [CommRing R] (u : Rˣ)
 
 The witness interface above is the one this development started with, and
 `Pcf.nonempty_unramifiedWitness_iff` records that it is equivalent to its own conclusion.
-What follows replaces it in `Prop41Data` and `PcfGeometry` with an interface whose
-inhabitants are honest tame covers, and whose passage to "ramification index `1`" is a
-theorem rather than a field. -/
+What follows replaces it in `Prop41Data` and `PcfGeometry` with an interface phrased in
+terms of the standard tame model. `Pcf.kummerWitness_iff_unramifiedWitness` proves the two
+are interderivable, so this is a change of *phrasing*: it discharges nothing, and the
+documentation that once said otherwise is corrected.
+
+`Pcf.UnramifiedWitness` and `Pcf.LocalModel.unramifiedWitness` are retained below, but
+they are **no longer consumed by any field**. They record the manuscript's own Step 3/4
+route (the restriction to the divisor is an isomorphism) and are kept for that reason, not
+because anything depends on them. -/
 
 /-- A **Kummer witness** for a natural number `n`: the standard tamely ramified local
 model that Abhyankar's lemma (Stacks Tag 0EYG) produces at a codimension-one point,
@@ -222,7 +230,14 @@ structure KummerWitness (n : ℕ) where
   /-- The prime of the cover under consideration. -/
   prime : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit deg))
   [isPrime : prime.IsPrime]
-  /-- `n` is its ramification index (Definition 2.2). -/
+  /-- `n` is Mathlib's `Ideal.ramificationIdx` for this prime over this base.
+
+  **Not** identified with Definition 2.2 of `latex/pcf.tex`. Mathlib's index is a
+  `Module.length`; Definition 2.2's is the exponent in `𝔪R = 𝔮₁^{e₁}···𝔮ₙ^{eₙ}` for the
+  DVR of the *divisor prime*, and for the *restriction* `g = f|_A` rather than the cover.
+  Two mismatches follow and neither is formalized: `Base` has the divisor equation
+  inverted, so `𝔪` is not one of its ideals; and this is the cover's index, not the
+  restriction's. See `AXIOMS.md` §E. -/
   ram_eq : n = prime.ramificationIdx Base
 
 attribute [instance] KummerWitness.commBase KummerWitness.isPrime
@@ -266,24 +281,53 @@ noncomputable def KummerWitness.ofTame {R : Type} [CommRing R] [Nontrivial R] (u
 noncomputable def KummerWitness.cubic : KummerWitness 1 :=
   KummerWitness.ofTame (R := ℚ) (e := 3) 1 (by norm_num) (by norm_num)
 
+/-- **The interface costs a proof of `n = 1` and nothing else.**
+
+Given `n = 1`, a witness is obtained by transporting a fixed closed constant. So supplying
+a `KummerWitness` is supplying its own numerical conclusion. -/
+noncomputable def KummerWitness.ofEqOne {n : ℕ} (h : n = 1) : KummerWitness n :=
+  cast (congrArg KummerWitness h).symm KummerWitness.cubic
+
+/-- **`KummerWitness` and `UnramifiedWitness` are interderivable, uniformly in `n`, with
+no hypotheses and no geometry.**
+
+This is the central negative result about the interface, and it is stated in Lean so that
+no reader of the census or of the manuscript can miss it. An adversarial review of the
+development produced it.
+
+It means the replacement of `UnramifiedWitness` by `KummerWitness` **discharged nothing**.
+The assumption was *restated*, not weakened. An earlier version of this file, of
+`AXIOMS.md`, of `README.md` and of `latex/pcf.tex` said otherwise; all are corrected. -/
+theorem kummerWitness_iff_unramifiedWitness (n : ℕ) :
+    Nonempty (KummerWitness n) ↔ Nonempty (UnramifiedWitness n) :=
+  ⟨fun ⟨w⟩ => ⟨cast (congrArg UnramifiedWitness w.eq_one).symm UnramifiedWitness.trivial⟩,
+   fun ⟨w⟩ => ⟨KummerWitness.ofEqOne w.eq_one⟩⟩
+
 /-- **Honesty check, the analogue of `Pcf.nonempty_unramifiedWitness_iff`.**
 
-`KummerWitness n` is inhabited exactly when `n = 1`. This is automatic for *any* interface
-sufficient for Proposition 4.1(2), and is not by itself the defect that
-`Pcf.nonempty_unramifiedWitness_iff` records. The question is what an inhabitant must
-supply.
+`KummerWitness n` is inhabited exactly when `n = 1`, so `standardForm` is logically
+equivalent to its own conclusion and **Proposition 4.1(2) is assumed, not derived**.
 
-* `UnramifiedWitness` requires `Function.Bijective (algebraMap Base Ext)`: the extension
-  is asserted to be trivial, which is the conclusion restated, and `ℤ → ℤ` is an
-  inhabitant.
-* `KummerWitness` requires a tame Kummer presentation — a degree, its invertibility, and
-  a unit. `Pcf.KummerWitness.cubic` is an inhabitant of degree `3`. That `n = 1` follows
-  is `Abhyankar.ramificationIdx_eq_one`, proved from the étale-ness of the Kummer algebra.
+An earlier version of this docstring argued that such an equivalence is unavoidable for
+any interface sufficient for Proposition 4.1(2), and therefore not a defect. **That
+argument is wrong** and is retracted. A sufficient hypothesis need only *imply* its
+conclusion; equivalence is not forced. This interface is equivalent to its conclusion for
+a specific, identifiable reason: `Base`, `deg`, `unit` and `prime` are chosen freely by
+whoever supplies the witness, and no field ties them to the prime whose index is `ram q`.
+So `Abhyankar.ramificationIdx_eq_one` is applied to an algebra the supplier invented, not
+to the cover under discussion, and no content crosses.
 
-**What remains assumed is Stacks Tag 0EYG**: that the cover is étale-locally in this
-standard form. What is no longer assumed is that the standard form is unramified. -/
+A genuinely weaker interface is describable: fix the local extension at `q` as data of the
+ambient structure, and have this field supply an `AlgEquiv` from *that* extension onto a
+Kummer algebra. Then `Algebra.Etale.of_equiv` would transport real content. That is what
+"Tag 0EYF moved out of the assumption" would have to mean, and it is **not** what is built
+here.
+
+`Pcf.KummerWitness.cubic` is of degree `3`, but that is a free choice: degree-1 witnesses
+exist too, and in them the Kummer algebra is the base ring itself. The degree proves
+nothing about the interface. -/
 theorem nonempty_kummerWitness_iff (n : ℕ) : Nonempty (KummerWitness n) ↔ n = 1 :=
-  ⟨fun ⟨w⟩ => w.eq_one, fun h => h ▸ ⟨KummerWitness.cubic⟩⟩
+  ⟨fun ⟨w⟩ => w.eq_one, fun h => ⟨KummerWitness.ofEqOne h⟩⟩
 
 /-! ### Proposition 4.1 -/
 
@@ -325,9 +369,10 @@ structure Prop41Data (B : Type*) [TopologicalSpace B] where
   4.1(2), each prime of `A` above it admits a **Kummer witness**: étale-locally the cover
   is the standard tamely ramified model `y ^ e = u` of Stacks Tag 0EYF.
 
-  That this standard model is unramified is *proved* (`Pcf.KummerWitness.eq_one`); what
-  this field assumes is that the cover is étale-locally of that shape, which is Stacks
-  Tag 0EYG. -/
+  **This field is Proposition 4.1(2) itself.** By `Pcf.nonempty_kummerWitness_iff` it is
+  equivalent to its own conclusion, and by `Pcf.kummerWitness_iff_unramifiedWitness` it is
+  interderivable with the earlier `Pcf.UnramifiedWitness` phrasing. It names its intended
+  justification; it does not reduce to it. -/
   standardForm : ∀ (P : Set B), IsPrime P → ¬ P ⊆ singAmbient → ¬ P ⊆ singSelf →
     ¬ P ⊆ interOther → ∀ q : over P, KummerWitness (ram q)
 
@@ -464,7 +509,7 @@ iterate.
 
 `standardForm` is Proposition 4.1(2) applied to every iterate, stated in a form that names
 its intended justification (purity plus Abhyankar plus étale-local descent). By
-`Pcf.nonempty_unramifiedWitness_iff` it is **logically equivalent to its own conclusion**,
+`Pcf.nonempty_kummerWitness_iff` it is **logically equivalent to its own conclusion**,
 so it is an assumption, not a reduction.
 
 Note also that `amb` and `res` are `Pcf.DivDyn`s, and `DivDyn` itself carries
@@ -537,7 +582,7 @@ theorem meets_finite [NoetherianSpace B] (E : PX) (hE : E ≠ G.fixedPrime) :
 
 Previously this was a hypothesis of `Pcf.PcfSetup`. Here it is obtained from
 `standardForm` — but `standardForm` is equivalent to it
-(`Pcf.nonempty_unramifiedWitness_iff`), so this is a change of packaging rather than a
+(`Pcf.nonempty_kummerWitness_iff`), so this is a change of packaging rather than a
 derivation. The value of the packaging is that it names purity and Abhyankar as the
 intended justification at the point of use. -/
 theorem key [NoetherianSpace B] (m : ℕ) (Q : {s : Set B // IsPrime s}) (hsing : Q ∉ G.sing)

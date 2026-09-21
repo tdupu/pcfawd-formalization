@@ -148,6 +148,13 @@ These are the newly discharged half of Stacks Tag 0EYF. The structure theorem
 #print axioms Pcf.KummerWitness.ofTame
 #print axioms Pcf.KummerWitness.cubic
 #print axioms Pcf.nonempty_kummerWitness_iff
+#print axioms Pcf.kummerWitness_iff_unramifiedWitness
+#print axioms Pcf.KummerWitness.ofEqOne
+#print axioms Abhyankar.free
+#print axioms Abhyankar.finrank
+#print axioms Abhyankar.etale_ramifiedPoly_general
+#print axioms Abhyankar.not_etale_wild
+#print axioms Abhyankar.not_etale_of_not_isUnit
 
 /-! ## §7: Example 7.4, the wild counterexample -/
 
