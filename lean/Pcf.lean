@@ -10,6 +10,7 @@ import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Wiring
 import Pcf.AllTheWayDown
+import Pcf.SpectrumDynamics
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp

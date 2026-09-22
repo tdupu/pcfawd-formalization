@@ -7,6 +7,7 @@ import Pcf.Purity
 import Mathlib.RingTheory.Etale.Locus
 import Mathlib.RingTheory.Ideal.Height
 import Mathlib.RingTheory.Spectrum.Prime.Noetherian
+import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # The non-étale locus of an actual algebra, and two fields of `PurityData` discharged
@@ -66,6 +67,38 @@ The manuscript says `E` is closed "because the étale locus is open". Mathlib pr
 theorem isClosed_nonEtaleLocus [Algebra.FinitePresentation R S] :
     IsClosed (nonEtaleLocus R S) :=
   Algebra.isOpen_etaleLocus.isClosed_compl
+
+/-! ### Ramified points are non-étale
+
+Definition 2.3 of `latex/pcf.tex` says the branch divisor is where the cover ramifies, and
+§4 uses that a ramified point is a non-étale point. In the abstract layer that implication
+is a *hypothesis* (`hbranch` in `Pcf.divDynOfGeometry`, `ramified_subset_nonEtale` in
+`Pcf/Wiring.lean`). Over an honest algebra it is a **theorem**, because Mathlib's
+`Ideal.ramificationIdx_eq_one` derives index `1` from unramifiedness and étale implies
+unramified. -/
+
+/-- **Ramified implies non-étale.** A prime of `Spec S` whose ramification index over `R`
+exceeds `1` lies in the non-étale locus.
+
+This is the content of the `hbranch` hypothesis, proved rather than assumed. -/
+theorem mem_nonEtaleLocus_of_one_lt_ramificationIdx [Algebra.EssFiniteType R S]
+    (q : PrimeSpectrum S) (h : 1 < Ideal.ramificationIdx q.asIdeal R) :
+    q ∈ nonEtaleLocus R S := by
+  have := q.isPrime
+  intro hq
+  have hetale : Algebra.IsEtaleAt R q.asIdeal := hq
+  have : Algebra.IsUnramifiedAt R q.asIdeal := inferInstance
+  have h1 := Ideal.ramificationIdx_eq_one q.asIdeal R
+  omega
+
+/-- The converse: an étale point is unramified in the sense of `Ideal.ramificationIdx`. -/
+theorem ramificationIdx_eq_one_of_notMem_nonEtaleLocus [Algebra.EssFiniteType R S]
+    (q : PrimeSpectrum S) (h : q ∉ nonEtaleLocus R S) :
+    Ideal.ramificationIdx q.asIdeal R = 1 := by
+  have := q.isPrime
+  have hetale : Algebra.IsEtaleAt R q.asIdeal := not_not.mp h
+  have : Algebra.IsUnramifiedAt R q.asIdeal := inferInstance
+  exact Ideal.ramificationIdx_eq_one q.asIdeal R
 
 /-! ### Codimension -/
 

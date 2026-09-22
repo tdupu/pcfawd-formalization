@@ -92,6 +92,7 @@ lean/
 │   ├── Purity.lean        ← §4: Zariski–Nagata purity, local form ⟹ global form
 │   ├── NonEtaleLocus.lean ← purity on Spec S; two PurityData fields discharged
 │   ├── Wiring.lean        ← purity ⟹ branch_finite' for the restricted system
+│   ├── SpectrumDynamics.lean ← branch_finite' fully discharged on Spec S
 │   ├── ZariskiNagata.lean ← Tag 0BMB restated (interderivable — discharges nothing)
 │   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
 │   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
@@ -142,6 +143,8 @@ orbit characterization of PCF.
 | height-zero points are generic | `Pcf.closure_eq_univ_of_specCodim_eq_zero` | proved — same status, *not wired in* |
 | purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` | proved |
 | finiteness of `Branch(g)` for the restriction | `Pcf.resDivDynOfPurity` | **proved** from purity — `DivDyn.branch_finite'` is no longer a field on this route. Still a field for the *ambient* system, and on the plain `PcfGeometry`/`PcfSetup` routes |
+| Definition 2.3, ramified ⟹ non-étale | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` | **proved** from Mathlib's `Ideal.ramificationIdx_eq_one`; previously assumed on every route |
+| `branch_finite'` over `Spec S` | `Pcf.divDynOfSpectrum` | **fully discharged** — costs only lying over and generic étaleness, with *no* purity input (AXIOMS.md §B.7) |
 | Stacks Tag 0BMB | `Pcf.ZariskiNagata` | **assumed**; restated with all five hypotheses but *interderivable* with the old field (`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`), so nothing is reduced |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
 | Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |

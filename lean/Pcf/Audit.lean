@@ -15,6 +15,7 @@ import Pcf.Abhyankar
 import Pcf.Geometry
 import Pcf.Wiring
 import Pcf.AllTheWayDown
+import Pcf.SpectrumDynamics
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
@@ -143,6 +144,20 @@ abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 #print axioms Pcf.Examples.cofiniteGeometry
 #print axioms Pcf.Examples.resDyn_branch
 #print axioms Pcf.Examples.resDyn_pcf
+
+/-! ## `branch_finite'` fully discharged on `Spec S`
+
+`Pcf.divDynOfSpectrum` builds a `Pcf.DivDyn` assuming only lying over and generic
+étaleness: `ram`, `ram_pos` and the ramified-implies-non-étale compatibility are all
+theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input — is needed. -/
+
+#print axioms Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx
+#print axioms Pcf.ramificationIdx_eq_one_of_notMem_nonEtaleLocus
+#print axioms Pcf.specRam
+#print axioms Pcf.specRam_pos
+#print axioms Pcf.subset_nonEtaleLocus_of_one_lt_specRam
+#print axioms Pcf.finite_ramified
+#print axioms Pcf.divDynOfSpectrum
 
 /-! ## The purity layer wired into Theorem A
 

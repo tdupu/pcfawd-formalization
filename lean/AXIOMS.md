@@ -121,7 +121,7 @@ The table below describes what the *structures* demand.
 | ID | Lean field | Statement assumed | Now proved elsewhere? |
 | --- | --- | --- | --- |
 | B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | No — assumed on both routes. |
-| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **Partly — see §B.6.** On the new `Pcf.PcfGeometry.ofPurityData` route it is **discharged for the restricted system** from a `Pcf.PurityData`. It remains a field of the *ambient* `amb : DivDyn PX`, which lives on a bare type with no topology, and remains a field on the plain `Pcf.PcfGeometry` and `Pcf.PcfSetup` routes, which still take `res` as a ready-made `DivDyn`. |
+| B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **Discharged on `Spec S` — see §B.7**, where it costs only lying over and generic étaleness, with no purity input. Partly discharged in the abstract layer — see §B.6. On the new `Pcf.PcfGeometry.ofPurityData` route it is **discharged for the restricted system** from a `Pcf.PurityData`. It remains a field of the *ambient* `amb : DivDyn PX`, which lives on a bare type with no topology, and remains a field on the plain `Pcf.PcfGeometry` and `Pcf.PcfSetup` routes, which still take `res` as a ready-made `DivDyn`. |
 | B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.sing_finite`, from properness plus Noetherianness. |
 | B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.meets_finite`, from properness plus Noetherianness. |
 | B5 | `PcfSetup.key` | **Proposition 4.1(2)**, applied to every iterate. | **No — restated, not discharged.** `Pcf.PcfGeometry.key` follows from `standardForm` (P2), which is logically equivalent to it (`Pcf.nonempty_kummerWitness_iff`). The Tag 0EYF material of §B.4 does not reach this row; see the retraction in §B.2. |
@@ -415,6 +415,59 @@ the wiring. The Mathlib half is exercised by `Pcf.resDivDynOfAlgebra`, whose onl
 available instances have an unramified restricted system, because the sole inhabitant of
 the spectrum route so far is `Pcf.purityDataOfEtale` with `E = ∅`.
 
+## B.7 `branch_finite'` fully discharged on `Spec S`
+
+§B.6 derived `DivDyn.branch_finite'` for a restricted system from a `Pcf.PurityData`, but
+still assumed `ramified_subset_nonEtale`. `lean/Pcf/SpectrumDynamics.lean` removes that
+too, and more besides. The comparison is the clearest way to state it:
+
+| Input | `Pcf.resDivDynOfPurity` (§B.6) | `Pcf.divDynOfSpectrum` |
+| --- | --- | --- |
+| `step`, `step_surjective` (lying over, B1) | supplied | supplied |
+| `ram` | **supplied by the caller** | canonical — `Ideal.ramificationIdx` at the generic point |
+| `ram_pos` | **supplied** | **proved** (`Ideal.ramificationIdx_pos`) |
+| ramified ⟹ non-étale | **supplied** (`hbranch`) | **proved** |
+| a `Pcf.PurityData`, including `localPurity` = Tag 0BMB | **required** | **not required at all** |
+| generic étaleness | a field of the datum | the one remaining hypothesis |
+| `branch_finite'` (B2) | derived | derived |
+
+So on this route a `Pcf.DivDyn` over `Spec S` costs exactly two assumptions: **lying over**
+and **`nonEtaleLocus R S ≠ univ`** (the separability hypothesis of §2). Zariski–Nagata is
+not among them — `branch_finite'` never needed purity, only closedness of the locus,
+properness, and Noetherianness.
+
+### The two new theorems
+
+* `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` — **ramified implies non-étale.** From
+  `Ideal.ramificationIdx_eq_one`, which derives index `1` from unramifiedness, together
+  with "étale implies unramified". This is Definition 2.3 in the direction §4 uses it, and
+  it was previously a hypothesis on every route.
+* `Pcf.subset_nonEtaleLocus_of_one_lt_specRam` — the same statement for a whole prime
+  rather than a point. `PrimeSpectrum` is sober, so a prime is the closure of its generic
+  point, and the locus is closed.
+
+### Is this another restatement? No, and here is the check
+
+The three earlier failures (§B.2, §B.5) were interfaces logically equivalent to their own
+conclusions. This one is not, and the reason is structural: the surviving hypothesis
+`nonEtaleLocus R S ≠ univ` mentions only `R` and `S`. It refers to no `step`, no `ram` and
+no branch set, so no field of `Pcf.DivDyn` can imply it and the derivation cannot be
+circular. The content that replaced `hbranch` is a Mathlib theorem, not a new field.
+
+### What it does not do
+
+* **It does not prove purity**, and does not reduce P1. No `PurityData` is involved.
+* **It does not touch Proposition 4.1(2)**, `standardForm` or `PcfSetup.key`.
+* **A1 stands.** `step` is an arbitrary self-map of the primes of `Spec S`, connected to no
+  morphism of schemes. Lying over is still assumed rather than derived from one.
+* **A2 improves but §E still stands.** `ram` is now *definitionally* Mathlib's
+  `Ideal.ramificationIdx` rather than an abstract `ℕ`-valued function, which is a real gain
+  in concreteness — but the identification of that index with Definition 2.2's
+  `e(𝔮/𝔪)` is still not formalized, exactly as §E records.
+* **Non-vacuity is weak.** `Pcf.divDynOfSpectrum` is inhabited (checked, with `R = S = ℚ`),
+  but no instance with a genuinely ramified prime is exhibited; that needs a concrete
+  ramification-index computation which Mathlib does not make easy.
+
 ## C. What is proved outright (no assumption beyond A and B)
 
 The conjecture the project is named after — Conjecture 2.6 of `latex/pcf.tex`, due to the
@@ -454,7 +507,8 @@ And, in the geometric layer, all of §4 except P1–P6:
 | Proposition 4.1(1), the `Z` term | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.IsPrime.inter_sUnion_ne_self` — *available, not wired in*: `Prop41Data` still takes `interOther_ne_univ` as a field |
 | Proposition 4.1(1), the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` — *available, not wired in*, and weaker than it looks: `codim` there is an arbitrary `X → ℕ` unconnected to `IsPrime` or to the topology, so it also needs "`B` has codimension 1", which `IsPrime` does not supply. The two notions cannot currently be composed. |
 | Proposition 4.1(2), first paragraph (finiteness) | `Pcf.finite_isPrime_subset` |
-| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale`; **now wired in** through `Pcf.resDivDynOfPurity`, which discharges `branch_finite'` for the restricted system by taking the image of that finite set (§B.6) |
+| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale`; wired in through `Pcf.resDivDynOfPurity` (§B.6), and **fully discharged** over `Spec S` by `Pcf.divDynOfSpectrum` (§B.7) |
+| Definition 2.3, ramified ⟹ non-étale | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` — **proved** from `Ideal.ramificationIdx_eq_one`; previously a hypothesis (§B.7) |
 | the converse trade | `Pcf.exists_nonEtale_of_branch_finite` — a **negative** result (§B.6) |
 | §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one`. `Pcf.codim_eq_one_of_algebra` and `Pcf.ZariskiNagata.codim_eq_one` are *restatements* of it at a spectrum and through `ZariskiNagata`; no result combines them |
 | the étale locus is open ⟹ `E` is closed | `Pcf.isClosed_nonEtaleLocus` — **discharges a field** of `PurityData`, which is itself not consumed by Theorem A (§B.5) |
