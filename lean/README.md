@@ -144,6 +144,7 @@ orbit characterization of PCF.
 | purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` | proved |
 | finiteness of `Branch(g)` for the restriction | `Pcf.resDivDynOfPurity` | **proved** from purity — `DivDyn.branch_finite'` is no longer a field on this route. Still a field for the *ambient* system, and on the plain `PcfGeometry`/`PcfSetup` routes |
 | Definition 2.3, ramified ⟹ non-étale | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` | **proved** from Mathlib's `Ideal.ramificationIdx_eq_one`; previously assumed on every route |
+| lying over (Stacks 00HS) | `Pcf.comap_surjective_of_isIntegral_of_injective` | **proved** on points; does *not* discharge `step_surjective`, which is about divisors (AXIOMS.md §B.7) |
 | `branch_finite'` over `Spec S` | `Pcf.divDynOfSpectrum` | **fully discharged** — costs only lying over and generic étaleness, with *no* purity input (AXIOMS.md §B.7) |
 | Stacks Tag 0BMB | `Pcf.ZariskiNagata` | **assumed**; restated with all five hypotheses but *interderivable* with the old field (`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`), so nothing is reduced |
 | Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |

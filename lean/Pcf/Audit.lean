@@ -157,6 +157,8 @@ theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input — is nee
 #print axioms Pcf.specRam_pos
 #print axioms Pcf.subset_nonEtaleLocus_of_one_lt_specRam
 #print axioms Pcf.finite_ramified
+#print axioms Pcf.comap_surjective_of_isIntegral_of_injective
+#print axioms Pcf.specStep_surjective
 #print axioms Pcf.divDynOfSpectrum
 
 /-! ## The purity layer wired into Theorem A

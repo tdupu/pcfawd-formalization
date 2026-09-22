@@ -79,6 +79,49 @@ theorem subset_nonEtaleLocus_of_one_lt_specRam [Algebra.EssFiniteType R S]
   refine (isClosed_nonEtaleLocus R S).closure_subset_iff.mpr ?_
   exact singleton_subset_iff.mpr (mem_nonEtaleLocus_of_one_lt_ramificationIdx R S _ h)
 
+/-! ### Lying over
+
+`Pcf.DivDyn.step_surjective` is census entry **B1** — "every prime is the image of a
+prime", the lying-over/going-down step isolated inside the proof of Lemma 3.2, and cited to
+Stacks Tags 00HS / 00H8. Mathlib proves it, for an injective integral ring map. -/
+
+omit [Algebra R S] in
+/-- **Lying over** (Stacks Tag 00HS). For an injective integral ring map, the induced map
+on prime spectra is surjective.
+
+This is the mathematical content of `Pcf.DivDyn.step_surjective`, which is assumed on every
+route in this development. See the caveat on `Pcf.specStep_surjective` for why proving it
+here does not yet remove the field. -/
+theorem comap_surjective_of_isIntegral_of_injective {φ : R →+* S}
+    (hint : φ.IsIntegral) (hinj : Function.Injective φ) :
+    Function.Surjective (PrimeSpectrum.comap φ) := by
+  let := φ.toAlgebra
+  have : Algebra.IsIntegral R S := ⟨fun x => hint x⟩
+  have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective R S).mpr hinj
+  intro p
+  have := p.isPrime
+  obtain ⟨⟨Q, hQp, hQl⟩⟩ := (inferInstance : Nonempty (Ideal.primesOver p.asIdeal S))
+  exact ⟨⟨Q, hQp⟩, PrimeSpectrum.ext hQl.over.symm⟩
+
+/-- The pushforward of points of `Spec S` along a ring endomorphism — the manuscript's
+`P' ↦ g(P')` on points. -/
+noncomputable def specStep (φ : S →+* S) : PrimeSpectrum S → PrimeSpectrum S :=
+  PrimeSpectrum.comap φ
+
+/-- **`step_surjective` on points, proved.** A finite injective self-map of `Spec S` is
+surjective on points.
+
+**This does not yet discharge the field `Pcf.DivDyn.step_surjective`.** That field is about
+a self-map of *divisors* — elements of `{s : Set (PrimeSpectrum S) // Pcf.IsPrime s}` —
+and transporting this statement there needs two things this development does not have:
+that the image of a closed set under a finite morphism is closed, and that such a morphism
+preserves codimension. The second is dimension theory that Mathlib's Krull-dimension API
+does not currently reach. So B1 stands as an assumption, with its content now identified
+and proved at the level where Mathlib can express it. -/
+theorem specStep_surjective (φ : S →+* S) (hint : φ.IsIntegral) (hinj : Function.Injective φ) :
+    Function.Surjective (specStep φ) :=
+  comap_surjective_of_isIntegral_of_injective hint hinj
+
 /-! ### The system -/
 
 /-- The ramified primes are finitely many: they lie in the non-étale locus, a proper closed

@@ -120,7 +120,7 @@ The table below describes what the *structures* demand.
 
 | ID | Lean field | Statement assumed | Now proved elsewhere? |
 | --- | --- | --- | --- |
-| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | No — assumed on both routes. |
+| B1 | `DivDyn.step_surjective` | Lying over: every prime is the image of a prime (proof of Lemma 3.2; Stacks 00HS / 00H8). | **No — still assumed**, but its mathematical content is now proved at the level Mathlib can express it: `Pcf.comap_surjective_of_isIntegral_of_injective` (§B.7). Transporting that to the *divisor* subtype needs image-of-closed-is-closed and codimension preservation, neither of which this development has. |
 | B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§2, after Definition 2.3). | **Discharged on `Spec S` — see §B.7**, where it costs only lying over and generic étaleness, with no purity input. Partly discharged in the abstract layer — see §B.6. On the new `Pcf.PcfGeometry.ofPurityData` route it is **discharged for the restricted system** from a `Pcf.PurityData`. It remains a field of the *ambient* `amb : DivDyn PX`, which lives on a bare type with no topology, and remains a field on the plain `Pcf.PcfGeometry` and `Pcf.PcfSetup` routes, which still take `res` as a ready-made `DivDyn`. |
 | B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.sing_finite`, from properness plus Noetherianness. |
 | B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Proposition 4.1(1)). | **Genuinely discharged** by `Pcf.PcfGeometry.meets_finite`, from properness plus Noetherianness. |
@@ -454,9 +454,27 @@ conclusions. This one is not, and the reason is structural: the surviving hypoth
 no branch set, so no field of `Pcf.DivDyn` can imply it and the derivation cannot be
 circular. The content that replaced `hbranch` is a Mathlib theorem, not a new field.
 
+### Lying over, proved at the point level
+
+`Pcf.comap_surjective_of_isIntegral_of_injective` proves Stacks Tag 00HS: for an injective
+integral ring map the induced map on prime spectra is surjective. That is the content of
+B1, from `Ideal.nonempty_primesOver`.
+
+**It does not discharge the field.** `DivDyn.step_surjective` is about a self-map of
+*divisors*, elements of `{s : Set (PrimeSpectrum S) // IsPrime s}`. Transporting the point
+statement there needs (i) the image of a closed set under a finite morphism is closed and
+(ii) that such a morphism preserves codimension. (ii) is dimension theory Mathlib's Krull
+API does not currently reach. So B1 stands, with its content identified and proved where it
+can be.
+
+This is exactly the same shape as the `hbranch` discharge above, which *did* go through —
+the difference is that there the transport was by generic points into a *closed* set, which
+costs nothing, whereas here it needs a dimension statement.
+
 ### What it does not do
 
 * **It does not prove purity**, and does not reduce P1. No `PurityData` is involved.
+* **It does not discharge B1**, only identifies and proves its content on points.
 * **It does not touch Proposition 4.1(2)**, `standardForm` or `PcfSetup.key`.
 * **A1 stands.** `step` is an arbitrary self-map of the primes of `Spec S`, connected to no
   morphism of schemes. Lying over is still assumed rather than derived from one.
