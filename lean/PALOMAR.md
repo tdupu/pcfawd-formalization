@@ -20,7 +20,7 @@ registered here as entries 9–11.
 | --- | --- |
 | Repository | `github.com/tdupu/pcf` |
 | Commit | *the commit introducing this file* — supply at submission time |
-| `lean/` subtree | `f7bf72d05a6839ba1290ec08561736d603512fe1` (stable across manuscript-only commits) |
+| `lean/` subtree | `f7bf72d05a6839ba1290ec08561736d603512fe1` at the time of writing; recompute with `git rev-parse HEAD:lean` (stable across manuscript-only commits, but this file now lives inside `lean/`, so it moves when this file changes) |
 | Toolchain | `leanprover/lean4:v4.34.0` |
 | Mathlib | `leanprover-community/mathlib4`, rev `5ed2965256430c3649e86755f9576b54eca72435` (`inputRev` `v4.34.0`) |
 | Build | `lake build` — 2584 jobs, 0 errors, 0 warnings |
@@ -32,7 +32,12 @@ and `git rev-parse HEAD` in `.lake/packages/mathlib` — because a first attempt
 it by `grep` returned the repository's own HEAD instead, which would have frozen a
 wrong pin into a permanent record.
 
-Accompanying manuscript: `latex/pcf.tex`. Assumption census: `lean/AXIOMS.md`.
+Accompanying manuscript: `latex/pcf.tex`. Assumption census: `AXIOMS.md`, beside this
+file. Statement-to-declaration map: `README.md`, likewise.
+
+**Status: prepared, not submitted.** No submission to the Palomar registry has been
+made. This file is the manifest of what a submission would assert; submitting is a
+separate, explicitly authorized act.
 
 ---
 
@@ -295,7 +300,8 @@ more faithful.
   `ai/2026-09-21-abhyankar-formalization/adversarial-review.md` and
   `ai/2026-09-21-zariski-nagata/adversarial-review.md`.
 * **Correction to this file's introducing commit.** The commit message of `facc8e2`
-  states "Mathlib is for human-only formalizations". That is **false as stated**, and
+  states "Mathlib is for human-only formalizations" (that commit created this file at
+  `palomar/registry-entries.md`, before it was moved here). That is **false as stated**, and
   is corrected here because a commit message cannot be amended after pushing.
   `leanprover-community.github.io/contribute/` does **not** categorically exclude
   AI-authored contributions: it permits them subject to disclosure of which tools were
