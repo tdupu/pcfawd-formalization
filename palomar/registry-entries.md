@@ -294,6 +294,25 @@ more faithful.
 * Two adversarial reviews are retained at
   `ai/2026-09-21-abhyankar-formalization/adversarial-review.md` and
   `ai/2026-09-21-zariski-nagata/adversarial-review.md`.
+* **Correction to this file's introducing commit.** The commit message of `facc8e2`
+  states "Mathlib is for human-only formalizations". That is **false as stated**, and
+  is corrected here because a commit message cannot be amended after pushing.
+  `leanprover-community.github.io/contribute/` does **not** categorically exclude
+  AI-authored contributions: it permits them subject to disclosure of which tools were
+  used and how, an `LLM-generated` label for substantial LLM-written code, the
+  requirement that a human understand all AI-written content and be able to justify
+  each decision to reviewers *without* AI assistance, a prohibition on LLM-written
+  GitHub and Zulip comments, and a quality bar the page states that unsupervised
+  AI-written code currently fails "by a large margin". The binding constraint is a
+  human who has done the understanding and will stand behind it publicly — not machine
+  authorship.
+
+  The routing conclusion is unaffected: this work goes to Palomar for provenance and
+  then to Tau Ceti, and no agent-authored Mathlib pull request is contemplated. But the
+  reason is that an autonomous pipeline cannot meet Mathlib's human-understanding
+  requirement, not that AI authorship is banned. Do not cite this repository for
+  "Mathlib bans AI".
+
 * No author has reviewed the formalization. Compilation certifies the formal
   statements; it does not certify that they render the statements of `latex/pcf.tex`,
   and that comparison has not been completed.
