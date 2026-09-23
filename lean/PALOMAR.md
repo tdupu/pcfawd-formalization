@@ -39,6 +39,32 @@ file. Statement-to-declaration map: `README.md`, likewise.
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act.
 
+> **Correction (2026-09-23).** An earlier version of this file, and of the commit
+> message introducing it, said there is "no submission tooling in this environment" and
+> that Palomar is "wired in only as a search channel". **That is false.** Palomar
+> publishes an agent-facing submission protocol at
+> `https://submit.palomar-registry.org/llms.txt`: `POST /api/submit`, a verification
+> tag and secret gist, `POST /api/verify`, `GET /api/review`, `POST /register`, and
+> `POST /withdraw`. The step is reachable. What prevents submission is the instruction
+> not to make one — not the absence of a path — and that distinction matters, because
+> the first is a decision and the second would have been a safeguard.
+>
+> The protocol's own gates are stricter than anything this file previously stated, and
+> they govern: **do not drive the browser sign-in** in any form; before verifying,
+> confirm with the user the repository, the commit, the Comparator configuration path,
+> and the answer to be given for their relationship to the formalization, since that is
+> a permanently recorded claim *about them*; treat the access token as a credential; and
+> **register only after showing the user the private review and being told to**.
+>
+> This file is also **not yet a submission package**. A registered record requires a
+> challenge/solution split, a Comparator configuration, a `formalization.yaml`, and the
+> `schema-v3.json` fields — `title`, `abstract`, `authors`, `classification`, `source`
+> with a `license`, `provenance`, `theorem_names`, `permitted_axioms` — none of which
+> appear below. `permitted_axioms` is a closed set of exactly `propext`, `Quot.sound`
+> and `Classical.choice`, which the entries here do satisfy. What follows is a claim
+> manifest, useful as the informal-vs-formal half of a submission and not a substitute
+> for it.
+
 ---
 
 # Entry 1 — the descent (CONDITIONAL)
