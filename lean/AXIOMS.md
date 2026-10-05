@@ -5,7 +5,7 @@
 | Repo | `pcf` |
 | Scope | `lean/` |
 | Status | Draft |
-| Date | `2026-09-21`; §B.8 and the `paper.tex` relabelling added `2026-10-04` |
+| Date | `2026-09-21`; §B.8 and the `paper.tex` relabelling added `2026-10-04`; §G (Theorem `thm:bounding` derived) added `2026-10-04` |
 | Manuscript | `latex/paper.tex`, cited by `\label` (the file was `pcf.tex` with different numbering when this census was first written; see `HANDOFF.md` §1) |
 | Toolchain | Lean `4.34.0`, Mathlib `v4.34.0` (`5ed296525643`) |
 
@@ -40,6 +40,7 @@ It axiomatizes the divisorial bookkeeping instead.
 | A3 | Branching is modelled by `1 < ram`, i.e. by `e > 1` alone. the ramification paragraph before Definition `def:crit-branch`'s second clause (inseparable residue extension) is **not** modelled. | the ramification paragraph before Definition `def:crit-branch`, Definition `def:crit-branch` and Lemma `lem:dictionary` |
 | A4 | The ramification index of the `m`-th iterate equals `∏_{i<m} ram (stepⁱ ·)`. In Lean this is the *definition* of `DivDyn.iterRam`, so multiplicativity of ramification in towers is assumed, not derived. | §`sec:prelim`, proof of Proposition `prop:iterates`(1) |
 | A5 | The geometric objects `Sing(X)`, `Sing(A)` and `A ∩ E` are represented by abstract sets of primes (`PcfSetup.sing`, `PcfSetup.meets`). No scheme-theoretic content is attached to them. | Theorem `thm:bounding` |
+| A6 | **The chart link** (`Pcf.PcfSetupChart.chart`, §G.4). For every `m ≥ 1`, every prime `Q` of `A` outside `Σₘ` and every `Q'` with `gᵐ(Q') = Q`, there is an affine chart of `fᵐ` around `Q` (a `Pcf.BoundingChart`) with a point `ξ` representing `Q'`, such that `Q' ∈ crit₁(gᵐ)` implies the chart's restriction `R/(a) → S/𝔭` is not étale at `ξ`. This identifies the abstract predicate `crit₁` with non-étaleness computed on charts, and encodes Step 0's choice of `U` avoiding `Σ`. Relative to the derived theorem it is exactly as strong as `key1`; see §G.4. | Theorem `thm:bounding`, Step 0 and Step 4; Definition `def:branch-loci` |
 
 **Consequence.** A3 restricts the development to the characteristic-zero
 setting of Theorem `thm:normal-invariant`, where non-étaleness at a source DVR is exactly `e > 1`.
@@ -61,13 +62,18 @@ The two layers **are now joined**. `Pcf.PcfGeometry.toPcfSetup` constructs a
 and `Pcf.PcfGeometry.res_pcf` is Theorem `thm:normal-invariant` on that route. `Pcf.divDynOfGeometry` likewise
 constructs a `Pcf.DivDyn` with `branch_finite'` proved.
 
-So there are two routes to Theorem `thm:normal-invariant`:
+So there are three routes to Theorem `thm:normal-invariant`:
 
 * **Abstract route** — `Pcf.PcfSetup.res_pcf` on a hand-built `PcfSetup`. Assumes B1–B5.
 * **Geometric route** — `Pcf.PcfGeometry.res_pcf`. Assumes B1 and B2 (they are fields of
-  the two `DivDyn`s inside `PcfGeometry`, so they must be supplied twice), P1 and P3–P6,
-  and **P2, which is equivalent to B5** — see the warning below. What it genuinely no
-  longer assumes is B3 and B4.
+  the two `DivDyn`s inside `PcfGeometry`, so they must be supplied twice), P3–P6, and the
+  bounding conclusion `key` as an **explicit argument** (since 2026-10-04; it was the field
+  P2, equivalent to B5 — see the warning below). What it genuinely no longer assumes is B3
+  and B4.
+* **Chart route** (2026-10-04, §G) — `Pcf.PcfSetupChart.res_pcf1`. Assumes B1, B2, B3, B4,
+  U1–U5, the chart link A6, and **derives** B5/U6 from Zariski–Nagata purity (G1),
+  Abhyankar's lemma (G2) and one standard fact (G4, Tag 036W), all stated faithfully to the
+  Stacks text; Tags 033B and 01JT are proved (G3, G5).
 
 **A correction, retained.** An earlier version of this file claimed Theorem `thm:bounding` (per-divisor form) is
 *proved* from purity and Abhyankar's lemma. It was not.
@@ -112,7 +118,13 @@ ambient structure and have `standardForm` supply an `AlgEquiv` from that extensi
 Kummer algebra, so `Algebra.Etale.of_equiv` transports content. That is not what is built.
 
 So: the new material in `Pcf/Abhyankar.lean` is real mathematics, correctly proved, and
-**not load-bearing**. Theorem `thm:bounding` (per-divisor form) is assumed, exactly as before.
+**not load-bearing**. *As of 2026-09-21*, Theorem `thm:bounding` (per-divisor form) was
+assumed, exactly as before.
+
+**2026-10-04.** The interface `KummerWitness` is no longer a field of anything. Theorem
+`thm:bounding` is derived on an affine chart from purity and Abhyankar's lemma in
+`Pcf/Bounding/`; see §G, which also records the remaining modelling link A6 and what it is
+worth. The paragraphs above are kept as the history that §G answers.
 
 The table below describes what the *structures* demand.
 
@@ -124,7 +136,7 @@ The table below describes what the *structures* demand.
 | B2 | `DivDyn.branch_finite'` | The branch divisor has finitely many components (§`sec:defs`, after Definition `def:crit-branch`). | **Discharged on `Spec S` — see §B.7**, where it costs only lying over and generic étaleness, with no purity input. Partly discharged in the abstract layer — see §B.6. On the new `Pcf.PcfGeometry.ofPurityData` route it is **discharged for the restricted system** from a `Pcf.PurityData`. It remains a field of the *ambient* `amb : DivDyn PX`, which lives on a bare type with no topology, and remains a field on the plain `Pcf.PcfGeometry` and `Pcf.PcfSetup` routes, which still take `res` as a ready-made `DivDyn`. |
 | B3 | `PcfSetup.sing_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`). | **Genuinely discharged** by `Pcf.PcfGeometry.sing_finite`, from properness plus Noetherianness. |
 | B4 | `PcfSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`). | **Genuinely discharged** by `Pcf.PcfGeometry.meets_finite`, from properness plus Noetherianness. |
-| B5 | `PcfSetup.key` | **Theorem `thm:bounding` (per-divisor form)**, applied to every iterate. | **No — restated, not discharged.** `Pcf.PcfGeometry.key` follows from `standardForm` (P2), which is logically equivalent to it (`Pcf.nonempty_kummerWitness_iff`). The Tag 0EYF material of §B.4 does not reach this row; see the retraction in §B.2. |
+| B5 | `PcfSetup.key` | **Theorem `thm:bounding` (per-divisor form)**, applied to every iterate. | **Derived on the chart route** (§G, 2026-10-04): `Pcf.PcfSetupChart.key1` proves the étale form from Zariski–Nagata purity and Abhyankar's lemma on charts, through the modelling link A6, and `Pcf.PcfSetup1.toPcfSetup` turns it into `key`. On the abstract route and on `Pcf.PcfGeometry.toPcfSetup` it is an explicit argument. The former `standardForm` (P2) is **removed**. |
 
 ### B.2 What the geometric layer actually assumes
 
@@ -134,7 +146,7 @@ literature rather than derived.
 | ID | Lean field | Statement assumed | Source |
 | --- | --- | --- | --- |
 | P1 | `PurityData.localPurity` | **More than Stacks Tag 0BMB.** `Pcf.ZariskiNagata` (§B.5) restates the tag with all five hypotheses, but is *interderivable* with this field and so does not reduce it. The field says: if a point has codimension ≥ 1 and the morphism is étale at every codimension-one generization, it is étale there — quantified over *every* such point, with none of 0BMB's hypotheses (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) the dimension equality. Those hold throughout §`sec:bounding`'s application and are absorbed into the field rather than carried as data, so the field is 0BMB *plus* the standing hypotheses of §`sec:bounding`. Separately, substituting "étale at `x'`" for 0BMB's "unramified at `x'`" strengthens the hypothesis and so weakens the implication — that substitution alone is harmless. | Stacks Tag 0BMB plus §`sec:bounding`'s standing hypotheses |
-| P2 | `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Theorem `thm:bounding` (per-divisor form) itself.** Phrased as: at a prime satisfying (a), (b), (c), each prime above admits a `Pcf.KummerWitness` — a tame Kummer presentation `y ^ e = u`. The phrasing names Abhyankar's lemma as its intended justification but is **logically equivalent to its own conclusion** (`Pcf.nonempty_kummerWitness_iff`) and interderivable with the earlier `UnramifiedWitness` phrasing (`Pcf.kummerWitness_iff_unramifiedWitness`). The `PcfGeometry` form is quantified over every iterate `m`, with the three loci **independent of `m`** — that independence is the crux of Theorem `thm:normal-invariant` and is visible in the type. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
+| P2 | *(removed 2026-10-04)* formerly `Prop41Data.standardForm`, `PcfGeometry.standardForm` | **Was Theorem `thm:bounding` (per-divisor form) itself**, phrased as a `Pcf.KummerWitness` at each prime above a good prime, and **logically equivalent to its own conclusion** (`Pcf.nonempty_kummerWitness_iff`, `Pcf.kummerWitness_iff_unramifiedWitness`). Both fields are gone. Their replacement is the pair `Pcf.Stacks.ZariskiNagataPurity` / `Pcf.Stacks.AbhyankarLemma` of §G, which are statements about the cover `R → S` and cannot mention the restriction. The witness types and the refutation theorems remain in `Pcf/Geometry.lean`, consumed by nothing. | Stacks Tags 0EYF, 0EYG; SGA 1 Exp. XIII Prop. 5.2 |
 | P3 | `PurityData.closure_eq_univ_of_codim_eq_zero` | A point of codimension zero is a generic point. **Discharged** for `Pcf.purityDataOfAlgebra` (§B.5); still a field of the abstract structure. | Bookkeeping; true in an irreducible scheme |
 | P4 | `PurityData.nonEtale_isClosed`, `nonEtale_ne_univ` | The étale locus is open, and the morphism is generically étale (separability). The **first is discharged** for `Pcf.purityDataOfAlgebra` from `Algebra.isOpen_etaleLocus` (§B.5); the second remains assumed. | §`sec:bounding`, and §`sec:defs`'s separability hypothesis |
 | P5 | `Prop41Data.singSelf_isClosed`, `singSelf_ne_univ` | `Sing(B)` is a proper closed subset — a variety in characteristic zero is generically regular. | Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` |
@@ -249,14 +261,14 @@ Two cautions about the table above.
   of the *divisor prime* and for the *restriction* `g = f|_A`; the Lean index here is over
   a base with the divisor equation inverted, and is the *cover's*.
 
-**What this is worth to the development: nothing, yet.** See the retraction in §B.2.
-The material above is correct and is real mathematics the repository did not have before,
-but the interface it was built to serve (P2) is equivalent to its own conclusion, so no
-assumption rests on it. Wiring it in would require fixing the local extension at each
-prime as data of `Prop41Data` / `PcfGeometry` and having `standardForm` supply an
-`AlgEquiv` onto a Kummer algebra. That was considered and not done: it would force the
-non-vacuity witness in `Pcf/Examples/CofiniteWitness.lean` to exhibit genuine ring
-extensions of ramification index `2^m` at every iterate, which it cannot.
+**What this is worth to the development: standalone mathematics, still not load-bearing.**
+The derivation of Theorem `thm:bounding` in `Pcf/Bounding/` (§G) does not go through
+`Pcf/Abhyankar.lean`: Steps 3–4 use `Pcf.LocalModel` (the restriction of a standard piece to
+the divisor is an isomorphism), which holds for any `e ≥ 1`, and tameness is consumed only
+inside the assumed `Pcf.Stacks.AbhyankarLemma`. The remark that a genuinely weaker interface
+would "fix the local extension as data and have Abhyankar's lemma supply an `AlgEquiv` from
+that extension" is what §G now does: the extension is the chart's `R → S`, and G2 supplies
+`R' ⊗[R] S ≃ₐ[R'] ∏ R'[zᵢ]/(zᵢ^{eᵢ} − uᵢ a)` for it.
 
 ## B.5 Zariski–Nagata purity: two fields discharged, and the tag stated faithfully
 
@@ -509,6 +521,12 @@ U6 is the new primitive of the manuscript. It is *stronger* than B5 (`PcfSetup.k
 U6 in place of B5, not in addition to it. `key1` is stated only for `m ≥ 1`; the `m = 0`
 case of `key` is proved from `iterRam 0 = 1`.
 
+**U6 is derived on the chart route** (§G, 2026-10-04): `Pcf.PcfSetupChart.key1` proves it from
+Zariski–Nagata purity and Abhyankar's lemma on charts, given the modelling link A6 and the
+standard fact G4 (Tag 036W; G3 and G5 are proved). `Pcf.PcfSetup1` keeps `key1` as a field so
+that the abstract route and the examples are unchanged; `Pcf.PcfSetupChart.toPcfSetup1` fills
+it.
+
 ### Modelling caveats specific to this layer
 
 * **One carrier for two kinds of prime.** `crit₀`, `crit₁` are sets of primes of `A`
@@ -645,15 +663,19 @@ And, in the geometric layer, all of §`sec:bounding` except P1–P6:
 * A *scheme-theoretic* construction of a `Pcf.PcfGeometry`. The join
   (`Pcf.PcfGeometry.toPcfSetup`) exists, but nothing derives its data from an actual
   morphism of varieties — that bridge is assumption A1/A2.
-* **Zariski–Nagata purity, any part of it.** P1 assumes it, in a form stronger than Tag
-  0BMB (see §B.2). What *is* machine-checked is the manuscript's own deduction of the
-  global form **from** the local form (`Pcf.PurityData.codim_eq_one`), a different and
-  smaller claim.
-* **Abhyankar's lemma as the development uses it.** P2 assumes Theorem `thm:bounding` (per-divisor form)
-  outright. Clauses 1 and 2 of Stacks Tag 0EYF *are* machine-checked (§B.4), but
-  **nothing consumes them**: the interface they would serve is equivalent to its own
-  conclusion, so they stand as correct standalone mathematics that is not load-bearing.
-  Clause 3 of Tag 0EYF, and Tag 0EYG, are not formalized at all.
+* **Zariski–Nagata purity, any part of it.** It is assumed — faithfully, as
+  `Pcf.Stacks.ZariskiNagataPurity` (§G.1), and in the older stronger form P1. What *is*
+  machine-checked is the manuscript's own deduction of the global form **from** the local
+  form (`Pcf.PurityData.codim_eq_one`), and now the manuscript's Step 1, which applies the
+  local form (`Pcf.BoundingChart.isEtaleAt_of_notMem`).
+* **Abhyankar's lemma itself** (Tags 0EYG/0EYH) is assumed as `Pcf.Stacks.AbhyankarLemma`
+  (§G.1). Clauses 1 and 2 of Stacks Tag 0EYF are machine-checked standalone (§B.4). What is
+  now **derived** from Abhyankar's lemma is Theorem `thm:bounding` (§G.3); the former
+  disguised assumption P2 is removed.
+* **One standard fact**: Tag 036W (étaleness is étale-local on the source), as the general
+  ring-theoretic statement G4 of §G.2. Tags 033B and 01JT are proved (G3, G5).
+* **Varieties.** The chart link A6 (§G.4) stands between the ring-level theorem and the
+  abstract dynamics, for the same reason as A1–A5: no morphism of varieties is formalized.
 * **The ramification index of the cover.** `Pcf.LocalModel.root_ne_zero_mod_algebraMap`
   establishes that the fibre of `R → R[z]/(z^e − ua)` over the divisor is non-reduced for
   `2 ≤ e`, which witnesses that the cover ramifies; but no statement computes the index and
@@ -677,6 +699,95 @@ And, in the geometric layer, all of §`sec:bounding` except P1–P6:
 * Dimension: Corollary `cor:pcfawd`'s "at most `dim X` steps" is not modelled;
   `Pcf.pcf_descent` proves the statement for a chain of any length.
 
+## G. Theorem `thm:bounding` derived (2026-10-04): the inputs, side by side with the Stacks text
+
+Human direction (Taylor Dupuy, 2026-10-04): "We need [the bounding theorem's conclusion] to
+follow from the ZN purity and Abhyankar. ZN-regularity and Abhyankar are good to assume."
+`lean/Pcf/Bounding/` does this. The conclusion of Theorem `thm:bounding` on an affine chart —
+the restriction `R/(a) → S/𝔭` is étale at every prime of `S/𝔭` — is the theorem
+`Pcf.BoundingChart.isEtaleAt_restriction`. Its inputs are the chart data (Step 0's standing
+hypotheses), two classical theorems and three standard facts, every one of them stated as a
+`Prop` about rings in `Pcf/Bounding/Stacks.lean` and *checked against the Stacks text fetched
+on 2026-10-04*. Nothing valued in `KummerWitness` or `UnramifiedWitness` survives as a field.
+
+### G.1 The two theorem-level inputs
+
+| ID | Lean | Stacks | Verdict |
+| --- | --- | --- | --- |
+| G1 | `Pcf.Stacks.ZariskiNagataPurity R S`: for `Spec S → Spec R` with `R`, `S` Noetherian and `S` of finite type, at every prime `w` of `S` with `S_w` an integrally closed domain, `R_{w∩R}` regular local, `S` quasi-finite at `w`, `ht w = ht (w ∩ R) ≥ 1`, and `S` unramified over `R` at every `w' ≤ w` of height `1`: `S` is étale over `R` at `w`. | **0BMB**: `f : X → Y` locally Noetherian, `x ∈ X`, `y = f(x)`; (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) `dim 𝒪_{X,x} = dim 𝒪_{Y,y} ≥ 1`, (5) for `x' ⤳ x` with `dim 𝒪_{X,x'} = 1`, `f` unramified at `x'`. Then `f` étale at `x`. | **Faithful** (the affine special case). `x' ⤳ x` is `w' ≤ w` (`PrimeSpectrum.le_iff_specializes`); "normal" is integrally closed domain; `dim 𝒪_{X,x}` is `Ideal.height`; "quasi-finite at `x`" in Stacks presupposes finite type, so `Algebra.FiniteType R S` is a premise alongside `Algebra.QuasiFiniteAt`; `IsUnramifiedAt`/`IsEtaleAt` are the local-ring forms, which for finite-type algebras over Noetherian rings are the Stacks meaning. |
+| G2 | `Pcf.Stacks.AbhyankarLemma R S a`: if `R` is Noetherian, `a` a nonzerodivisor, `R/(a)` regular, `S` finite over `R` and étale at every prime not containing `a`, `S` the integral closure of `R` in `S_a`, and every positive integer invertible in `R`, then for every prime `y ∋ a` there is an étale `R`-algebra `R'` with a prime over `y`, Noetherian, with `a` a nonzerodivisor in `R'`, `R'/(a)` regular with all local rings domains, and `R' ⊗_R S ≅ ∏ᵢ R'[zᵢ]/(zᵢ^{eᵢ} − uᵢ a)` as `R'`-algebras, `eᵢ ≥ 1` invertible in `R'`. | **0EYG**: `X` locally Noetherian, `D ⊂ X` effective Cartier and regular, `Y → X ∖ D` finite étale and tamely ramified over `X` in codim 1 ⟹ étale locally on `X`, `Y → X` is a finite disjoint union of standard tamely ramified morphisms. **0EYH**: the normalization `Y'` of `X` in `Y` is finite locally free and étale locally on `X` a finite disjoint union of `Spec(A[x]/(x^e − f)) → Spec(A)`, `A` Noetherian, `f` a nonzerodivisor, `A/fA` regular, `e ≥ 1` invertible in `A`. | **Weaker** than 0EYG + 0EYH, modulo one lemma Mathlib lacks. Weaker because: (i) the premise "tamely ramified in codimension 1" is replaced by the stronger "every positive integer is invertible" (characteristic zero, the manuscript's standing hypothesis); (ii) the conclusion allows units `uᵢ` (the manuscript's form; 0EYH has `uᵢ = 1`); (iii) only points of `D` are covered; (iv) "finite étale over `X ∖ D`" is written pointwise, which for a finite algebra over a Noetherian ring is equivalent. Adjoined: "every local ring of `R'/aR'` is a domain", a consequence of "`R'/aR'` regular" by **00NP** (a regular local ring is a domain), which Mathlib does not have; with 00NP the Lean conclusion is equivalent to 0EYH's. |
+
+**Could either be equivalent to the conclusion?** No, and for a reason visible in the types:
+neither Prop mentions `𝔭`, the quotient `S/𝔭`, or the map `R/(a) → S/𝔭`. Both are statements
+about the cover `R → S` alone. The conclusion is about a different ring map. Moreover both
+are *true theorems* (special cases of the cited tags), so assuming them assumes nothing false,
+and `Pcf.Stacks.ZariskiNagataPurity.of_etale` shows purity is satisfied by any étale cover
+with no information about any divisor. The self-check required by the task — try to prove the
+conclusion from each input alone — fails structurally: from G1 alone one reaches Step 1
+(`Pcf.BoundingChart.isEtaleAt_of_notMem`, étaleness of `S` over `R` off `a`) and nothing about
+`S/𝔭`; from G2 alone one cannot even discharge G2's premise "étale off `a`", which only G1
+supplies, and G2's conclusion is a decomposition of `R' ⊗_R S`, which reaches the restriction
+only through Step 3 (`Pcf.LocalModel.quotientMap_bijective`, `radical_span_algebraMap_eq_span_root`)
+and Step 4 (`Pcf/Bounding/LocalStructure.lean`), both proved.
+
+### G.2 The three standard facts, isolated as hypotheses
+
+| ID | Lean | Stacks | Verdict |
+| --- | --- | --- | --- |
+| G3 | `Pcf.Stacks.isReduced_of_etale_of_isDomain`: an étale algebra over a **domain** is reduced. | **033B**: `φ : R → S` smooth, `R` reduced ⟹ `S` reduced. | **PROVED** (`Pcf/Bounding/Reduced.lean`), for the case used: the étale algebra is flat, so it injects into its base change to the fraction field, which is étale over a field and hence reduced (Mathlib `Algebra.FormallyUnramified.isReduced_of_field`). Used once: the base change `S/𝔭 → (R' ⊗_R S)/𝔭` of the integral `A ∩ V` is reduced, Step 3's "`T` is reduced because `V' → V` is étale". |
+| G4 | `Pcf.Stacks.EtaleLocalOnSource`: for all `A → B → B'` with `B → B'` étale, if `A → B'` is étale at every prime and `ξ ∈ Spec B` is under some prime of `B'`, then `A → B` is étale at `ξ`. | **036W**: "`f` is étale" is étale local on the source; with **03WT** (étale morphisms are open) for the passage from a covering of the open image to the point. | **ASSUMED; weaker** (a pointwise consequence). Used once, in Step 4's last sentence. The only standard fact still assumed. Mathlib has descent of étaleness along *faithfully flat* base change (`Algebra.Etale.of_etale_tensorProduct_of_faithfullyFlat`), from which this could be derived by localizing at `ξ` (flat local maps are faithfully flat); not attempted. |
+| G5 | `Pcf.Stacks.ExistsPrimeOverBoth`: for all `R → S`, `R → T`, primes `p ⊂ S`, `q ⊂ T` over the same prime of `R` lie under a common prime of `T ⊗_R S`. | **01JT**: points of `X ×_S Y` ↔ quadruples `(x, y, s, 𝔭)` with `𝔭` a prime of `κ(x) ⊗_{κ(s)} κ(y)`, a nonzero ring. | **PROVED** (`Pcf.Stacks.existsPrimeOverBoth`, `Pcf/Bounding/FibreProduct.lean`) from Mathlib's `AlgebraicGeometry.Scheme.Pullback.exists_preimage_pullback` and `pullbackSpecIso`. Used once: "choose a point `ξ'` of `T` over `ξ`". |
+
+G4 is universally quantified over the rings of a universe; it cannot be specialized to the
+chart, so it cannot encode the conclusion. It is what the manuscript cites in passing
+(Tag 036W), and it is isolated because Mathlib does not have it.
+
+### G.3 What is proved in `Pcf/Bounding/`
+
+| Manuscript | Lean | Status |
+| --- | --- | --- |
+| Step 1 | `Pcf.BoundingChart.isEtaleAt_of_notMem` | proved from G1 and the chart's standing hypotheses, including the generic-point case from `generic_etale` |
+| Step 2 | `Pcf.BoundingChart.exists_standardPieces` | G2 applied; its seven premises discharged by the chart and Step 1 |
+| `eq:standard-piece`: `(C/aC)_red = C/zC` | `Pcf.LocalModel.radical_span_algebraMap_eq_span_root` | proved: `√(aC) = (z)` when `R/(a)` is reduced |
+| Step 3, `V(z) → V(a)` an isomorphism | `Pcf.LocalModel.quotientMap_bijective` | proved (the canonical map; this is `restrictionMap_bijective`) |
+| Step 3, the dimension count | `Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map` | proved without dimensions: a minimal prime over `𝔭C` is minimal over `aC`, by going down for flat maps (Mathlib `Algebra.HasGoingDown.of_flat`) and incomparability in quasi-finite fibres (Mathlib `Algebra.QuasiFiniteAt.eq_of_le_of_under_eq`) |
+| Step 3, "union of connected components" | `Pcf.Bounding.exists_mul_mem_ker_of_mem_minimalPrimes_ker` | proved at a point: a minimal prime over `(z)` vanishes locally where the local ring of `R'/(a)` is a domain |
+| Step 4, `T → D'` étale at `ξ'` | `Pcf.Bounding.isLocalization_of_localStructure`, `formallyEtale_of_localStructure`, `Pcf.BoundingChart.isEtaleAt_quot_of_pieces` | proved: the local ring of the base-changed restriction is a localization of `R'/(a)` |
+| the piece through a point | `Pcf.Bounding.exists_isUnit_evalRingHom_single`, `exists_lift_of_isUnit_single`, `isLocalizationAway_evalRingHom` | proved |
+| Step 4, descent to `g` | `Pcf.BoundingChart.isEtaleAt_restriction` | proved from the above plus G4 (assumed) and G5 (proved); G3 (proved) is used inside |
+| the étale conclusion for the dynamics | `Pcf.PcfSetupChart.key1`, `toPcfSetup1`, `res_pcf1`, `res_pcf`, `res_pcf1_of_iter` | proved from the chart link A6 |
+
+Tameness of the `eᵢ` is consumed only inside G2; Steps 3–4 hold for any `e ≥ 1`
+(`Pcf.BoundingChart.isEtaleAt_quot_of_pieces` takes `e i ≠ 0` only).
+
+### G.4 The chart link A6, and exactly what it is worth
+
+`Pcf.PcfSetupChart` is `Pcf.PcfSetup1` with `key1` replaced by `chart`: for each `m ≥ 1`,
+good `Q`, and `Q'` over `Q`, a `Pcf.BoundingChart` and a point `ξ` representing `Q'`, with
+`Q' ∈ crit₁(gᵐ) → ¬ IsEtaleAt (R/(a)) ξ`. `Pcf.PcfSetupChart.key1` then derives `key1`.
+
+**Honesty check.** The abstract carrier `PA` has no rings attached (A1–A5). So the link is
+necessarily supplied by whoever supplies the data, and it is exactly as strong as `key1`
+*relative to the derived theorem*: given `key1`, `chart` could be discharged for every `Q'`
+with a trivial chart (the identity cover `ℚ[x] → ℚ[x]`, `a = x`, satisfies every field of
+`Pcf.BoundingChart`); given `chart`, `key1` follows. This is **not** the situation the reviews
+of §B.2 refuted: there, the supplier chose the algebra to which Abhyankar's lemma was applied,
+and no geometry crossed. Here the algebra is the chart's own `R → S`, G1 and G2 are applied
+to *it*, and the only thing left to the supplier is to say which chart represents which
+abstract prime. What has changed is where the mathematics lives — Steps 1–4 are theorems — and
+not the trust boundary of the abstraction, which cannot move without formalizing varieties.
+The report to the human says this in the same words.
+
+### G.5 Removed
+
+`Prop41Data.over`, `Prop41Data.ram`, `Prop41Data.standardForm`, `Prop41Data.branch`,
+`Prop41Data.notMem_branch`, `Prop41Data.branch_subset_bound`, `Prop41Data.finite_branch`,
+`PcfGeometry.standardForm`, `PcfGeometry.key` (the theorem); `PcfGeometry.toPcfSetup`,
+`res_pcf`, `res_pcf_of_iter` and `PcfGeometry.ofPurityData` / `res_pcf_of_purityData` now take
+the bounding conclusion as an explicit argument. The cofinite witness
+(`Pcf/Examples/CofiniteWitness.lean`) supplies it directly (`Pcf.Examples.resDyn_key`), with
+no `KummerWitness`.
+
 ## F. Status of the formalization
 
 * `Pcf/Unnormalized.lean` — **LEAN-PROVED** given U1–U6; Theorem `thm:normal-invariant` in
@@ -695,21 +806,26 @@ Using the vocabulary of the formalization-evidence contract:
   P1–P6. B3 and B4 are genuinely discharged; B5 is *restated* as P2, not discharged.
 * Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` and (3) — the finiteness half is **proved**; the properness half
   is assumed (P5, P6).
-* Theorem `thm:bounding` (per-divisor form) — **ASSUMED** (P2). It is stated in a form that names purity and
-  Abhyankar as its justification, and that form is logically equivalent to the
-  statement itself (`Pcf.nonempty_unramifiedWitness_iff`).
+* Theorem `thm:bounding` on an affine chart — **LEAN-PROVED, CONDITIONAL** on the chart's
+  standing hypotheses, G1 (Zariski–Nagata purity, Tag 0BMB), G2 (Abhyankar's lemma, Tags
+  0EYG/0EYH) and the standard fact G4 (Tag 036W): `Pcf.BoundingChart.isEtaleAt_restriction`
+  (§G). Tags 033B and 01JT are proved along the way.
+* Theorem `thm:normal-invariant` via `Pcf.PcfSetupChart.res_pcf1` — **CONDITIONAL** on
+  A1–A6, B1–B4, U1–U5, G1, G2, G4. The former P2/U6 primitive is derived.
 * The global form of Zariski–Nagata purity, given the local form — **PROVED**
-  (`Pcf.PurityData.codim_eq_one`). This is the strongest piece of new work in §`sec:bounding`.
+  (`Pcf.PurityData.codim_eq_one`).
 
-This is not a machine verification of "PCF All the Way Down". It is a
-machine-checked derivation of Theorem `thm:normal-invariant`, Corollary `cor:normal-preperiodic` and Corollary `cor:pcfawd` from
-Theorem `thm:bounding` and the divisorial bookkeeping; a machine-checked derivation of the
-global form of purity from the local form; machine-checked finiteness statements;
-machine-checked proofs of the supporting examples; and a constructor joining the
-geometric data to the structure Theorem `thm:normal-invariant` consumes.
+This is not a machine verification of "PCF All the Way Down". It is a machine-checked
+derivation of Theorem `thm:normal-invariant`, Corollary `cor:normal-preperiodic` and
+Corollary `cor:pcfawd` from Theorem `thm:bounding` and the divisorial bookkeeping; a
+machine-checked derivation of Theorem `thm:bounding` on an affine chart from Zariski–Nagata
+purity and Abhyankar's lemma, stated as the Stacks Project states them, plus three cited
+standard facts; a machine-checked derivation of the global form of purity from the local
+form; machine-checked finiteness statements; machine-checked proofs of the supporting
+examples; and constructors joining the geometric data to the structure Theorem
+`thm:normal-invariant` consumes.
 
-Theorem `thm:bounding` (per-divisor form) itself is **assumed**, and so is purity. Two gaps remain at the
-bottom: no Lean code derives a `Pcf.PcfGeometry` from an actual morphism of schemes
-(assumptions A1–A5); no part of purity is machine-checked; and although clauses 1–2 of
-Stacks Tag 0EYF are machine-checked (§B.4), no assumption of the development rests on
-them.
+Purity and Abhyankar's lemma themselves are **assumed**. Two gaps remain at the bottom: no
+Lean code derives a `Pcf.PcfSetup` or a `Pcf.BoundingChart` from an actual morphism of
+varieties (assumptions A1–A6), and no part of purity or of Abhyankar's lemma is
+machine-checked beyond clauses 1–2 of Tag 0EYF.

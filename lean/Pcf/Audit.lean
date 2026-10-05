@@ -17,6 +17,14 @@ import Pcf.Geometry
 import Pcf.Wiring
 import Pcf.AllTheWayDown
 import Pcf.SpectrumDynamics
+import Pcf.Bounding.Stacks
+import Pcf.Bounding.StandardPiece
+import Pcf.Bounding.LocalStructure
+import Pcf.Bounding.Pieces
+import Pcf.Bounding.Reduced
+import Pcf.Bounding.Chart
+import Pcf.Bounding.FibreProduct
+import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
@@ -37,10 +45,10 @@ scheme-theoretic meaning of "prime" and "ramification index") is carried in
 *fields* of `Pcf.DivDyn` and `Pcf.PcfSetup` — that is, in hypotheses — and
 hypotheses are invisible to `#print axioms` by construction.
 
-The one place where that conditionality is discharged is
-`Pcf.Examples.diagonalSquaring`, whose `key` field is proved rather than
-assumed; `Pcf.Examples.diagonalSquaring_res_pcf` therefore witnesses that
-`Pcf.PcfSetup.res_pcf` is not vacuous.
+`Pcf.Examples.diagonalSquaring`'s `key` field is proved rather than assumed, so
+`Pcf.Examples.diagonalSquaring_res_pcf` witnesses that `Pcf.PcfSetup.res_pcf` is
+not vacuous. On the chart route (`Pcf/Bounding/`), `key1` is a theorem derived from
+Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
 -/
 
 /-! ## The conjecture the project is named after
@@ -101,10 +109,7 @@ abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 #print axioms Pcf.nonempty_unramifiedWitness_iff
 #print axioms Pcf.UnramifiedWitness.eq_one
 #print axioms Pcf.LocalModel.unramifiedWitness
-#print axioms Pcf.Prop41Data.notMem_branch
-#print axioms Pcf.Prop41Data.branch_subset_bound
 #print axioms Pcf.Prop41Data.finite_bound
-#print axioms Pcf.Prop41Data.finite_branch
 #print axioms Pcf.Prop41Data.finite_sing_subtype
 #print axioms Pcf.Prop41Data.finite_meets_subtype
 
@@ -114,10 +119,41 @@ abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 #print axioms Pcf.divDynOfGeometry
 #print axioms Pcf.PcfGeometry.sing_finite
 #print axioms Pcf.PcfGeometry.meets_finite
-#print axioms Pcf.PcfGeometry.key
 #print axioms Pcf.PcfGeometry.toPcfSetup
 #print axioms Pcf.PcfGeometry.res_pcf
 #print axioms Pcf.PcfGeometry.res_pcf_of_iter
+
+/-! ## §`sec:bounding`: Theorem `thm:bounding` **derived** from purity and Abhyankar's lemma
+
+`Pcf/Bounding/`. The two classical inputs are the fields `purity` and `abhyankar` of
+`Pcf.BoundingChart`, stated as the Stacks Project states them (`Pcf/Bounding/Stacks.lean`);
+of the three standard facts, Tags 033B and 01JT are proved
+(`Pcf.Stacks.isReduced_of_etale_of_isDomain`, `Pcf.Stacks.existsPrimeOverBoth`) and Tag 036W
+is the explicit hypothesis `hF1`. Everything
+printed here reports only the standard axioms, as it must: the assumed inputs are
+hypotheses. -/
+
+#print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
+#print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
+#print axioms Pcf.LocalModel.quotientMap_bijective
+#print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
+#print axioms Pcf.Bounding.exists_mul_mem_ker_of_mem_minimalPrimes_ker
+#print axioms Pcf.Bounding.isLocalization_of_localStructure
+#print axioms Pcf.Bounding.formallyEtale_of_localStructure
+#print axioms Pcf.Bounding.isLocalizationAway_evalRingHom
+#print axioms Pcf.Bounding.exists_isUnit_evalRingHom_single
+#print axioms Pcf.Bounding.exists_lift_of_isUnit_single
+#print axioms Pcf.BoundingChart.isEtaleAt_of_notMem
+#print axioms Pcf.BoundingChart.exists_standardPieces
+#print axioms Pcf.BoundingChart.isEtaleAt_quot_of_pieces
+#print axioms Pcf.BoundingChart.isEtaleAt_restriction
+#print axioms Pcf.Stacks.existsPrimeOverBoth
+#print axioms Pcf.Stacks.isReduced_of_etale_of_isDomain
+#print axioms Pcf.PcfSetupChart.key1
+#print axioms Pcf.PcfSetupChart.toPcfSetup1
+#print axioms Pcf.PcfSetupChart.res_pcf1
+#print axioms Pcf.PcfSetupChart.res_pcf
+#print axioms Pcf.PcfSetupChart.res_pcf1_of_iter
 
 /-! ## §`sec:examples`: Examples `ex:squaring` and `ex:squaring-P2`, and the non-vacuity witness -/
 
@@ -198,10 +234,11 @@ Purity itself is still assumed; see `lean/AXIOMS.md`, entry P1. -/
 #print axioms Pcf.localPurity_of_codim_le_one
 #print axioms Pcf.PurityData.ofCodimLeOne
 
-/-! ## Abhyankar's lemma: the standard tamely ramified model
+/-! ## Stacks Tag 0EYF, clauses 1–2, and the retracted witness interfaces
 
-These are the newly discharged half of Stacks Tag 0EYF. The structure theorem
-(Tag 0EYG) remains assumed; see `lean/AXIOMS.md`, entry B2. -/
+The Kummer-algebra material is correct standalone mathematics. The witness interfaces
+`Pcf.KummerWitness`/`Pcf.UnramifiedWitness` are retained only as the record of a retracted
+assumption; no field is valued in them. -/
 
 #print axioms Abhyankar.isStandardEtale_adjoinRoot_of_separable
 #print axioms Abhyankar.isStandardEtale

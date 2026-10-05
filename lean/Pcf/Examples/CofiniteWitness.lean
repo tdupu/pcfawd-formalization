@@ -13,11 +13,11 @@ import Mathlib.Topology.Irreducible
 # A concrete, genuinely ramified witness for `Pcf.PcfGeometry`
 
 `Pcf/Geometry.lean` derives Theorem `thm:normal-invariant` (`Pcf.PcfGeometry.res_pcf`) from a
-structure
-`Pcf.PcfGeometry PX B` whose only assumed field is `standardForm`. A reader is entitled to
-ask whether that structure is inhabited at all, and — more sharply — whether it is
-inhabited by anything in which the *restricted* system actually ramifies. If the only
-models had `res.branch = ∅`, Theorem `thm:normal-invariant` would be true but empty on this route.
+structure `Pcf.PcfGeometry PX B` together with the bounding conclusion `key` as an explicit
+argument. A reader is entitled to ask whether that structure is inhabited at all, and — more
+sharply — whether it is inhabited by anything in which the *restricted* system actually
+ramifies. If the only models had `res.branch = ∅`, Theorem `thm:normal-invariant` would be
+true but empty on this route.
 
 This file answers both questions with a single compiling instance.
 
@@ -53,12 +53,9 @@ description (`CofiniteTopology.isClosed_iff`) and its Noetherianness
 This is a toy topological space, not a variety. `CofNat` is one-dimensional in the crude
 sense that its proper closed subsets are finite, and its "primes" are points; there is no
 scheme, no cover, no ring of functions, and nothing here is a model of an actual finite
-separable self-map. The `standardForm` field is discharged cheaply, because away from
-`{0}` the restricted ramification index is literally `1`, so any witness of index `1`
-suffices — here `Pcf.KummerWitness.cubic`, the Kummer algebra `ℚ[y]/(y³ - 1)`. No purity
-input is exercised, and while the Kummer witness does carry genuine Abhyankar content
-(`Abhyankar.ramificationIdx_eq_one`), this example does not *need* it: the index is known
-to be `1` on other grounds.
+separable self-map. The bounding conclusion `key` is discharged cheaply, because away from
+`{0}` the restricted ramification index is literally `1`. No purity or Abhyankar input is
+exercised: the index is known to be `1` by construction.
 
 What the file does show is precisely this: `Pcf.PcfGeometry` is consistent, its fields can
 be satisfied simultaneously, and they can be satisfied with `res.branch ≠ ∅`. That is the
@@ -218,11 +215,21 @@ theorem resDyn_iterRam_eq_one (m : ℕ) {Q : {s : Set CofNat // Pcf.IsPrime s}}
   refine Finset.prod_eq_one fun i _ => ?_
   rw [resDyn_step, Function.iterate_id, id_eq, resDyn_ram, resRam_of_ne h]
 
-/-- Transport the concrete degree-`3` Kummer witness `Pcf.KummerWitness.cubic` along an
-identification of the index with `1`. This is the only glue needed to discharge
-`standardForm` below. -/
-noncomputable def kummerWitnessOfEqOne {n : ℕ} (h : n = 1) : KummerWitness n :=
-  cast (congrArg KummerWitness h).symm KummerWitness.cubic
+/-- The bounding conclusion for the witness: away from the prime `{0}` (which lies in
+`singAmbient`) every iterate of the restricted system is unramified, so no good prime is a
+branch prime. -/
+theorem resDyn_key (m : ℕ) (Q : {s : Set CofNat // Pcf.IsPrime s})
+    (hsa : ¬ ((Q : Set CofNat) ⊆ ({pt} : Set CofNat))) :
+    Q ∉ (resDyn.iter m).branch := by
+  rintro ⟨Q', hQ', hram⟩
+  have hQeq : Q' = Q := by
+    rw [DivDyn.iter_step, resDyn_step, Function.iterate_id, id_eq] at hQ'
+    exact hQ'
+  have hne : (Q' : Set CofNat) ≠ {pt} := by
+    rw [hQeq]
+    exact fun h => hsa (le_of_eq h)
+  rw [DivDyn.iter_ram, resDyn_iterRam_eq_one m hne] at hram
+  exact absurd hram (by omega)
 
 /-- **The witness.** A `Pcf.PcfGeometry` on the cofinite space, with a trivial ambient
 system and a restricted system that genuinely ramifies at the prime `{0}`.
@@ -244,15 +251,6 @@ noncomputable def cofiniteGeometry : PcfGeometry Unit CofNat where
   singSelf_ne_univ := ne_univ_of_finite Set.finite_empty
   meetsSet_isClosed := fun _ _ => isClosed_empty
   meetsSet_ne_univ := fun _ _ => ne_univ_of_finite Set.finite_empty
-  standardForm := by
-    intro m Q hsa _ _ Q' hQ'
-    have hQeq : Q' = Q := by
-      rw [resDyn_step, Function.iterate_id, id_eq] at hQ'
-      exact hQ'
-    have hne : (Q' : Set CofNat) ≠ {pt} := by
-      rw [hQeq]
-      exact fun h => hsa (le_of_eq h)
-    exact kummerWitnessOfEqOne (resDyn_iterRam_eq_one m hne)
 
 /-! ### Step 5: the payoff -/
 
@@ -279,7 +277,7 @@ inhabited, the inhabitant has a nonempty restricted branch divisor, and Theorem
 `thm:normal-invariant` fires on
 it. -/
 theorem resDyn_pcf : resDyn.PCF :=
-  cofiniteGeometry.res_pcf ambDyn_pcf
+  cofiniteGeometry.res_pcf (fun m Q hs _ => resDyn_key m Q fun h => hs (Or.inl h)) ambDyn_pcf
 
 #print axioms isPrime_iff_singleton
 #print axioms noetherianSpace_cofNat
@@ -348,13 +346,7 @@ theorem resDynOfPurity_pcf : resDynOfPurity.PCF := by
     isClosed_empty (ne_univ_of_finite Set.finite_empty)
     (fun _ _ => isClosed_empty) (fun _ _ => ne_univ_of_finite Set.finite_empty)
     ?_ ambDyn_pcf
-  intro m Q hsa _ _ Q' hQ'
-  have hQeq : Q' = Q := by
-    rw [Function.iterate_id, id_eq] at hQ'
-    exact hQ'
-  have hne : (Q' : Set CofNat) ≠ {pt} := by
-    rw [hQeq]
-    exact fun h => hsa (le_of_eq h)
-  exact kummerWitnessOfEqOne (resDyn_iterRam_eq_one m hne)
+  intro m Q hs _
+  exact resDyn_key m Q fun h => hs (Or.inl h)
 
 end Pcf.Examples

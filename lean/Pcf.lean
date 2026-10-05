@@ -12,6 +12,14 @@ import Pcf.Geometry
 import Pcf.Wiring
 import Pcf.AllTheWayDown
 import Pcf.SpectrumDynamics
+import Pcf.Bounding.Stacks
+import Pcf.Bounding.StandardPiece
+import Pcf.Bounding.LocalStructure
+import Pcf.Bounding.Pieces
+import Pcf.Bounding.Reduced
+import Pcf.Bounding.Chart
+import Pcf.Bounding.FibreProduct
+import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp

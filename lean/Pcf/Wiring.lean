@@ -28,9 +28,10 @@ to Theorem `thm:normal-invariant` with the restricted system's `branch_finite'` 
 
 in which **each arrow is a theorem**. That is not the same as saying nothing is assumed:
 the *inputs* to the chain — generic étaleness, Zariski–Nagata purity itself,
-`ramified_subset_nonEtale`, and `standardForm` — remain hypotheses, and are listed in
-`lean/AXIOMS.md`. What changes is that `branch_finite'`, previously a field on both routes,
-is no longer among them, and that its closedness input is supplied by Mathlib.
+`ramified_subset_nonEtale`, and the bounding conclusion `key` — remain hypotheses
+here, and are listed in `lean/AXIOMS.md`; `key` is derived from charts in
+`Pcf/Bounding/Wiring.lean`. What changes is that `branch_finite'`, previously a field on
+both routes, is no longer among them, and that its closedness input is supplied by Mathlib.
 
 This is the first place in this development where the purity layer reaches Theorem
 `thm:normal-invariant` at
@@ -59,7 +60,8 @@ that one of its three components is now discharged from Mathlib rather than assu
 Earlier tasks in this repository claimed reductions that were not reductions, three times
 (`Pcf.nonempty_unramifiedWitness_iff`, `Pcf.kummerWitness_iff_unramifiedWitness`,
 `Pcf.PurityData.ofZariskiNagata_toZariskiNagata`). The converse below is stated so that
-this one cannot be read as a fourth.
+this one cannot be read as a fourth. The bounding conclusion itself enters this file as the
+explicit argument `key`; it is derived from charts in `Pcf/Bounding/Wiring.lean`.
 
 ## Main results
 
@@ -120,13 +122,7 @@ noncomputable def PcfGeometry.ofPurityData [NoetherianSpace B]
     (singAmbient_isClosed : IsClosed singAmbient) (singAmbient_ne_univ : singAmbient ≠ univ)
     (singSelf_isClosed : IsClosed singSelf) (singSelf_ne_univ : singSelf ≠ univ)
     (meetsSet_isClosed : ∀ E, E ≠ fixedPrime → IsClosed (meetsSet E))
-    (meetsSet_ne_univ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ)
-    (standardForm : ∀ (m : ℕ) (Q : {s : Set B // IsPrime s}),
-      ¬ ((Q : Set B) ⊆ singAmbient) → ¬ ((Q : Set B) ⊆ singSelf) →
-      (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → ¬ ((Q : Set B) ⊆ meetsSet E)) →
-      ∀ Q' : {s : Set B // IsPrime s}, step^[m] Q' = Q →
-        KummerWitness ((resDivDynOfPurity step ram ram_pos step_surjective D hbranch).iterRam
-          m Q')) :
+    (meetsSet_ne_univ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ) :
     PcfGeometry PX B where
   amb := amb
   fixedPrime := fixedPrime
@@ -141,7 +137,6 @@ noncomputable def PcfGeometry.ofPurityData [NoetherianSpace B]
   singSelf_ne_univ := singSelf_ne_univ
   meetsSet_isClosed := meetsSet_isClosed
   meetsSet_ne_univ := meetsSet_ne_univ
-  standardForm := standardForm
 
 /-- **Theorem `thm:normal-invariant`, with the branch divisor's finiteness no longer assumed for the
 restricted
@@ -157,16 +152,17 @@ theorem PcfGeometry.res_pcf_of_purityData [NoetherianSpace B]
     (h₃ : IsClosed singSelf) (h₄ : singSelf ≠ univ)
     (h₅ : ∀ E, E ≠ fixedPrime → IsClosed (meetsSet E))
     (h₆ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ)
-    (standardForm : ∀ (m : ℕ) (Q : {s : Set B // IsPrime s}),
-      ¬ ((Q : Set B) ⊆ singAmbient) → ¬ ((Q : Set B) ⊆ singSelf) →
-      (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → ¬ ((Q : Set B) ⊆ meetsSet E)) →
-      ∀ Q' : {s : Set B // IsPrime s}, step^[m] Q' = Q →
-        KummerWitness ((resDivDynOfPurity step ram ram_pos step_surjective D hbranch).iterRam
-          m Q'))
+    (key : ∀ (m : ℕ) (Q : {s : Set B // IsPrime s}),
+      Q ∉ (PcfGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D
+        hbranch singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).sing →
+      (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime →
+        Q ∉ (PcfGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D
+          hbranch singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).meets E) →
+      Q ∉ ((resDivDynOfPurity step ram ram_pos step_surjective D hbranch).iter m).branch)
     (hamb : amb.PCF) :
     (resDivDynOfPurity step ram ram_pos step_surjective D hbranch).PCF :=
   (PcfGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D hbranch
-    singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆ standardForm).res_pcf hamb
+    singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).res_pcf key hamb
 
 /-! ### The composite over an actual algebra -/
 
