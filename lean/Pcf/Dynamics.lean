@@ -10,39 +10,44 @@ import Mathlib.Order.Interval.Finset.Nat
 /-!
 # Divisorial dynamics: ramification of iterates
 
-This file formalizes §2 and §3 of the manuscript `latex/pcf.tex`, "PCF All the Way Down".
+This file formalizes §`sec:defs` and §`sec:prelim` of the manuscript `latex/paper.tex`, "PCF All the
+Way Down".
 
 The manuscript works with a finite surjective separable self-map `g : B → B` of a
 variety and studies its *primes* (irreducible codimension-one closed subvarieties),
-the *branch primes* of Definition 2.2, and the postcritical set of Definition 2.4.
-All of §3 depends on the source only through the following data, packaged here as
+the *branch primes* of the ramification paragraph before Definition `def:crit-branch`, and the
+postcritical set of Definition `def:pcf`.
+All of §`sec:prelim` depends on the source only through the following data, packaged here as
 `Pcf.DivDyn`:
 
 * the set `P` of primes of the normalized model of `B`;
 * the pushforward `step : P → P`, `P' ↦ g(P')`, well defined because the image of a
-  prime under a finite dominant map is a prime (Conventions, §1);
+  prime under a finite dominant map is a prime (Conventions, §`sec:intro`);
 * the ramification index `ram : P → ℕ`, `P' ↦ e(P'/g(P'))`, of the induced extension
-  of discrete valuation rings (Definition 2.2);
+  of discrete valuation rings (the ramification paragraph before Definition `def:crit-branch`);
 * `step_surjective`, which is exactly the lying-over/going-down input isolated in the
-  proof of Lemma 3.2;
-* `branch_finite'`, the finiteness of the branch divisor proved in §2.
+  proof of Lemma `lem:lift`;
+* `branch_finite'`, the finiteness of the branch divisor proved in §`sec:defs`.
 
 In characteristic zero, non-étaleness at a source DVR is exactly `e > 1` (paragraph
-after Definition 2.3, and Remark 7.2), so `branch` below faithfully renders
-`Irr(Branch(g))` in the setting of Theorem 5.1. The positive-characteristic
+after Definition `def:crit-branch`, and Lemma `lem:dictionary`), so `branch` below faithfully
+renders
+`Irr(Branch(g))` in the setting of Theorem `thm:normal-invariant`. The positive-characteristic
 refinement, which must also record inseparable residue extensions, is *not* modelled
-here: Theorem A is a characteristic-zero statement, and Example 7.4 shows that it
+here: Theorem `thm:normal-invariant` is a characteristic-zero statement, and Example `ex:wild` shows
+that it
 fails in the wild case.
 
 ## Main results
 
-* `Pcf.DivDyn.IsChain.extend` — Lemma 3.2 (padding).
+* `Pcf.DivDyn.IsChain.extend` — Lemma `lem:lift`, existence clause, iterated (the old padding
+  lemma).
 * `Pcf.DivDyn.iterRam_add` — multiplicativity of ramification indices in towers.
-* `Pcf.DivDyn.mem_branch_iter_iff` — Proposition 3.3 (ramification under iterates).
-* `Pcf.DivDyn.mem_branch_iter_succ` — Proposition 3.4 (orbit propagation).
-* `Pcf.DivDyn.pcSet_iter` — Proposition 3.5 (`PCset(f) = PCset(fᵐ)`).
+* `Pcf.DivDyn.mem_branch_iter_iff` — Proposition `prop:iterates`(1) (ramification under iterates).
+* `Pcf.DivDyn.mem_branch_iter_succ` — Proposition `prop:iterates`(2) (orbit propagation).
+* `Pcf.DivDyn.pcSet_iter` — Proposition `prop:iterates`(3)–(4) (`PCset(f) = PCset(fᵐ)`).
 * `Pcf.DivDyn.pcf_iff_forall_orbit_finite` — the orbit characterization of PCF.
-* `Pcf.DivDyn.pcf_of_finite_cover` — Remark 2.5 (passing to normalizations).
+* `Pcf.DivDyn.pcf_of_finite_cover` — Lemma `lem:normalization` (passing to normalizations).
 -/
 
 universe u v
@@ -53,11 +58,13 @@ namespace Pcf
 
 This is the abstract shadow of a finite surjective separable self-map `g : B → B`
 of a variety, recorded through its action on the primes of the normalized model
-together with the ramification indices of Definition 2.2.
+together with the ramification indices of the ramification paragraph before Definition
+`def:crit-branch`.
 
 The fields `step_surjective` and `branch_finite'` are theorems in the manuscript
-(the lying-over/going-down step inside the proof of Lemma 3.2, and the finiteness
-paragraph following Definition 2.3). They are hypotheses here; see `lean/AXIOMS.md`. -/
+(the lying-over/going-down step inside the proof of Lemma `lem:lift`, and the finiteness
+paragraph following Definition `def:crit-branch`). They are hypotheses here; see `lean/AXIOMS.md`.
+-/
 structure DivDyn (P : Type u) where
   /-- Pushforward of primes: `step P'` is the prime `g(P')`. -/
   step : P → P
@@ -65,9 +72,10 @@ structure DivDyn (P : Type u) where
   ram : P → ℕ
   /-- Ramification indices are positive. -/
   ram_pos : ∀ Q, 0 < ram Q
-  /-- Lying over: every prime is the image of a prime (proof of Lemma 3.2). -/
+  /-- Lying over: every prime is the image of a prime (proof of Lemma `lem:lift`). -/
   step_surjective : Function.Surjective step
-  /-- The branch divisor has finitely many components (§2, after Definition 2.3). -/
+  /-- The branch divisor has finitely many components (§`sec:defs`, after Definition
+  `def:crit-branch`). -/
   branch_finite' : {Q | ∃ Q', step Q' = Q ∧ 1 < ram Q'}.Finite
 
 namespace DivDyn
@@ -75,21 +83,21 @@ namespace DivDyn
 variable {P : Type u} (D : DivDyn P)
 
 /-- `D.branch` is `Irr(Branch(g))`: the set of primes over which `g` is branched
-(Definitions 2.2 and 2.3). -/
+(the ramification paragraph before Definition `def:crit-branch`, and that definition). -/
 def branch : Set P := {Q | ∃ Q', D.step Q' = Q ∧ 1 < D.ram Q'}
 
 theorem mem_branch_iff {Q : P} : Q ∈ D.branch ↔ ∃ Q', D.step Q' = Q ∧ 1 < D.ram Q' := Iff.rfl
 
 theorem branch_finite : D.branch.Finite := D.branch_finite'
 
-/-! ### Chains and padding (Lemma 3.2) -/
+/-! ### Chains and padding (Lemma `lem:lift`) -/
 
 /-- `D.IsChain P₀ m c` says that `c 0, c 1, …, c m` is a *chain over `P₀` of length `m`*
-in the sense of §3: `c 0 = P₀` and `g(c (i+1)) = c i` for `i < m`. -/
+in the sense of §`sec:prelim`: `c 0 = P₀` and `g(c (i+1)) = c i` for `i < m`. -/
 def IsChain (P₀ : P) (m : ℕ) (c : ℕ → P) : Prop :=
   c 0 = P₀ ∧ ∀ i < m, D.step (c (i + 1)) = c i
 
-/-- **Lemma 3.2** (padding). Every chain of length `m` over `P₀` extends to a chain
+/-- **Lemma `lem:lift`** (padding). Every chain of length `m` over `P₀` extends to a chain
 of length `m + 1` over `P₀`. -/
 theorem IsChain.extend {P₀ : P} {m : ℕ} {c : ℕ → P} (h : D.IsChain P₀ m c) :
     ∃ c', D.IsChain P₀ (m + 1) c' ∧ ∀ i ≤ m, c' i = c i := by
@@ -109,7 +117,7 @@ theorem IsChain.extend {P₀ : P} {m : ℕ} {c : ℕ → P} (h : D.IsChain P₀ 
     simp [hi]
 
 /-- Chains over `P₀` of length `m` are the same data as primes `Q` with `gᵐ(Q) = P₀`;
-this is the dictionary described in the proof of Lemma 3.2. -/
+this is the dictionary described in the proof of Lemma `lem:lift`. -/
 theorem exists_isChain_iff (P₀ Q : P) (m : ℕ) :
     (∃ c, D.IsChain P₀ m c ∧ c m = Q) ↔ D.step^[m] Q = P₀ := by
   constructor
@@ -136,7 +144,7 @@ theorem exists_isChain_iff (P₀ Q : P) (m : ℕ) :
 
 /-- The ramification index of the `m`-th iterate, `e(Q / gᵐ(Q)) = ∏_{i<m} e(gⁱ(Q))`.
 Defining it by this product is precisely the multiplicativity of ramification indices
-in towers invoked throughout §3. -/
+in towers invoked in the proof of Lemma `lem:tower`. -/
 def iterRam (m : ℕ) (Q : P) : ℕ := ∏ i ∈ Finset.range m, D.ram (D.step^[i] Q)
 
 theorem iterRam_pos (m : ℕ) (Q : P) : 0 < D.iterRam m Q :=
@@ -146,7 +154,8 @@ theorem iterRam_pos (m : ℕ) (Q : P) : 0 < D.iterRam m Q :=
 
 @[simp] theorem iterRam_one (Q : P) : D.iterRam 1 Q = D.ram Q := by simp [iterRam]
 
-/-- **Multiplicativity of ramification indices in towers** (§3, proof of Proposition 3.3). -/
+/-- **Multiplicativity of ramification indices in towers** (§`sec:prelim`, proof of Lemma
+`lem:tower`). -/
 theorem iterRam_add (m n : ℕ) (Q : P) :
     D.iterRam (m + n) Q = D.iterRam m Q * D.iterRam n (D.step^[m] Q) := by
   simp only [iterRam, Finset.prod_range_add]
@@ -176,7 +185,7 @@ theorem one_lt_iterRam_iff (m : ℕ) (Q : P) :
       (Nat.le_mul_of_pos_right _ (CanonicallyOrderedAdd.prod_pos.mpr fun _ _ => D.ram_pos _))
 
 /-- The primes over which the `m`-th iterate branches, described directly.
-This is the set-level form of Proposition 3.3. -/
+This is the set-level form of Proposition `prop:iterates`(1). -/
 theorem branchIter_eq (m : ℕ) :
     {Q | ∃ Q', D.step^[m] Q' = Q ∧ 1 < D.iterRam m Q'}
       = ⋃ n ∈ Set.Iio m, D.step^[n] '' D.branch := by
@@ -217,26 +226,27 @@ theorem branch_iter (m : ℕ) :
     (D.iter m).branch = ⋃ n ∈ Set.Iio m, D.step^[n] '' D.branch :=
   D.branchIter_eq m
 
-/-- **Proposition 3.3** (Ramification under iterates). A prime `Q` is a branch prime of
+/-- **Proposition `prop:iterates`(1)** (Ramification under iterates). A prime `Q` is a branch prime
+of
 `gᵐ` if and only if `Q = gⁿ(R)` for some branch prime `R` of `g` and some `0 ≤ n < m`. -/
 theorem mem_branch_iter_iff (m : ℕ) (Q : P) :
     Q ∈ (D.iter m).branch ↔ ∃ n < m, ∃ R ∈ D.branch, D.step^[n] R = Q := by
   rw [branch_iter]
   simp only [Set.mem_iUnion, Set.mem_Iio, Set.mem_image, exists_prop]
 
-/-- **Proposition 3.4** (Orbit propagation). If `Q` is a branch prime of `g`, then
+/-- **Proposition `prop:iterates`(2)** (Orbit propagation). If `Q` is a branch prime of `g`, then
 `gⁿ(Q)` is a branch prime of `gⁿ⁺¹` for every `n ≥ 0`. -/
 theorem mem_branch_iter_succ (n : ℕ) {Q : P} (hQ : Q ∈ D.branch) :
     D.step^[n] Q ∈ (D.iter (n + 1)).branch :=
   (D.mem_branch_iter_iff (n + 1) _).mpr ⟨n, Nat.lt_succ_self n, Q, hQ, rfl⟩
 
-/-! ### The postcritical set (Definition 2.4 and Proposition 3.5) -/
+/-! ### The postcritical set (Definition `def:pcf` and Proposition `prop:iterates`(3)–(4)) -/
 
-/-- The postcritical set `PCset(g) = ⋃_{n ≥ 0} gⁿ(Branch(g))` (Definition 2.4). -/
+/-- The postcritical set `PCset(g) = ⋃_{n ≥ 0} gⁿ(Branch(g))` (Definition `def:pcf`). -/
 def pcSet : Set P := ⋃ n : ℕ, D.step^[n] '' D.branch
 
 /-- `g` is **post-critically finite** when its postcritical set has finitely many
-components (Definition 2.4). -/
+components (Definition `def:pcf`). -/
 def PCF : Prop := D.pcSet.Finite
 
 theorem mem_pcSet_iff {Q : P} : Q ∈ D.pcSet ↔ ∃ n, ∃ R ∈ D.branch, D.step^[n] R = Q := by
@@ -245,7 +255,7 @@ theorem mem_pcSet_iff {Q : P} : Q ∈ D.pcSet ↔ ∃ n, ∃ R ∈ D.branch, D.s
 theorem branch_subset_pcSet : D.branch ⊆ D.pcSet := fun _ hQ =>
   D.mem_pcSet_iff.mpr ⟨0, _, hQ, rfl⟩
 
-/-- `PCset(g)` is forward invariant (Proposition 3.5). -/
+/-- `PCset(g)` is forward invariant (Proposition `prop:iterates`(3)–(4)). -/
 theorem step_image_pcSet_subset : D.step '' D.pcSet ⊆ D.pcSet := by
   rintro _ ⟨Q, hQ, rfl⟩
   obtain ⟨n, R, hR, rfl⟩ := D.mem_pcSet_iff.mp hQ
@@ -259,13 +269,13 @@ theorem step_iterate_mem_pcSet {Q : P} (h : Q ∈ D.pcSet) (n : ℕ) :
     rw [Function.iterate_succ_apply']
     exact D.step_image_pcSet_subset ⟨_, ih, rfl⟩
 
-/-- `Branch(gᵐ) ⊆ PCset(g)` (Proposition 3.5). -/
+/-- `Branch(gᵐ) ⊆ PCset(g)` (Proposition `prop:iterates`(3)–(4)). -/
 theorem branch_iter_subset_pcSet (m : ℕ) : (D.iter m).branch ⊆ D.pcSet := by
   intro Q hQ
   obtain ⟨n, _, R, hR, hRQ⟩ := (D.mem_branch_iter_iff m Q).mp hQ
   exact D.mem_pcSet_iff.mpr ⟨n, R, hR, hRQ⟩
 
-/-- **Proposition 3.5**. `PCset(gᵐ) = PCset(g)` for every `m ≥ 1`. -/
+/-- **Proposition `prop:iterates`(3)–(4)**. `PCset(gᵐ) = PCset(g)` for every `m ≥ 1`. -/
 theorem pcSet_iter {m : ℕ} (hm : 1 ≤ m) : (D.iter m).pcSet = D.pcSet := by
   apply Set.Subset.antisymm
   · intro Q hQ
@@ -282,7 +292,7 @@ theorem pcSet_iter {m : ℕ} (hm : 1 ≤ m) : (D.iter m).pcSet = D.pcSet := by
       simp only [iter_step]
       rw [← Function.iterate_mul, ← Function.iterate_add_apply, hN, hRQ]
 
-/-- `g` is PCF if and only if every iterate is (Proposition 3.5). -/
+/-- `g` is PCF if and only if every iterate is (Proposition `prop:iterates`(3)–(4)). -/
 theorem pcf_iter_iff : D.PCF ↔ ∀ m, 1 ≤ m → (D.iter m).PCF := by
   constructor
   · intro h m hm
@@ -301,7 +311,7 @@ theorem pcSet_eq_biUnion_orbit : D.pcSet = ⋃ Q ∈ D.branch, D.orbit Q := by
   simp only [mem_pcSet_iff, orbit, Set.mem_iUnion, Set.mem_range, exists_prop]
   tauto
 
-/-- The orbit characterization of PCF (Definition 2.4, final sentence): `g` is PCF if
+/-- The orbit characterization of PCF (Definition `def:pcf`, final sentence): `g` is PCF if
 and only if every branch prime has finite forward orbit. -/
 theorem pcf_iff_forall_orbit_finite :
     D.PCF ↔ ∀ Q ∈ D.branch, (D.orbit Q).Finite := by
@@ -315,15 +325,16 @@ theorem pcf_iff_forall_orbit_finite :
     exact D.branch_finite.biUnion h
 
 /-- If every branch orbit lands in one finite set of primes, `g` is PCF.
-This is the shape in which Theorem 5.1 concludes. -/
+This is the shape in which Theorem `thm:normal-invariant` concludes. -/
 theorem pcf_of_orbits_subset {S : Set P} (hS : S.Finite)
     (h : ∀ Q ∈ D.branch, D.orbit Q ⊆ S) : D.PCF := by
   rw [PCF, pcSet_eq_biUnion_orbit]
   exact hS.subset (Set.iUnion₂_subset h)
 
-/-! ### Remark 2.5: invariance under a finite orbit-compatible cover -/
+/-! ### Lemma `lem:normalization`: invariance under a finite orbit-compatible cover -/
 
-/-- **Remark 2.5**. If `ν` is a finite-to-one map of prime systems intertwining the two
+/-- **Lemma `lem:normalization`**. If `ν` is a finite-to-one map of prime systems intertwining the
+two
 dynamics, and the branch primes upstairs lie over the postcritical set downstairs,
 then PCF is inherited upstairs. This is the bookkeeping used to pass to normalizations. -/
 theorem pcf_of_finite_cover {Q : Type v} (E : DivDyn Q) (ν : Q → P)

@@ -70,8 +70,10 @@ theorem isClosed_nonEtaleLocus [Algebra.FinitePresentation R S] :
 
 /-! ### Ramified points are non-étale
 
-Definition 2.3 of `latex/pcf.tex` says the branch divisor is where the cover ramifies, and
-§4 uses that a ramified point is a non-étale point. In the abstract layer that implication
+Definition `def:crit-branch` of `latex/paper.tex` says the branch divisor is where the cover
+ramifies, and
+§`sec:bounding` uses that a ramified point is a non-étale point. In the abstract layer that
+implication
 is a *hypothesis* (`hbranch` in `Pcf.divDynOfGeometry`, `ramified_subset_nonEtale` in
 `Pcf/Wiring.lean`). Over an honest algebra it is a **theorem**, because Mathlib's
 `Ideal.ramificationIdx_eq_one` derives index `1` from unramifiedness and étale implies

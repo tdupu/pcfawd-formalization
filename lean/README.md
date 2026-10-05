@@ -1,6 +1,6 @@
 # Lean formalization of "PCF All the Way Down"
 
-A Lean 4 + Mathlib formalization of `../latex/pcf.tex`.
+A Lean 4 + Mathlib formalization of parts of `../latex/paper.tex`.
 
 | Field | Value |
 | --- | --- |
@@ -8,166 +8,174 @@ A Lean 4 + Mathlib formalization of `../latex/pcf.tex`.
 | Mathlib | `v4.34.0` (rev `5ed296525643`) |
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
+| Manuscript | `../latex/paper.tex`, cited below **by `\label`**, never by number (see [HANDOFF.md](HANDOFF.md) §1 for why) |
 | Provenance | [`../ai/ai-usage.md`](../ai/ai-usage.md), [`../ai/tokens.md`](../ai/tokens.md) |
 
-## The conjecture
+## What the paper proves, and what this development proves
 
-> **PCF all the way down.** Let `X` be a normal projective variety over an algebraically
-> closed field of characteristic zero and `f : X → X` a finite surjective post-critically
-> finite morphism. Then for every prime `A` of `X` periodic under `f`, say `fⁿ(A) = A`,
-> the restriction `fⁿ|_A` is post-critically finite — and the same holds recursively for
-> the induced maps on normalizations of periodic primes, all the way down to dimension
-> zero.
+The paper's Theorem A (`thm:A` = `thm:general`) and Corollary `cor:pcfawd` say: every finite
+surjective post-critically finite self-map `f` of a variety over a field of characteristic
+zero is *PCF all the way down* (`def:pcfawd`) — for every preperiodic integral effective
+divisor `A` with `f^{r+s}(A) = f^r(A)`, the restriction `f^s|_{f^r(A)}` is PCF, recursively.
+The proof has three layers:
 
-Conjecture 2.6 of `../latex/pcf.tex`. It is due to the authors and is quoted on page 2 of
+1. **Divisorial dynamics** (`sec:defs`, `sec:pcf`, `sec:prelim`): branch loci, `PC(f)`,
+   iterates, towers, normalization.
+2. **The bounding theorem** (`thm:bounding`, `sec:bounding`): for `f : X → Y` finite
+   surjective between *normal* varieties and `A ⊂ X` an integral effective divisor with image
+   `B`, the restriction `g = f|_A` is étale at the generic point of every divisor of `A`
+   whose image is not in `Σ = (B ∩ Z) ∪ (B ∩ Sing Y) ∪ Sing B`. Proved by Zariski–Nagata
+   purity and Abhyankar's lemma.
+3. **Assembly** (`sec:main`, `sec:general`): for normal `X` and invariant `A`, `Σ` does not
+   depend on the iterate, so `g` is `1`-PCF (`thm:normal-invariant`); the general case passes
+   to the normalization (`thm:general`).
 
-> A. Bridy, P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
-> J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
-> morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.00194`.
+**This development machine-checks layer 1 and layer 3's normal case, on an abstract carrier,
+with layer 2 assumed.** Concretely:
 
-**Both paragraphs are formalized**, in [`Pcf/AllTheWayDown.lean`](Pcf/AllTheWayDown.lean):
-`Pcf.pcf_periodic_prime` for the first and `Pcf.pcf_all_the_way_down` for the descent,
-whose proof is a genuine induction. Read that file's header before quoting this: the
-statements are about the abstract `DivDyn`/`PcfSetup` layer, nothing constructs a `DivDyn`
-from a morphism of schemes, and Proposition 4.1(2) is assumed.
+* Everything in layer 1 that is a statement about sets of divisors, their pushforward and
+  ramification indices is **proved**: `prop:iterates`, the orbit characterization of PCF,
+  one direction of `lem:normalization`, and — new in this round — `cor:orbit-unnormalized`
+  and the comparison `PC ⊆ PC₀ ⊆ PC₁` of `prop:loci-compare`/`def:pcf-unnormalized`.
+* Theorem `thm:normal-invariant` is **proved from its inputs**: given the conclusion of
+  `thm:bounding` for every iterate (a structure field), the finite set `Σ`, and PCF-ness of
+  `f`, the restriction is `1`-PCF (`Pcf.PcfSetup1.res_pcf1`), hence `0`-PCF and PCF
+  (`cor:normal-invariant-pcf`). The older `Pcf.PcfSetup.res_pcf` is the same theorem with the
+  normalized (`e > 1`) form of the bounding conclusion. `cor:normal-preperiodic` is
+  `Pcf.PcfSetup.res_pcf_of_iter` / `Pcf.PcfSetup1.res_pcf1_of_iter`.
+* The **descent** along a chain of invariant divisors is a genuine induction
+  (`Pcf.pcf_descent` = `Pcf.pcf_all_the_way_down`), *given a `PcfSetup` at each stage*.
+* Theorem `thm:bounding` itself is **assumed** (`PcfSetup.key`, `PcfSetup1.key1`,
+  `Prop41Data.standardForm`). Zariski–Nagata purity and Abhyankar's structure theorem are
+  assumed. Clauses 1–2 of Stacks Tag 0EYF *are* proved (`Pcf/Abhyankar.lean`) but nothing
+  consumes them.
+* **Not formalized**: `thm:general` and therefore `thm:A`/`cor:pcfawd` *as stated* for
+  non-normal `X` — the passage to the normalization (`lem:lift`'s finiteness, `lem:covers`,
+  the periodic point of a finite set) has no Lean counterpart, and `Pcf.pcf_descent`
+  asserts nothing about non-normal stages. Nothing constructs a `Pcf.DivDyn` from a
+  morphism of schemes (assumptions A1–A5 in AXIOMS.md); "prime", "ramification index",
+  "singular locus", `crit₀`, `crit₁` are abstract data.
 
-## What is and is not claimed
-
-This is a **conditional** formalization in the style of the `gq2` project: the
-whole argument is machine-checked *down to a named list of interfaces to the
-classical literature*, which are assumed rather than proved.
-
-* **Proved in Lean.** The entire dynamical and combinatorial half of the paper:
-  Lemma 3.2, Propositions 3.3, 3.4 and 3.5, Remark 2.5, Theorem 5.1 (= Theorem
-  A), Corollary 5.2, Corollary 5.5, plus the algebraic core of Proposition 4.1
-  Step 3, the fact that `k[t]` is the normalization of the cuspidal cubic's
-  coordinate ring, and the computations behind Examples 4.4, 4.5, 6.1, 6.2
-  and 7.4.
-  Proposition 4.1's **finiteness** statements are also proved, and the *global*
-  form of purity is derived from the *local* form exactly as the manuscript argues.
-  **Clauses 1 and 2 of Stacks Tag 0EYF** are proved in `Pcf/Abhyankar.lean`: the standard
-  tamely ramified model `R[y]/(y^e − u)` is free of rank `e`, and is étale over `R` when
-  `e` is invertible and `u` is a unit, hence unramified at every prime. Both hypotheses
-  are shown necessary. Clause 3 (tameness in codimension one) is not stated. **None of it
-  is consumed by any assumption of the development** — see below.
-* **Assumed in Lean.** Zariski–Nagata purity (in a form *stronger* than Stacks Tag
-  0BMB — see AXIOMS.md §B.2), **Abhyankar's structure theorem** (Stacks Tag 0EYG),
-  lying-over, finiteness of the branch divisor **for the ambient system** (for the restricted system it is now
-  derived — see `Pcf/Wiring.lean` and AXIOMS.md §B.6), and the scheme-theoretic meaning
-  of "prime", "ramification index" and "singular locus".
-
-  On Proposition 4.1(2): it is **assumed**. The hypothesis `standardForm` asks for a
-  `Pcf.KummerWitness`, which names Abhyankar's lemma as its intended justification but
-  is logically equivalent to its own conclusion (`Pcf.nonempty_kummerWitness_iff`) and
-  interderivable with the earlier `Pcf.UnramifiedWitness` phrasing
-  (`Pcf.kummerWitness_iff_unramifiedWitness`). Nothing ties the witness's rings to the
-  cover under discussion, so the Tag 0EYF material above does not reach it.
-
-  Two adversarial reviews of this development are retained, at
-  `../ai/2026-09-21-prop41-formalization/adversarial-review.md` and
-  `../ai/2026-09-21-abhyankar-formalization/adversarial-review.md`. The first caught a
-  claim that Proposition 4.1(2) had been *derived*; the second caught a claim that the
-  assumption had been *weakened*. Both claims had reached this file and the manuscript.
-  Both refutations are now stated as Lean theorems so they cannot be missed.
-  See [AXIOMS.md](AXIOMS.md). The two layers are joined:
-  `Pcf.PcfGeometry.toPcfSetup` builds the structure Theorem A consumes with
-  `sing_finite`, `meets_finite` and `key` proved, so `Pcf.PcfGeometry.res_pcf`
-  reaches Theorem A assuming only purity, Proposition 4.1(2), lying over, and the
-  properness of the three correction loci.
-
-There is **no `sorry`, no `axiom`, no `admit` and no `native_decide`** in
-`Pcf/`. The assumed inputs are structure fields, so `#print axioms` reports
-only `propext`, `Classical.choice`, `Quot.sound` — read
+There is **no `sorry`, no `axiom`, no `admit` and no `native_decide`** in `Pcf/`. The
+assumed inputs are structure fields, so `#print axioms` (run for every headline result in
+`Pcf/Audit.lean`) reports only `propext`, `Classical.choice`, `Quot.sound` — read
 [AXIOMS.md](AXIOMS.md) before drawing conclusions from that.
+
+Two adversarial reviews of this development are retained, at
+`../ai/2026-09-21-prop41-formalization/adversarial-review.md` and
+`../ai/2026-09-21-abhyankar-formalization/adversarial-review.md`. The first caught a claim
+that the bounding theorem's per-divisor statement had been *derived*; the second caught a
+claim that the assumption had been *weakened*. Both refutations are Lean theorems
+(`Pcf.nonempty_kummerWitness_iff`, `Pcf.kummerWitness_iff_unramifiedWitness`,
+`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`).
 
 ## Layout
 
 ```
 lean/
-├── Pcf.lean               ← root module, imports everything
+├── Pcf.lean                 ← root module, imports everything
 ├── Pcf/
-│   ├── Dynamics.lean      ← §2–§3: divisorial dynamics, ramification of iterates
-│   ├── Restriction.lean   ← §5: Theorem A and its corollaries
-│   ├── Noetherian.lean    ← §4: primes of a Noetherian space; the finiteness engine
-│   ├── Purity.lean        ← §4: Zariski–Nagata purity, local form ⟹ global form
-│   ├── NonEtaleLocus.lean ← purity on Spec S; two PurityData fields discharged
-│   ├── Wiring.lean        ← purity ⟹ branch_finite' for the restricted system
-│   ├── SpectrumDynamics.lean ← branch_finite' fully discharged on Spec S
-│   ├── ZariskiNagata.lean ← Tag 0BMB restated (interderivable — discharges nothing)
-│   ├── Ramification.lean  ← §4 Step 4: an isomorphism has ramification index one
-│   ├── Geometry.lean      ← §4: Proposition 4.1, assembled and proved
-│   ├── LocalModel.lean    ← §4 Step 3: the standard tame local model
-│   ├── Abhyankar.lean     ← Stacks Tag 0EYF clauses 1–2 (Mathlib-only; not load-bearing)
-│   ├── Audit.lean         ← `#print axioms` for every headline result
+│   ├── Dynamics.lean        ← sec:defs, sec:prelim: DivDyn, iterates (prop:iterates), lem:normalization
+│   ├── Unnormalized.lean    ← app:other-defs, def:pcf-unnormalized: UnnormDyn, cor:orbit-unnormalized,
+│   │                           thm:normal-invariant in 1-PCF form (PcfSetup1)
+│   ├── Restriction.lean     ← sec:main: PcfSetup, thm:normal-invariant (PCF form), descent
+│   ├── AllTheWayDown.lean   ← conj:pcfawd, abstract normal-case form, conjecture-facing names
+│   ├── Noetherian.lean      ← lem:finitely-many: primes of a Noetherian space
+│   ├── Purity.lean          ← thm:purity: local form ⟹ global form
+│   ├── NonEtaleLocus.lean   ← the non-étale locus on Spec S is closed
+│   ├── Wiring.lean          ← purity ⟹ branch_finite' for the restricted system
+│   ├── SpectrumDynamics.lean← branch_finite' fully discharged on Spec S
+│   ├── ZariskiNagata.lean   ← Stacks 0BMB restated (interderivable — discharges nothing)
+│   ├── Ramification.lean    ← thm:bounding Step 4: an isomorphism has index one
+│   ├── Geometry.lean        ← thm:bounding assembled: Prop41Data, PcfGeometry
+│   ├── LocalModel.lean      ← thm:bounding Step 3 / eq:standard-piece
+│   ├── Abhyankar.lean       ← Stacks 0EYF clauses 1–2 (Mathlib-only; not load-bearing)
+│   ├── Audit.lean           ← #print axioms for every headline result
 │   └── Examples/
-│       ├── Squaring.lean  ← §6: Examples 6.1, 6.2; witness that the setup is inhabited
-│       ├── CofiniteWitness.lean ← a complete `PcfGeometry` with genuine ramification
-│       ├── Cusp.lean      ← §4: Examples 4.4, 4.5
-│       └── CharP.lean     ← §7: Examples 7.1, 7.4 (the wild counterexample)
-├── AXIOMS.md              ← axiom census: everything assumed
+│       ├── Squaring.lean    ← ex:squaring, ex:squaring-P2
+│       ├── Pinched.lean     ← ex:pinched (ring level + divisorial dynamics on the nodal line)
+│       ├── CofiniteWitness.lean ← a complete PcfGeometry with genuine ramification
+│       ├── Cusp.lean        ← ex:cusp, ex:branch-singular
+│       └── CharP.lean       ← ex:frobenius-line, ex:wild
+├── AXIOMS.md                ← axiom census: everything assumed
+├── HANDOFF.md               ← session handoff; §1 explains why labels, not numbers
 ├── lakefile.toml, lean-toolchain, lake-manifest.json
-└── .lake/                 ← build output, never tracked
+└── .lake/                   ← build output, never tracked
 ```
 
 ## The design in one paragraph
 
-The manuscript's §3 depends on a variety only through the set of its primes,
-the pushforward of primes along `g`, and the ramification index at each prime.
-`Pcf.DivDyn` packages exactly that. The `m`-th iterate `D.iter m` is defined by
-`step := stepᵐ` and `ram := ∏_{i<m} ram (stepⁱ ·)`, which builds multiplicativity
-of ramification in towers into the definition; Propositions 3.3–3.5 then become
-theorems about finite products of natural numbers and forward orbits, and are
-proved outright. `Pcf.PcfSetup` adds the data of Theorem 5.1 — a fixed prime
-`A`, the restricted system on `A`, the finite sets `Sing` and `A ∩ E`, and the
-conclusion of Proposition 4.1 for every iterate. The decisive point of the
-paper, that the bounding set `Σ` does **not** depend on the iterate `m`, is
-`Pcf.PcfSetup.branch_iter_subset_bound`, and Theorem A follows from it and the
-orbit characterization of PCF.
+The manuscript's `sec:prelim` depends on a variety only through the set of its integral
+effective divisors ("primes"), their pushforward along `g`, and the ramification index at
+each. `Pcf.DivDyn` packages exactly that. The `m`-th iterate `D.iter m` has `step := stepᵐ`
+and `ram := ∏_{i<m} ram (stepⁱ ·)`, which builds the tower formula of `lem:tower` into the
+definition; `prop:iterates` then becomes a theorem about finite products and forward orbits.
+`Pcf.UnnormDyn` adds the two unnormalized critical predicates `crit₀(gᵐ)`, `crit₁(gᵐ)` *as
+data indexed by `m`*, because `lem:tower-unnormalized` gives only one-sided inclusions, which
+are fields. `Pcf.PcfSetup`/`Pcf.PcfSetup1` add the data of `thm:normal-invariant` — the
+invariant prime `A`, the restricted system, the finite sets `Sing` and `A ∩ E`, and the
+conclusion of `thm:bounding` for every iterate. The decisive point, that `Σ` does **not**
+depend on `m`, is `Pcf.PcfSetup.branch_iter_subset_bound` /
+`Pcf.PcfSetup1.branch1_iter_subset_bound`.
 
 ## Statement-to-declaration map
 
-| `pcf.tex` | Lean declaration | Status |
+Status words: **proved** (a Lean theorem with the paper's content, on the abstract carrier);
+**assumed** (a structure field); **modelled** (a Lean definition standing for a paper
+notion, with the identification itself an assumption); **not formalized**.
+
+| `paper.tex` label | Lean declaration | Status |
 | --- | --- | --- |
-| Definition 2.2, 2.3 (`Branch`) | `Pcf.DivDyn.branch` | modelled (char. 0 convention) |
-| Definition 2.4 (`PCset`, PCF) | `Pcf.DivDyn.pcSet`, `Pcf.DivDyn.PCF` | modelled |
-| Remark 2.5 (normalization) | `Pcf.DivDyn.pcf_of_finite_cover` | proved |
-| Chains over `P₀` (§3) | `Pcf.DivDyn.IsChain`, `Pcf.DivDyn.exists_isChain_iff` | proved |
-| Lemma 3.2 (padding) | `Pcf.DivDyn.IsChain.extend` | proved |
-| multiplicativity in towers | `Pcf.DivDyn.iterRam_add` | proved (from the definition; see AXIOMS A4) |
-| Proposition 3.3 | `Pcf.DivDyn.mem_branch_iter_iff` | proved |
-| Proposition 3.4 | `Pcf.DivDyn.mem_branch_iter_succ` | proved |
-| Proposition 3.5 | `Pcf.DivDyn.pcSet_iter`, `Pcf.DivDyn.pcf_iter_iff` | proved |
-| §2, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isPrime_subset_nonEtale` | proved, but *not wired in* — `DivDyn.branch_finite'` is still a field |
-| §4, purity: local form ⟹ global form | `Pcf.PurityData.codim_eq_one` | proved |
-| `E` is closed | `Pcf.isClosed_nonEtaleLocus` | proved from Mathlib's `isOpen_etaleLocus` — discharges a `PurityData` field, but `PurityData` is *not wired in* to Theorem A |
-| height-zero points are generic | `Pcf.closure_eq_univ_of_specCodim_eq_zero` | proved — same status, *not wired in* |
-| purity is free below codimension two | `Pcf.localPurity_of_codim_le_one` | proved |
-| finiteness of `Branch(g)` for the restriction | `Pcf.resDivDynOfPurity` | **proved** from purity — `DivDyn.branch_finite'` is no longer a field on this route. Still a field for the *ambient* system, and on the plain `PcfGeometry`/`PcfSetup` routes |
-| Definition 2.3, ramified ⟹ non-étale | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` | **proved** from Mathlib's `Ideal.ramificationIdx_eq_one`; previously assumed on every route |
-| lying over (Stacks 00HS) | `Pcf.comap_surjective_of_isIntegral_of_injective` | **proved** on points; does *not* discharge `step_surjective`, which is about divisors (AXIOMS.md §B.7) |
-| `branch_finite'` over `Spec S` | `Pcf.divDynOfSpectrum` | **fully discharged** — costs only lying over and generic étaleness, with *no* purity input (AXIOMS.md §B.7) |
-| Stacks Tag 0BMB | `Pcf.ZariskiNagata` | **assumed**; restated with all five hypotheses but *interderivable* with the old field (`Pcf.PurityData.ofZariskiNagata_toZariskiNagata`), so nothing is reduced |
-| Proposition 4.1(1) | `Pcf.IsPrime.not_subset_sUnion`, `Pcf.not_subset_of_two_le_codim` | proved (`Sing(B)` properness assumed) |
-| Proposition 4.1(1), finiteness | `Pcf.finite_isPrime_subset` | proved |
-| Proposition 4.1(2) | `Pcf.Prop41Data.notMem_branch` | **assumed** via `standardForm`, which is equivalent to it |
-| Stacks Tag 0EYF, clauses 1–2 | `Abhyankar.finrank`, `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one` | **proved**, but consumed by nothing |
-| monic + separable ⟹ standard étale | `Abhyankar.isStandardEtale_adjoinRoot_of_separable` | proved; the one declaration a library-fit assessment flagged as an upstream candidate |
-| necessity of Tag 0EYF(2)'s hypotheses | `Abhyankar.not_etale_wild`, `Abhyankar.not_etale_of_not_isUnit` | proved |
-| Proposition 4.1(3) | `Pcf.Prop41Data.branch_subset_bound`, `Pcf.Prop41Data.finite_branch` | proved |
-| Proposition 4.1, Step 3 (as a map) | `Pcf.LocalModel.restrictionMap_bijective` | proved |
-| Proposition 4.1, Step 4's inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
-| purity | `Pcf.PurityData.localPurity` | **assumed**; stronger than Stacks 0BMB |
-| Proposition 4.1(2) as a hypothesis | `Pcf.Prop41Data.standardForm` | **assumed**; names Stacks 0EYF/0EYG as its justification |
-| Theorem A via geometry | `Pcf.PcfGeometry.res_pcf` | proved; `sing_finite`/`meets_finite` discharged, `key` restated |
-| the join | `Pcf.PcfGeometry.toPcfSetup`, `Pcf.divDynOfGeometry` | proved |
-| the join is inhabited | `Pcf.Examples.cofiniteGeometry`, `Pcf.Examples.resDyn_branch` | proved (toy space; see AXIOMS.md) |
-| Example 4.4 (cusp) | `Pcf.Examples.Cusp` | normalization, parametrization, Jacobian and `B ∩ Z` proved; `Branch(g) = ∅` not stated (no scheme-level `Branch`) |
-| Example 4.5 (quadric cone) | `Pcf.Examples.Cusp` | parametrization and restriction proved; normality/étaleness not formalized |
-| Theorem 5.1 = Theorem A | `Pcf.PcfSetup.res_pcf` | proved from the above |
-| Corollary 5.2 | `Pcf.PcfSetup.res_pcf_of_iter` | proved |
-| Corollary 5.5 | `Pcf.pcf_descent`, `Pcf.PcfSetup.normalization_pcf` | proved |
-| Example 6.1, 6.2 | `Pcf.Examples.squaringP1`, `Pcf.Examples.diagonalSquaring` | proved |
-| Example 7.4 (wild) | `Pcf.Examples.CharP` | proved |
+| `def:branch-loci` (1), (2): `branch₀`, `branch₁` | `Pcf.UnnormDyn.crit0/crit1`, `Pcf.UnnormDyn.branch0/branch1` | modelled: `crit_i(gᵐ)` is data indexed by `m`; `branch_i(gᵐ) := gᵐ(crit_i(gᵐ))` |
+| `def:branch-loci` (3) = `def:crit-branch`: `branch` | `Pcf.DivDyn.branch` | modelled, as `{g(Q) : e(Q/g(Q)) > 1}` (char. 0, assumption A3) |
+| `eq:branch-normalization` | — | not formalized (no `ν` on primes; one direction of its consequence is `pcf_of_finite_cover`) |
+| `lem:lift` | `Pcf.DivDyn.step_surjective` (existence), `Pcf.DivDyn.IsChain.extend` (iterated) | existence **assumed** as a field; finiteness of the fibre **not formalized** |
+| `lem:dictionary` | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` | one direction proved on `Spec S` (ramified ⟹ non-étale); the converse is assumption A3 |
+| `def:pcf` | `Pcf.DivDyn.pcSet`, `Pcf.DivDyn.PCF`, `Pcf.DivDyn.pcf_iff_forall_orbit_finite` | modelled; orbit characterization proved |
+| `lem:restriction` | — | not formalized (`step : P → P` presupposes it, assumption A1) |
+| `def:pcfawd` | `Pcf.pcf_descent` hypotheses (a chain of `PcfSetup`s) | modelled for *normal* stages only; dimension not modelled |
+| `conj:pcfawd` | `Pcf.pcf_all_the_way_down` | proved **in the abstract normal case** with `thm:bounding` assumed at every stage; the general case (`thm:general`) is **not formalized** |
+| `prop:pcf-equiv` (1)⟺(2) | `Pcf.DivDyn.pcf_iff_forall_orbit_finite` | proved in the form "every branch prime has *finite orbit*"; the paper's word "preperiodic" (`∃ r s, fʳ⁺ˢ(D) = fʳ(D)`) is not stated, and (3) is not stated |
+| `lem:tower` | `Pcf.DivDyn.iterRam_add`, `Pcf.DivDyn.branch_iter` | **not stated** for a general tower `g ∘ f`; multiplicativity of `e` in towers is the *definition* of `iterRam` (assumption A4), and the iterate consequence is `prop:iterates`(1) |
+| `prop:iterates` (1) | `Pcf.DivDyn.mem_branch_iter_iff` | proved |
+| `prop:iterates` (2) | `Pcf.DivDyn.mem_branch_iter_succ` | proved |
+| `prop:iterates` (3), (4) | `Pcf.DivDyn.pcSet_iter`, `Pcf.DivDyn.branch_iter_subset_pcSet`, `Pcf.DivDyn.pcf_iter_iff` | proved |
+| `lem:normalization` | `Pcf.DivDyn.pcf_of_finite_cover` | the direction "`f` PCF ⟹ `f̃` PCF" proved, with `ν` finite-to-one and `ν(branch f̃) ⊆ PC(f)` as hypotheses; the equality `PC(f) = ν(PC(f̃))` and the converse direction not formalized |
+| `lem:covers` | — | **not formalized** |
+| `lem:finitely-many` | `Pcf.finite_isPrime_subset`, `Pcf.PcfGeometry.sing_finite`, `Pcf.PcfGeometry.meets_finite` | proved on a Noetherian space, for `Pcf.IsPrime` (see AXIOMS.md §C on its fidelity) |
+| `thm:bounding`, Step 0 (properness of `Σ`) | `Pcf.Prop41Data.interOther_ne_univ` etc. | **assumed** (P5, P6) |
+| `thm:bounding`, étale conclusion | `Pcf.PcfSetup1.key1` | **assumed**, for every iterate |
+| `thm:bounding`, `e > 1` conclusion (`branch(g) ⊆ Σ`) | `Pcf.PcfSetup.key`, `Pcf.Prop41Data.standardForm` ⟹ `Pcf.Prop41Data.branch_subset_bound` | **assumed**; `standardForm` is logically equivalent to its conclusion (`Pcf.nonempty_kummerWitness_iff`) |
+| `thm:bounding`, Steps 1–2 (purity, Abhyankar) | `Pcf.PurityData.localPurity`, `Pcf.ZariskiNagata` (restated), `Abhyankar.*` | purity **assumed**; local ⟹ global form proved (`Pcf.PurityData.codim_eq_one`); Tag 0EYF (1)–(2) proved but not consumed |
+| `thm:bounding`, Step 3 (`eq:standard-piece`) | `Pcf.LocalModel.restrictionMap_bijective`, `Pcf.LocalModel.quotientRootEquiv` | proved as a statement about `R[z]/(zᵉ − ua)` |
+| `thm:bounding`, Step 4 | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
+| `ex:cusp` | `Pcf.Examples.Cusp.*` | parametrization, Jacobian `2u`, `k[t]` is the normalization, `B ∩ Z = {0}` proved; `branch(g) = ∅` and the new sentence `branch₀(g) = {(0,0)}` **not formalized** |
+| `ex:branch-singular` | `Pcf.Examples.Cusp.coneParam`, `coneMap_restrict` | parametrization and restriction proved; normality, étaleness off the vertex, `branch(g) = {o}` not formalized |
+| `thm:normal-invariant` (1-PCF) | `Pcf.PcfSetup1.res_pcf1` | proved from `key1`, `sing_finite`, `meets_finite`, PCF-ness of `f` |
+| `cor:normal-invariant-pcf` | `Pcf.PcfSetup1.res_pcf0`, `Pcf.PcfSetup1.res_pcf`, `Pcf.PcfSetup.res_pcf` | proved |
+| `cor:normal-preperiodic` | `Pcf.PcfSetup1.res_pcf1_of_iter`, `Pcf.PcfSetup.res_pcf_of_iter`, `Pcf.pcf_periodic_prime` | proved in the form "ambient system is `fˢ` and `B` is `fˢ`-invariant"; the reduction `B = fʳ(A)` is left to the supplier of the `PcfSetup` |
+| `thm:general` (= `thm:A`) | — | **not formalized** (needs `lem:normalization` both ways, `lem:covers`, `lem:lift` finiteness) |
+| `cor:pcfawd` | `Pcf.pcf_descent`, `Pcf.pcf_all_the_way_down` | abstract descent **proved** (a genuine induction) for a chain of `PcfSetup`s; each stage assumes `thm:bounding`; non-normal stages and dimension **not formalized** |
+| `def:pcf-unnormalized` | `Pcf.UnnormDyn.pcSet0/pcSet1`, `Pcf.UnnormDyn.PCF0/PCF1` | modelled |
+| `prop:loci-compare` (1) | `Pcf.UnnormDyn.crit1_finite` ⟹ `branch1_finite`, `branch0_finite` | **assumed** for `crit₁`; `crit₀` derived |
+| `prop:loci-compare` (2) | `Pcf.UnnormDyn.crit_subset_crit0`, `crit0_subset_crit1` ⟹ `branch_subset_branch0`, `branch0_subset_branch1`, `pcSet_subset_pcSet0`, `pcSet0_subset_pcSet1`, `pcf0_of_pcf1`, `pcf_of_pcf0` | **assumed** on `crit`; the consequences for `branch`, `PC` and `i`-PCF proved |
+| `prop:loci-compare` (3) | — | not formalized |
+| `lem:tower-unnormalized` (1), (2) | `Pcf.UnnormDyn.crit0_tower`, `Pcf.UnnormDyn.crit1_tower` | **assumed**, for `g` and `h = gⁿ` only; the inclusions of branch loci and the failure of the converse not stated |
+| `cor:orbit-unnormalized` | `Pcf.UnnormDyn.orbit_unnormalized_zero`, `orbit_unnormalized_one`, `orbit_unnormalized_one'` | proved (for all `n ≥ 0`) |
+| `ex:pinched`, `f̃*R ⊆ R` | `Pcf.Examples.Pinched.sqMap_mem_of_mem` (indeed `sqMap_mem` for all `h`) | proved, any commutative ring |
+| `ex:pinched`, `R = k[w, z², z(w−1), z³−4z]` | `Pcf.Examples.Pinched.adjoin_gens_eq` | proved, `k` a field of characteristic zero (uses only `4 ≠ 0`) |
+| `ex:pinched`, `R_B` closed under `p ↦ p(z²)` | `Pcf.Examples.Pinched.comp_sq_mem` | proved |
+| `ex:pinched`, orbit `4, 16, 256, …` distinct | `Pcf.Examples.Pinched.sqOrbit_injective`, `pt_four_pow_injective` | proved |
+| `ex:pinched`, `g` PCF | `Pcf.Examples.Pinched.nodeDivDyn_pcf` (`PC(g) = {0}`) | proved on the modelled system `nodeDivDyn` (`k` algebraically closed, char. 0) |
+| `ex:pinched`, `g` not `0`-PCF, not `1`-PCF | `Pcf.Examples.Pinched.pcSet0_infinite`, `pcSet1_infinite`; instance `nodeUnnormDyn_not_pcf0/1` | proved **given `o ∈ crit₀(g)`** as a hypothesis (or stipulated in the instance); the fibre-length computation is **not formalized** |
+| `ex:pinched`, pushout, variety, normalization, finiteness of `f`, `f` not flat at `o`, `PC(f)` | — | not formalized |
+| `ex:squaring` | `Pcf.Examples.squaringP1` | proved on the modelled system |
+| `ex:squaring-P2` | `Pcf.Examples.diagonalSquaring` | proved on a reduced ambient model (see that file's caveat); `key` **proved** there, so `PcfSetup` is inhabited |
+| `ex:wild` | `Pcf.Examples.CharP.orbit_infinite` | the critical orbit of `h(t) = t^{p+1} + c` is infinite: proved; the geometry of `F` not formalized |
+| `ex:frobenius-line` | `Pcf.Examples.CharP.restriction_eq_frobenius`, `derivative_charPoly_ne_zero` | concrete identities proved; "index one but not étale" not formalized |
+| `thm:purity` (Stacks 0BMB) | `Pcf.ZariskiNagata`, `Pcf.PurityData.localPurity` | **assumed** (restated with all hypotheses; interderivable with the old field) |
+| `thm:abhyankar` (Stacks 0EYG) | `Pcf.Prop41Data.standardForm` | **assumed** |
+| `lem:jacobian`, `ex:basilica`, `ex:dupont`, `ex:loci-compared`, `rem:why-normalized`, `q:sing-B` | — | not formalized |
 
 ## Building
 

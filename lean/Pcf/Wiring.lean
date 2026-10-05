@@ -8,23 +8,23 @@ import Pcf.NonEtaleLocus
 import Pcf.ZariskiNagata
 
 /-!
-# Wiring the purity layer into Theorem A
+# Wiring the purity layer into Theorem `thm:normal-invariant`
 
 Until now the purity layer of `Pcf/Purity.lean` and `Pcf/NonEtaleLocus.lean` was a side
 branch: `lean/AXIOMS.md` recorded that `Pcf.DivDyn.branch_finite'` — the finiteness of the
-branch divisor — was a *field* on both routes to Theorem A, and that
+branch divisor — was a *field* on both routes to Theorem `thm:normal-invariant`, and that
 `Pcf.divDynOfGeometry` showed how it *could* be discharged but that nothing was built
 through it.
 
 This file builds through it. `Pcf.PcfGeometry.ofPurityData` constructs the geometric input
-to Theorem A with the restricted system's `branch_finite'` **proved**, from a
+to Theorem `thm:normal-invariant` with the restricted system's `branch_finite'` **proved**, from a
 `Pcf.PurityData` on the base. Composed with `Pcf.purityDataOfAlgebra`, that gives a chain
 
   Mathlib's `Algebra.isOpen_etaleLocus`
     ⟹ `Pcf.isClosed_nonEtaleLocus`                 (the non-étale locus is closed)
     ⟹ `Pcf.finite_isPrime_subset`                  (Noetherian: finitely many primes in it)
     ⟹ `Pcf.DivDyn.branch_finite'`                  (a field of `DivDyn`, now discharged)
-    ⟹ `Pcf.PcfGeometry.res_pcf`                    (Theorem A)
+    ⟹ `Pcf.PcfGeometry.res_pcf`                    (Theorem `thm:normal-invariant`)
 
 in which **each arrow is a theorem**. That is not the same as saying nothing is assumed:
 the *inputs* to the chain — generic étaleness, Zariski–Nagata purity itself,
@@ -32,7 +32,8 @@ the *inputs* to the chain — generic étaleness, Zariski–Nagata purity itself
 `lean/AXIOMS.md`. What changes is that `branch_finite'`, previously a field on both routes,
 is no longer among them, and that its closedness input is supplied by Mathlib.
 
-This is the first place in this development where the purity layer reaches Theorem A at
+This is the first place in this development where the purity layer reaches Theorem
+`thm:normal-invariant` at
 all.
 
 ## What is traded, stated exactly
@@ -40,7 +41,7 @@ all.
 `branch_finite'` is not removed for free. It is traded for
 
 * `ramified_subset_nonEtale` — every prime over which the restriction ramifies lies in the
-  non-étale locus, which is Definition 2.3 read in the direction the argument needs;
+  non-étale locus, which is Definition `def:crit-branch` read in the direction the argument needs;
 * `PurityData.nonEtale_ne_univ` — the morphism is generically étale (separability);
 * Noetherianness of the base.
 
@@ -64,7 +65,7 @@ this one cannot be read as a fourth.
 
 * `Pcf.resDivDynOfPurity` — the restricted system, with `branch_finite'` proved.
 * `Pcf.PcfGeometry.ofPurityData` — the geometric input built through it.
-* `Pcf.PcfGeometry.res_pcf_of_purityData` — Theorem A on that route.
+* `Pcf.PcfGeometry.res_pcf_of_purityData` — Theorem `thm:normal-invariant` on that route.
 * `Pcf.resDivDynOfAlgebra` — the composite over an actual algebra, taking no closedness
   argument because Mathlib supplies it.
 * `Pcf.exists_nonEtale_of_branch_finite` — the converse; the honesty check.
@@ -102,7 +103,8 @@ noncomputable def resDivDynOfPurity [NoetherianSpace B]
 
 /-! ### The geometric input, built through it -/
 
-/-- **The geometric input to Theorem A, with the restricted system's branch-finiteness
+/-- **The geometric input to Theorem `thm:normal-invariant`, with the restricted system's
+branch-finiteness
 derived from purity instead of assumed.**
 
 Every field of the resulting `Pcf.PcfGeometry` is as before except `res`, which is now
@@ -141,7 +143,8 @@ noncomputable def PcfGeometry.ofPurityData [NoetherianSpace B]
   meetsSet_ne_univ := meetsSet_ne_univ
   standardForm := standardForm
 
-/-- **Theorem A, with the branch divisor's finiteness no longer assumed for the restricted
+/-- **Theorem `thm:normal-invariant`, with the branch divisor's finiteness no longer assumed for the
+restricted
 system.** -/
 theorem PcfGeometry.res_pcf_of_purityData [NoetherianSpace B]
     (amb : DivDyn PX) (fixedPrime : PX) (fixed : amb.step fixedPrime = fixedPrime)

@@ -11,12 +11,12 @@ import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 /-!
 # The standard tame local model
 
-This file formalizes the commutative-algebra core of Proposition 4.1 of
-*PCF All the Way Down* (`latex/pcf.tex`).
+This file formalizes the commutative-algebra core of Theorem `thm:bounding` of
+*PCF All the Way Down* (`latex/paper.tex`).
 
 The paper's `Strategy` section states that "the entire mechanism of *PCF all the way down*
 is the elementary observation that restricting `O[z]/(z^e - u*a) → O` to `V(a)` gives
-`O/(a) ≅ O/(a)`", and Step 3 of the proof of Proposition 4.1 states that "in a standard
+`O/(a) ≅ O/(a)`", and Step 3 of the proof of Theorem `thm:bounding` states that "in a standard
 piece, the reduced preimage of `D` is `V(z)`, and `O[z]/(z^e - u*a, z) = O/(a)`, so
 `V(z) → V(a)` is an isomorphism".  The Remark *Regularity of the source in the local model*
 additionally records that the standard piece is free over the base with basis
@@ -38,7 +38,7 @@ additionally records that the standard piece is free over the base with basis
   the standard piece is a finite free `R`-module of rank `e`.
 * `Pcf.LocalModel.quotientRootEquiv` : **the main result**, the `R`-algebra isomorphism
   `R[z]/(z ^ e - u * a, z) ≃ₐ[R] R/(a)`.  This is the statement
-  `O[z]/(z^e - ua, z) = O/(a)` from Step 3 of Proposition 4.1.
+  `O[z]/(z^e - ua, z) = O/(a)` from Step 3 of Theorem `thm:bounding`.
 * `Pcf.LocalModel.restrictionMap_bijective` : **the form of Step 3 that Step 4 uses**, namely
   that the restriction map `V(z) → V(a)` is an isomorphism *as a map*.
 * `Pcf.LocalModel.root_mem_nonZeroDivisors` : `z` is a nonzerodivisor whenever `a` is.
@@ -83,7 +83,7 @@ non-reducedness, not bare nilpotency, that distinguishes the ramified case, and 
 what the `_ne_zero` forms supply.  All three of their hypotheses are needed: for `e ≤ 1`,
 for `a` a unit, and over the zero ring the image of `z` in `C/(a)` really is `0`.
 
-What Step 4 of the proof of Proposition 4.1 in `pcf.tex` actually uses is a statement about
+What Step 4 of the proof of Theorem `thm:bounding` in `paper.tex` actually uses is a statement about
 a *different* map: the restriction `g = f|_A`.  Its ramification index along the divisor
 is `1` because the natural map `V(z) → V(a)` — the map induced by the structure map
 `R → C`, not any abstractly chosen isomorphism — is an isomorphism.  That is
@@ -112,13 +112,13 @@ open Polynomial
 variable {R : Type*} [CommRing R]
 
 /-- The defining polynomial `X ^ e - C (u * a)` of a standard piece of a tame cyclic cover,
-as in the local model of Proposition 4.1 of `pcf.tex` (`C = R[z]/(z ^ e - u * a)`). -/
+as in the local model of Theorem `thm:bounding` of `paper.tex` (`C = R[z]/(z ^ e - u * a)`). -/
 noncomputable def localPoly (u : Rˣ) (a : R) (e : ℕ) : R[X] :=
   X ^ e - Polynomial.C ((u : R) * a)
 
 /-- The defining polynomial of a standard piece is monic when `e ≥ 1`; this is the
 "since the defining polynomial is monic" step of the Remark *Regularity of the source in
-the local model* in `pcf.tex`. -/
+the local model* in `paper.tex`. -/
 theorem localPoly_monic (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) : (localPoly u a e).Monic :=
   monic_X_pow_sub_C _ (Nat.one_le_iff_ne_zero.mp he)
 
@@ -138,7 +138,7 @@ private theorem root_pow_eq_aux (r : R) (e : ℕ) :
   simpa [AdjoinRoot.algebraMap_eq] using h
 
 /-- The fundamental relation `z ^ e = u * a` in a standard piece `C = R[z]/(z ^ e - u * a)`
-(Proposition 4.1 of `pcf.tex`). -/
+(Theorem `thm:bounding` of `paper.tex`). -/
 theorem root_pow_eq (u : Rˣ) (a : R) (e : ℕ) :
     AdjoinRoot.root (localPoly u a e) ^ e
       = algebraMap R (AdjoinRoot (localPoly u a e)) ((u : R) * a) :=
@@ -150,13 +150,13 @@ variable (u : Rˣ) (a : R) {e : ℕ}
 
 /-- The power basis `1, z, …, z ^ (d - 1)` (`d` the degree of the defining polynomial) of the
 standard piece `C = R[z]/(z ^ e - u * a)`, from the Remark *Regularity of the source in the
-local model* of `pcf.tex`: "since the defining polynomial is monic, `C` is free over `R`
+local model* of `paper.tex`: "since the defining polynomial is monic, `C` is free over `R`
 with basis `1, z, …, z^{e-1}`". -/
 noncomputable def powerBasis (he : 1 ≤ e) : PowerBasis R (AdjoinRoot (localPoly u a e)) :=
   AdjoinRoot.powerBasis' (localPoly_monic u a he)
 
 /-- A standard piece `C = R[z]/(z ^ e - u * a)` is a free `R`-module
-(Remark *Regularity of the source in the local model* of `pcf.tex`). -/
+(Remark *Regularity of the source in the local model* of `paper.tex`). -/
 theorem free (he : 1 ≤ e) : Module.Free R (AdjoinRoot (localPoly u a e)) :=
   Module.Free.of_basis (powerBasis u a he).basis
 
@@ -166,14 +166,14 @@ theorem finite (he : 1 ≤ e) : Module.Finite R (AdjoinRoot (localPoly u a e)) :
 
 /-- The `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece
 `C = R[z]/(z ^ e - u * a)`, indexed by `Fin e`.  See the Remark
-*Regularity of the source in the local model* of `pcf.tex`. -/
+*Regularity of the source in the local model* of `paper.tex`. -/
 noncomputable def basis [Nontrivial R] (he : 1 ≤ e) :
     Module.Basis (Fin e) R (AdjoinRoot (localPoly u a e)) :=
   (powerBasis u a he).basis.reindex (finCongr (localPoly_natDegree u a e))
 
 /-- The `i`-th vector of `Pcf.LocalModel.basis` is `z ^ i`: the basis really is
 `1, z, …, z ^ (e - 1)`, as in the Remark *Regularity of the source in the local model*
-of `pcf.tex`. -/
+of `paper.tex`. -/
 @[simp]
 theorem basis_apply [Nontrivial R] (he : 1 ≤ e) (i : Fin e) :
     basis u a he i = AdjoinRoot.root (localPoly u a e) ^ (i : ℕ) := by
@@ -195,7 +195,7 @@ variable (u : Rˣ) (a : R) {e : ℕ}
 
 /-- The `R`-algebra map `C = R[z]/(z ^ e - u * a) → R/(a)` sending `z` to `0`.  This is the
 algebraic incarnation of the restriction of a standard piece to its branch divisor
-(Step 3 of the proof of Proposition 4.1 in `pcf.tex`). -/
+(Step 3 of the proof of Theorem `thm:bounding` in `paper.tex`). -/
 noncomputable def toQuotient (he : 1 ≤ e) :
     AdjoinRoot (localPoly u a e) →ₐ[R] R ⧸ Ideal.span ({a} : Set R) :=
   AdjoinRoot.liftAlgHom (localPoly u a e) (Algebra.ofId R (R ⧸ Ideal.span ({a} : Set R))) 0 <| by
@@ -220,8 +220,8 @@ theorem toQuotient_root (he : 1 ≤ e) :
   simp
 
 /-- The image of `a` in a standard piece lies in the ideal `(z)`: this is the reason the
-restriction map descends, and it is the identity `a = u⁻¹ * z ^ e` of Proposition 4.1
-of `pcf.tex`. -/
+restriction map descends, and it is the identity `a = u⁻¹ * z ^ e` of Theorem `thm:bounding`
+of `paper.tex`. -/
 theorem algebraMap_mem_span_root (he : 1 ≤ e) :
     algebraMap R (AdjoinRoot (localPoly u a e)) a
       ∈ Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
@@ -243,7 +243,7 @@ theorem algebraMap_mem_span_root (he : 1 ≤ e) :
               * AdjoinRoot.root (localPoly u a (d + 1)) ^ d) := by ring
 
 /-- The `R`-algebra map `R/(a) → C/(z)` induced by the structure map `R → C`.
-See Step 3 of the proof of Proposition 4.1 of `pcf.tex`. -/
+See Step 3 of the proof of Theorem `thm:bounding` of `paper.tex`. -/
 noncomputable def fromQuotient (he : 1 ≤ e) :
     R ⧸ Ideal.span ({a} : Set R) →ₐ[R]
       AdjoinRoot (localPoly u a e) ⧸
@@ -285,7 +285,7 @@ reduced preimage `V(z)` of the branch divisor is isomorphic to the divisor `V(a)
 `R[z]/(z ^ e - u * a, z) ≃ₐ[R] R/(a)`.
 
 This is exactly the identity `O[z]/(z^e - ua, z) = O/(a)` of Step 3 of the proof of
-Proposition 4.1 in `pcf.tex`, i.e. the "elementary observation" that the entire mechanism
+Theorem `thm:bounding` in `paper.tex`, i.e. the "elementary observation" that the entire mechanism
 of *PCF all the way down* rests on: restricting `O[z]/(z^e - ua) → O` to `V(a)` gives
 `O/(a) ≅ O/(a)`. -/
 noncomputable def quotientRootEquiv (he : 1 ≤ e) :
@@ -318,8 +318,8 @@ noncomputable def quotientRootEquiv (he : 1 ≤ e) :
 
 /-- **The restriction map `V(z) → V(a)`, algebraically.**  The `R`-algebra map
 `R/(a) → C/(z)`, `C = R[z]/(z ^ e - u * a)`, induced by the structure map `R → C`.
-On spectra this is the map `V(z) → V(a)` of Step 3 of the proof of Proposition 4.1 in
-`pcf.tex`: the restriction `g = f|_A` of the cover to the (reduced preimage of the) branch
+On spectra this is the map `V(z) → V(a)` of Step 3 of the proof of Theorem `thm:bounding` in
+`paper.tex`: the restriction `g = f|_A` of the cover to the (reduced preimage of the) branch
 divisor.  It is a synonym for `Pcf.LocalModel.fromQuotient`, named for the role it plays in
 Steps 3 and 4 of the proof.
 
@@ -339,7 +339,7 @@ theorem restrictionMap_mk (he : 1 ≤ e) (r : R) :
   rfl
 
 /-- `Pcf.LocalModel.restrictionMap` is the inverse of the isomorphism
-`Pcf.LocalModel.quotientRootEquiv` of Step 3 of Proposition 4.1 in `pcf.tex`. -/
+`Pcf.LocalModel.quotientRootEquiv` of Step 3 of Theorem `thm:bounding` in `paper.tex`. -/
 theorem coe_quotientRootEquiv_symm (he : 1 ≤ e) :
     ⇑(quotientRootEquiv u a he).symm = ⇑(restrictionMap u a he) := by
   rw [quotientRootEquiv, AlgEquiv.ofAlgHom_symm]
@@ -349,7 +349,7 @@ theorem coe_quotientRootEquiv_symm (he : 1 ≤ e) :
 `R → C = R[z]/(z ^ e - u * a)` is bijective, for `u` a unit and `e ≥ 1`.
 
 This is the precise content of "so `V(z) → V(a)` is an isomorphism" in Step 3 of the proof
-of Proposition 4.1 of `pcf.tex`, in the form used in Step 4: it is a statement about the
+of Theorem `thm:bounding` of `paper.tex`, in the form used in Step 4: it is a statement about the
 *specific map* `V(z) → V(a)`, not merely about the existence of some abstract isomorphism
 between the two rings.  In particular it is this statement, and not
 `Pcf.LocalModel.quotientRootEquiv` on its own, that says the restriction `g = f|_A` is
@@ -361,7 +361,7 @@ theorem restrictionMap_bijective (he : 1 ≤ e) : Function.Bijective (restrictio
 
 /-- **Restriction to the divisor is an isomorphism**, packaged as an `R`-algebra
 isomorphism `R/(a) ≃ₐ[R] C/(z)` whose underlying map is
-`Pcf.LocalModel.restrictionMap`.  Step 3 of the proof of Proposition 4.1 of `pcf.tex`. -/
+`Pcf.LocalModel.restrictionMap`.  Step 3 of the proof of Theorem `thm:bounding` of `paper.tex`. -/
 noncomputable def restrictionEquiv (he : 1 ≤ e) :
     (R ⧸ Ideal.span ({a} : Set R)) ≃ₐ[R]
       AdjoinRoot (localPoly u a e) ⧸
@@ -375,8 +375,8 @@ theorem restrictionEquiv_apply (he : 1 ≤ e) (x : R ⧸ Ideal.span ({a} : Set R
   rfl
 
 /-- The inverse of `Pcf.LocalModel.restrictionEquiv` is the map `C/(z) → R/(a)` sending
-`z` to `0`, i.e. `Pcf.LocalModel.quotientRootEquiv`.  Step 3 of Proposition 4.1 of
-`pcf.tex`. -/
+`z` to `0`, i.e. `Pcf.LocalModel.quotientRootEquiv`.  Step 3 of Theorem `thm:bounding` of
+`paper.tex`. -/
 theorem restrictionEquiv_symm_apply (he : 1 ≤ e)
     (x : AdjoinRoot (localPoly u a e) ⧸
       Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
@@ -394,7 +394,7 @@ variable (u : Rˣ) (a : R) {e : ℕ}
 /-- `z ^ e` lies in the ideal generated by the image of `a`: in the *scheme-theoretic*
 fibre of the cover over the divisor `V(a)`, the element `z` is nilpotent.  Together with
 `Pcf.LocalModel.restrictionMap_bijective` this is the precise separation between the two
-statements of Step 3 of Proposition 4.1 of `pcf.tex`: the *reduced* preimage `V(z)` maps
+statements of Step 3 of Theorem `thm:bounding` of `paper.tex`: the *reduced* preimage `V(z)` maps
 isomorphically to `V(a)`, while the *scheme-theoretic* fibre `C/(a)` of the cover carries a
 nilpotent `z`, which for `e ≥ 2` is the non-reducedness expressing the ramification of the
 cover. -/
@@ -466,7 +466,7 @@ nontrivial ring `R`, and with `a` a non-unit, the image of `z` in the scheme-the
 fibre `C/(a)` of the standard piece `C = R[z]/(z ^ e - u * a)` over the divisor `V(a)` is a
 nilpotent *and* is nonzero; equivalently, that fibre is non-reduced.
 
-This is the ramification statement for the local model of Proposition 4.1 of `pcf.tex`, and
+This is the ramification statement for the local model of Theorem `thm:bounding` of `paper.tex`, and
 the companion to `Pcf.LocalModel.restrictionMap_bijective`: the *restriction to the divisor*
 is an isomorphism, while the *cover* is ramified along the divisor.  (That the ramification
 index is exactly `e` is a finer statement, not formalized here.)  See the module
@@ -492,7 +492,7 @@ variable {M : Type*} [AddCommGroup M] [Module R M]
 /-- If `r` is a nonzerodivisor of `R` and `M` is a free `R`-module, then `r` acts injectively
 on `M`.  This is the step that lets the manuscript's argument "`u a c = 0`, hence `c = 0`"
 descend from `R` to `C`; see the Remark *Regularity of the source in the local model*
-of `pcf.tex`. -/
+of `paper.tex`. -/
 theorem eq_zero_of_smul_eq_zero_of_basis {ι : Type*} (b : Module.Basis ι R M) {r : R}
     (hr : r ∈ nonZeroDivisors R) {m : M} (h : r • m = 0) : m = 0 := by
   have hrepr : b.repr m = 0 := by
@@ -510,7 +510,7 @@ variable (u : Rˣ) (a : R) {e : ℕ}
 root `z` of `z ^ e - u * a` is a nonzerodivisor of the standard piece
 `C = R[z]/(z ^ e - u * a)`.
 
-This is the Remark *Regularity of the source in the local model* of `pcf.tex`:
+This is the Remark *Regularity of the source in the local model* of `paper.tex`:
 "as `a` is a nonzerodivisor, multiplication by `z` is injective: if `z c = 0`, then
 `u a c = z^e c = 0`, hence `c = 0`" — the last step uses freeness of `C` over `R`. -/
 theorem root_mem_nonZeroDivisors (he : 1 ≤ e) (ha : a ∈ nonZeroDivisors R) :

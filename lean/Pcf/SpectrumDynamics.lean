@@ -11,8 +11,9 @@ import Mathlib.Topology.Sober
 
 `Pcf/Wiring.lean` derives `Pcf.DivDyn.branch_finite'` for the restricted system from a
 `Pcf.PurityData`, but it still *assumes* `ramified_subset_nonEtale`: that a prime over
-which the system ramifies lies in the non-étale locus. That hypothesis is Definition 2.3 of
-`latex/pcf.tex` read in the direction the argument needs, and in the abstract layer there
+which the system ramifies lies in the non-étale locus. That hypothesis is Definition
+`def:crit-branch` of
+`latex/paper.tex` read in the direction the argument needs, and in the abstract layer there
 is nothing to prove it from.
 
 Over an honest algebra there is. This file instantiates the dynamics at `Spec S` with the
@@ -27,7 +28,7 @@ then **both** hypotheses become theorems:
 
 What the caller must still supply is the dynamics itself — a self-map `step` of the primes
 and its surjectivity (lying over) — and **generic étaleness**, `nonEtaleLocus R S ≠ univ`,
-which is the separability hypothesis of §2 and is a genuine condition on `S`.
+which is the separability hypothesis of §`sec:defs` and is a genuine condition on `S`.
 
 ## Why generic points
 
@@ -39,7 +40,8 @@ the point to the whole subset using closedness of the locus.
 
 ## What this does *not* do
 
-It does not prove Zariski–Nagata purity, and it does not touch Proposition 4.1(2). It
+It does not prove Zariski–Nagata purity, and it does not touch Theorem `thm:bounding` (per-divisor
+form). It
 removes one hypothesis — the definitional compatibility between ramification and
 non-étaleness — from the list a caller must supply on this route, and nothing else. See
 `lean/AXIOMS.md` §B.7.
@@ -53,7 +55,8 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 
 /-! ### Reading a ramification index off a prime -/
 
-/-- The ramification index of a prime of `Spec S`, in the sense of Definition 2.2's
+/-- The ramification index of a prime of `Spec S`, in the sense of the ramification paragraph before
+Definition `def:crit-branch`'s
 divisorial bookkeeping: `Ideal.ramificationIdx` at the generic point of the prime. -/
 noncomputable def specRam (R : Type*) [CommRing R] [Algebra R S]
     (Q : {s : Set (PrimeSpectrum S) // IsPrime s}) : ℕ :=
@@ -82,7 +85,7 @@ theorem subset_nonEtaleLocus_of_one_lt_specRam [Algebra.EssFiniteType R S]
 /-! ### Lying over
 
 `Pcf.DivDyn.step_surjective` is census entry **B1** — "every prime is the image of a
-prime", the lying-over/going-down step isolated inside the proof of Lemma 3.2, and cited to
+prime", the lying-over/going-down step isolated inside the proof of Lemma `lem:lift`, and cited to
 Stacks Tags 00HS / 00H8. Mathlib proves it, for an injective integral ring map. -/
 
 omit [Algebra R S] in

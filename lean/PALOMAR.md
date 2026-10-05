@@ -32,7 +32,7 @@ and `git rev-parse HEAD` in `.lake/packages/mathlib` — because a first attempt
 it by `grep` returned the repository's own HEAD instead, which would have frozen a
 wrong pin into a permanent record.
 
-Accompanying manuscript: `latex/pcf.tex`. Assumption census: `AXIOMS.md`, beside this
+Accompanying manuscript: `latex/paper.tex`. Assumption census: `AXIOMS.md`, beside this
 file. Statement-to-declaration map: `README.md`, likewise.
 
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
@@ -86,7 +86,7 @@ whose induced system is the next stage. If stage `0` is post-critically finite, 
 **every** stage is. The proof is an induction on `i`.
 
 This is the second paragraph — the descent — of the conjecture the project is named
-after: Conjecture 2.6 of `latex/pcf.tex`, due to the authors and quoted on page 2 of
+after: Conjecture `conj:pcfawd` of `latex/paper.tex`, due to the authors and quoted on page 2 of
 A. Bridy, P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
 J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
 morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.00194`.
@@ -96,7 +96,7 @@ morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.0019
 * **This is not a statement about varieties.** `Pcf.DivDyn` and `Pcf.PcfSetup` are
   abstract structures. Nothing in this repository constructs a `Pcf.DivDyn` from a
   morphism of schemes; that bridge is assumptions A1–A5 of `lean/AXIOMS.md`.
-* **Proposition 4.1(2) of the manuscript is assumed**, as the field `PcfSetup.key`.
+* **Theorem `thm:bounding` (per-divisor form) of the manuscript is assumed**, as the field `PcfSetup.key`.
   It is not proved here, and three attempts to reduce it were retracted — see
   entries 9–11.
 * **Lying over is assumed** (`DivDyn.step_surjective`), and so is finiteness of the
@@ -206,7 +206,7 @@ subset, and, as the field `localPurity`, **the local form of the Zariski–Nagat
 theorem**. Then every irreducible component of that subset has a codimension-one
 generic point: the global form of purity.
 
-This is the one passage of §4 of the manuscript that the authors reasoned out rather
+This is the one passage of §`sec:bounding` of the manuscript that the authors reasoned out rather
 than quoted, because the cited SGA reference recalls the theorem without proof.
 
 **Does not claim.**
@@ -236,7 +236,7 @@ than quoted, because the cited SGA reference recalls the theorem without proof.
 `Spec S` whose ramification index over `R` — in Mathlib's sense,
 `Ideal.ramificationIdx` — exceeds `1` lies in the non-étale locus of `R → S`.
 
-**Does not claim.** The identification of `Ideal.ramificationIdx` with Definition 2.2
+**Does not claim.** The identification of `Ideal.ramificationIdx` with the ramification paragraph before Definition `def:crit-branch`
 of the manuscript (the exponent in `𝔪R = 𝔮₁^{e₁}···𝔮ₙ^{eₙ}` for the discrete valuation
 ring of a divisor prime) **is not formalized**; `lean/AXIOMS.md` §E records this.
 
@@ -346,5 +346,5 @@ more faithful.
   "Mathlib bans AI".
 
 * No author has reviewed the formalization. Compilation certifies the formal
-  statements; it does not certify that they render the statements of `latex/pcf.tex`,
+  statements; it does not certify that they render the statements of `latex/paper.tex`,
   and that comparison has not been completed.

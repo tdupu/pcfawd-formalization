@@ -9,7 +9,7 @@ import Pcf.Noetherian
 /-!
 # Zariski–Nagata purity: from the local form to the global form
 
-§4 of `latex/pcf.tex` quotes the **local** form of the Zariski–Nagata purity
+§`sec:bounding` of `latex/paper.tex` quotes the **local** form of the Zariski–Nagata purity
 theorem from the Stacks Project (Tag 0BMB), and then derives the **global** form
 (SGA 1, Exposé X, Theorem 3.1) from it by hand, because — in the authors' words —
 
@@ -18,7 +18,7 @@ theorem from the Stacks Project (Tag 0BMB), and then derives the **global** form
 > parse for the present application, we include the short deduction from the
 > local Stacks form.
 
-That deduction is the one piece of §4 the authors reasoned out rather than
+That deduction is the one piece of §`sec:bounding` the authors reasoned out rather than
 quoted, and it is pure point-set topology once the dimension bookkeeping is
 isolated. This file formalizes it: the local form is the sole hypothesis, the
 global form is proved.
@@ -30,7 +30,7 @@ Tag 0BMB has "`h` is unramified at `x'`". Étale implies unramified, so this
 field is a *consequence* of the genuine theorem rather than a strengthening of
 it. The remaining hypotheses of Tag 0BMB — `𝒪_{X',x}` normal, `𝒪_{Y',y}`
 regular, `h` quasi-finite at `x`, and `dim 𝒪_{X',x} = dim 𝒪_{Y',y} ≥ 1` — hold
-throughout §4's application and are absorbed into the field rather than carried
+throughout §`sec:bounding`'s application and are absorbed into the field rather than carried
 as separate data; the manuscript verifies them in a single sentence.
 
 ## Main results
@@ -43,7 +43,7 @@ as separate data; the manuscript verifies them in a single sentence.
   point, i.e. `E` is pure of codimension one.
 * `Pcf.PurityData.finite_isPrime_subset_nonEtale` — combined with the Noetherian
   finiteness of `Pcf.finite_isPrime_subset`, the branch divisor has finitely
-  many components (§2, after Definition 2.3).
+  many components (§`sec:defs`, after Definition `def:crit-branch`).
 -/
 
 namespace Pcf
@@ -52,7 +52,7 @@ open TopologicalSpace Set
 
 variable {X : Type*} [TopologicalSpace X]
 
-/-- The data of §4's purity argument.
+/-- The data of §`sec:bounding`'s purity argument.
 
 `nonEtale` is the manuscript's ramification locus `E`: the locus where the
 morphism fails to be étale. It is closed because the étale locus is open, and
@@ -151,7 +151,7 @@ theorem codim_eq_one [T0Space X] {E₀ : Set X} (hE₀ : D.IsComponent E₀)
   exact D.localPurity η h1
     (fun x' hx' hx'codim => notMem_nonEtale_of_specializes hE₀ hη hcodim hx' hx'codim) hηE
 
-/-- **Finiteness of the branch divisor** (§2, after Definition 2.3).
+/-- **Finiteness of the branch divisor** (§`sec:defs`, after Definition `def:crit-branch`).
 
 The non-étale locus is a proper closed subset, so in a Noetherian space it
 contains only finitely many primes; their images are the finitely many
@@ -164,7 +164,7 @@ theorem finite_isPrime_subset_nonEtale [NoetherianSpace X] :
     {P : Set X | IsPrime P ∧ P ⊆ D.nonEtale}.Finite :=
   Pcf.finite_isPrime_subset D.nonEtale_isClosed D.nonEtale_ne_univ
 
-/-- The image of the branch primes under any map — the form in which §2 concludes
+/-- The image of the branch primes under any map — the form in which §`sec:defs` concludes
 that `Branch(g)` has finitely many components. -/
 theorem finite_image_isPrime_subset_nonEtale [NoetherianSpace X] {β : Type*}
     (f : Set X → β) : (f '' {P : Set X | IsPrime P ∧ P ⊆ D.nonEtale}).Finite :=

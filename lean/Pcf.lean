@@ -1,5 +1,6 @@
 import Pcf.Dynamics
 import Pcf.Restriction
+import Pcf.Unnormalized
 import Pcf.Noetherian
 import Pcf.Purity
 import Pcf.NonEtaleLocus
@@ -15,4 +16,5 @@ import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
 import Pcf.Examples.Cusp
 import Pcf.Examples.CofiniteWitness
+import Pcf.Examples.Pinched
 import Pcf.Audit

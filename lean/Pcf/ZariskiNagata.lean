@@ -16,7 +16,8 @@ localPurity : ∀ x, 1 ≤ codim x →
 ```
 
 and `lean/AXIOMS.md` has always recorded, as entry P1, that this is **not** Stacks Tag
-0BMB but Tag 0BMB *plus* the standing hypotheses of §4 of `latex/pcf.tex`, absorbed into
+0BMB but Tag 0BMB *plus* the standing hypotheses of §`sec:bounding` of `latex/paper.tex`, absorbed
+into
 the field rather than carried as data. Tag 0BMB reads:
 
 > Let `f : X → Y` be a morphism of locally Noetherian schemes, `x ∈ X`, `y = f x`. Assume
@@ -115,13 +116,14 @@ end ZariskiNagata
 
 /-- **`PurityData.localPurity`, proved from the faithful form of Tag 0BMB.**
 
-The four standing hypotheses of §4 — that `𝒪_{X,x}` is normal, that `𝒪_{Y,f x}` is
+The four standing hypotheses of §`sec:bounding` — that `𝒪_{X,x}` is normal, that `𝒪_{Y,f x}` is
 regular, that `f` is quasi-finite, and that the two local dimensions agree — are now
 explicit arguments rather than silently absorbed into the assumed field. The manuscript
-verifies all four in a single sentence in Step 1 of the proof of Proposition 4.1.
+verifies all four in a single sentence in Step 1 of the proof of Theorem `thm:bounding`.
 
 Note the quantifier: they are required at *every* point, and `hdim` asks for global
-equidimensionality, which is more than §4 uses. But this does **not** make the resulting
+equidimensionality, which is more than §`sec:bounding` uses. But this does **not** make the
+resulting
 assumption weaker than the old field: by `Pcf.PurityData.ofZariskiNagata_toZariskiNagata`
 the two are interderivable, so nothing has been given up and nothing gained. An earlier
 version of this docstring said the requirement was "much less than the previous field,

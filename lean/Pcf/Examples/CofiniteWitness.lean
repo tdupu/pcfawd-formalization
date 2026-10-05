@@ -12,11 +12,12 @@ import Mathlib.Topology.Irreducible
 /-!
 # A concrete, genuinely ramified witness for `Pcf.PcfGeometry`
 
-`Pcf/Geometry.lean` derives Theorem A (`Pcf.PcfGeometry.res_pcf`) from a structure
+`Pcf/Geometry.lean` derives Theorem `thm:normal-invariant` (`Pcf.PcfGeometry.res_pcf`) from a
+structure
 `Pcf.PcfGeometry PX B` whose only assumed field is `standardForm`. A reader is entitled to
 ask whether that structure is inhabited at all, and — more sharply — whether it is
 inhabited by anything in which the *restricted* system actually ramifies. If the only
-models had `res.branch = ∅`, Theorem A would be true but empty on this route.
+models had `res.branch = ∅`, Theorem `thm:normal-invariant` would be true but empty on this route.
 
 This file answers both questions with a single compiling instance.
 
@@ -40,7 +41,7 @@ description (`CofiniteTopology.isClosed_iff`) and its Noetherianness
   trivial (identity step, no ramification, hence PCF); the restricted system has identity
   step and ramification index `2` at the prime `{0}` and `1` elsewhere; the correction
   locus `singAmbient` is `{0}`, so the ramified prime sits inside it, exactly as
-  Proposition 4.1 permits.
+  Theorem `thm:bounding` permits.
 * `Pcf.Examples.resDyn_branch` — the restricted branch divisor is `{{0}}`, in particular
   **nonempty** (`Pcf.Examples.resDyn_branch_nonempty`). The witness is therefore not
   ramification-free.
@@ -227,7 +228,7 @@ noncomputable def kummerWitnessOfEqOne {n : ℕ} (h : n = 1) : KummerWitness n :
 system and a restricted system that genuinely ramifies at the prime `{0}`.
 
 The ramified prime lies in the correction locus `singAmbient = {0}`, which is exactly the
-configuration Proposition 4.1 allows: the proposition bounds ramification *away* from the
+configuration Theorem `thm:bounding` allows: the proposition bounds ramification *away* from the
 three loci, and says nothing inside them. -/
 noncomputable def cofiniteGeometry : PcfGeometry Unit CofNat where
   amb := ambDyn
@@ -271,10 +272,11 @@ theorem resDyn_branch_nonempty : resDyn.branch.Nonempty :=
   ⟨zeroPrime, by rw [resDyn_branch]; rfl⟩
 
 /-- **The payoff.** The restricted system is post-critically finite, obtained by *applying*
-Theorem A (`Pcf.PcfGeometry.res_pcf`) to the witness — not by reproving it.
+Theorem `thm:normal-invariant` (`Pcf.PcfGeometry.res_pcf`) to the witness — not by reproving it.
 
 Together with `Pcf.Examples.resDyn_branch_nonempty` this says: `Pcf.PcfGeometry` is
-inhabited, the inhabitant has a nonempty restricted branch divisor, and Theorem A fires on
+inhabited, the inhabitant has a nonempty restricted branch divisor, and Theorem
+`thm:normal-invariant` fires on
 it. -/
 theorem resDyn_pcf : resDyn.PCF :=
   cofiniteGeometry.res_pcf ambDyn_pcf
@@ -289,7 +291,8 @@ theorem resDyn_pcf : resDyn.PCF :=
 
 /-! ### The same witness, with `branch_finite'` derived from purity
 
-`Pcf/Wiring.lean` routes the geometric input to Theorem A through a `Pcf.PurityData`, so
+`Pcf/Wiring.lean` routes the geometric input to Theorem `thm:normal-invariant` through a
+`Pcf.PurityData`, so
 that `Pcf.DivDyn.branch_finite'` for the restricted system is *proved* rather than supplied.
 This section exhibits an inhabitant of that route, so the wiring is not vacuous.
 

@@ -8,35 +8,39 @@ import Pcf.Dynamics
 /-!
 # PCF descends to fixed primes
 
-This file formalizes §5 of `latex/pcf.tex`: Theorem 5.1 (= Theorem A), Corollary 5.2
-(= the first part of Conjecture 2.6) and Corollary 5.5 (= "all the way down").
+This file formalizes §`sec:main` of `latex/paper.tex` on the abstract carrier: Theorem
+`thm:normal-invariant` in its PCF form (`cor:normal-invariant-pcf`; the `1`-PCF form is in
+`Pcf/Unnormalized.lean`), Corollary `cor:normal-preperiodic` (the normal case of Conjecture
+`conj:pcfawd`) and the descent of Corollary `cor:pcfawd` along normal stages.
 
-The geometric input is Proposition 4.1, the key proposition bounding the ramification
-of a restriction. Proposition 4.1 is proved in the manuscript by Zariski–Nagata purity
+The geometric input is Theorem `thm:bounding`, the key proposition bounding the ramification
+of a restriction. Theorem `thm:bounding` is proved in the manuscript by Zariski–Nagata purity
 (Stacks Tag 0BMB) followed by Abhyankar's lemma for a regular divisor (Stacks Tag 0EYG);
 neither is available in Mathlib. It enters here as the field `PcfSetup.key`, together
-with the finiteness statements of Proposition 4.1(1) as `sing_finite` and `meets_finite`.
+with the finiteness statements of Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` as
+`sing_finite` and `meets_finite`.
 See `lean/AXIOMS.md` for the full census of assumed inputs, and
 `Pcf.Examples.DiagonalSquaring` for a witness showing that `PcfSetup` is inhabited.
 
 Everything below `PcfSetup` is proved outright: given the key proposition, the passage
 from "the branch primes of every iterate lie in one fixed finite set" to
-"post-critical finiteness of the restriction" is exactly the content of §3, and it is
+"post-critical finiteness of the restriction" is exactly the content of §`sec:prelim`, and it is
 formalized without further assumptions.
 
 ## Main results
 
-* `Pcf.PcfSetup.res_pcf` — Theorem 5.1 (= Theorem A).
-* `Pcf.PcfSetup.res_pcf_of_iter` — Corollary 5.2.
-* `Pcf.pcf_descent` — Corollary 5.5, the descent along a chain of periodic primes.
-* `Pcf.PcfSetup.normalization_pcf` — Corollary 5.5 in its normalized form.
+* `Pcf.PcfSetup.res_pcf` — Theorem `thm:normal-invariant`.
+* `Pcf.PcfSetup.res_pcf_of_iter` — Corollary `cor:normal-preperiodic`.
+* `Pcf.pcf_descent` — Corollary `cor:pcfawd`, the descent along a chain of periodic primes.
+* `Pcf.PcfSetup.normalization_pcf` — Corollary `cor:pcfawd` in its normalized form.
 -/
 
 universe u v w
 
 namespace Pcf
 
-/-- The data of Theorem 5.1 together with the conclusion of Proposition 4.1.
+/-- The data of Theorem `thm:normal-invariant` together with the conclusion of Theorem
+`thm:bounding`.
 
 Here `amb` is the divisorial dynamical system of a finite surjective PCF morphism
 `f : X → X` of a normal variety in characteristic zero, `fixedPrime` is a prime `A`
@@ -44,11 +48,13 @@ of `X` with `f(A) = A`, and `res` is the divisorial dynamical system of the
 restriction `g = f|_A : A → A`.
 
 * `sing` is the set of primes `Q'` of `A` with `Q' ⊆ Sing(X)` or `Q' ⊆ Sing(A)`;
-  by Proposition 4.1(1) these are the codimension-one components of two proper closed
+  by Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` these are the codimension-one
+  components of two proper closed
   subsets of `A`, hence `sing_finite`.
 * `meets E` is the set of primes of `A` contained in `A ∩ E`; again by
-  Proposition 4.1(1) this is finite whenever `E ≠ A`.
-* `key` is Proposition 4.1(2) applied to the iterate `f^m`, for every `m`: away from
+  Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` this is finite whenever `E ≠ A`.
+* `key` is Theorem `thm:bounding` (per-divisor form) applied to the iterate `f^m`, for every `m`:
+  away from
   `Sing(X)`, `Sing(A)` and the other components of `Branch(f^m)`, the restriction
   `g^m` is unramified in codimension one.
 
@@ -63,15 +69,15 @@ structure PcfSetup (PX : Type u) (PA : Type v) where
   fixed : amb.step fixedPrime = fixedPrime
   /-- The restricted system, i.e. `g = f|_A` acting on the primes of `A`. -/
   res : DivDyn PA
-  /-- Primes of `A` inside `Sing(X) ∪ Sing(A)` (Proposition 4.1, terms (i) and (ii)). -/
+  /-- Primes of `A` inside `Sing(X) ∪ Sing(A)` (Theorem `thm:bounding`, terms (i) and (ii)). -/
   sing : Set PA
-  /-- Proposition 4.1(1) for the singular terms. -/
+  /-- Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` for the singular terms. -/
   sing_finite : sing.Finite
   /-- `meets E` collects the primes of `A` contained in `A ∩ E`. -/
   meets : PX → Set PA
-  /-- Proposition 4.1(1) for the intersection term. -/
+  /-- Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` for the intersection term. -/
   meets_finite : ∀ E, E ≠ fixedPrime → (meets E).Finite
-  /-- **Proposition 4.1(2)**, applied to the iterate `f^m` for each `m`. -/
+  /-- **Theorem `thm:bounding` (per-divisor form)**, applied to the iterate `f^m` for each `m`. -/
   key : ∀ (m : ℕ) (Q : PA), Q ∉ sing →
       (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
       Q ∉ (res.iter m).branch
@@ -80,7 +86,8 @@ namespace PcfSetup
 
 variable {PX : Type u} {PA : Type v} (S : PcfSetup PX PA)
 
-/-- The finite bounding set `Σ` of the proof of Theorem 5.1: the primes of `A` lying in
+/-- The finite bounding set `Σ` of the proof of Theorem `thm:normal-invariant`: the primes of `A`
+lying in
 `Sing(X)`, in `Sing(A)`, or in `A ∩ W_A`, where `W_A` is the union of the components of
 the postcritical divisor `PC(f)` other than `A`. It does not depend on the iterate. -/
 def bound : Set PA :=
@@ -91,7 +98,7 @@ theorem bound_finite (h : S.amb.PCF) : S.bound.Finite :=
     ((h.subset Set.sdiff_subset).biUnion fun _ hE =>
       S.meets_finite _ (by simpa using hE.2))
 
-/-- The heart of Theorem 5.1: the branch primes of **every** iterate `g^m` of the
+/-- The heart of Theorem `thm:normal-invariant`: the branch primes of **every** iterate `g^m` of the
 restriction lie in the single finite set `S.bound`, uniformly in `m`. -/
 theorem branch_iter_subset_bound (m : ℕ) : (S.res.iter m).branch ⊆ S.bound := by
   intro Q hQ
@@ -101,7 +108,7 @@ theorem branch_iter_subset_bound (m : ℕ) : (S.res.iter m).branch ⊆ S.bound :
   exact hQb (Or.inr (Set.mem_biUnion
     ⟨S.amb.branch_iter_subset_pcSet m hE, by simpa using hEA⟩ hmeets))
 
-/-- **Theorem 5.1** (= Theorem A of the manuscript).
+/-- **Theorem `thm:normal-invariant`** (= Theorem `thm:normal-invariant` of the manuscript).
 
 Let `X` be a normal variety over a field of characteristic zero and `f : X → X` a
 finite surjective post-critically finite morphism. Let `A` be a prime of `X` with
@@ -111,7 +118,7 @@ theorem res_pcf (h : S.amb.PCF) : S.res.PCF := by
   rintro Q hQ R ⟨n, rfl⟩
   exact S.branch_iter_subset_bound (n + 1) (S.res.mem_branch_iter_succ n hQ)
 
-/-- **Corollary 5.2** (= the first part of Conjecture 2.6).
+/-- **Corollary `cor:normal-preperiodic`** (= the first part of Conjecture `conj:pcfawd`).
 
 If `A` is a prime with `fⁿ(A) = A` for some `n ≥ 1`, then `fⁿ|_A` is post-critically
 finite. Abstractly: a setup whose ambient system is an iterate `Dⁿ` of a PCF system `D`
@@ -122,7 +129,8 @@ theorem res_pcf_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
   rw [hS]
   exact D.pcf_iter_iff.mp h n hn
 
-/-- **Corollary 5.5**, normalized form. Combining Theorem 5.1 with Remark 2.5, the lift
+/-- **Corollary `cor:pcfawd`**, normalized form. Combining Theorem `thm:normal-invariant` with Lemma
+`lem:normalization`, the lift
 of the restriction to the normalization of `A` is again post-critically finite. -/
 theorem normalization_pcf {PÃ : Type w} (E : DivDyn PÃ) (ν : PÃ → PA)
     (hcomm : ∀ x, ν (E.step x) = S.res.step (ν x))
@@ -133,9 +141,9 @@ theorem normalization_pcf {PÃ : Type w} (E : DivDyn PÃ) (ν : PÃ → PA)
 
 end PcfSetup
 
-/-- **Corollary 5.5** ("PCF all the way down").
+/-- **Corollary `cor:pcfawd`** ("PCF all the way down").
 
-This is the second paragraph of Conjecture 2.6 of `latex/pcf.tex`, the conjecture the
+This is the second paragraph of Conjecture `conj:pcfawd` of `latex/paper.tex`, the conjecture the
 project is named after. It is due to the authors and is quoted on page 2 of A. Bridy,
 P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
 J. H. Silverman, *Finite ramification for preimage fields of post-critically finite

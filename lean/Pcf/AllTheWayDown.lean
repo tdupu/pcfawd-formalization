@@ -23,16 +23,22 @@ place and under conjecture-facing names, the two halves of
 
 ## Where the conjecture appears in print
 
-The conjecture is due to the authors of `latex/pcf.tex` and is quoted on page 2 of
+The conjecture is due to the authors of `latex/paper.tex` and is quoted on page 2 of
 
 > A. Bridy, P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
 > J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
 > morphisms*, Mathematical Research Letters **24** (2017), no. 6, 1633–1647;
 > `arXiv:1511.00194`.
 
-It is Conjecture 2.6 of `latex/pcf.tex`, where Corollaries 5.2 and 5.5 prove it — and
-prove it without the projectivity and algebraic-closedness hypotheses under which it was
-posed.
+The conjecture quoted above is the form in which it was posed. In `latex/paper.tex` it is
+Conjecture `conj:pcfawd`, stated for an arbitrary variety over a field of characteristic
+zero (no normality, projectivity or algebraic closedness), and proved there as Corollary
+`cor:pcfawd` via Theorem `thm:general`. **This file formalizes the normal case only**:
+`Pcf.pcf_periodic_prime` is the abstract form of Corollary `cor:normal-preperiodic`, and
+`Pcf.pcf_all_the_way_down` descends along a chain of such normal-case steps. The passage to
+the normalization in Theorem `thm:general` (Lemmas `lem:normalization`, `lem:covers`,
+`lem:lift`) is **not formalized**, so the paper's `conj:pcfawd` for non-normal `X` is not
+a theorem of this development.
 
 ## What is formalized here
 
@@ -42,7 +48,7 @@ posed.
 * `Pcf.pcf_periodic_prime` — the first paragraph: a periodic prime's return map is PCF.
 * `Pcf.pcf_all_the_way_down` — the second paragraph: along a chain of periodic-prime
   restrictions, **every** stage is PCF. The proof is `induction i`.
-* `Pcf.pcSet_finite_all_the_way_down` — the conclusion unfolded to Definition 2.4.
+* `Pcf.pcSet_finite_all_the_way_down` — the conclusion unfolded to Definition `def:pcf`.
 
 There is deliberately **no** separate "purity route" descent theorem here. `Pcf/Wiring.lean`
 discharges `DivDyn.branch_finite'` for a restricted system, so each stage of a tower may be
@@ -60,7 +66,8 @@ particular:
 1. **No bridge from geometry.** Nothing in this development constructs a `Pcf.DivDyn` from
    an actual morphism of schemes. That `step`, `ram`, `branch` and `PCF` mean what their
    names say is assumptions A1–A5 of `lean/AXIOMS.md`, not a theorem.
-2. **Proposition 4.1(2) is assumed** — `Pcf.PcfSetup.key`, the mathematical heart of the
+2. **Theorem `thm:bounding` (per-divisor form) is assumed** — `Pcf.PcfSetup.key`, the mathematical
+   heart of the
    argument. Three attempts to reduce it are recorded as retracted in `lean/AXIOMS.md`
    §B.2 and §B.5.
 3. **Lying over is assumed** (`DivDyn.step_surjective`), and so is branch-finiteness for
@@ -71,8 +78,9 @@ particular:
    each level, and the manuscript's "the descent continues for at most `dim X` steps" is
    not modelled at all — the abstraction carries no dimension.
 5. **Characteristic zero is implicit.** `Pcf.DivDyn.branch` is `1 < ram`, dropping
-   Definition 2.2's inseparable-residue-extension clause (assumption A3). That is faithful
-   in characteristic zero, which is where the conjecture lives, and Example 7.4 in
+   the ramification paragraph before Definition `def:crit-branch`'s inseparable-residue-extension
+   clause (assumption A3). That is faithful
+   in characteristic zero, which is where the conjecture lives, and Example `ex:wild` in
    `Pcf/Examples/CharP.lean` shows the conclusion genuinely fails in characteristic `p`.
 
 So: the *logical architecture* of "PCF all the way down", including the descent induction,
@@ -88,7 +96,8 @@ universe u
 A prime that is periodic with return time `n ≥ 1` has post-critically finite return map,
 given that the ambient system is post-critically finite.
 
-This is Corollary 5.2 of `latex/pcf.tex` — the first paragraph of the conjecture quoted in
+This is Corollary `cor:normal-preperiodic` of `latex/paper.tex` — the first paragraph of the
+conjecture quoted in
 this file's header — restated under a conjecture-facing name.
 `Pcf.PcfSetup.res_pcf_of_iter` is the same theorem. -/
 theorem pcf_periodic_prime {PX : Type u} {PA : Type u} (S : PcfSetup PX PA)
@@ -107,7 +116,7 @@ than a finite schema. It does not stop, because the abstraction carries no dimen
 the manuscript the descent terminates after at most `dim X` steps, which is not modelled
 here (see the header).
 
-This is Corollary 5.5 of `latex/pcf.tex`. `Pcf.pcf_descent` is the same theorem. -/
+This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.pcf_descent` is the same theorem. -/
 theorem pcf_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))
     (S : ∀ i, PcfSetup (P i) (P (i + 1)))
     (hres : ∀ i, (S i).res = D (i + 1))
@@ -116,7 +125,7 @@ theorem pcf_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))
   pcf_descent D S hres hperiodic h0
 
 /-- The conclusion of `Pcf.pcf_all_the_way_down` unfolded: at every level of the descent
-the postcritical set has finitely many components, which is Definition 2.4. -/
+the postcritical set has finitely many components, which is Definition `def:pcf`. -/
 theorem pcSet_finite_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))
     (S : ∀ i, PcfSetup (P i) (P (i + 1)))
     (hres : ∀ i, (S i).res = D (i + 1))

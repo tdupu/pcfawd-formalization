@@ -8,7 +8,7 @@ import Mathlib.RingTheory.RamificationInertia.Ramification
 /-!
 # An isomorphism has ramification index one
 
-Step 4 of the proof of Proposition 4.1 in `latex/pcf.tex` argues as follows. The
+Step 4 of the proof of Theorem `thm:bounding` in `latex/paper.tex` argues as follows. The
 branch of `A` through the relevant point is one of the subschemes `V(z)` of
 Step 3, and that subscheme *maps isomorphically* onto the étale-local model of
 the divisor `D`. Because the map is an isomorphism, the induced extension of
@@ -81,8 +81,8 @@ theorem ramificationIdx_eq_one_of_surjective (q : Ideal S) [q.IsPrime]
 
 /-- **An isomorphism has ramification index one.**
 
-This is the statement used in Step 4 of the proof of Proposition 4.1 in
-`latex/pcf.tex`: the branch under consideration maps *isomorphically* onto the
+This is the statement used in Step 4 of the proof of Theorem `thm:bounding` in
+`latex/paper.tex`: the branch under consideration maps *isomorphically* onto the
 local model of the divisor, so the induced extension of discrete valuation rings
 is trivial and `e(𝔮/𝔪) = 1`. -/
 theorem ramificationIdx_eq_one_of_bijective (q : Ideal S) [q.IsPrime]

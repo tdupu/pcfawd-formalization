@@ -76,8 +76,9 @@ unit constant term (`u` invertible) are exactly the two hypotheses that make `c`
 * `Abhyankar.etale` — `R[y]/(y ^ e - u)` is étale over `R`.
 * `Abhyankar.ramificationIdx_eq_one` — every prime of the Kummer algebra has
   `Ideal.ramificationIdx` equal to `1` over `R`. **Caveat:** this is Mathlib's
-  `Ideal.ramificationIdx` (a `Module.length`); identifying it with Definition 2.2 of
-  `latex/pcf.tex` is *not* formalized anywhere in this development. See `AXIOMS.md` §E.
+  `Ideal.ramificationIdx` (a `Module.length`); identifying it with the ramification paragraph before
+  Definition `def:crit-branch` of
+  `latex/paper.tex` is *not* formalized anywhere in this development. See `AXIOMS.md` §E.
 * `Abhyankar.finrank` — clause 1 of Tag 0EYF (freeness and finiteness are Mathlib's).
 * `Abhyankar.etale_ramifiedPoly_general` — clause 2 in the form matching "invert `f`".
 * `Abhyankar.not_etale_wild`, `Abhyankar.not_etale_of_not_isUnit` — both hypotheses are
@@ -183,9 +184,11 @@ theorem etale (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
   inferInstance
 
 /-- **The form used downstream.** Every prime of the Kummer algebra is unramified over
-`R`: its ramification index in the sense of Definition 2.2 of the manuscript is `1`.
+`R`: its ramification index in the sense of the ramification paragraph before Definition
+`def:crit-branch` of the manuscript is `1`.
 
-This is the conclusion Proposition 4.1(2) needs, and it is here *derived* from the
+This is the conclusion Theorem `thm:bounding` (per-divisor form) needs, and it is here *derived*
+from the
 standard tame local form rather than assumed. -/
 theorem ramificationIdx_eq_one (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R)))
     (q : Ideal (AdjoinRoot (kummerPoly u e))) [q.IsPrime] :

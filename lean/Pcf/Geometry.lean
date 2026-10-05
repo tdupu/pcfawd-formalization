@@ -11,9 +11,9 @@ import Pcf.Abhyankar
 import Pcf.Restriction
 
 /-!
-# Proposition 4.1, assembled
+# Theorem `thm:bounding`, assembled
 
-This file assembles Proposition 4.1 of `latex/pcf.tex` — the key proposition bounding the
+This file assembles Theorem `thm:bounding` of `latex/paper.tex` — the key proposition bounding the
 ramification of a restriction — from the two classical inputs the manuscript cites.
 
 ## What is assumed and what is proved
@@ -33,7 +33,8 @@ Abhyankar's lemma splits into two halves.
   **proved**, in `Pcf/Abhyankar.lean`. Clause 3, tameness in codimension one, is not
   stated anywhere. See that file's header for the clause-by-clause account.
 
-**Proposition 4.1(2) is nevertheless still assumed, not derived, and the assumption has
+**Theorem `thm:bounding` (per-divisor form) is nevertheless still assumed, not derived, and the
+assumption has
 not shrunk.** `Pcf.kummerWitness_iff_unramifiedWitness` proves that the current interface
 `Pcf.KummerWitness` and the earlier `Pcf.UnramifiedWitness` are interderivable with no
 hypotheses, and `Pcf.nonempty_kummerWitness_iff` proves the current one is inhabited
@@ -97,7 +98,7 @@ open Set TopologicalSpace
 whose structure map is an isomorphism, a prime of the larger ring, and an identification
 of `n` with the corresponding ramification index.
 
-This is what Steps 1–3 of the proof of Proposition 4.1 produce at a prime satisfying
+This is what Steps 1–3 of the proof of Theorem `thm:bounding` produce at a prime satisfying
 hypotheses (a), (b), (c): purity makes the cover étale away from the divisor, Abhyankar's
 lemma puts it in standard tame form, and the restriction of a standard tame piece to its
 branch divisor is an isomorphism (`Pcf.LocalModel.restrictionMap_bijective`). -/
@@ -152,7 +153,8 @@ purity or Abhyankar's lemma is needed to build one.
 
 So `Prop41Data.standardForm` and `PcfGeometry.standardForm` are logically equivalent to
 "the ramification index is `1` at every prime over a good prime", i.e. to the conclusion of
-Proposition 4.1(2). **Proposition 4.1(2) is assumed in this development, not derived.**
+Theorem `thm:bounding` (per-divisor form). **Theorem `thm:bounding` (per-divisor form) is assumed in
+this development, not derived.**
 
 This lemma is stated so that no reader of the census or of the manuscript's disclosure can
 miss that point. -/
@@ -205,7 +207,8 @@ because anything depends on them. -/
 model that Abhyankar's lemma (Stacks Tag 0EYG) produces at a codimension-one point,
 together with an identification of `n` with a ramification index in it.
 
-The fields are exactly the output of Steps 1–2 of the proof of Proposition 4.1(2): a base
+The fields are exactly the output of Steps 1–2 of the proof of Theorem `thm:bounding` (per-divisor
+form): a base
 ring, a degree `e ≥ 1`, the *tameness* hypothesis that `e` is invertible in the base, and
 the unit `u` of the resulting Kummer equation `y ^ e = u`.
 
@@ -234,8 +237,10 @@ structure KummerWitness (n : ℕ) where
   [isPrime : prime.IsPrime]
   /-- `n` is Mathlib's `Ideal.ramificationIdx` for this prime over this base.
 
-  **Not** identified with Definition 2.2 of `latex/pcf.tex`. Mathlib's index is a
-  `Module.length`; Definition 2.2's is the exponent in `𝔪R = 𝔮₁^{e₁}···𝔮ₙ^{eₙ}` for the
+  **Not** identified with the ramification paragraph before Definition `def:crit-branch` of
+  `latex/paper.tex`. Mathlib's index is a
+  `Module.length`; the ramification paragraph before Definition `def:crit-branch`'s is the exponent
+  in `𝔪R = 𝔮₁^{e₁}···𝔮ₙ^{eₙ}` for the
   DVR of the *divisor prime*, and for the *restriction* `g = f|_A` rather than the cover.
   Two mismatches follow and neither is formalized: `Base` has the divisor equation
   inverted, so `𝔪` is not one of its ideals; and this is the cover's index, not the
@@ -299,7 +304,7 @@ development produced it.
 
 It means the replacement of `UnramifiedWitness` by `KummerWitness` **discharged nothing**.
 The assumption was *restated*, not weakened. An earlier version of this file, of
-`AXIOMS.md`, of `README.md` and of `latex/pcf.tex` said otherwise; all are corrected. -/
+`AXIOMS.md`, of `README.md` and of `latex/paper.tex` said otherwise; all are corrected. -/
 theorem kummerWitness_iff_unramifiedWitness (n : ℕ) :
     Nonempty (KummerWitness n) ↔ Nonempty (UnramifiedWitness n) :=
   ⟨fun ⟨w⟩ => ⟨cast (congrArg UnramifiedWitness w.eq_one).symm UnramifiedWitness.trivial⟩,
@@ -308,10 +313,12 @@ theorem kummerWitness_iff_unramifiedWitness (n : ℕ) :
 /-- **Honesty check, the analogue of `Pcf.nonempty_unramifiedWitness_iff`.**
 
 `KummerWitness n` is inhabited exactly when `n = 1`, so `standardForm` is logically
-equivalent to its own conclusion and **Proposition 4.1(2) is assumed, not derived**.
+equivalent to its own conclusion and **Theorem `thm:bounding` (per-divisor form) is assumed, not
+derived**.
 
 An earlier version of this docstring argued that such an equivalence is unavoidable for
-any interface sufficient for Proposition 4.1(2), and therefore not a defect. **That
+any interface sufficient for Theorem `thm:bounding` (per-divisor form), and therefore not a defect.
+**That
 argument is wrong** and is retracted. A sufficient hypothesis need only *imply* its
 conclusion; equivalence is not forced. This interface is equivalent to its conclusion for
 a specific, identifiable reason: `Base`, `deg`, `unit` and `prime` are chosen freely by
@@ -331,14 +338,15 @@ nothing about the interface. -/
 theorem nonempty_kummerWitness_iff (n : ℕ) : Nonempty (KummerWitness n) ↔ n = 1 :=
   ⟨fun ⟨w⟩ => w.eq_one, fun h => ⟨KummerWitness.ofEqOne h⟩⟩
 
-/-! ### Proposition 4.1 -/
+/-! ### Theorem `thm:bounding` -/
 
 variable {B : Type*} [TopologicalSpace B]
 
-/-- The data of Proposition 4.1, with `B` the target prime regarded as a variety.
+/-- The data of Theorem `thm:bounding`, with `B` the target prime regarded as a variety.
 
 `over P` indexes the primes of `A` lying over a prime `P` of `B`, and `ram` is their
-ramification index in the sense of Definition 2.2. The three loci are the correction terms
+ramification index in the sense of the ramification paragraph before Definition `def:crit-branch`.
+The three loci are the correction terms
 of the proposition.
 
 Only `standardForm` carries mathematics that is not proved here: it is Steps 1–2, i.e.
@@ -351,27 +359,32 @@ structure Prop41Data (B : Type*) [TopologicalSpace B] where
   singSelf : Set B
   /-- `B ∩ Z`, the intersection with the other branch components. -/
   interOther : Set B
-  /-- Proposition 4.1(1) for the ambient singular locus. -/
+  /-- Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` for the ambient singular locus. -/
   singAmbient_isClosed : IsClosed singAmbient
   singAmbient_ne_univ : singAmbient ≠ univ
-  /-- Proposition 4.1(1) for `Sing(B)`; in characteristic zero a variety is generically
+  /-- Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` for `Sing(B)`; in characteristic
+  zero a variety is generically
   regular, which is exactly properness here. -/
   singSelf_isClosed : IsClosed singSelf
   singSelf_ne_univ : singSelf ≠ univ
-  /-- Proposition 4.1(1) for `B ∩ Z`; `Pcf.IsPrime.inter_sUnion_ne_self` proves this from
+  /-- Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` for `B ∩ Z`;
+  `Pcf.IsPrime.inter_sUnion_ne_self` proves this from
   the description of `Z` as a union of primes different from `B`. -/
   interOther_isClosed : IsClosed interOther
   interOther_ne_univ : interOther ≠ univ
   /-- The primes of `A` lying over a prime of `B`. -/
   over : Set B → Type
-  /-- The ramification index of `g = f|_A` at such a prime (Definition 2.2). -/
+  /-- The ramification index of `g = f|_A` at such a prime (the ramification paragraph before
+  Definition `def:crit-branch`). -/
   ram : ∀ {P : Set B}, over P → ℕ
   /-- **Steps 1–2: Zariski–Nagata purity (Stacks Tag 0BMB) and Abhyankar's lemma
-  (Stacks Tag 0EYG).** At a prime satisfying hypotheses (a), (b), (c) of Proposition
-  4.1(2), each prime of `A` above it admits a **Kummer witness**: étale-locally the cover
+  (Stacks Tag 0EYG).** At a prime satisfying hypotheses (a), (b), (c) of Theorem `thm:bounding`
+  (per-divisor form), each prime of `A` above it admits a **Kummer witness**: étale-locally the
+  cover
   is the standard tamely ramified model `y ^ e = u` of Stacks Tag 0EYF.
 
-  **This field is Proposition 4.1(2) itself.** By `Pcf.nonempty_kummerWitness_iff` it is
+  **This field is Theorem `thm:bounding` (per-divisor form) itself.** By
+  `Pcf.nonempty_kummerWitness_iff` it is
   equivalent to its own conclusion, and by `Pcf.kummerWitness_iff_unramifiedWitness` it is
   interderivable with the earlier `Pcf.UnramifiedWitness` phrasing. It names its intended
   justification; it does not reduce to it. -/
@@ -382,15 +395,18 @@ namespace Prop41Data
 
 variable (D : Prop41Data B)
 
-/-- `Branch(g)`: the primes of `B` over which `g` ramifies (Definitions 2.2 and 2.3). -/
+/-- `Branch(g)`: the primes of `B` over which `g` ramifies (the ramification paragraph before
+Definition `def:crit-branch`, and that definition). -/
 def branch : Set (Set B) := {P | IsPrime P ∧ ∃ q : D.over P, 1 < D.ram q}
 
-/-- The bounding set of Proposition 4.1(3): the primes of `B` lying in one of the three
+/-- The bounding set of the containment `branch(g) ⊆ Σ` after Theorem `thm:bounding`: the primes of
+`B` lying in one of the three
 correction loci. -/
 def bound : Set (Set B) :=
   {P | IsPrime P ∧ (P ⊆ D.singAmbient ∨ P ⊆ D.singSelf ∨ P ⊆ D.interOther)}
 
-/-- **Proposition 4.1(2).** A prime of `B` whose generic point avoids `Sing(Y)`, `Sing(B)`
+/-- **Theorem `thm:bounding` (per-divisor form).** A prime of `B` whose generic point avoids
+`Sing(Y)`, `Sing(B)`
 and `Z` is not a branch prime of `g`.
 
 The proof is Step 4: the witness supplied by Steps 1–3 forces every ramification index
@@ -400,8 +416,9 @@ theorem notMem_branch {P : Set B} (hP : IsPrime P) (ha : ¬ P ⊆ D.singAmbient)
   rintro ⟨-, q, hq⟩
   exact absurd ((D.standardForm P hP ha hb hc q).eq_one) (by omega)
 
-/-- **Proposition 4.1(3), the inclusion.** `Branch(g)` is contained in the bounding set.
-This is the contrapositive of Proposition 4.1(2). -/
+/-- **the containment `branch(g) ⊆ Σ` after Theorem `thm:bounding`, the inclusion.** `Branch(g)` is
+contained in the bounding set.
+This is the contrapositive of Theorem `thm:bounding` (per-divisor form). -/
 theorem branch_subset_bound : D.branch ⊆ D.bound := by
   rintro P hP
   by_contra hPb
@@ -409,9 +426,11 @@ theorem branch_subset_bound : D.branch ⊆ D.bound := by
   obtain ⟨ha, hb, hc⟩ := hPb hP.1
   exact D.notMem_branch hP.1 ha hb hc hP
 
-/-- **Proposition 4.1(3), the finiteness.** The bounding set is a finite set of primes.
+/-- **the containment `branch(g) ⊆ Σ` after Theorem `thm:bounding`, the finiteness.** The bounding
+set is a finite set of primes.
 
-Each of the three loci is a proper closed subset by Proposition 4.1(1), and a proper
+Each of the three loci is a proper closed subset by Theorem `thm:bounding` Step 0 and Lemma
+`lem:finitely-many`, and a proper
 closed subset of a Noetherian space contains only finitely many primes. -/
 theorem finite_bound [NoetherianSpace B] : D.bound.Finite := by
   have e1 := finite_isPrime_subset D.singAmbient_isClosed D.singAmbient_ne_univ
@@ -423,10 +442,12 @@ theorem finite_bound [NoetherianSpace B] : D.bound.Finite := by
   · exact Or.inl (Or.inr ⟨hP, h⟩)
   · exact Or.inr ⟨hP, h⟩
 
-/-- **Proposition 4.1(3).** `Branch(g)` is contained in a finite set of primes of `B`
+/-- **the containment `branch(g) ⊆ Σ` after Theorem `thm:bounding`.** `Branch(g)` is contained in a
+finite set of primes of `B`
 which does not depend on the cover beyond the three correction loci.
 
-This is the statement Theorem 5.1 consumes, and the reason the argument works: the
+This is the statement Theorem `thm:normal-invariant` consumes, and the reason the argument works:
+the
 bounding set is built from `Sing(Y)`, `Sing(B)` and `Z`, none of which moves when `f` is
 replaced by an iterate. -/
 theorem finite_branch [NoetherianSpace B] : D.branch.Finite :=
@@ -436,7 +457,8 @@ theorem finite_branch [NoetherianSpace B] : D.branch.Finite :=
 
 `Pcf/Restriction.lean` carries `sing_finite` and `meets_finite` as hypotheses of
 `Pcf.PcfSetup`. In the geometric setting they are theorems: the loci are proper closed
-subsets by Proposition 4.1(1), and a proper closed subset of a Noetherian space contains
+subsets by Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, and a proper closed subset
+of a Noetherian space contains
 finitely many primes. The statements below are in the exact shape those fields require,
 with primes of `B` realized as the subtype `{s : Set B // Pcf.IsPrime s}`. -/
 
@@ -464,10 +486,11 @@ theorem finite_meets_subtype [NoetherianSpace B] :
 
 end Prop41Data
 
-/-! ### Joining the geometric layer to Theorem A
+/-! ### Joining the geometric layer to Theorem `thm:normal-invariant`
 
-Everything above proves Proposition 4.1 as a statement about a topological space. This
-section connects it to `Pcf.PcfSetup`, the structure Theorem 5.1 consumes, so that the
+Everything above proves Theorem `thm:bounding` as a statement about a topological space. This
+section connects it to `Pcf.PcfSetup`, the structure Theorem `thm:normal-invariant` consumes, so
+that the
 three fields `sing_finite`, `meets_finite` and `key` are **discharged** rather than
 assumed. Primes of `A` are realized as the subtype `{s : Set B // Pcf.IsPrime s}`.
 
@@ -482,7 +505,8 @@ variable {PX : Type*}
 **proved** rather than assumed, given that every branch prime lies in a proper closed
 locus — in the application, the image of the non-étale locus.
 
-This discharges the finiteness of the branch divisor (§2, after Definition 2.3) at the
+This discharges the finiteness of the branch divisor (§`sec:defs`, after Definition
+`def:crit-branch`) at the
 point where `Pcf.DivDyn` demands it. -/
 noncomputable def divDynOfGeometry [NoetherianSpace B]
     (step : {s : Set B // IsPrime s} → {s : Set B // IsPrime s})
@@ -505,11 +529,13 @@ noncomputable def divDynOfGeometry [NoetherianSpace B]
     rintro Q ⟨Q', rfl, hram⟩
     exact hbranch Q' hram
 
-/-- The geometric input to Theorem 5.1: the ambient system, the fixed prime, the restricted
-system on the primes of `A`, the three correction loci, and Proposition 4.1 applied to every
+/-- The geometric input to Theorem `thm:normal-invariant`: the ambient system, the fixed prime, the
+restricted
+system on the primes of `A`, the three correction loci, and Theorem `thm:bounding` applied to every
 iterate.
 
-`standardForm` is Proposition 4.1(2) applied to every iterate, stated in a form that names
+`standardForm` is Theorem `thm:bounding` (per-divisor form) applied to every iterate, stated in a
+form that names
 its intended justification (purity plus Abhyankar plus étale-local descent). By
 `Pcf.nonempty_kummerWitness_iff` it is **logically equivalent to its own conclusion**,
 so it is an assumption, not a reduction.
@@ -540,11 +566,11 @@ structure PcfGeometry (PX : Type*) (B : Type*) [TopologicalSpace B] where
   singSelf_ne_univ : singSelf ≠ univ
   meetsSet_isClosed : ∀ E, E ≠ fixedPrime → IsClosed (meetsSet E)
   meetsSet_ne_univ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ
-  /-- **Proposition 4.1 applied to the iterate `fᵐ`.** At a prime of `A` avoiding the three
+  /-- **Theorem `thm:bounding` applied to the iterate `fᵐ`.** At a prime of `A` avoiding the three
   loci, every prime above it under `gᵐ` carries a Kummer witness — étale-locally the cover
   is the standard tamely ramified model `y ^ e = u` of Stacks Tag 0EYF.
 
-  The loci do not depend on `m`; that independence is the crux of Theorem 5.1. -/
+  The loci do not depend on `m`; that independence is the crux of Theorem `thm:normal-invariant`. -/
   standardForm : ∀ (m : ℕ) (Q : {s : Set B // IsPrime s}),
     ¬ ((Q : Set B) ⊆ singAmbient) → ¬ ((Q : Set B) ⊆ singSelf) →
     (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → ¬ ((Q : Set B) ⊆ meetsSet E)) →
@@ -562,7 +588,8 @@ def sing : Set {s : Set B // IsPrime s} :=
 /-- The primes of `A` inside `A ∩ E`. -/
 def meets (E : PX) : Set {s : Set B // IsPrime s} := {Q | (Q : Set B) ⊆ G.meetsSet E}
 
-/-- `PcfSetup.sing_finite`, **proved** from Proposition 4.1(1) and Noetherianness. -/
+/-- `PcfSetup.sing_finite`, **proved** from Theorem `thm:bounding` Step 0 and Lemma
+`lem:finitely-many` and Noetherianness. -/
 theorem sing_finite [NoetherianSpace B] : G.sing.Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
   refine ((finite_isPrime_subset G.singAmbient_isClosed G.singAmbient_ne_univ).union
@@ -572,7 +599,8 @@ theorem sing_finite [NoetherianSpace B] : G.sing.Finite := by
   · exact Or.inl ⟨hQ, h⟩
   · exact Or.inr ⟨hQ, h⟩
 
-/-- `PcfSetup.meets_finite`, **proved** from Proposition 4.1(1) and Noetherianness. -/
+/-- `PcfSetup.meets_finite`, **proved** from Theorem `thm:bounding` Step 0 and Lemma
+`lem:finitely-many` and Noetherianness. -/
 theorem meets_finite [NoetherianSpace B] (E : PX) (hE : E ≠ G.fixedPrime) :
     (G.meets E).Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
@@ -580,7 +608,8 @@ theorem meets_finite [NoetherianSpace B] (E : PX) (hE : E ≠ G.fixedPrime) :
   rintro t ⟨⟨Q, hQ⟩, h, rfl⟩
   exact ⟨hQ, h⟩
 
-/-- `PcfSetup.key`, **proved**: Proposition 4.1(2) applied to the iterate `fᵐ`.
+/-- `PcfSetup.key`, **proved**: Theorem `thm:bounding` (per-divisor form) applied to the iterate
+`fᵐ`.
 
 Previously this was a hypothesis of `Pcf.PcfSetup`. Here it is obtained from
 `standardForm` — but `standardForm` is equivalent to it
@@ -597,9 +626,10 @@ theorem key [NoetherianSpace B] (m : ℕ) (Q : {s : Set B // IsPrime s}) (hsing 
   have := hw.eq_one
   omega
 
-/-- **The join.** Geometric data yields the structure Theorem 5.1 consumes.
+/-- **The join.** Geometric data yields the structure Theorem `thm:normal-invariant` consumes.
 
-`sing_finite` and `meets_finite` are genuinely proved, from Proposition 4.1(1)'s properness
+`sing_finite` and `meets_finite` are genuinely proved, from Theorem `thm:bounding` Step 0 and Lemma
+`lem:finitely-many`'s properness
 statements plus Noetherianness. `key` is *repackaged* from `standardForm`, which is
 equivalent to it. Lying over and `branch_finite'` remain fields of the two `DivDyn`s. -/
 noncomputable def toPcfSetup [NoetherianSpace B] : PcfSetup PX {s : Set B // IsPrime s} where
@@ -613,17 +643,19 @@ noncomputable def toPcfSetup [NoetherianSpace B] : PcfSetup PX {s : Set B // IsP
   meets_finite := G.meets_finite
   key := G.key
 
-/-- **Theorem A, from geometry.** If the ambient system is post-critically finite, so is
+/-- **Theorem `thm:normal-invariant`, from geometry.** If the ambient system is post-critically
+finite, so is
 the restriction.
 
-What this route assumes: `standardForm` (Proposition 4.1(2) for every iterate, equivalent
+What this route assumes: `standardForm` (Theorem `thm:bounding` (per-divisor form) for every
+iterate, equivalent
 to its own conclusion), `step_surjective` and `branch_finite'` on both `DivDyn`s, and the
 properness of the three correction loci. What it no longer assumes separately:
 `sing_finite` and `meets_finite`, which are proved. -/
 theorem res_pcf [NoetherianSpace B] (h : G.amb.PCF) : G.res.PCF :=
   G.toPcfSetup.res_pcf h
 
-/-- Corollary 5.2 on the same route. -/
+/-- Corollary `cor:normal-preperiodic` on the same route. -/
 theorem res_pcf_of_iter [NoetherianSpace B] {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
     (hG : G.amb = D.iter n) (h : D.PCF) : G.res.PCF :=
   G.toPcfSetup.res_pcf_of_iter hn hG h
