@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Pcf.Bounding.Chart
 import Pcf.Bounding.FibreProduct
+import Pcf.NormalizationDynamics
 import Pcf.Unnormalized
 
 /-!
@@ -45,9 +46,9 @@ Step 3, Step 4 — is now machine-checked on every chart, and the only thing lef
 supplier is the identification of the abstract primes with points of actual charts. Before
 this file, the supplier was asked for the conclusion itself.
 
-The one remaining standard fact, `Pcf.Stacks.EtaleLocalOnSource` (Tag 036W), is an explicit
-hypothesis of every theorem below; Tags 033B and 01JT are theorems
-(`Pcf.Stacks.isReduced_of_etale_of_isDomain`, `Pcf.Stacks.existsPrimeOverBoth`).
+The finite-presentation case of `Pcf.Stacks.EtaleLocalOnSource` (Tag 036W) and Tags 033B
+and 01JT are theorems (`Pcf.Stacks.etaleLocalOnSource`,
+`Pcf.Stacks.isReduced_of_etale_of_isDomain`, `Pcf.Stacks.existsPrimeOverBoth`).
 
 ## Main results
 
@@ -58,7 +59,7 @@ hypothesis of every theorem below; Tags 033B and 01JT are theorems
   `cor:normal-preperiodic` on this route.
 -/
 
-universe u v w
+universe u v w x
 
 namespace Pcf
 
@@ -100,9 +101,6 @@ structure PcfSetupChart (PX : Type u) (PA : Type v) where
 namespace PcfSetupChart
 
 variable {PX : Type u} {PA : Type v} (S : PcfSetupChart.{u, v, w} PX PA)
-  (hF1 : Stacks.EtaleLocalOnSource.{w})
-
-include hF1
 
 /-- **Theorem `thm:bounding`, étale form, derived.** A prime of `A` outside `Σₘ` is not in
 `branch₁(gᵐ)`: every prime `Q'` over it is represented on a chart, where the restriction is
@@ -112,7 +110,7 @@ theorem key1 (m : ℕ) (hm : 1 ≤ m) (Q : PA) (hs : Q ∉ S.sing)
     Q ∉ S.res.branch1 m := by
   rintro ⟨Q', hQ', hQ'Q⟩
   obtain ⟨R, T, _, _, _, a, 𝔭, ξ, h, hlink⟩ := S.chart m hm Q hs hmeets Q' hQ'Q
-  exact hlink hQ' (h.isEtaleAt_restriction hF1 Stacks.existsPrimeOverBoth ξ)
+  exact hlink hQ' (h.isEtaleAt_restriction Stacks.existsPrimeOverBoth ξ)
 
 /-- The `Pcf.PcfSetup1` with `key1` **proved**. -/
 def toPcfSetup1 : PcfSetup1 PX PA where
@@ -124,29 +122,98 @@ def toPcfSetup1 : PcfSetup1 PX PA where
   sing_finite := S.sing_finite
   meets := S.meets
   meets_finite := S.meets_finite
-  key1 := S.key1 hF1
+  key1 := S.key1
 
-@[simp] theorem toPcfSetup1_amb : (S.toPcfSetup1 hF1).amb = S.amb := rfl
-@[simp] theorem toPcfSetup1_res : (S.toPcfSetup1 hF1).res = S.res := rfl
+@[simp] theorem toPcfSetup1_amb : S.toPcfSetup1.amb = S.amb := rfl
+@[simp] theorem toPcfSetup1_res : S.toPcfSetup1.res = S.res := rfl
 
 /-- **Theorem `thm:normal-invariant`**, with the bounding theorem derived from purity and
 Abhyankar's lemma on charts. If `f` is PCF then `g = f|_A` is `1`-PCF. -/
 theorem res_pcf1 (h : S.amb.PCF) : S.res.PCF1 :=
-  (S.toPcfSetup1 hF1).res_pcf1 h
+  S.toPcfSetup1.res_pcf1 h
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is `0`-PCF. -/
 theorem res_pcf0 (h : S.amb.PCF) : S.res.PCF0 :=
-  (S.toPcfSetup1 hF1).res_pcf0 h
+  S.toPcfSetup1.res_pcf0 h
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is PCF. -/
 theorem res_pcf (h : S.amb.PCF) : S.res.toDivDyn.PCF :=
-  (S.toPcfSetup1 hF1).res_pcf h
+  S.toPcfSetup1.res_pcf h
 
 /-- **Corollary `cor:normal-preperiodic`** on this route. -/
 theorem res_pcf1_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
     (hS : S.amb = D.iter n) (h : D.PCF) : S.res.PCF1 :=
-  (S.toPcfSetup1 hF1).res_pcf1_of_iter hn hS h
+  S.toPcfSetup1.res_pcf1_of_iter hn hS h
 
 end PcfSetupChart
+
+/-! ### Chart wiring with normalized and unnormalized divisors separated -/
+
+/-- The chart presentation of `Pcf.NormalizationPcfSetup`.  Unlike `PcfSetupChart`, the
+ramification dynamics lives on `PN`, while the non-étale loci and the bounding set live on the
+possibly nonnormal divisor carrier `PA`. -/
+structure NormalizationPcfSetupChart (PX : Type u) (PN : Type v) (PA : Type w) where
+  amb : DivDyn PX
+  fixedPrime : PX
+  fixed : amb.step fixedPrime = fixedPrime
+  res : NormalizationUnnormDyn PN PA
+  sing : Set PA
+  sing_finite : sing.Finite
+  meets : PX → Set PA
+  meets_finite : ∀ E, E ≠ fixedPrime → (meets E).Finite
+  /-- The remaining scheme-to-affine chart link.  The divisor `Q'` is an actual divisor of the
+  unnormalized scheme; no identification with a divisor of its normalization occurs here. -/
+  chart : ∀ (m : ℕ), 1 ≤ m → ∀ (Q : PA), Q ∉ sing →
+    (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
+    ∀ (Q' : PA), res.step^[m] Q' = Q →
+      ∃ (R S : Type x) (_ : CommRing R) (_ : CommRing S) (_ : Algebra R S) (a : R)
+        (p : Ideal S) (ξ : PrimeSpectrum (S ⧸ p)) (h : BoundingChart R S a p),
+        (Q' ∈ res.crit1 m →
+          letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ p) :=
+            Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
+          ¬ Algebra.IsEtaleAt (R ⧸ Ideal.span {a}) ξ.asIdeal)
+
+namespace NormalizationPcfSetupChart
+
+variable {PX : Type u} {PN : Type v} {PA : Type w}
+  (S : NormalizationPcfSetupChart.{u, v, w, x} PX PN PA)
+
+/-- The bounding conclusion on the unnormalized divisor carrier, derived from the chart theorem. -/
+theorem key1 (m : ℕ) (hm : 1 ≤ m) (Q : PA) (hs : Q ∉ S.sing)
+    (hmeets : ∀ E ∈ (S.amb.iter m).branch, E ≠ S.fixedPrime → Q ∉ S.meets E) :
+    Q ∉ S.res.branch1 m := by
+  rintro ⟨Q', hQ', hQ'Q⟩
+  obtain ⟨R, T, _, _, _, a, p, ξ, h, hlink⟩ := S.chart m hm Q hs hmeets Q' hQ'Q
+  exact hlink hQ' (h.isEtaleAt_restriction Stacks.existsPrimeOverBoth ξ)
+
+/-- Forget the charts after deriving the bounding conclusion. -/
+def toNormalizationPcfSetup : NormalizationPcfSetup PX PN PA where
+  amb := S.amb
+  fixedPrime := S.fixedPrime
+  fixed := S.fixed
+  res := S.res
+  sing := S.sing
+  sing_finite := S.sing_finite
+  meets := S.meets
+  meets_finite := S.meets_finite
+  key1 := S.key1
+
+@[simp] theorem toNormalizationPcfSetup_amb : S.toNormalizationPcfSetup.amb = S.amb := rfl
+@[simp] theorem toNormalizationPcfSetup_res : S.toNormalizationPcfSetup.res = S.res := rfl
+
+/-- The unnormalized restriction is `1`-PCF on the chart route. -/
+theorem res_pcf1 (h : S.amb.PCF) : S.res.PCF1 :=
+  S.toNormalizationPcfSetup.res_pcf1 h
+
+/-- The normalized restriction is PCF on the chart route, using finite normalization fibers. -/
+theorem norm_pcf (h : S.amb.PCF) : S.res.norm.PCF :=
+  S.toNormalizationPcfSetup.norm_pcf h
+
+/-- Periodic-prime form of `norm_pcf`. -/
+theorem norm_pcf_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
+    (hS : S.amb = D.iter n) (h : D.PCF) : S.res.norm.PCF :=
+  S.toNormalizationPcfSetup.norm_pcf_of_iter hn hS h
+
+end NormalizationPcfSetupChart
 
 end Pcf

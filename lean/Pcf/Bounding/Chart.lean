@@ -62,18 +62,19 @@ faithfully to the Stacks Project in `Pcf/Bounding/Stacks.lean`.
   general lemmas of `Pcf/Bounding/LocalStructure.lean`; the conclusion at a point is
   `Pcf.Bounding.formallyEtale_of_localStructure`.
 * **Descent** — `Pcf.BoundingChart.isEtaleAt_restriction`: étaleness descends from the
-  étale cover to `R/(a) → S/𝔭` itself. This is Stacks Tag 036W, and the existence of a point
-  of the cover over a given point is Tag 01JT.
+  étale cover to `R/(a) → S/𝔭` itself. The finite-presentation case of Stacks Tag 036W is
+  proved in `Pcf/Bounding/Stacks.lean`; existence of a point of the cover over a given point
+  is Tag 01JT.
 
 ## What is assumed, and where
 
-The theorem `isEtaleAt_restriction` takes, besides the chart, two further hypotheses:
-`Pcf.Stacks.EtaleLocalOnSource` (Tag 036W) and `Pcf.Stacks.ExistsPrimeOverBoth` (Tag 01JT).
-Both are statements about arbitrary rings of the universe, quantified universally; neither
-can be specialized to the chart. The second is **proved** in `Pcf/Bounding/FibreProduct.lean`
-(it is a hypothesis here only to keep the scheme library out of this file); the first remains
-assumed. Tag 033B, reducedness of étale base change, is proved in `Pcf/Bounding/Reduced.lean`
-for a domain base, which is all Step 3 needs. See `lean/AXIOMS.md` §G.
+Besides the chart, `isEtaleAt_restriction` takes only
+`Pcf.Stacks.ExistsPrimeOverBoth` (Tag 01JT). It is **proved** in
+`Pcf/Bounding/FibreProduct.lean` and remains a parameter here only to keep the scheme library
+out of this file. The finite-presentation case of Tag 036W needed here is
+`Pcf.Stacks.etaleLocalOnSource`. Tag 033B, reducedness of étale base change, is proved in
+`Pcf/Bounding/Reduced.lean` for a domain base, which is all Step 3 needs. See
+`lean/AXIOMS.md` §G.
 
 Nothing here is a `KummerWitness`; nothing here lets the supplier of the data choose the
 algebra to which Abhyankar's lemma is applied. The local extension is `R → S` itself, the
@@ -493,19 +494,21 @@ Steps 1–2 produce the étale neighbourhood `R'` and the standard pieces
 (`Pcf.BoundingChart.exists_standardPieces`); Steps 3–4 show the base change of `g` to `R'`
 is étale at every point (`Pcf.BoundingChart.isEtaleAt_quot_of_pieces`); the point `ξ` of
 `A ∩ V` lifts to the base change by Tag 01JT (`hF3`, proved in `Pcf/Bounding/FibreProduct.lean`
-and supplied by the wiring); and étaleness descends by Tag 036W (`hF1`). Reducedness of the
+and supplied by the wiring); and étaleness descends by the proved finite-presentation case
+of Tag 036W. Reducedness of the
 base change, Tag 033B, is proved in `Pcf/Bounding/Reduced.lean` and used inside Step 3.
 
 Since `U` was chosen inside the complement of `Σ`, this is exactly the manuscript's
 conclusion: `g` is étale at every point of `A` over `U`, in particular at the generic point
 of every integral effective divisor of `A` whose image is not contained in `Σ`. -/
-theorem isEtaleAt_restriction (hF1 : Stacks.EtaleLocalOnSource.{u})
-    (hF3 : Stacks.ExistsPrimeOverBoth.{u}) :
+theorem isEtaleAt_restriction (hF3 : Stacks.ExistsPrimeOverBoth.{u}) :
     letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
       Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
     ∀ ξ : PrimeSpectrum (S ⧸ 𝔭), Algebra.IsEtaleAt (R ⧸ Ideal.span {a}) ξ.asIdeal := by
   letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
     Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
+  have := h.noetherian_base
+  have := h.finite
   have := h.prime
   intro ξ
   -- The prime of `S` under `ξ`, and the point `y ∈ D` under it.
@@ -601,8 +604,17 @@ theorem isEtaleAt_restriction (hF1 : Stacks.EtaleLocalOnSource.{u})
         (ξ''.asIdeal.under (R' ⧸ Ideal.span {algebraMap R R' a})) := inferInstance
     exact Algebra.IsEtaleAt.comp (ξ''.asIdeal.under (R' ⧸ Ideal.span {algebraMap R R' a}))
       ξ''.asIdeal
-  -- Descent (Tag 036W).
-  exact hF1 (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) _ inferInstance hall ξ ⟨ξ', hξ'⟩
+  -- Descent (the finite-presentation case of Tag 036W).
+  haveI : IsScalarTower R (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
+    IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let _ : Module.Finite R (S ⧸ 𝔭) :=
+    Module.Finite.of_surjective (Ideal.Quotient.mkₐ R 𝔭).toLinearMap
+      Ideal.Quotient.mk_surjective
+  let _ : Module.Finite (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
+    Module.Finite.of_restrictScalars_finite R _ _
+  let _ : Algebra.FinitePresentation (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
+    Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  exact Stacks.etaleLocalOnSource (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) _ inferInstance hall ξ ⟨ξ', hξ'⟩
 
 end BoundingChart
 

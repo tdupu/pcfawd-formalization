@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Pcf.Dynamics
 import Pcf.Restriction
 import Pcf.Unnormalized
+import Pcf.NormalizationDynamics
 import Pcf.LocalModel
 import Pcf.Noetherian
 import Pcf.Purity
@@ -24,6 +25,13 @@ import Pcf.Bounding.Pieces
 import Pcf.Bounding.Reduced
 import Pcf.Bounding.Chart
 import Pcf.Bounding.FibreProduct
+import Pcf.Bounding.Divisors
+import Pcf.Bounding.LocalChart
+import Pcf.Bounding.SchemeBridge
+import Pcf.Bounding.AffineStalkBridge
+import Pcf.Bounding.SchemeExtraction
+import Pcf.Bounding.SchemeWiring
+import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
@@ -127,9 +135,9 @@ abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 
 `Pcf/Bounding/`. The two classical inputs are the fields `purity` and `abhyankar` of
 `Pcf.BoundingChart`, stated as the Stacks Project states them (`Pcf/Bounding/Stacks.lean`);
-of the three standard facts, Tags 033B and 01JT are proved
-(`Pcf.Stacks.isReduced_of_etale_of_isDomain`, `Pcf.Stacks.existsPrimeOverBoth`) and Tag 036W
-is the explicit hypothesis `hF1`. Everything
+all three standard facts are proved in the form used here: Tags 033B and 01JT by
+`Pcf.Stacks.isReduced_of_etale_of_isDomain` and `Pcf.Stacks.existsPrimeOverBoth`, and the
+finite-presentation case of Tag 036W by `Pcf.Stacks.etaleLocalOnSource`. Everything
 printed here reports only the standard axioms, as it must: the assumed inputs are
 hypotheses. -/
 
@@ -147,8 +155,216 @@ hypotheses. -/
 #print axioms Pcf.BoundingChart.exists_standardPieces
 #print axioms Pcf.BoundingChart.isEtaleAt_quot_of_pieces
 #print axioms Pcf.BoundingChart.isEtaleAt_restriction
+#print axioms Pcf.Stacks.etaleLocalOnSource
 #print axioms Pcf.Stacks.existsPrimeOverBoth
 #print axioms Pcf.Stacks.isReduced_of_etale_of_isDomain
+#print axioms Pcf.affineDivisorPointEquiv
+#print axioms Pcf.Scheme.Hom.finite_divisorPoint_fiber
+#print axioms Pcf.finite_heightOne_comap_fiber
+#print axioms Pcf.height_eq_one_of_liesOver_heightOne
+#print axioms Pcf.heightOneUnderOfCodim_surjective
+#print axioms Pcf.finite_heightOneUnderOfCodim_fiber
+#print axioms Pcf.height_under_eq_of_finite_of_normal
+#print axioms Pcf.heightOneUnder_surjective
+#print axioms Pcf.finite_heightOneUnder_fiber
+#print axioms Pcf.affineDivisorUnder_surjective
+#print axioms Pcf.isDiscreteValuationRing_localizationAtPrime_of_heightOne
+#print axioms Pcf.heightOnePrime_localRing_isDiscreteValuationRing
+#print axioms Pcf.isDomain_of_isRegularLocalRing_of_ringKrullDim_eq_one
+#print axioms Pcf.isRegularRing_of_isRegularLocalRing_of_ringKrullDim_eq_one
+#print axioms Pcf.heightOne_isPrincipal_of_regularLocalRing_dim_two
+#print axioms Pcf.isRegularRing_of_isRegularLocalRing_of_isIntegrallyClosed_dim_two
+#print axioms Pcf.exists_generator_map_atPrime_regular_dim_two
+#print axioms Pcf.mem_minimalPrimes_span_singleton_of_height_eq_one
+#print axioms Pcf.exists_principal_localizationAway_of_atPrime_isPrincipal
+#print axioms Pcf.exists_principal_map_of_atPrime_isPrincipal
+#print axioms Pcf.exists_principal_localizationAway_of_atPrime_regular_dim_two
+#print axioms Pcf.exists_principal_localizationAway_of_atPrime_ufd
+#print axioms Pcf.exists_principal_localizationAway_of_heightOne
+#print axioms Pcf.mem_nonZeroDivisors_of_ringKrullDim_eq_two_of_quotient_eq_one
+#print axioms Pcf.isIntegralClosure_localizationAway_of_finite_of_integrallyClosed
+#print axioms Pcf.faithfulSMul_localization_algebraMapSubmonoid
+#print axioms Pcf.isIntegrallyClosed_localization_algebraMapSubmonoid
+#print axioms Pcf.charZero_of_isUnit_natCast
+#print axioms Pcf.isUnit_natCast_of_algebraRat
+#print axioms Pcf.isUnramifiedAt_of_ramificationIdx_eq_one_of_algebraRat
+#print axioms Pcf.isEtaleAt_height_zero_of_charZero_of_integral
+#print axioms Pcf.isUnramifiedAt_localization_algebraMapSubmonoid
+#print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalization
+#print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfDivisorsAt
+#print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfDivisors
+#print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfHeightOneDivisorsAt
+#print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfHeightOneDivisors
+#print axioms Pcf.heightOneRam_pos
+#print axioms Pcf.heightOneBranchIdeal
+#print axioms Pcf.ramified_heightOne_lies_over_of_branchIdeal_subset_singleton
+#print axioms Pcf.heightOneBranch
+#print axioms Pcf.mem_heightOneBranch_iff
+#print axioms
+  Pcf.heightOneBranchIdeal_subset_singleton_of_heightOneBranch_subset_singleton
+#print axioms Pcf.ramified_heightOne_lies_over_of_branch_subset_singleton
+#print axioms Pcf.ramified_heightOne_lies_over_of_avoids_other_branch_at
+#print axioms Pcf.heightOneDvrExponent_spec
+#print axioms Pcf.heightOneRam_eq_dvrExponent
+#print axioms Pcf.finite_heightOne_ramified
+#print axioms Pcf.divDynOfFiniteNormalSelfAlgebra
+#print axioms Pcf.divDynOfFiniteNormalSelfAlgebra_branch
+#print axioms Pcf.LocalBoundingChart.toBoundingChart
+#print axioms Pcf.LocalBoundingChart.restrictionRingHom
+#print axioms Pcf.LocalBoundingChart.restrictionPoint
+#print axioms Pcf.LocalBoundingChart.isEtaleAt_restriction
+#print axioms Pcf.LocalBoundingChart.formallyEtale_localRingHom
+#print axioms Pcf.LocalBoundingChart.affineCrit1_restriction_eq_empty
+#print axioms Pcf.ringEquiv_formallyEtale
+#print axioms Pcf.formallyEtale_respectsIso
+#print axioms Pcf.SchemeStalkBoundingChart.formallyEtale
+#print axioms Pcf.SchemeStalkBoundingChart.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingPresentation.toSchemeStalkBoundingChart
+#print axioms Pcf.SchemeStalkBoundingPresentation.formallyEtale
+#print axioms Pcf.SchemeStalkBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.toSchemeStalkBoundingPresentation
+#print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.formallyEtale
+#print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingChart.toSchemeStalkBoundingLocalizationPresentation
+#print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentation
+#print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfIdeals
+#print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfAmbientMap
+#print axioms Pcf.exists_principal_affineBasicOpen_of_atPrime_isPrincipal
+#print axioms Pcf.exists_principal_affineBasicOpen_of_atPrime_regular_dim_two
+#print axioms Pcf.IdealSheafData.exists_generator_comap_top_of_ideal_eq_span
+#print axioms Pcf.exists_principal_comap_affineBasicOpen_of_atPrime_regular_dim_two
+#print axioms Pcf.affineIdealSheaf_le_map_of_localBoundingChart
+#print axioms Pcf.affineIdealSheafStalkBoundingLocalizationPresentation
+#print axioms Pcf.LocalBoundingChart.toSchemeStalkBoundingChart
+#print axioms Pcf.LocalBoundingChart.toSchemeStalkBoundingPresentation
+#print axioms Pcf.LocalBoundingChart.toSchemeStalkBoundingLocalizationPresentation
+#print axioms Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingChart
+#print axioms
+  Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingChartOfFiniteNormalLocalizationOfDivisors
+#print axioms
+  Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingLocalizationPresentationOfHeightOneDivisors
+#print axioms
+  Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingLocalizationPresentationOfHeightOneDivisorsAt
+#print axioms AlgebraicGeometry.Scheme.Hom.stalkQuotientKerEquiv
+#print axioms AlgebraicGeometry.Scheme.Hom.stalkQuotientKerEquiv_mk
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientPoint
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientStalkAlgebra
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientStalk_isLocalization
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientAppLE
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.stalkMap_comp_quotientStalkAlgebraMap
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.comap_quotientPoint_quotientAppLE
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.stalkMapArrowIsoQuotientAppLE
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.subschemeMap_preimage_le
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientAppLE_comp_mk_subschemeMap
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.subschemeMap_ideal_le
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientAppLE_subschemeMap_eq_quotientMap
+#print axioms Pcf.finitePreimageModuleFinite
+#print axioms Pcf.finitePreimageFaithfulSMul
+#print axioms Pcf.pointClosureIdealSheaf_ideal
+#print axioms Pcf.pointClosureIdealSheaf_ideal_isPrime
+#print axioms Pcf.pointClosureIdealSheaf_ideal_height
+#print axioms Pcf.pointClosureIdealSheaf_map
+#print axioms Pcf.pointClosureSubschemeMap
+#print axioms Pcf.pointClosureSubschemeMap_subschemeι
+#print axioms Pcf.pointClosureSubschemeMap_comp
+#print axioms Pcf.pointClosureSubschemeMap_id
+#print axioms Pcf.end_pow_apply_eq_of_apply_eq
+#print axioms Pcf.pointClosureSubschemeMap_iterate_subschemeι
+#print axioms Pcf.pointClosureSubschemeMap_iterate
+#print axioms Pcf.isFinite_end_pow
+#print axioms Pcf.isDominant_end_pow
+#print axioms Pcf.affinePrimeOfSchemeDivisorPoint
+#print axioms Pcf.exists_pointClosureSubschemePoint
+#print axioms Pcf.pointClosureSubschemePoint_subschemeι
+#print axioms Pcf.image_mem_pointClosure
+#print axioms Pcf.pointClosureSubschemeMap_point
+#print axioms Pcf.pointClosureSubschemeMap_isFinite
+#print axioms Pcf.pointClosureSubschemeι_mem
+#print axioms Pcf.SchemeDivisorPoint.mem_affine_of_pointClosurePoint_mem
+#print axioms Pcf.pointClosureSubschemeMap_isDominant
+#print axioms Pcf.pointClosureSubschemeMap_surjective
+#print axioms Pcf.pointClosureSubschemePreimage
+#print axioms Pcf.pointClosureSubschemeMap_preimage
+#print axioms Pcf.coheight_apply_eq_one_of_mem_affine
+#print axioms Pcf.coheight_apply_eq_one
+#print axioms Pcf.SchemeDivisorPoint.mapFiniteDominantNormal
+#print axioms Pcf.SchemeDivisorPoint.closureMapFiniteDominantNormal
+#print axioms Pcf.SchemeDivisorPoint.closurePreimageFiniteDominantNormal
+#print axioms Pcf.SchemeDivisorPoint.closureMap_preimageFiniteDominantNormal
+#print axioms Pcf.SchemeDivisorPoint.closurePreimage_mem_finitePreimage
+#print axioms Pcf.map_ambientPrimeOfQuotientPoint
+#print axioms Pcf.ambientPrimeOfQuotientPoint_eq_primeIdealOf
+#print axioms Pcf.ambientPrimeLocalizationRingEquivStalk
+#print axioms Pcf.divisorQuotientLocalizationRingEquivStalkOfEq
+#print axioms Pcf.divisorQuotientLocalizationRingEquivStalk
+#print axioms Pcf.isRegularLocalRing_divisorQuotientLocalization
+#print axioms Pcf.ringKrullDim_divisorQuotientLocalization
+#print axioms Pcf.ambientPrimeOfQuotientPoint_comap
+#print axioms Pcf.ringKrullDim_eq_two_of_cartier_quotient_eq_one
+#print axioms Pcf.isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus
+#print axioms Pcf.SchemeDivisorPoint.image_mem_affine_of_closurePoint_mem
+#print axioms Pcf.avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+#print axioms Pcf.SchemeDivisorPoint.closurePreimage_under_eq_primeIdealOf
+#print axioms Pcf.SchemeDivisorPoint.closurePoint_under_eq_primeIdealOf
+#print axioms Pcf.pointClosurePoint_under_eq_primeIdealOf
+#print axioms Pcf.SchemeDivisorPoint.imageDivisorCartierDataAtOfUFD
+#print axioms Pcf.SchemeDivisorPoint.imageDivisorCartierDataAtOfRegularDimTwo
+#print axioms
+  Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfFiniteNormalAt
+#print axioms
+  Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfFiniteDominantNormalAt
+#print axioms
+  Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfFiniteDominantNormal
+#print axioms
+  Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCartier
+#print axioms
+  Pcf.pointClosureStalkBoundingLocalizationPresentationOfFiniteDominantNormal
+#print axioms
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormal
+#print axioms
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCartier
+#print axioms
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0At
+#print axioms Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0UFDAt
+#print axioms
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0RegularDimTwoAt
+#print axioms Pcf.SchemeDivisorPoint.invariantClosureMap_iterate
+#print axioms
+  Pcf.SchemeDivisorPoint.invariantClosureStalkBoundingLocalizationOfStep0At
+#print axioms
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0
+#print axioms Pcf.LocalBoundingChart.schemeDivisorCrit1_restriction_eq_empty
+#print axioms Pcf.RingHom.Etale.localRingHom_formallyEtale
+#print axioms Pcf.AlgebraicGeometry.Etale.stalkMap_formallyEtale
+#print axioms Pcf.LocalBoundingChart.restrictionRingHom_etale
+#print axioms Pcf.LocalBoundingChart.restrictionScheme_etale
+#print axioms Pcf.schemeResLETopIso
+#print axioms Pcf.affineResLEArrowIso
+#print axioms Pcf.affineQuotientArrowIso
+#print axioms Pcf.SchemeAffineLocalBoundingPresentation.toSchemeLocalBoundingPresentation
+#print axioms Pcf.LocalBoundingChart.toSchemeLocalBoundingPresentation
+#print axioms Pcf.LocalBoundingChart.toSchemeAffineLocalBoundingPresentation
+#print axioms Pcf.SchemeLocalBoundingPresentation.restrictedEtale
+#print axioms Pcf.SchemeLocalBoundingPresentation.formallyEtale
+#print axioms Pcf.SchemeLocalBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeAffineLocalBoundingPresentation.formallyEtale
+#print axioms Pcf.SchemeAffineLocalBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.schemeDivisorMap_val
+#print axioms Pcf.schemeDivisorMap_iterate_val
+#print axioms Pcf.SchemeNormalizationUnnormDyn.finite_iterate
+#print axioms Pcf.SchemeNormalizationUnnormDyn.finitePresentation_iterate
+#print axioms Pcf.SchemeNormalizationUnnormDyn.toNormalizationUnnormDyn
+#print axioms Pcf.SchemeNormalizationPcfSetupChart.key1
+#print axioms Pcf.SchemeNormalizationPcfSetupChart.res_pcf1
+#print axioms Pcf.SchemeNormalizationPcfSetupChart.norm_pcf
+#print axioms
+  Pcf.InvariantDivisorSchemeNormalizationPcfSetup.toSchemeNormalizationPcfSetupChart
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.key1
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.res_pcf1
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf_of_iter
+#print axioms Pcf.BoundingChart.affineCrit1_restriction_eq_empty
+#print axioms Pcf.BoundingChart.not_mem_affineCrit1_restriction
 #print axioms Pcf.PcfSetupChart.key1
 #print axioms Pcf.PcfSetupChart.toPcfSetup1
 #print axioms Pcf.PcfSetupChart.res_pcf1
@@ -292,6 +508,29 @@ Theorem `thm:bounding`, also assumed. Everything printed here is proved from tho
 #print axioms Pcf.PcfSetup1.res_pcf0
 #print axioms Pcf.PcfSetup1.res_pcf
 #print axioms Pcf.PcfSetup1.res_pcf1_of_iter
+
+/-! ## Normalized and unnormalized divisor carriers
+
+`Pcf.NormalizationUnnormDyn` keeps divisors on the normalization separate from divisors on
+the possibly nonnormal scheme.  The PCF transfer below uses finite normalization fibers rather
+than a definitional identification of the two carriers. -/
+
+#print axioms Pcf.NormalizationUnnormDyn.normalization_iterate
+#print axioms Pcf.NormalizationUnnormDyn.normalization_image_branch_iter_subset_branch0
+#print axioms Pcf.NormalizationUnnormDyn.normalization_image_pcSet_subset_pcSet0
+#print axioms Pcf.NormalizationUnnormDyn.pcSet_subset_normalization_preimage_pcSet0
+#print axioms Pcf.NormalizationUnnormDyn.norm_pcf_of_pcf0
+#print axioms Pcf.NormalizationUnnormDyn.norm_pcf_of_pcf1
+#print axioms Pcf.NormalizationUnnormDyn.pcSet1_subset_of_branch1_subset
+#print axioms Pcf.NormalizationUnnormDyn.pcf1_of_branch1_subset
+#print axioms Pcf.NormalizationPcfSetup.branch1_iter_subset_bound
+#print axioms Pcf.NormalizationPcfSetup.res_pcf1
+#print axioms Pcf.NormalizationPcfSetup.norm_pcf
+#print axioms Pcf.NormalizationPcfSetup.norm_pcf_of_iter
+#print axioms Pcf.NormalizationPcfSetupChart.key1
+#print axioms Pcf.NormalizationPcfSetupChart.toNormalizationPcfSetup
+#print axioms Pcf.NormalizationPcfSetupChart.norm_pcf
+#print axioms Pcf.NormalizationPcfSetupChart.norm_pcf_of_iter
 
 /-! ## Example `ex:pinched`: the pinched plane
 

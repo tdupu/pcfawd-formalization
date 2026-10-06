@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.Etale.Locus
+import Mathlib.RingTheory.Etale.Descent
+import Mathlib.RingTheory.Etale.Kaehler
 import Mathlib.RingTheory.Unramified.Locus
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.QuasiFinite.Basic
@@ -13,6 +15,7 @@ import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
 import Mathlib.RingTheory.Localization.Away.Basic
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.RingTheory.Spectrum.Prime.Topology
+import Mathlib.RingTheory.Spectrum.Prime.Chevalley
 import Pcf.LocalModel
 
 /-!
@@ -22,11 +25,12 @@ import Pcf.LocalModel
 Zariski–Nagata purity (Stacks Tag 0BMB) and Abhyankar's lemma (Stacks Tags 0EYG, 0EYH), and
 from three facts it cites in passing: étale base change preserves reducedness (Tag 033B),
 étaleness is étale-local on the source (Tag 036W), and points of a fibre product exist over
-compatible pairs of points (Tag 01JT). Neither classical theorem is in Mathlib, nor is 036W.
-This file states them as `Prop`s about **arbitrary commutative rings**, in the
+compatible pairs of points (Tag 01JT). Neither classical theorem is in Mathlib. This file
+states them as `Prop`s about **arbitrary commutative rings**, in the
 commutative-algebra language of one affine chart, so that `Pcf/Bounding/Chart.lean` can take
-them as hypotheses and *derive* the bounding theorem. Tag 01JT is stated here and **proved**
-in `Pcf/Bounding/FibreProduct.lean`; Tag 033B is **proved** directly, for a domain base, in
+them as hypotheses and *derive* the bounding theorem. The finite-presentation case of Tag
+036W needed by the chart is **proved below**; Tag 01JT is stated here and **proved** in
+`Pcf/Bounding/FibreProduct.lean`; Tag 033B is **proved** directly, for a domain base, in
 `Pcf/Bounding/Reduced.lean`.
 
 ## Design rule
@@ -147,14 +151,137 @@ covering `{Xᵢ → X}`, `f : X → Y` is étale iff every `Xᵢ → Y` is étal
 at `ξ`. It follows from 036W applied to the open image `U ⊆ X` of `X'` (étale morphisms are
 open, Tag 03WT), which `X'` covers étale-locally.
 
-**Verdict: weaker** (a pointwise consequence of 036W together with 03WT). -/
+The chart map is finite, so the statement includes the finite-presentation hypothesis on
+`A → B`. This is enough to shrink the image of the étale cover to a faithfully flat basic
+open and descend flatness and formal unramifiedness.
+
+**Verdict: weaker** (a finite-presentation pointwise consequence of 036W together with
+03WT).
+
+**Status: proved**, as `Pcf.Stacks.etaleLocalOnSource`. -/
 def EtaleLocalOnSource : Prop :=
   ∀ (A B B' : Type u) [CommRing A] [CommRing B] [CommRing B'] [Algebra A B] [Algebra A B']
-    [Algebra B B'] [IsScalarTower A B B'],
+    [Algebra B B'] [IsScalarTower A B B'] [Algebra.FinitePresentation A B],
     Algebra.Etale B B' →
     (∀ ξ' : PrimeSpectrum B', Algebra.IsEtaleAt A ξ'.asIdeal) →
     ∀ ξ : PrimeSpectrum B, (∃ ξ' : PrimeSpectrum B', ξ'.asIdeal.under B = ξ.asIdeal) →
       Algebra.IsEtaleAt A ξ.asIdeal
+
+open TensorProduct
+
+/-- Flatness descends through a faithfully flat extension of the target. -/
+private theorem flat_of_faithfullyFlat_restrictScalars
+    (R S T : Type u) [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+    [Module.FaithfullyFlat S T] [Module.Flat R T] : Module.Flat R S := by
+  rw [Module.Flat.iff_lTensor_preserves_injective_linearMap]
+  intro M N _ _ _ _ f hf
+  refine (Module.FaithfullyFlat.lTensor_injective_iff_injective S T
+    (AlgebraTensorModule.lTensor S S f)).mp ?_
+  change Function.Injective ⇑(AlgebraTensorModule.lTensor T T
+    (AlgebraTensorModule.lTensor S S f))
+  intro x y hxy
+  let eM := AlgebraTensorModule.cancelBaseChange R S T T M
+  let eN := AlgebraTensorModule.cancelBaseChange R S T T N
+  apply eM.injective
+  apply Module.Flat.lTensor_preserves_injective_linearMap f hf
+  have hcomm := AlgebraTensorModule.lTensor_comp_cancelBaseChange R S T (M := T) f
+  have hx := LinearMap.congr_fun hcomm x
+  have hy := LinearMap.congr_fun hcomm y
+  simp only [LinearMap.comp_apply] at hx hy
+  exact hx.trans ((congrArg (fun z ↦ eN z) hxy).trans hy.symm)
+
+/-- If `S → T` is faithfully flat and étale, and `R → T` is étale, then a
+finite-presentation map `R → S` is étale. -/
+private theorem etale_of_faithfullyFlat_restrictScalars
+    (R S T : Type u) [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+    [Module.FaithfullyFlat S T] [Algebra.Etale R T] [Algebra.Etale S T]
+    [Algebra.FinitePresentation R S] : Algebra.Etale R S := by
+  let _ : Module.Flat R S := flat_of_faithfullyFlat_restrictScalars R S T
+  let _ : Algebra.FormallyUnramified R S :=
+    Algebra.formallyUnramified_iff R S |>.mpr <| by
+      let _ : Subsingleton (T ⊗[S] Ω[S⁄R]) :=
+        (KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale R S T).subsingleton
+      exact Module.FaithfullyFlat.lTensor_reflects_triviality S T Ω[S⁄R]
+  exact Algebra.Etale.of_formallyUnramified_of_flat
+
+set_option linter.style.haveILetI false in
+/-- The finite-presentation pointwise form of Stacks Tag 036W used by the bounding chart. -/
+theorem etaleLocalOnSource : EtaleLocalOnSource.{u} := by
+  intro A B C _ _ _ _ _ _ _ _ hBC hall p hp
+  let _ : Algebra.Etale B C := hBC
+  let _ : Algebra.FinitePresentation A C :=
+    Algebra.FinitePresentation.trans A B C
+  have hAC : Algebra.Etale A C :=
+    Algebra.etaleLocus_eq_univ_iff_etale.mp <|
+      Set.eq_univ_iff_forall.mpr hall
+  obtain ⟨q, hqp⟩ := hp
+  have hpRange : p ∈ Set.range (PrimeSpectrum.comap (algebraMap B C)) :=
+    ⟨q, PrimeSpectrum.ext hqp⟩
+  have hOpenRange : IsOpen (Set.range (PrimeSpectrum.comap (algebraMap B C))) := by
+    rw [← Set.image_univ]
+    exact PrimeSpectrum.isOpenMap_comap_of_hasGoingDown_of_finitePresentation
+      Set.univ isOpen_univ
+  obtain ⟨_, ⟨_, ⟨f, rfl⟩, rfl⟩, hpf, hfRange⟩ :=
+    PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open hpRange hOpenRange
+  let Bf := Localization.Away f
+  let Cf := Localization.Away (algebraMap B C f)
+  haveI : IsScalarTower A B Bf := by infer_instance
+  haveI : IsScalarTower A C Cf := by infer_instance
+  haveI : IsScalarTower B C Cf := by infer_instance
+  letI : Algebra Bf Cf :=
+    (IsLocalization.Away.map Bf Cf (algebraMap B C) f).toAlgebra
+  haveI : IsScalarTower B Bf Cf := by
+    apply IsScalarTower.of_algebraMap_eq
+    intro x
+    simp [RingHom.algebraMap_toAlgebra, IsLocalization.Away.map,
+      ← IsScalarTower.algebraMap_apply B C]
+  haveI : IsScalarTower A Bf Cf := .to₁₃₄ A B Bf Cf
+  let _ : Algebra.Etale A Cf := by
+    let _ : Algebra.Etale A C := hAC
+    exact Algebra.Etale.comp A C Cf
+  let _ : Algebra.Etale Bf Cf := by
+    let _ : Algebra.Etale B Cf := Algebra.Etale.comp B C Cf
+    exact Algebra.Etale.of_restrictScalars B Bf Cf
+  let _ : Algebra.FinitePresentation A Bf :=
+    Algebra.FinitePresentation.trans A B Bf
+  let _ : Module.FaithfullyFlat Bf Cf :=
+    Module.FaithfullyFlat.of_comap_surjective (by
+      intro P
+      let pB : PrimeSpectrum B := PrimeSpectrum.comap (algebraMap B Bf) P
+      have hpBf : pB ∈ PrimeSpectrum.basicOpen f := by
+        change pB ∈ (↑(PrimeSpectrum.basicOpen f) : Set (PrimeSpectrum B))
+        rw [← PrimeSpectrum.localization_away_comap_range Bf f]
+        exact ⟨P, rfl⟩
+      obtain ⟨Q, hQ⟩ := hfRange hpBf
+      have hQideal : Q.asIdeal.under B = pB.asIdeal := by
+        simpa only [PrimeSpectrum.comap_asIdeal] using congr_arg PrimeSpectrum.asIdeal hQ
+      have hQf : Q ∈ PrimeSpectrum.basicOpen (algebraMap B C f) := by
+        rw [PrimeSpectrum.mem_basicOpen]
+        intro hfQ
+        change f ∈ Q.asIdeal.under B at hfQ
+        rw [hQideal] at hfQ
+        exact (PrimeSpectrum.mem_basicOpen f pB).mp hpBf hfQ
+      have hQf' : Q ∈ Set.range (PrimeSpectrum.comap (algebraMap C Cf)) := by
+        rw [PrimeSpectrum.localization_away_comap_range Cf (algebraMap B C f)]
+        exact hQf
+      obtain ⟨Qf, hQf⟩ := hQf'
+      have hQfIdeal : Qf.asIdeal.under C = Q.asIdeal := by
+        simpa only [PrimeSpectrum.comap_asIdeal] using congr_arg PrimeSpectrum.asIdeal hQf
+      refine ⟨Qf, ?_⟩
+      apply PrimeSpectrum.localization_comap_injective Bf (.powers f)
+      apply PrimeSpectrum.ext
+      simp only [PrimeSpectrum.comap_asIdeal]
+      calc
+        (Qf.asIdeal.under Bf).under B = Qf.asIdeal.under B :=
+          Ideal.under_under Qf.asIdeal
+        _ = (Qf.asIdeal.under C).under B := (Ideal.under_under Qf.asIdeal).symm
+        _ = Q.asIdeal.under B := congr_arg (Ideal.under B) hQfIdeal
+        _ = pB.asIdeal := hQideal
+        _ = P.asIdeal.under B := rfl)
+  have : Algebra.Etale A Bf := etale_of_faithfullyFlat_restrictScalars A Bf Cf
+  exact (Algebra.basicOpen_subset_etaleLocus_iff_etale.mpr this) hpf
 
 /-- **Points of a fibre product, Stacks Tag 01JT.**
 

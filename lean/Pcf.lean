@@ -1,6 +1,7 @@
 import Pcf.Dynamics
 import Pcf.Restriction
 import Pcf.Unnormalized
+import Pcf.NormalizationDynamics
 import Pcf.Noetherian
 import Pcf.Purity
 import Pcf.NonEtaleLocus
@@ -19,6 +20,13 @@ import Pcf.Bounding.Pieces
 import Pcf.Bounding.Reduced
 import Pcf.Bounding.Chart
 import Pcf.Bounding.FibreProduct
+import Pcf.Bounding.Divisors
+import Pcf.Bounding.LocalChart
+import Pcf.Bounding.SchemeBridge
+import Pcf.Bounding.AffineStalkBridge
+import Pcf.Bounding.SchemeExtraction
+import Pcf.Bounding.SchemeWiring
+import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
 import Pcf.Examples.CharP
