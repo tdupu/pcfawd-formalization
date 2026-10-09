@@ -173,8 +173,14 @@ theorem isEtaleAt_of_notMem (w : PrimeSpectrum S) (hw : algebraMap R S a ∉ w.a
   · exact h.generic_etale w h0
   · have h1 : 1 ≤ w.asIdeal.height := Order.one_le_iff_ne_zero.mpr hne
     refine h.purity inferInstance inferInstance inferInstance w
-      (IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors _))
-      (h.normal w) inferInstance inferInstance (h.dim_eq w) h1 ?_
+      { source_isDomain :=
+          IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors _)
+        source_isIntegrallyClosed := h.normal w
+        target_isRegular := inferInstance
+        quasiFinite := inferInstance
+        equalDimension := h.dim_eq w
+        positiveDimension := h1
+        unramifiedCodimensionOne := ?_ }
     intro w' hw' hw'1
     refine h.unramified_codim_one w' hw'1 fun hmem => hw ?_
     exact (PrimeSpectrum.le_iff_specializes w' w).mpr hw' hmem
@@ -185,18 +191,7 @@ theorem isEtaleAt_of_notMem (w : PrimeSpectrum S) (hw : algebraMap R S a ∉ w.a
 `R'` over which the cover is a finite disjoint union of standard pieces. The hypotheses of
 `Pcf.Stacks.AbhyankarLemma` are discharged by the chart and by Step 1. -/
 theorem exists_standardPieces (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal) :
-    ∃ (R' : Type u) (_ : CommRing R') (_ : Algebra R R'),
-      Algebra.Etale R R' ∧
-      (∃ y' : PrimeSpectrum R', y'.asIdeal.under R = y.asIdeal) ∧
-      IsNoetherianRing R' ∧
-      algebraMap R R' a ∈ nonZeroDivisors R' ∧
-      IsRegularRing (R' ⧸ Ideal.span {algebraMap R R' a}) ∧
-      (∀ q : PrimeSpectrum (R' ⧸ Ideal.span {algebraMap R R' a}),
-        IsDomain (Localization.AtPrime q.asIdeal)) ∧
-      ∃ (ι : Type) (_ : Fintype ι) (e : ι → ℕ) (u : ι → R'ˣ),
-        (∀ i, e i ≠ 0) ∧ (∀ i, IsUnit ((e i : ℕ) : R')) ∧
-        Nonempty ((R' ⊗[R] S) ≃ₐ[R']
-          ∀ i, AdjoinRoot (LocalModel.localPoly (u i) (algebraMap R R' a) (e i))) :=
+    Stacks.HasAbhyankarStandardCoverAt R S a y :=
   h.abhyankar h.noetherian_base h.nonZeroDivisor h.regular_divisor h.finite
     h.isEtaleAt_of_notMem h.normalization h.tame y hy
 
@@ -238,9 +233,9 @@ theorem etale_tensor [Algebra.Etale R R'] :
       simp [RingHom.algebraMap_toAlgebra, Algebra.TensorProduct.algebraMap_apply]
   exact Algebra.Etale.of_equiv e
 
-/-- **Steps 3 and 4.** Given the output of Abhyankar's lemma — the étale neighbourhood `R'`,
-the local rings of `R'/(a)` being domains, and the decomposition
-`R' ⊗_R S ≅ ∏ R'[zᵢ]/(zᵢ^{eᵢ} − uᵢ a)` — the base change
+/-- **Steps 3 and 4.** Given the output of Abhyankar's lemma — the étale neighbourhood `R'`
+and the decomposition `R' ⊗_R S ≅ ∏ R'[zᵢ]/(zᵢ^{eᵢ} − uᵢ a)` — together with the
+local-domain conclusion supplied by Tag 00NP, the base change
 `R'/(a) → (R' ⊗_R S)/𝔭(R' ⊗_R S)` of the restriction `g = f|_A` is étale at **every** point.
 
 This is the manuscript's Step 3 ("`T` is a union of connected components of `∐ V(zᵢ)`, each
@@ -520,8 +515,13 @@ theorem isEtaleAt_restriction (hF3 : Stacks.ExistsPrimeOverBoth.{u}) :
   let y : PrimeSpectrum R := ⟨𝔓S.under R, inferInstance⟩
   have hy : a ∈ y.asIdeal := Ideal.mem_comap.mpr (h𝔭𝔓S h.algebraMap_mem)
   -- Steps 1–2.
-  obtain ⟨R', _, _, hEt, ⟨y', hy'⟩, -, -, -, hdom, ι, _, e, u, he, -, ⟨φ⟩⟩ :=
+  obtain ⟨R', _, _, hEt, ⟨y', hy'⟩, -, -, hreg, ι, _, e, u, he, -, ⟨φ⟩⟩ :=
     h.exists_standardPieces y hy
+  have hdom : ∀ q : PrimeSpectrum (R' ⧸ Ideal.span {algebraMap R R' a}),
+      IsDomain (Localization.AtPrime q.asIdeal) := by
+    letI : IsRegularRing (R' ⧸ Ideal.span {algebraMap R R' a}) := hreg
+    intro q
+    exact Stacks.isDomain_of_isRegularLocalRing _
   have := hEt
   letI : Algebra S (R' ⊗[R] S) := Algebra.TensorProduct.rightAlgebra
   have : Algebra.Etale S (R' ⊗[R] S) := etale_tensor R'

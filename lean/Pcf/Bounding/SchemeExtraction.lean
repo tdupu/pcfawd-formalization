@@ -30,6 +30,19 @@ set_option linter.style.haveILetI false
 
 open LocalBoundingChart
 
+/-- Restricting a quasi-finite quasi-compact morphism to codimension-one points gives
+finite fibers whenever its images have codimension one.  The explicit subtype map
+allows downstream divisor-dynamics constructors to use this without an import cycle. -/
+theorem Scheme.Hom.finite_divisorPoint_subtype_fiber {X Y : Scheme.{u}}
+    (f : X ⟶ Y) [LocallyQuasiFinite f] [QuasiCompact f]
+    (hcodim : ∀ x : SchemeDivisorPoint X, Order.coheight (f x.1) = 1)
+    (y : SchemeDivisorPoint Y) :
+    ((fun x : SchemeDivisorPoint X ↦
+      (⟨f x.1, hcodim x⟩ : SchemeDivisorPoint Y)) ⁻¹' {y}).Finite := by
+  refine (Scheme.Hom.finite_divisorPoint_fiber f y.1).subset ?_
+  intro x hx
+  exact congrArg Subtype.val hx
+
 /-- A scheme is normal in the affine-coordinate sense used by the divisor bridge. -/
 class IsNormalScheme (X : Scheme.{u}) : Prop where
   component_integrallyClosed : ∀ U : X.affineOpens, IsIntegrallyClosed Γ(X, U)
@@ -851,6 +864,85 @@ noncomputable def closedSubschemeStalkBoundingLocalizationPresentationOfFiniteNo
   exact hchart.toSchemeStalkBoundingLocalizationPresentation
 
 end AmbientMap
+
+section FiniteTypeDivisorMap
+
+variable {X Y : Scheme.{u}} (f : X ⟶ Y) [IsFinite f] [IsDominant f]
+  [IsIntegral X] [IsIntegral Y]
+
+/-- A finite dominant morphism of integral schemes preserves codimension one at a
+point whose image has an affine neighborhood of finite type over a field.
+Neither scheme is required to be normal. -/
+theorem coheight_apply_eq_one_of_mem_affine_finiteType
+    (k : Type*) [Field k] (U : Y.affineOpens)
+    [Algebra k Γ(Y, U)] [Algebra.FiniteType k Γ(Y, U)]
+    (A : SchemeDivisorPoint X) (hAU : f A.1 ∈ (U : Y.Opens)) :
+    Order.coheight (f A.1) = 1 := by
+  let V := finitePreimageAffine f U
+  have hAV : A.1 ∈ (V : X.Opens) := hAU
+  letI : Nonempty (U : Y.Opens) := ⟨⟨f A.1, hAU⟩⟩
+  letI : Nonempty (V : X.Opens) := ⟨⟨A.1, hAV⟩⟩
+  letI : Algebra Γ(Y, U) Γ(X, V) := (f.app U).hom.toAlgebra
+  letI : Module.Finite Γ(Y, U) Γ(X, V) := finitePreimageModuleFinite f U
+  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := finitePreimageFaithfulSMul f U
+  let Q : Ideal Γ(X, V) := (V.2.primeIdealOf ⟨A.1, hAV⟩).asIdeal
+  let q : Ideal Γ(Y, U) := (U.2.primeIdealOf ⟨f A.1, hAU⟩).asIdeal
+  letI : Q.IsPrime := by
+    dsimp only [Q]
+    infer_instance
+  have hQheight : Q.height = 1 := by
+    dsimp only [Q]
+    rw [← pointClosureIdealSheaf_ideal A.1 V hAV]
+    exact pointClosureIdealSheaf_ideal_height A V hAV
+  have hAlg : algebraMap Γ(Y, U) Γ(X, V) =
+      (f.appLE U V le_rfl).hom := by
+    change (f.app U).hom = (f.appLE U V le_rfl).hom
+    exact congr_arg CommRingCat.Hom.hom f.appLE_eq_app.symm
+  have hcontract : Q.under Γ(Y, U) = q := by
+    change Q.comap (algebraMap Γ(Y, U) Γ(X, V)) = q
+    rw [hAlg]
+    exact congrArg PrimeSpectrum.asIdeal
+      (IsAffineOpen.comap_primeIdealOf_appLE (U : Y.Opens) U.2
+        (V : X.Opens) V.2 le_rfl hAV)
+  have hqheight : q.height = 1 := by
+    rw [← hcontract]
+    exact (height_under_eq_of_finite_of_finiteType k Q).trans hQheight
+  let hU : IsAffineOpen (U : Y.Opens) := U.2
+  let p : AlgebraicGeometry.Spec Γ(Y, U) :=
+    hU.primeIdealOf ⟨f A.1, hAU⟩
+  have hopen := AlgebraicGeometry.coheight_eq_of_isOpenImmersion
+    (x := p) hU.fromSpec
+  rw [hU.fromSpec_primeIdealOf] at hopen
+  exact hopen.trans <| (AlgebraicGeometry.idealHeight_eq_coheight Γ(Y, U) p).symm.trans <| by
+    simpa only [q, p] using hqheight
+
+variable (k : Type*) [Field k]
+  [∀ U : Y.affineOpens, Algebra k Γ(Y, U)]
+  [∀ U : Y.affineOpens, Algebra.FiniteType k Γ(Y, U)]
+
+include k in
+/-- Finite dominant morphisms preserve codimension one when the target affine charts
+are of finite type over a field, without normality assumptions. -/
+theorem coheight_apply_eq_one_of_finiteType (A : SchemeDivisorPoint X) :
+    Order.coheight (f A.1) = 1 := by
+  obtain ⟨_, ⟨W, hW, rfl⟩, hAW, -⟩ :=
+    Y.isBasis_affineOpens.exists_subset_of_mem_open
+      (Set.mem_univ (f A.1)) isOpen_univ
+  exact coheight_apply_eq_one_of_mem_affine_finiteType f k ⟨W, hW⟩ A hAW
+
+/-- The divisor pushforward under a finite dominant morphism with finite-type target
+charts.  Its underlying point is the image under the original scheme morphism. -/
+noncomputable def SchemeDivisorPoint.mapFiniteDominantFiniteType
+    (A : SchemeDivisorPoint X) : SchemeDivisorPoint Y :=
+  ⟨f A.1, coheight_apply_eq_one_of_finiteType f k A⟩
+
+@[simp]
+theorem SchemeDivisorPoint.mapFiniteDominantFiniteType_val
+    (A : SchemeDivisorPoint X) :
+    (A.mapFiniteDominantFiniteType f k).1 = f A.1 :=
+  rfl
+
+end FiniteTypeDivisorMap
 
 section FiniteDominantMorphism
 
@@ -2786,6 +2878,23 @@ noncomputable def SchemeDivisorPoint.invariantClosureMap
     (pointClosureIdealSheaf A.1).subscheme ⟶
       (pointClosureIdealSheaf A.1).subscheme :=
   pointClosureSubschemeMap f A.1 A.1 hA
+
+omit [IsDominant f] [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] in
+/-- Restriction of a finite endomorphism to an invariant reduced divisor is finite. -/
+instance SchemeDivisorPoint.invariantClosureMap_isFinite
+    (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) :
+    IsFinite (A.invariantClosureMap f hA) :=
+  pointClosureSubschemeMap_isFinite f A.1 A.1 hA
+
+omit [IsDominant f] [IsIntegral X] [IsNormalScheme X] in
+/-- Over a locally Noetherian ambient scheme, the finite invariant-divisor restriction
+is locally of finite presentation. -/
+instance SchemeDivisorPoint.invariantClosureMap_locallyOfFinitePresentation
+    (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) :
+    LocallyOfFinitePresentation (A.invariantClosureMap f hA) := by
+  letI : IsLocallyNoetherian (pointClosureIdealSheaf A.1).subscheme :=
+    LocallyOfFiniteType.isLocallyNoetherian (pointClosureIdealSheaf A.1).subschemeι
+  infer_instance
 
 omit [IsFinite f] [IsDominant f] [IsIntegral X] [IsLocallyNoetherian X]
     [IsNormalScheme X] in

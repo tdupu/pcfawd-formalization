@@ -14,6 +14,8 @@ import Mathlib.RingTheory.Ideal.UFD
 import Mathlib.RingTheory.IntegralClosure.GoingDown
 import Mathlib.RingTheory.KrullDimension.Regular
 import Mathlib.RingTheory.Localization.Saturation
+import Mathlib.RingTheory.NoetherNormalization
+import Mathlib.RingTheory.Polynomial.UniqueFactorization
 import Mathlib.RingTheory.QuasiFinite.Basic
 import Mathlib.RingTheory.RegularLocalRing.Defs
 
@@ -30,9 +32,11 @@ ideal of the source DVR.
 This removes the dimension-theoretic and ramification-fidelity obstructions recorded in
 `AXIOMS.md` §B.7.  It also constructs the honest contraction map from a normalized
 height-one prime to a point of a possibly nonnormal target and proves its fibers finite,
-both affinely and for scheme morphisms.  It does not construct the Step 0 chart, prove
-that those target points have codimension one in the nonnormal scheme, or identify the
-abstract `crit₁` predicate with the non-étale locus; those are remaining parts of A6.
+both affinely and for scheme morphisms.  For a finite-type domain over a field,
+Noether normalization also proves height preservation without normality of the target.
+This supplies the affine divisor contraction, its surjectivity and its finite fibers
+over a possibly nonnormal target.  The scheme-global construction and the identification
+of the abstract `crit₁` predicate with the non-étale locus are separate bridges.
 -/
 
 open TopologicalSpace
@@ -303,6 +307,67 @@ theorem finite_heightOneUnder_fiber (p : HeightOnePrime R) :
   exact congr_arg Subtype.val hQ
 
 end Height
+
+section FiniteTypeHeight
+
+variable (k : Type*) [Field k]
+  {R S : Type*} [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+  [Algebra k R] [Algebra.FiniteType k R]
+  [Algebra R S] [Module.Finite R S] [FaithfulSMul R S]
+
+include k
+
+set_option linter.style.haveILetI false in
+/-- A finite faithful extension of domains preserves prime height when the base is
+of finite type over a field, even when that base is not normal.
+
+Noether normalization supplies a finite injective polynomial subalgebra of `R`.
+Both `R` and `S` are finite over that same normal polynomial ring, so the normal-base
+height theorem applied twice gives the equality. -/
+theorem height_under_eq_of_finite_of_finiteType (Q : Ideal S) [Q.IsPrime] :
+    (Q.under R).height = Q.height := by
+  obtain ⟨n, φ, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg k R
+  let P := MvPolynomial (Fin n) k
+  letI : Algebra P R := φ.toRingHom.toAlgebra
+  letI : Module.Finite P R := hfin
+  letI : FaithfulSMul P R := (faithfulSMul_iff_algebraMap_injective P R).mpr hinj
+  letI : Algebra P S := ((algebraMap R S).comp (algebraMap P R)).toAlgebra
+  letI : IsScalarTower P R S := IsScalarTower.of_algebraMap_eq' rfl
+  letI : Module.Finite P S := Module.Finite.trans R S
+  letI : FaithfulSMul P S := (faithfulSMul_iff_algebraMap_injective P S).mpr
+    ((FaithfulSMul.algebraMap_injective R S).comp hinj)
+  letI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing k R
+  letI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
+  letI : (Q.under R).IsPrime := Ideal.IsPrime.under R Q
+  calc
+    (Q.under R).height = ((Q.under R).under P).height :=
+      (height_under_eq_of_finite_of_normal (R := P) (S := R) (Q.under R)).symm
+    _ = (Q.under P).height := by rw [Ideal.under_under]
+    _ = Q.height := height_under_eq_of_finite_of_normal (R := P) Q
+
+/-- Divisor contraction for a finite faithful extension of finite-type domains over a
+field.  The target need not be normal; its codimension condition is proved above. -/
+noncomputable def heightOneUnderOfFiniteType : HeightOnePrime S → HeightOnePrime R :=
+  heightOneUnderOfCodim fun Q ↦
+    (height_under_eq_of_finite_of_finiteType k Q.1.asIdeal).trans Q.2
+
+@[simp]
+theorem heightOneUnderOfFiniteType_val (Q : HeightOnePrime S) :
+    (heightOneUnderOfFiniteType k Q).1 = heightOneComapPoint (R := R) Q :=
+  rfl
+
+/-- Every divisor downstairs has a divisor above it under finite faithful contraction
+over a finite-type domain, with no normality assumption downstairs. -/
+theorem heightOneUnderOfFiniteType_surjective :
+    Function.Surjective (heightOneUnderOfFiniteType k (R := R) (S := S)) :=
+  heightOneUnderOfCodim_surjective _
+
+/-- Divisor contraction over a finite-type domain has finite fibers. -/
+theorem finite_heightOneUnderOfFiniteType_fiber (p : HeightOnePrime R) :
+    (heightOneUnderOfFiniteType k (S := S) ⁻¹' {p}).Finite :=
+  finite_heightOneUnderOfCodim_fiber _ p
+
+end FiniteTypeHeight
 
 section LowDimensionalRegularLocal
 
@@ -941,6 +1006,24 @@ theorem heightOneRam_pos (Q : HeightOnePrime S) :
     0 < heightOneRam (R := R) Q := by
   have := Q.1.isPrime
   exact Ideal.ramificationIdx_pos Q.1.asIdeal R
+
+omit [Module.Finite R S] in
+/-- Ramification indices at codimension-one primes multiply in a tower when the
+localized upper extension is flat.  This is the geometric tower identity behind
+the product used by `DivDyn.iterRam`; unlike that product identity, this theorem
+is about Mathlib's actual local ramification index. -/
+theorem heightOneRam_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
+    [IsScalarTower R S T] (Q : HeightOnePrime S) (P : HeightOnePrime T)
+    [P.1.asIdeal.LiesOver Q.1.asIdeal]
+    [Algebra (Localization.AtPrime Q.1.asIdeal)
+      (Localization.AtPrime P.1.asIdeal)]
+    [IsScalarTower S (Localization.AtPrime Q.1.asIdeal)
+      (Localization.AtPrime P.1.asIdeal)]
+    [Module.Flat (Localization.AtPrime Q.1.asIdeal)
+      (Localization.AtPrime P.1.asIdeal)] :
+    heightOneRam (R := R) P =
+      heightOneRam (R := R) Q * heightOneRam (R := S) P :=
+  Ideal.ramificationIdx_tower' Q.1.asIdeal P.1.asIdeal
 
 /-- The codimension-one branch support as contracted target ideals.
 

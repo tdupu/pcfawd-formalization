@@ -33,12 +33,17 @@ The conjecture is due to the authors of `latex/paper.tex` and is quoted on page 
 The conjecture quoted above is the form in which it was posed. In `latex/paper.tex` it is
 Conjecture `conj:pcfawd`, stated for an arbitrary variety over a field of characteristic
 zero (no normality, projectivity or algebraic closedness), and proved there as Corollary
-`cor:pcfawd` via Theorem `thm:general`. **This file formalizes the normal case only**:
-`Pcf.pcf_periodic_prime` is the abstract form of Corollary `cor:normal-preperiodic`, and
-`Pcf.pcf_all_the_way_down` descends along a chain of such normal-case steps. The passage to
-the normalization in Theorem `thm:general` (Lemmas `lem:normalization`, `lem:covers`,
-`lem:lift`) is **not formalized**, so the paper's `conj:pcfawd` for non-normal `X` is not
-a theorem of this development.
+`cor:pcfawd` via Theorem `thm:general`. **This file contains the abstract recursive
+induction.** `Pcf.pcf_periodic_prime` is the abstract form of Corollary
+`cor:normal-preperiodic`, and `Pcf.pcf_all_the_way_down` descends along a chain of such
+steps.  Elsewhere, `Pcf.pcfAllTheWayDown_scheme` formalizes the one-divisor geometric
+Theorem `thm:general`, including nonnormal ambient schemes, the canonical normalization,
+periodic lifting, the two-way normalization PCF comparison, and ramified-cover descent.
+`Pcf.SchemePCFAllTheWayDownAtDepth` and
+`Pcf.schemePCFAllTheWayDown_of_cover` recursively assemble that theorem on the actual
+reduced closures and return maps through every prescribed finite depth.
+`Pcf.SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le` proves that this
+actual recursion has no branch longer than the topological Krull dimension of `X`.
 
 ## What is formalized here
 
@@ -63,28 +68,30 @@ combinatorial shadow of a finite surjective self-map, recorded through its actio
 primes and its ramification indices. They are **not** statements about varieties. In
 particular:
 
-1. **No bridge from geometry.** Nothing in this development constructs a `Pcf.DivDyn` from
-   an actual morphism of schemes. That `step`, `ram`, `branch` and `PCF` mean what their
-   names say is assumptions A1–A5 of `lean/AXIOMS.md`, not a theorem.
-2. **Theorem `thm:bounding` (per-divisor form) is assumed** — `Pcf.PcfSetup.key`, the mathematical
-   heart of the
-   argument. Three attempts to reduce it are recorded as retracted in `lean/AXIOMS.md`
-   §B.2 and §B.5.
-3. **Lying over is assumed** (`DivDyn.step_surjective`), and so is branch-finiteness for
-   the ambient system (`DivDyn.branch_finite'`); for the restricted system the latter is
-   derived on the purity route (§B.6).
+1. **The geometric tower is not produced in this abstract file.** Elsewhere
+   `Pcf.schemePCFAllTheWayDownAtDepth_of_cover` recursively constructs the actual
+   scheme-level descent, and `Pcf.SchemePcfDescentBranch` packages its actual branches.
+   This file itself still takes a tower of `PcfSetup`s as input.
+2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PcfSetup.key` is supplied
+   to the abstract induction. On the actual invariant-divisor chart route it is derived
+   from the literal Step 0 data, Zariski--Nagata purity, and Abhyankar's lemma.
+3. **Lying over and branch-finiteness are fields of abstract `DivDyn`.** They are proved
+   by the actual normal-scheme constructors used by the geometric route.
 4. **The chain is given, not produced.** `pcf_all_the_way_down` takes the tower of
    `PcfSetup`s as input. It asserts nothing about the *existence* of periodic primes at
-   each level, and the manuscript's "the descent continues for at most `dim X` steps" is
-   not modelled at all — the abstraction carries no dimension.
+   each level, and the abstraction carries no dimension.  On the actual-scheme route,
+   every recursive branch forgets to an actual divisor flag, whose length is proved to
+   be at most `topologicalKrullDim X`.
 5. **Characteristic zero is implicit.** `Pcf.DivDyn.branch` is `1 < ram`, dropping
    the ramification paragraph before Definition `def:crit-branch`'s inseparable-residue-extension
    clause (assumption A3). That is faithful
    in characteristic zero, which is where the conjecture lives, and Example `ex:wild` in
    `Pcf/Examples/CharP.lean` shows the conclusion genuinely fails in characteristic `p`.
 
-So: the *logical architecture* of "PCF all the way down", including the descent induction,
-is machine-checked. The *geometric content* is assumed, in a named and audited list.
+So: the recursive logical architecture is machine-checked here, and the geometric
+recursive assembly is machine-checked in `Pcf/Bounding/SchemeAllTheWayDown.lean`;
+its numerical termination bound is machine-checked in
+`Pcf/Bounding/DimensionTermination.lean`.
 -/
 
 namespace Pcf
@@ -112,9 +119,9 @@ Along any tower of periodic-prime restrictions — at stage `i` one chooses a pr
 `D (i+1)` on it — **every** stage is post-critically finite, given that stage `0` is.
 
 The proof is an induction on `i`, so the "all the way down" is genuine recursion rather
-than a finite schema. It does not stop, because the abstraction carries no dimension; in
-the manuscript the descent terminates after at most `dim X` steps, which is not modelled
-here (see the header).
+than a finite schema. This abstract theorem does not stop because its abstraction carries
+no dimension. The actual-scheme companion recursion is separately proved to terminate
+after at most `topologicalKrullDim X` restriction steps (see the header).
 
 This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.pcf_descent` is the same theorem. -/
 theorem pcf_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))

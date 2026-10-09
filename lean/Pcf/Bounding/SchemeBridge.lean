@@ -10,6 +10,7 @@ import Mathlib.AlgebraicGeometry.Morphisms.Affine
 import Mathlib.AlgebraicGeometry.Morphisms.Etale
 import Mathlib.AlgebraicGeometry.Morphisms.SurjectiveOnStalks
 import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.RingTheory.RingHom.Unramified
 import Mathlib.RingTheory.RingHomProperties
 
 /-!
@@ -1112,6 +1113,21 @@ noncomputable def affineIdealSheafStalkBoundingLocalizationPresentation
       U V ambient_map_le h hJ rfl
   simp [V]
 
+/-- Failure of formal unramifiedness at a point, defined from the actual stalk map. -/
+def schemeCrit0At {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
+  ¬ (g.stalkMap x).hom.FormallyUnramified
+
+/-- The codimension-one stalk-formal-non-unramified locus of an actual scheme morphism. -/
+def schemeDivisorCrit0 {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) :
+    Set (SchemeDivisorPoint X) :=
+  {x | schemeCrit0At g x.1}
+
+@[simp]
+theorem mem_schemeDivisorCrit0_iff {X Y : AlgebraicGeometry.Scheme.{u}}
+    (g : X ⟶ Y) (x : SchemeDivisorPoint X) :
+    x ∈ schemeDivisorCrit0 g ↔ ¬ (g.stalkMap x.1).hom.FormallyUnramified :=
+  Iff.rfl
+
 /-- Failure of formal étaleness at a point, defined from the actual stalk map.
 
 For the locally finitely presented morphisms used in `SchemeNormalizationUnnormDyn`, this
@@ -1129,6 +1145,18 @@ theorem mem_schemeDivisorCrit1_iff {X Y : AlgebraicGeometry.Scheme.{u}}
     (g : X ⟶ Y) (x : SchemeDivisorPoint X) :
     x ∈ schemeDivisorCrit1 g ↔ ¬ (g.stalkMap x.1).hom.FormallyEtale :=
   Iff.rfl
+
+/-- Formal étaleness implies formal unramifiedness, so the actual non-unramified
+divisor locus is contained in the actual non-étale divisor locus (U2). -/
+theorem schemeDivisorCrit0_subset_crit1 {X Y : AlgebraicGeometry.Scheme.{u}}
+    (g : X ⟶ Y) : schemeDivisorCrit0 g ⊆ schemeDivisorCrit1 g := by
+  intro x hx he
+  apply hx
+  letI := (g.stalkMap x.1).hom.toAlgebra
+  letI : Algebra.FormallyEtale (Y.presheaf.stalk (g x.1))
+      (X.presheaf.stalk x.1) := he
+  exact (inferInstance : Algebra.FormallyUnramified
+    (Y.presheaf.stalk (g x.1)) (X.presheaf.stalk x.1))
 
 /-- A divisor point represented by a local bounding chart is not in the actual
 codimension-one non-étale locus. -/
