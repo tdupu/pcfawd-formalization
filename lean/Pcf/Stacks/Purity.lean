@@ -8,6 +8,7 @@ import Pcf.Stacks.Purity.LocalEtale
 import Pcf.Stacks.Purity.DimensionOne
 import Pcf.Stacks.Purity.EtaleLocalization
 import Pcf.Stacks.Purity.NormalRing
+import Pcf.Stacks.Purity.IntegralClosure
 import Pcf.Stacks.Purity.PuncturedSpectrum
 import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
@@ -26,6 +27,8 @@ the proved pieces of its Stacks Tag `0BMB` proof.
   start of Tag `0BM9`.
 * the literal possibly-disconnected Stacks-normal-ring predicate and the actual finite-normal
   algebra target category of Tag `0BM9`, including its obvious `Spec`-and-restrict functor.
+* finiteness and Stacks-normality of the integral closure in the finite separable field-extension
+  component of the construction in Tag `0BM9`.
 
 ## Remaining Stacks spine
 
