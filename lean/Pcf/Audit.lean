@@ -63,6 +63,7 @@ import Pcf.Bounding.SchemeAllTheWayDown
 import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
@@ -190,6 +191,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_stage_for_two_eventual_eq_of_finitePresentation
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.presentationModelEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_common_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_equalizing_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitPoint_comp_toColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residuePoint_injective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localPoint_comp_toLocalColimit
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
