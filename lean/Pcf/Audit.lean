@@ -188,6 +188,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
 #print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_height_eq_one
 #print axioms Pcf.Stacks.exists_etale_finite_component_of_quasiFiniteAt
+#print axioms Pcf.Stacks.mem_puncturedSpectrum_iff
+#print axioms Pcf.Stacks.closedPoint_not_mem_puncturedSpectrum
+#print axioms Pcf.Stacks.puncturedFiniteEtaleRecovery
+#print axioms Pcf.Stacks.puncturedFiniteEtaleExtensionCover
+#print axioms Pcf.Stacks.puncturedFiniteEtaleRecoveryIso
+#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrum_essSurj
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation

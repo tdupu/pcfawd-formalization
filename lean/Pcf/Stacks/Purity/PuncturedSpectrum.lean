@@ -178,12 +178,15 @@ noncomputable def puncturedFiniteEtaleRecoveryIso
     (@asIso _ _ _ _ ((puncturedFiniteEtaleRecovery R).app V) (hRecovery V))
 
 omit [IsNoetherianRing R] in
-/-- The exact categorical consequence of the missing Tag `0BM9` Hartogs/normality input:
-if every `Spec Γ` extension is finite étale and every recovery map is an isomorphism, then
-restriction to the punctured spectrum is essentially surjective.
+/-- A useful special consequence of the missing Tag `0BM9` Hartogs/normality input: if every
+`Spec Γ` extension in a chosen family is finite étale and every recovery map is an isomorphism,
+then restriction to the punctured spectrum is essentially surjective.
 
-Full faithfulness, and hence the equivalence asserted by Tag `0BM9`, requires the corresponding
-extension theorem for morphisms and is not claimed here. -/
+Tag `0BM9` does not say that every punctured finite étale cover extends finite étale.  Rather,
+it identifies punctured finite étale covers with finite normal `R`-algebras étale away from the
+closed point, and characterizes the covers whose corresponding algebra is finite étale.  The
+strong objectwise `hExtension` hypothesis below is therefore an explicit additional premise,
+not the general conclusion of that tag. -/
 theorem restrictFiniteEtaleToPuncturedSpectrum_essSurj
     (hExtension : ∀ V, finiteEtaleMorphism ((puncturedFiniteEtaleExtension R).obj V).hom)
     (hRecovery : ∀ V, IsIso ((puncturedFiniteEtaleRecovery R).app V)) :
