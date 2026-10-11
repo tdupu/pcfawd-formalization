@@ -66,6 +66,7 @@ import Pcf.Stacks.Abhyankar.EtaleDescentObjects
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
+import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
@@ -215,6 +216,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.residueField_isSepClosed
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.bijective_algebraMap_finiteEtale_local
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.finiteEtaleLocalAlgEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_of_colimit_element
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_containing_finite_colimit_set
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_of_localColimit_element
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_containing_finite_localColimit_set
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit

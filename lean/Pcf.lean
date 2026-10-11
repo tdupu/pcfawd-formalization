@@ -21,6 +21,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselization
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
+import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
