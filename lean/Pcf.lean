@@ -15,6 +15,9 @@ import Pcf.AllTheWayDown
 import Pcf.SpectrumDynamics
 import Pcf.Stacks.Purity
 import Pcf.Stacks.Abhyankar
+import Pcf.Stacks.Abhyankar.EtaleDescent
+import Pcf.Stacks.Abhyankar.StrictHenselization
+import Pcf.Stacks.Common.RegularDimensionOne
 import Pcf.Bounding.RegularLocalDomain
 import Pcf.Bounding.Stacks
 import Pcf.Bounding.StandardPiece
