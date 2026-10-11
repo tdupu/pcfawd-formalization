@@ -63,6 +63,10 @@ import Pcf.Bounding.SchemeAllTheWayDown
 import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+import Pcf.Stacks.Abhyankar.TameRamification
+import Pcf.Stacks.Abhyankar.StandardCover
+import Pcf.Stacks.Abhyankar.DVR
+import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -177,10 +181,32 @@ hypotheses. -/
 #print axioms Pcf.Stacks.ZariskiNagataPurityInputsAt
 #print axioms Pcf.Stacks.HasZariskiNagataPurityAt
 #print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
+#print axioms Pcf.Stacks.formallyEtale_of_flat_of_formallyUnramified_of_isLocalization
+#print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
+#print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_height_eq_one
+#print axioms Pcf.Stacks.exists_etale_finite_component_of_quasiFiniteAt
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_stage_for_two_eventual_eq_of_finitePresentation
+#print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
+#print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
+#print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
+#print axioms Pcf.Stacks.localizedStandardPoly_eq_kummerPoly
+#print axioms Pcf.Stacks.localizedStandardCover_etale
+#print axioms Pcf.Stacks.standardCover_finite
+#print axioms Pcf.Stacks.standardCover_free
+#print axioms Pcf.Stacks.standardCover_finrank
+#print axioms Pcf.Stacks.standardCover_tameInCodimensionOne_charZero
+#print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
+#print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
+#print axioms Pcf.Stacks.dvrRootPoly_monic
+#print axioms Pcf.Stacks.dvrRootAlgebra_finite
+#print axioms Pcf.Stacks.dvrRootAlgebra_free
+#print axioms Pcf.Stacks.dvrRootAlgebra_finrank
+#print axioms Pcf.Stacks.dvrRoot_pow_eq
+#print axioms Pcf.Stacks.dvrRootQuotientEquiv
+#print axioms Pcf.Stacks.dvrRoot_mem_nonZeroDivisors
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map

@@ -18,6 +18,10 @@ import Pcf.Stacks.Abhyankar
 import Pcf.Stacks.Abhyankar.EtaleDescent
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
 import Pcf.Stacks.Abhyankar.StrictHenselization
+import Pcf.Stacks.Abhyankar.TameRamification
+import Pcf.Stacks.Abhyankar.StandardCover
+import Pcf.Stacks.Abhyankar.DVR
+import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Common.RegularDimensionOne
 import Pcf.Bounding.RegularLocalDomain
 import Pcf.Bounding.Stacks
