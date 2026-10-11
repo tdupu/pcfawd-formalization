@@ -67,6 +67,7 @@ import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.KummerIntermediate
+import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -207,6 +208,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRoot_pow_eq
 #print axioms Pcf.Stacks.dvrRootQuotientEquiv
 #print axioms Pcf.Stacks.dvrRoot_mem_nonZeroDivisors
+#print axioms Pcf.Stacks.dvrRootPoly_isEisensteinAt
+#print axioms Pcf.Stacks.dvrRootPoly_irreducible
+#print axioms Pcf.Stacks.dvrRootPoly_prime
+#print axioms Pcf.Stacks.dvrRootAlgebra_isDomain
+#print axioms Pcf.Stacks.dvrRootIdeal_isMaximal
+#print axioms Pcf.Stacks.dvrRootAlgebra_isLocalRing
+#print axioms Pcf.Stacks.dvrRootAlgebra_isDiscreteValuationRing
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
