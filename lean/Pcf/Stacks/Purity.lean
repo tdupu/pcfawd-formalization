@@ -7,6 +7,7 @@ import Pcf.Stacks.Purity.Defs
 import Pcf.Stacks.Purity.LocalEtale
 import Pcf.Stacks.Purity.DimensionOne
 import Pcf.Stacks.Purity.EtaleLocalization
+import Pcf.Stacks.Purity.PuncturedSpectrum
 
 /-!
 # Zariski--Nagata purity: assembly boundary
@@ -19,6 +20,8 @@ the proved pieces of its Stacks Tag `0BMB` proof.
 * the faithful affine pointwise statement (`ZariskiNagataPurity`);
 * the local essentially-finite-presentation flat-plus-unramified criterion;
 * the full dimension-one branch of Tag `0BMB`, including both DVR reductions.
+* the actual finite-étale restriction, global-sections, and affine-extension functors at the
+  start of Tag `0BM9`.
 
 ## Remaining Stacks spine
 
