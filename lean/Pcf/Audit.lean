@@ -62,6 +62,7 @@ import Pcf.Bounding.PcfAllTheWayDownScheme
 import Pcf.Bounding.SchemeAllTheWayDown
 import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
+import Pcf.Stacks.Abhyankar.EtaleDescentObjects
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -176,6 +177,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.ZariskiNagataPurityInputsAt
 #print axioms Pcf.Stacks.HasZariskiNagataPurityAt
 #print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
+#print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
+#print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
+#print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
+#print axioms Pcf.Stacks.EtaleDescent.exists_common_stage_for_two_eventual_eq_of_finitePresentation
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
