@@ -7,7 +7,9 @@ import Pcf.Stacks.Purity.Defs
 import Pcf.Stacks.Purity.LocalEtale
 import Pcf.Stacks.Purity.DimensionOne
 import Pcf.Stacks.Purity.EtaleLocalization
+import Pcf.Stacks.Purity.NormalRing
 import Pcf.Stacks.Purity.PuncturedSpectrum
+import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
 /-!
 # Zariski--Nagata purity: assembly boundary
@@ -22,14 +24,16 @@ the proved pieces of its Stacks Tag `0BMB` proof.
 * the full dimension-one branch of Tag `0BMB`, including both DVR reductions.
 * the actual finite-étale restriction, global-sections, and affine-extension functors at the
   start of Tag `0BM9`.
+* the literal possibly-disconnected Stacks-normal-ring predicate and the actual finite-normal
+  algebra target category of Tag `0BM9`, including its obvious `Spec`-and-restrict functor.
 
 ## Remaining Stacks spine
 
 The higher-dimensional induction still requires punctured-spectrum purity (Tag `0BMA`). At the
 pinned Mathlib revision, the key étale-local finite factor of Tag `02LK` is already available as
 Tag `00UJ`, `Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. The categorical
-punctured-spectrum extension theorem used in `0BMA` (Tag `0BM9`) and the hyperplane-section
-lifting theorem (Tag `0BLM`) remain absent.
+depth-two/reflexive Hartogs recovery theorem needed to prove the equivalence in Tag `0BM9`, and
+the hyperplane-section lifting theorem (Tag `0BLM`), remain absent.
 
 No declaration in this assembly file asserts the unproved terminal theorem.
 -/
