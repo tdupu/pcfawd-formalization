@@ -64,12 +64,15 @@ import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
+import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
+import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction
+import Pcf.Stacks.Abhyankar.KummerFractionEquiv
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -205,6 +208,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.residuePoint_injective
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isLocalRing
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localPoint_comp_toLocalColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtaleNeighborhood_point_eq
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residuePoint_surjective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residuePoint_bijective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residueFieldAlgEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residueField_isSepClosed
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.bijective_algebraMap_finiteEtale_local
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.finiteEtaleLocalAlgEquiv
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -236,6 +246,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRootFractionAlgebra_finrank
 #print axioms Pcf.Stacks.dvrRootAlgebra_isIntegralClosure_fractionRing
 #print axioms Pcf.Stacks.dvrRootIdeal_ramificationIdx
+#print axioms Pcf.Stacks.dvrRootAlgebraToFractionRoot_injective
+#print axioms Pcf.Stacks.dvrRootFractionLift_algebraMap
+#print axioms Pcf.Stacks.dvrRootFractionLiftAlgHom
+#print axioms Pcf.Stacks.dvrRootFractionRing_finrank
+#print axioms Pcf.Stacks.dvrRootFractionLiftAlgHom_bijective
+#print axioms Pcf.Stacks.dvrRootFractionEquiv
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
