@@ -186,8 +186,8 @@ Tag `0BM9` does not say that every punctured finite étale cover extends finite 
 it identifies punctured finite étale covers with finite normal `R`-algebras étale away from the
 closed point, and characterizes the covers whose corresponding algebra is finite étale. The
 strong objectwise `hExtension` hypothesis below is therefore an explicit additional premise,
-not the general conclusion of that tag. Full faithfulness also requires the corresponding
-extension theorem for morphisms and is not claimed here. -/
+not the general conclusion of that tag. Full faithfulness of this restriction functor also
+requires the corresponding extension theorem for morphisms and is not claimed here. -/
 theorem restrictFiniteEtaleToPuncturedSpectrum_essSurj
     (hExtension : ∀ V, finiteEtaleMorphism ((puncturedFiniteEtaleExtension R).obj V).hom)
     (hRecovery : ∀ V, IsIso ((puncturedFiniteEtaleRecovery R).app V)) :
