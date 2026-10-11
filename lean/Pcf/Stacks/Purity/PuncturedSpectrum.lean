@@ -182,11 +182,12 @@ omit [IsNoetherianRing R] in
 `Spec Γ` extension in a chosen family is finite étale and every recovery map is an isomorphism,
 then restriction to the punctured spectrum is essentially surjective.
 
-Tag `0BM9` does not say that every punctured finite étale cover extends finite étale.  Rather,
+Tag `0BM9` does not say that every punctured finite étale cover extends finite étale. Rather,
 it identifies punctured finite étale covers with finite normal `R`-algebras étale away from the
-closed point, and characterizes the covers whose corresponding algebra is finite étale.  The
+closed point, and characterizes the covers whose corresponding algebra is finite étale. The
 strong objectwise `hExtension` hypothesis below is therefore an explicit additional premise,
-not the general conclusion of that tag. -/
+not the general conclusion of that tag. Full faithfulness also requires the corresponding
+extension theorem for morphisms and is not claimed here. -/
 theorem restrictFiniteEtaleToPuncturedSpectrum_essSurj
     (hExtension : ∀ V, finiteEtaleMorphism ((puncturedFiniteEtaleExtension R).obj V).hom)
     (hRecovery : ∀ V, IsIso ((puncturedFiniteEtaleRecovery R).app V)) :
@@ -195,6 +196,50 @@ theorem restrictFiniteEtaleToPuncturedSpectrum_essSurj
   intro V
   refine ⟨(puncturedFiniteEtaleExtensionCover R hExtension).obj V, ?_⟩
   exact ⟨(puncturedFiniteEtaleRecoveryIso R hExtension hRecovery V).symm⟩
+
+/-- The precise morphism-extension property for finite étale covers across the closed point:
+restriction induces a bijection on every hom-set.
+
+This isolates the morphism part of the stronger special case in which every finite étale cover of
+the punctured spectrum extends as a finite étale cover of `Spec R`.  It is not itself part of the
+conclusion of Tag `0BM9`, whose target is a category of finite normal algebras. -/
+def PuncturedFiniteEtaleMorphismsExtend : Prop :=
+  ∀ X Y : FiniteEtaleCover (Spec (.of R)),
+    Function.Bijective (fun f : X ⟶ Y ↦
+      (restrictFiniteEtaleToPuncturedSpectrum R).map f)
+
+omit [IsNoetherianRing R] in
+/-- The morphism-extension property is exactly sufficient to make restriction fully faithful. -/
+noncomputable def restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful
+    (hMorphisms : PuncturedFiniteEtaleMorphismsExtend R) :
+    (restrictFiniteEtaleToPuncturedSpectrum R).FullyFaithful where
+  preimage {X Y} f := Classical.choose ((hMorphisms X Y).2 f)
+  map_preimage {X Y} f :=
+    Classical.choose_spec ((hMorphisms X Y).2 f)
+  preimage_map {X Y} f :=
+    (hMorphisms X Y).1 (Classical.choose_spec ((hMorphisms X Y).2
+      ((restrictFiniteEtaleToPuncturedSpectrum R).map f)))
+
+omit [IsNoetherianRing R] in
+/-- Under the strictly stronger hypotheses that every punctured finite étale cover extends as a
+finite étale cover and morphisms extend uniquely, restriction is an equivalence.
+
+This is a conditional special consequence and is deliberately not labelled as Tag `0BM9`. -/
+noncomputable def restrictFiniteEtaleToPuncturedSpectrumEquivalence
+    (hExtension : ∀ V, finiteEtaleMorphism ((puncturedFiniteEtaleExtension R).obj V).hom)
+    (hRecovery : ∀ V, IsIso ((puncturedFiniteEtaleRecovery R).app V))
+    (hMorphisms : PuncturedFiniteEtaleMorphismsExtend R) :
+    FiniteEtaleCover (Spec (.of R)) ≌ FiniteEtaleCover (puncturedSpectrumScheme R) := by
+  let F := restrictFiniteEtaleToPuncturedSpectrum R
+  let hFullyFaithful : F.FullyFaithful :=
+    restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful R hMorphisms
+  let hEssSurj : F.EssSurj :=
+    restrictFiniteEtaleToPuncturedSpectrum_essSurj R hExtension hRecovery
+  letI : F.Full := hFullyFaithful.full
+  letI : F.Faithful := hFullyFaithful.faithful
+  letI : F.EssSurj := hEssSurj
+  letI : F.IsEquivalence := {}
+  exact F.asEquivalence
 
 end LocalRing
 
