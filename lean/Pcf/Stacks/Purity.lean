@@ -10,6 +10,7 @@ import Pcf.Stacks.Purity.EtaleLocalization
 import Pcf.Stacks.Purity.NormalRing
 import Pcf.Stacks.Purity.IntegralClosure
 import Pcf.Stacks.Purity.PuncturedSpectrum
+import Pcf.Stacks.Purity.Hartogs
 import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
 /-!
@@ -29,6 +30,8 @@ the proved pieces of its Stacks Tag `0BMB` proof.
   algebra target category of Tag `0BM9`, including its obvious `Spec`-and-restrict functor.
 * finiteness and Stacks-normality of the integral closure in the finite separable field-extension
   component of the construction in Tag `0BM9`.
+* quasi-compactness of the Noetherian punctured spectrum, together with injectivity of restriction
+  of functions from a positive-dimensional local domain.
 
 ## Remaining Stacks spine
 
