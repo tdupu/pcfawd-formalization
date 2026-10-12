@@ -6,6 +6,8 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Pcf.Abhyankar
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
 import Pcf.Stacks.Abhyankar.KummerClauses
+import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+import Pcf.Bounding.SmoothRegularLocal
 
 /-!
 # The root-of-a-unit leg in the DVR Abhyankar square
@@ -26,6 +28,149 @@ universe u v w x
 namespace Pcf.Stacks
 
 set_option linter.style.haveILetI false
+
+/-- The root-of-a-unit algebra over a DVR is the integral closure of the DVR in its
+generic localization.
+
+This supplies the common ambient generic algebra used in the last paragraph of Stacks
+Tag `0BRM`.  The Kummer algebra is finite over the DVR, its uniformizer stays a
+nonzerodivisor by flatness, and its closed fibre is reduced because the Kummer algebra is
+etale.  Hence the principal ideal of the uniformizer is radical, so the elementary
+normalization calculation for localization away from a radical nonzerodivisor applies. -/
+theorem kummerUnit_isIntegralClosure_localizationAway_uniformizer
+    (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
+    (pi : S) (hpi : Irreducible pi)
+    (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (heUnit : IsUnit (exponent : S)) :
+    IsIntegralClosure
+      (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) S
+      (Localization.Away
+        (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) pi)) := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let C := Localization.Away (algebraMap S U pi)
+  letI : Module.Free S U :=
+    (Abhyankar.kummerPoly_monic unit (by omega)).free_adjoinRoot
+  letI : Module.Finite S U :=
+    (Abhyankar.kummerPoly_monic unit (by omega)).finite_adjoinRoot
+  letI : Algebra.Etale S U :=
+    Abhyankar.etale unit (by omega) heUnit
+  have hpi_regular : pi ∈ nonZeroDivisors S :=
+    mem_nonZeroDivisors_iff_ne_zero.mpr hpi.ne_zero
+  have hsmul : IsSMulRegular U pi :=
+    Module.Flat.isSMulRegular_of_nonZeroDivisors hpi_regular
+  have hmap_regular : algebraMap S U pi ∈ nonZeroDivisors U := by
+    rw [mem_nonZeroDivisors_iff]
+    constructor
+    · intro x hx
+      apply hsmul
+      simpa only [Algebra.smul_def, mul_zero] using hx
+    · intro x hx
+      apply hsmul
+      simpa only [Algebra.smul_def, mul_zero] using (mul_comm x (algebraMap S U pi) ▸ hx)
+  let p : Ideal S := Ideal.span {pi}
+  letI : p.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hpi
+  have hrad_map : (p.map (algebraMap S U)).IsRadical :=
+    Algebra.FormallyUnramified.isRadical_map_isMaximal S U p
+  have hrad : (Ideal.span ({algebraMap S U pi} : Set U)).IsRadical := by
+    simpa [p, Ideal.map_span] using hrad_map
+  let _ : IsIntegrallyClosedIn U C :=
+    isIntegrallyClosedIn_away_of_span_isRadical hmap_regular hrad
+  let _ : Algebra.IsIntegral S U :=
+    AdjoinRoot.isIntegral_of_monic (Abhyankar.kummerPoly_monic unit (by omega))
+  exact IsIntegralClosure.of_isIntegrallyClosedIn
+
+/-- A closed local factor of the root-of-a-unit Kummer algebra over a DVR is regular
+local.  This is the auxiliary vertical leg of the last square in Tag `0BRM`, proved from
+the etale Kummer presentation rather than assumed. -/
+theorem kummerUnit_localizationAtPrime_isRegularLocalRing
+    (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
+    (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (heUnit : IsUnit (exponent : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (hq : q.under S = maximalIdeal S) :
+    IsRegularLocalRing (Localization.AtPrime q) := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let T := Localization.AtPrime q
+  letI : Algebra.Etale S U :=
+    Abhyankar.etale unit (by omega) heUnit
+  letI : IsLocalHom (algebraMap S T) := by
+    apply ((IsLocalRing.local_hom_TFAE
+      (algebraMap S T)).out 5 1).mp
+    change (maximalIdeal T).under S = maximalIdeal S
+    rw [← Ideal.under_under (B := U),
+      Localization.AtPrime.under_maximalIdeal, hq]
+  exact Pcf.isRegularLocalRing_of_flat_of_formallyUnramified S T
+
+/-- The closed local factor of a Kummer unit algebra over a DVR is a domain. -/
+theorem kummerUnit_localizationAtPrime_isDomain
+    (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
+    (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (heUnit : IsUnit (exponent : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (hq : q.under S = maximalIdeal S) :
+    IsDomain (Localization.AtPrime q) := by
+  letI : IsRegularLocalRing (Localization.AtPrime q) :=
+    kummerUnit_localizationAtPrime_isRegularLocalRing
+      S unit exponent hexponent heUnit q hq
+  exact Pcf.Stacks.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
+
+/-- A closed local factor of the root-of-a-unit Kummer algebra over a DVR is again a
+DVR.  Regularity comes from the etale local map, while formal unramifiedness identifies
+the target maximal ideal with the extension of the principal maximal ideal of the base. -/
+theorem kummerUnit_localizationAtPrime_isDiscreteValuationRing
+    (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
+    (pi : S) (hpi : Irreducible pi)
+    (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (heUnit : IsUnit (exponent : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (hq : q.under S = maximalIdeal S) :
+    @IsDiscreteValuationRing (Localization.AtPrime q) _
+      (kummerUnit_localizationAtPrime_isDomain
+        S unit exponent hexponent heUnit q hq) := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let T := Localization.AtPrime q
+  letI : Algebra.Etale S U :=
+    Abhyankar.etale unit (by omega) heUnit
+  letI : IsLocalHom (algebraMap S T) := by
+    apply ((IsLocalRing.local_hom_TFAE
+      (algebraMap S T)).out 5 1).mp
+    change (maximalIdeal T).under S = maximalIdeal S
+    rw [← Ideal.under_under (B := U),
+      Localization.AtPrime.under_maximalIdeal, hq]
+  letI : IsRegularLocalRing T :=
+    kummerUnit_localizationAtPrime_isRegularLocalRing
+      S unit exponent hexponent heUnit q hq
+  letI : IsDomain T :=
+    kummerUnit_localizationAtPrime_isDomain
+      S unit exponent hexponent heUnit q hq
+  have hmax : (maximalIdeal T).IsPrincipal := by
+    rw [← Algebra.FormallyUnramified.map_maximalIdeal (R := S),
+      hpi.maximalIdeal_eq, Ideal.map_span, Set.image_singleton]
+    infer_instance
+  have hpi_regular : pi ∈ nonZeroDivisors S :=
+    mem_nonZeroDivisors_iff_ne_zero.mpr hpi.ne_zero
+  have hsmul : IsSMulRegular T pi :=
+    Module.Flat.isSMulRegular_of_nonZeroDivisors hpi_regular
+  have hpiT : algebraMap S T pi ≠ 0 := by
+    intro hzero
+    have hone : (1 : T) = 0 := by
+      apply hsmul
+      change pi • (1 : T) = pi • (0 : T)
+      rw [Algebra.smul_def, Algebra.smul_def, hzero]
+      simp
+    exact one_ne_zero hone
+  have hnotField : ¬ IsField T := by
+    intro hfield
+    letI : IsField T := hfield
+    have hmem : algebraMap S T pi ∈ maximalIdeal T := by
+      rw [← Algebra.FormallyUnramified.map_maximalIdeal (R := S)]
+      exact Ideal.mem_map_of_mem (algebraMap S T) <| by
+        rw [hpi.maximalIdeal_eq]
+        exact Ideal.subset_span (Set.mem_singleton pi)
+    have hmaxbot : maximalIdeal T = ⊥ :=
+      IsLocalRing.isField_iff_maximalIdeal_eq.mp hfield
+    exact hpiT (Ideal.mem_bot.mp (hmaxbot ▸ hmem))
+  exact ((IsDiscreteValuationRing.TFAE T hnotField).out 5 1).mp hmax
 
 /-- If a normalization `N` and the root-of-a-unit algebra are realized as integral
 closures in the same ambient generic algebra, their local factors are canonically
@@ -76,6 +221,22 @@ theorem isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal
   change (maximalIdeal (Localization.AtPrime m)).under S = maximalIdeal S
   rw [← Ideal.under_under (B := N),
     Localization.AtPrime.under_maximalIdeal, hm]
+
+/-- A maximal ideal of an integral-closure model over a local base lies over the closed
+point.  This is the lying-over equality used for the selected normalization factor in
+Tag `0BRM`; it follows from integrality rather than being extra incidence data. -/
+theorem maximalIdeal_under_eq_of_isIntegralClosure
+    (S : Type v) (N : Type w) (C : Type x)
+    [CommRing S] [CommRing N] [CommRing C]
+    [IsLocalRing S]
+    [Algebra S N] [Algebra S C] [Algebra N C] [IsScalarTower S N C]
+    [IsIntegralClosure N S C]
+    (m : Ideal N) [m.IsMaximal] :
+    m.under S = maximalIdeal S := by
+  letI : Algebra.IsIntegral S N :=
+    IsIntegralClosure.isIntegral_algebra S C
+  exact IsLocalRing.eq_maximalIdeal
+    (Ideal.isMaximal_under_of_isIntegral_of_isMaximal m)
 
 /-- Residue-field separability composes with a formally unramified top leg.
 
@@ -240,6 +401,86 @@ theorem isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
     rw [htower, hunderS, htopOverS, mul_one, hindex]
   exact isUnramifiedAt_of_ramificationIdx_total_eq_intermediate_at
     R A T (maximalIdeal A) (maximalIdeal T) htotal
+
+/-- The literal `0BRM` local factor with the common generic algebra constructed rather
+than postulated.
+
+The ambient algebra is the Kummer root algebra localized away from a uniformizer of the
+upper DVR.  The preceding normalization theorem proves that the Kummer root algebra is its
+integral closure.  A maximal ideal of the competing normalization automatically lies over
+the closed point by integrality.  Consequently the only remaining hypotheses concern the
+other map in the ramification square: the closed Kummer factor is proved internally to be
+a DVR and that structure is transported to the selected normalization factor. -/
+theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
+    (R : Type u) (S : Type v) (N : Type w)
+    [CommRing R] [CommRing S] [CommRing N]
+    [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    [Algebra.HasSeparableResidueFieldsAt R S (maximalIdeal R)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    (piS : S) (hpiS : Irreducible piS)
+    (unit : Sˣ) (heUnit : IsUnit (exponent : S))
+    [Algebra S N] [Algebra R N] [IsScalarTower R S N]
+    [Algebra N (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    [IsScalarTower S N (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    [IsIntegralClosure N S (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    (m : Ideal N) [m.IsMaximal]
+    [Algebra (AdjoinRoot (dvrRootPoly pi exponent))
+      (Localization.AtPrime m)]
+    [IsScalarTower R (AdjoinRoot (dvrRootPoly pi exponent))
+      (Localization.AtPrime m)]
+    [FaithfulSMul (AdjoinRoot (dvrRootPoly pi exponent))
+      (Localization.AtPrime m)]
+    (hmA : (maximalIdeal (Localization.AtPrime m)).under
+      (AdjoinRoot (dvrRootPoly pi exponent)) =
+      Ideal.span {AdjoinRoot.root (dvrRootPoly pi exponent)})
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    Algebra.IsUnramifiedAt
+      (AdjoinRoot (dvrRootPoly pi exponent))
+      (maximalIdeal (Localization.AtPrime m)) := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let C := Localization.Away (algebraMap S U piS)
+  letI : IsIntegralClosure U S C :=
+    kummerUnit_isIntegralClosure_localizationAway_uniformizer
+      S piS hpiS unit exponent hexponent heUnit
+  have hmS : m.under S = maximalIdeal S :=
+    maximalIdeal_under_eq_of_isIntegralClosure S N C m
+  let g : N ≃ₐ[S] U := IsIntegralClosure.equiv S N C U
+  let q : Ideal U := m.map g
+  letI : q.IsMaximal := by
+    dsimp only [q]
+    infer_instance
+  have hqS : q.under S = maximalIdeal S := by
+    have hmaps : algebraMap S U = g.toRingHom.comp (algebraMap S N) := by
+      ext s
+      simp
+    have hcomap : (m.map g).comap g.toRingHom = m := by
+      exact Ideal.comap_map_of_bijective g.toRingHom g.bijective
+    change (m.map g).comap (algebraMap S U) = maximalIdeal S
+    rw [hmaps, ← Ideal.comap_comap, hcomap]
+    exact hmS
+  let T := Localization.AtPrime m
+  let V := Localization.AtPrime q
+  let equiv : T ≃ₐ[S] V :=
+    localizationEquivKummerUnit_of_isIntegralClosure
+      S N C unit exponent m
+  letI : IsDomain V :=
+    kummerUnit_localizationAtPrime_isDomain
+      S unit exponent hexponent heUnit q hqS
+  letI : IsDiscreteValuationRing V :=
+    kummerUnit_localizationAtPrime_isDiscreteValuationRing
+      S piS hpiS unit exponent hexponent heUnit q hqS
+  letI : IsDomain T := equiv.toMulEquiv.isDomain _
+  letI : IsDiscreteValuationRing T :=
+    IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing equiv.symm
+  exact isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
+    R S N C pi exponent hexponent hpi unit heUnit m hmS hmA hramification
 
 /-- A finite algebra identified with a local factor of a root-of-a-unit Kummer algebra is
 etale over the base DVR.
@@ -424,10 +665,16 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
     R S A T unit exponent (by omega) heUnit q equiv hindex
 
 #print axioms localizationEquivKummerUnit_of_isIntegralClosure
+#print axioms kummerUnit_isIntegralClosure_localizationAway_uniformizer
+#print axioms kummerUnit_localizationAtPrime_isRegularLocalRing
+#print axioms kummerUnit_localizationAtPrime_isDomain
+#print axioms kummerUnit_localizationAtPrime_isDiscreteValuationRing
 #print axioms isLocalHom_of_maximalIdeal_under_eq
 #print axioms isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal
+#print axioms maximalIdeal_under_eq_of_isIntegralClosure
 #print axioms hasSeparableResidueFieldsAt_comp_formallyUnramified
 #print axioms isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
+#print axioms isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
 #print axioms etale_of_equiv_localization_kummerUnit
 #print axioms isUnramifiedAt_of_kummerUnit_local_ramification_square
 #print axioms isUnramifiedAt_of_standardRoot_kummerUnit_local_square
