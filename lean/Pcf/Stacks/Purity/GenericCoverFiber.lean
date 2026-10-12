@@ -194,6 +194,23 @@ theorem puncturedCover_genericPullback_sections_injective
   letI : QuasiCompact (Limits.pullback.fst V.hom g) := inferInstance
   exact (Limits.pullback.fst V.hom g).app_injective ⊤
 
+/-- Restriction of global functions on a punctured cover to its actual generic fibre. -/
+noncomputable def puncturedCoverGenericFiber_sectionMap
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    Γ(V.left, ⊤) →+* Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) := by
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  exact (Limits.pullback.fst V.hom g).appTop.hom
+
+omit [IsNoetherianRing R] in
+/-- The actual generic-fibre algebra contains the section ring of the punctured cover. -/
+theorem puncturedCoverGenericFiber_sectionMap_injective
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    Function.Injective (puncturedCoverGenericFiber_sectionMap R hdim V) := by
+  exact puncturedCover_genericPullback_sections_injective R hdim V
+
 omit [IsNoetherianRing R] in
 /-- The generic fibre of any finite étale punctured cover is affine. -/
 theorem puncturedCoverGenericFiber_isAffine (hdim : 1 ≤ ringKrullDim R)
