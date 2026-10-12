@@ -202,23 +202,64 @@ theorem reesQuotient_isNoetherian
   exact Algebra.FiniteType.isNoetherianRing
     (R ⧸ K.comap (algebraMap R (reesAlgebra I))) ((reesAlgebra I) ⧸ K)
 
+/-- A coefficient formula for a product in which the sum is extended to any fixed bound for
+the degree of the right factor. -/
+theorem Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
+    {R : Type u} [CommRing R] (p q : Polynomial R) {D : ℕ}
+    (hp : p.natDegree ≤ D) (n : ℕ) :
+    (q * p).coeff n = ∑ j ∈ Finset.range (D + 1),
+      (if j ≤ n then q.coeff (n - j) else 0) * p.coeff j := by
+  rw [mul_comm, Polynomial.coeff_mul,
+    Finset.Nat.sum_antidiagonal_eq_sum_range_succ
+      (fun i j ↦ p.coeff i * q.coeff j) n]
+  simp_rw [mul_comm (p.coeff _)]
+  rcases le_total n D with hnD | hDn
+  · calc
+      ∑ j ∈ Finset.range (n + 1), q.coeff (n - j) * p.coeff j =
+          ∑ j ∈ Finset.range (n + 1),
+            (if j ≤ n then q.coeff (n - j) else 0) * p.coeff j := by
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [ite_eq_left (Nat.le_of_lt_succ (Finset.mem_range.mp hj))]
+      _ = ∑ j ∈ Finset.range (D + 1),
+          (if j ≤ n then q.coeff (n - j) else 0) * p.coeff j := by
+        apply Finset.sum_subset
+        · exact Finset.range_mono (Nat.succ_le_succ hnD)
+        · intro j _ hjn
+          rw [ite_eq_right (by simpa [Finset.mem_range] using hjn), zero_mul]
+  · symm
+    calc
+      ∑ j ∈ Finset.range (D + 1),
+          (if j ≤ n then q.coeff (n - j) else 0) * p.coeff j =
+          ∑ j ∈ Finset.range (D + 1), q.coeff (n - j) * p.coeff j := by
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [ite_eq_left (le_trans (Nat.le_of_lt_succ (Finset.mem_range.mp hj)) hDn)]
+      _ = ∑ j ∈ Finset.range (n + 1), q.coeff (n - j) * p.coeff j := by
+        apply Finset.sum_subset
+        · exact Finset.range_mono (Nat.succ_le_succ hDn)
+        · intro j hjn hjD
+          rw [Finset.mem_range] at hjn hjD
+          rw [Polynomial.coeff_eq_zero_of_natDegree_lt
+            (lt_of_le_of_lt hp (by omega)), mul_zero]
+
 /-- The convergence step in Stacks Tag `05GH`.  A finite family whose coefficients improve
 adic order by one at each approximation generates the whole ideal in an adically complete
 ring.  The degree offsets allow this to be applied directly to coefficients of finitely many
 Rees polynomials. -/
 theorem fg_of_adic_approximation
     {R : Type u} [CommRing R] (I J : Ideal R) [IsAdicComplete I R]
-    {k : ℕ} (g : Fin k → R) (d : Fin k → ℕ)
+    {ι : Type*} [Fintype ι] (g : ι → R) (d : ι → ℕ)
     (hg : ∀ i, g i ∈ J)
     (happrox : ∀ (n : ℕ) (x : R), x ∈ J → x ∈ I ^ n →
-      ∃ a : Fin k → R, (∀ i, a i ∈ I ^ (n - d i)) ∧
+      ∃ a : ι → R, (∀ i, a i ∈ I ^ (n - d i)) ∧
         x - ∑ i, a i * g i ∈ J ⊓ I ^ (n + 1)) :
     J.FG := by
   classical
   let D : ℕ := ∑ i, d i
-  have hd (i : Fin k) : d i ≤ D :=
+  have hd (i : ι) : d i ≤ D :=
     Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ i)
-  let corr : ℕ → R → (Fin k → R) := fun n x ↦
+  let corr : ℕ → R → (ι → R) := fun n x ↦
     if hx : x ∈ J ∧ x ∈ I ^ n then Classical.choose (happrox n x hx.1 hx.2) else 0
   have hcorr {n : ℕ} {x : R} (hxJ : x ∈ J) (hxI : x ∈ I ^ n) :
       (∀ i, corr n x i ∈ I ^ (n - d i)) ∧
@@ -244,8 +285,8 @@ theorem fg_of_adic_approximation
       | succ n ih =>
         have hh := (hcorr ih.1 ih.2).2
         exact ⟨by simpa only [rem] using hh.1, by simpa only [rem] using hh.2⟩
-    let coeff : ℕ → Fin k → R := fun n i ↦ ∑ j ∈ Finset.range n, corr j (rem j) i
-    have hcoeff_succ (n : ℕ) (i : Fin k) :
+    let coeff : ℕ → ι → R := fun n i ↦ ∑ j ∈ Finset.range n, corr j (rem j) i
+    have hcoeff_succ (n : ℕ) (i : ι) :
         coeff (n + 1) i = coeff n i + corr n (rem n) i := by
       simp only [coeff, Finset.sum_range_succ]
     have hrem_eq (n : ℕ) : rem n = x - ∑ i, coeff n i * g i := by
@@ -255,7 +296,7 @@ theorem fg_of_adic_approximation
         simp only [rem, ih, hcoeff_succ]
         simp_rw [add_mul, Finset.sum_add_distrib]
         ring
-    have hcoeff_cauchy (i : Fin k) : ∀ {m n : ℕ}, m ≤ n →
+    have hcoeff_cauchy (i : ι) : ∀ {m n : ℕ}, m ≤ n →
         coeff (m + D) i ≡ coeff (n + D) i [SMOD (I ^ m : Ideal R)] := by
       intro m n hmn
       induction n, hmn using Nat.le_induction with
@@ -266,7 +307,7 @@ theorem fg_of_adic_approximation
         rw [SModEq.sub_mem, sub_add_eq_sub_sub, sub_self, zero_sub, Ideal.neg_mem_iff]
         exact Ideal.pow_le_pow_right (I := I) (by have := hd i; omega)
           ((hcorr (hrem (n + D)).1 (hrem (n + D)).2).1 i)
-    have hlimit : ∀ i : Fin k, ∃ a : R, ∀ n,
+    have hlimit : ∀ i : ι, ∃ a : R, ∀ n,
         coeff (n + D) i ≡ a [SMOD (I ^ n : Ideal R)] := by
       intro i
       have hc : ∀ {m n}, m ≤ n → coeff (m + D) i ≡ coeff (n + D) i
@@ -292,7 +333,7 @@ theorem fg_of_adic_approximation
       intro i _
       apply Ideal.mul_mem_right
       simpa [SModEq.sub_mem] using ha i n
-    have hmul (b : Fin k → R) : ∑ i, b i * g i = ∑ i, g i * b i := by
+    have hmul (b : ι → R) : ∑ i, b i * g i = ∑ i, g i * b i := by
       apply Finset.sum_congr rfl
       intro i _
       rw [mul_comm]
@@ -302,9 +343,174 @@ theorem fg_of_adic_approximation
     simp_rw [mul_sub, Finset.sum_sub_distrib]
     ring
 
+/-- Stacks Tag `05GH`, finite-generation step.  If `R` is complete for a finitely generated
+ideal `I` and `R ⧸ I` is Noetherian, then every ideal of `R` is finitely generated.  The proof
+extracts finitely many homogeneous coefficient generators from the Rees ideal modulo `I`, then
+uses adic convergence to turn the resulting approximate generators into exact generators. -/
+theorem fg_of_fg_quotient_of_isAdicComplete
+    {R : Type u} [CommRing R] (I J : Ideal R) [IsAdicComplete I R]
+    (hI : I.FG) (hquot : IsNoetherianRing (R ⧸ I)) :
+    J.FG := by
+  classical
+  let K : Ideal (reesAlgebra I) := I.map (algebraMap R (reesAlgebra I))
+  let q : reesAlgebra I →+* (reesAlgebra I ⧸ K) := Ideal.Quotient.mk K
+  let F : Ideal (reesAlgebra I) := adicReesIdeal I J
+  let L : Ideal (reesAlgebra I ⧸ K) := F.map q
+  let _ : IsNoetherianRing (reesAlgebra I ⧸ K) :=
+    reesQuotient_isNoetherian I hI hquot
+  obtain ⟨k, b, hb⟩ :=
+    Submodule.fg_iff_exists_fin_generating_family.mp L.fg_of_isNoetherianRing
+  have hbL (i : Fin k) : b i ∈ L := by
+    rw [← hb]
+    exact Submodule.subset_span (Set.mem_range_self i)
+  choose p hpF hpq using fun i ↦
+    (Ideal.mem_map_iff_of_surjective q Ideal.Quotient.mk_surjective).mp (hbL i)
+  let D : ℕ := ∑ i, (p i).1.natDegree
+  have hpdeg (i : Fin k) : (p i).1.natDegree ≤ D := by
+    dsimp only [D]
+    exact Finset.single_le_sum
+      (s := Finset.univ) (f := fun i : Fin k ↦ (p i).1.natDegree)
+      (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ i)
+  apply fg_of_adic_approximation I J
+    (fun ij : Fin k × Fin (D + 1) ↦ (p ij.1).1.coeff ij.2)
+    (fun ij : Fin k × Fin (D + 1) ↦ ij.2)
+  · intro ij
+    exact hpF ij.1 ij.2
+  · intro n x hxJ hxI
+    let z : reesAlgebra I :=
+      ⟨Polynomial.monomial n x, reesAlgebra.monomial_mem.mpr hxI⟩
+    have hzF : z ∈ F := by
+      intro m
+      simp only [z, Polynomial.coeff_monomial]
+      split_ifs with h
+      · simpa [h] using hxJ
+      · exact J.zero_mem
+    have hqzL : q z ∈ L := Ideal.mem_map_of_mem q hzF
+    have hqzspan : q z ∈ Submodule.span (reesAlgebra I ⧸ K) (Set.range b) := by
+      rw [hb]
+      exact hqzL
+    obtain ⟨c, hc⟩ :=
+      (Submodule.mem_span_range_iff_exists_fun (reesAlgebra I ⧸ K)).mp hqzspan
+    choose c' hc' using fun i ↦ Ideal.Quotient.mk_surjective (c i)
+    have hsum_map : q (∑ i, c' i * p i) = q z := by
+      calc
+        q (∑ i, c' i * p i) = ∑ i, q (c' i) * q (p i) := by simp
+        _ = ∑ i, c i * b i := by
+          apply Finset.sum_congr rfl
+          intro i _
+          rw [hc' i, hpq i]
+        _ = q z := by simpa only [smul_eq_mul] using hc
+    have hremK : z - ∑ i, c' i * p i ∈ K := by
+      rw [← Ideal.Quotient.eq_zero_iff_mem]
+      rw [map_sub, hsum_map, sub_self]
+    let a : Fin k × Fin (D + 1) → R := fun ij ↦
+      if (ij.2 : ℕ) ≤ n then (c' ij.1).1.coeff (n - ij.2) else 0
+    refine ⟨a, ?_, ?_⟩
+    · intro ij
+      dsimp only [a]
+      split_ifs with h
+      · exact (c' ij.1).2 (n - ij.2)
+      · exact Ideal.zero_mem _
+    · have hcoeffsum :
+          (∑ i, c' i * p i : reesAlgebra I).1.coeff n =
+            ∑ ij : Fin k × Fin (D + 1), a ij * (p ij.1).1.coeff ij.2 := by
+        calc
+          (∑ i, c' i * p i : reesAlgebra I).1.coeff n =
+              ∑ i, ((c' i).1 * (p i).1).coeff n := by simp
+          _ = ∑ i, ∑ j ∈ Finset.range (D + 1),
+              (if j ≤ n then (c' i).1.coeff (n - j) else 0) *
+                (p i).1.coeff j := by
+            apply Finset.sum_congr rfl
+            intro i _
+            exact Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
+              (p i).1 (c' i).1 (hpdeg i) n
+          _ = ∑ i, ∑ j : Fin (D + 1),
+              (if (j : ℕ) ≤ n then (c' i).1.coeff (n - j) else 0) *
+                (p i).1.coeff j := by
+            apply Finset.sum_congr rfl
+            intro i _
+            exact (Fin.sum_univ_eq_sum_range fun j ↦
+              (if j ≤ n then (c' i).1.coeff (n - j) else 0) *
+                (p i).1.coeff j) (D + 1) |>.symm
+          _ = ∑ ij : Fin k × Fin (D + 1),
+              a ij * (p ij.1).1.coeff ij.2 := by
+            rw [Fintype.sum_prod_type]
+      have hcoeffK := coeff_mem_pow_succ_of_mem_rees_map hremK n
+      change (z.1 - (∑ i, c' i * p i : reesAlgebra I).1).coeff n ∈
+        I ^ (n + 1) at hcoeffK
+      rw [Polynomial.coeff_sub, show z.1.coeff n = x by simp [z], hcoeffsum] at hcoeffK
+      refine ⟨?_, hcoeffK⟩
+      apply J.sub_mem hxJ
+      apply J.sum_mem
+      intro ij _
+      exact J.mul_mem_left _ (hpF ij.1 ij.2)
+
+/-- Stacks Tag `05GH`.  A ring complete for a finitely generated ideal is Noetherian when
+the quotient by that ideal is Noetherian. -/
+theorem isNoetherianRing_of_fg_quotient_of_isAdicComplete
+    {R : Type u} [CommRing R] (I : Ideal R) [IsAdicComplete I R]
+    (hI : I.FG) (hquot : IsNoetherianRing (R ⧸ I)) :
+    IsNoetherianRing R :=
+  (isNoetherianRing_iff_ideal_fg R).mpr fun J ↦
+    fg_of_fg_quotient_of_isAdicComplete I J hI hquot
+
 end Ideal
 
+/-- Stacks Tag `032B`, complete-local form.  A local ring complete for its maximal-ideal
+topology is Noetherian as soon as its maximal ideal is finitely generated. -/
+theorem isNoetherianRing_of_maximalIdeal_fg_of_isAdicComplete
+    (R : Type u) [CommRing R] [IsLocalRing R]
+    [IsAdicComplete (IsLocalRing.maximalIdeal R) R]
+    (hmax : (IsLocalRing.maximalIdeal R).FG) :
+    IsNoetherianRing R := by
+  let _ : Field (R ⧸ IsLocalRing.maximalIdeal R) :=
+    Ideal.Quotient.field (IsLocalRing.maximalIdeal R)
+  exact Ideal.isNoetherianRing_of_fg_quotient_of_isAdicComplete
+    (IsLocalRing.maximalIdeal R) hmax inferInstance
+
 namespace AdicCompletion
+
+/-- Stacks Tag `05GH`.  The completion of a ring along a finitely generated ideal is
+Noetherian when the quotient by that ideal is Noetherian. -/
+theorem isNoetherianRing_of_fg_of_quotient
+    {R : Type u} [CommRing R] (I : Ideal R)
+    (hI : I.FG) (hquot : IsNoetherianRing (R ⧸ I)) :
+    IsNoetherianRing (AdicCompletion I R) := by
+  let K : Ideal (AdicCompletion I R) :=
+    I.map (algebraMap R (AdicCompletion I R))
+  let _ : IsAdicComplete K (AdicCompletion I R) := by
+    dsimp only [K]
+    exact AdicCompletion.isAdicComplete_self I hI
+  have hK : K.FG := hI.map (algebraMap R (AdicCompletion I R))
+  let e : (AdicCompletion I R ⧸ K) ≃+* (R ⧸ I) :=
+    (Ideal.quotEquivOfEq
+      (AdicCompletion.ker_evalOneₐ_eq_map I hI).symm).trans
+      ((AdicCompletion.evalOneₐ I).toRingHom.quotientKerEquivOfSurjective
+        (AdicCompletion.evalOneₐ_surjective I))
+  let _ : IsNoetherianRing (R ⧸ I) := hquot
+  let _ : IsNoetherianRing (AdicCompletion I R ⧸ K) :=
+    isNoetherianRing_of_surjective (R ⧸ I) (AdicCompletion I R ⧸ K)
+      e.symm.toRingHom e.symm.surjective
+  exact Ideal.isNoetherianRing_of_fg_quotient_of_isAdicComplete K hK inferInstance
+
+/-- The completion-Noetherianity input in Stacks Tag `06LJ`.  The maximal ideal of the
+completion is the extension of the original one, and the completion is complete for that ideal,
+so Tag `032B` applies. -/
+theorem isNoetherianRing_of_maximalIdeal_fg
+    {R : Type u} [CommRing R] [IsLocalRing R]
+    (hmax : (IsLocalRing.maximalIdeal R).FG) :
+    IsNoetherianRing
+      (AdicCompletion (IsLocalRing.maximalIdeal R) R) := by
+  let _ : IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+    AdicCompletion.isLocalRing_of_fg hmax
+  let _ : IsAdicComplete
+      (IsLocalRing.maximalIdeal
+        (AdicCompletion (IsLocalRing.maximalIdeal R) R))
+      (AdicCompletion (IsLocalRing.maximalIdeal R) R) :=
+    AdicCompletion.isAdicComplete_of_fg hmax
+  apply isNoetherianRing_of_maximalIdeal_fg_of_isAdicComplete
+  rw [AdicCompletion.maximalIdeal_eq_map_of_fg hmax]
+  exact hmax.map (algebraMap R (AdicCompletion (IsLocalRing.maximalIdeal R) R))
 
 section ExactOfArtinRees
 
@@ -1654,23 +1860,22 @@ theorem localColimit_quotient_maximalIdeal_pow_free
         rfl }
   exact Module.Free.of_equiv' hfree e
 
-/-- Noetherianity of the strict local colimit reduces to the two completion facts in the proof
-of Stacks Tag `06LJ`: its completion is Noetherian and the completion map is flat. -/
+/-- Noetherianity of the strict local colimit reduces to flatness of its completion in the proof
+of Stacks Tag `06LJ`.  Noetherianity of the completion is supplied internally by Tags `032B`,
+`05GH`, and `06LN`. -/
 theorem localColimit_isNoetherianRing_of_completion
-    (hnoeth : IsNoetherianRing
-      (AdicCompletion
-        (IsLocalRing.maximalIdeal (LocalColimit R Ω))
-        (LocalColimit R Ω)))
     (hflat : Module.Flat (LocalColimit R Ω)
       (AdicCompletion
         (IsLocalRing.maximalIdeal (LocalColimit R Ω))
         (LocalColimit R Ω))) :
     IsNoetherianRing (LocalColimit R Ω) := by
+  have hmax : (IsLocalRing.maximalIdeal (LocalColimit R Ω)).FG := by
+    rw [← map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+    exact (IsLocalRing.maximalIdeal R).fg_of_isNoetherianRing.map
+      (algebraMap R (LocalColimit R Ω))
   apply isNoetherianRing_of_maximalAdicCompletion
-    (LocalColimit R Ω) _ hnoeth hflat
-  rw [← map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
-  exact (IsLocalRing.maximalIdeal R).fg_of_isNoetherianRing.map
-    (algebraMap R (LocalColimit R Ω))
+    (LocalColimit R Ω) hmax
+    (AdicCompletion.isNoetherianRing_of_maximalIdeal_fg hmax) hflat
 
 end PointedEtaleNeighborhood
 
@@ -1682,7 +1887,13 @@ end PointedEtaleNeighborhood
 #print axioms Ideal.adicReesIdeal
 #print axioms Ideal.coeff_mem_pow_succ_of_mem_rees_map
 #print axioms Ideal.reesQuotient_isNoetherian
+#print axioms Ideal.Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
 #print axioms Ideal.fg_of_adic_approximation
+#print axioms Ideal.fg_of_fg_quotient_of_isAdicComplete
+#print axioms Ideal.isNoetherianRing_of_fg_quotient_of_isAdicComplete
+#print axioms isNoetherianRing_of_maximalIdeal_fg_of_isAdicComplete
+#print axioms AdicCompletion.isNoetherianRing_of_fg_of_quotient
+#print axioms AdicCompletion.isNoetherianRing_of_maximalIdeal_fg
 #print axioms AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
@@ -1726,5 +1937,6 @@ end PointedEtaleNeighborhood
   PointedEtaleNeighborhood.exists_localColimit_linearCombination_reduceModIdeal_bijective
 #print axioms PointedEtaleNeighborhood.exists_localColimit_adicCompletion_map_bijective
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
+#print axioms PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
 
 end Pcf.Stacks
