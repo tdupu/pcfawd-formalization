@@ -82,12 +82,14 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
+import Pcf.Stacks.Abhyankar.DVRAbhyankar
 import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction
@@ -279,6 +281,20 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericModel
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericSchemeModel
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_integralClosure_finite
+#print axioms Pcf.Stacks.puncturedCover_sections_integralClosure_finite
+#print axioms Pcf.Stacks.puncturedCover_isNoetherian
+#print axioms Pcf.Stacks.genericPoint_fromSpecStalk_flat
+#print axioms Pcf.Stacks.genericPoint_fromSpecStalk_dominant
+#print axioms Pcf.Stacks.genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant
+#print axioms Pcf.Stacks.genericPoint_toPuncturedSpectrum_quasiCompact
+#print axioms Pcf.Stacks.puncturedCover_genericBaseChange_isIso
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_iso_basePullback
+#print axioms Pcf.Stacks.puncturedCover_genericPullback_sections_injective
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_injective
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_base
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionAlgHom
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionAlgHom_injective
 #print axioms Pcf.Stacks.puncturedCover_normalization_isAffine
 #print axioms Pcf.Stacks.puncturedCover_normalizationSpecMap
 #print axioms Pcf.Stacks.puncturedCover_normalizationRestrictIso
@@ -362,6 +378,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_faithfullyFlat
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
+#print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
+#print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -376,6 +395,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_finite_free_cartier_regular
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
+#print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
+#print axioms Pcf.Stacks.isEtaleAt_of_ramificationIdx_total_eq_intermediate
+#print axioms Pcf.Stacks.etale_of_dvr_ramificationIdx_total_eq
 #print axioms Pcf.Stacks.dvrRootPoly_monic
 #print axioms Pcf.Stacks.dvrRootAlgebra_finite
 #print axioms Pcf.Stacks.dvrRootAlgebra_free
