@@ -213,6 +213,51 @@ theorem Module.Basis.mapSemilinear_apply
   apply (Module.Basis.mapSemilinear σ b e).repr.injective
   simp [Module.Basis.mapSemilinear]
 
+/-- If a local algebra identifies the extended maximal ideal with the target's maximal ideal,
+its closed fiber is canonically the target residue field. -/
+noncomputable def residueTensorEquivOfMapMaximalIdeal
+    {A : Type u} {B : Type v} [CommRing A] [CommRing B]
+    [IsLocalRing A] [IsLocalRing B] [Algebra A B]
+    [IsLocalHom (algebraMap A B)]
+    (hmax : (IsLocalRing.maximalIdeal A).map (algebraMap A B) =
+      IsLocalRing.maximalIdeal B) :
+    (IsLocalRing.ResidueField A ⊗[A] B) ≃ₗ[IsLocalRing.ResidueField A]
+      IsLocalRing.ResidueField B := by
+  let eRing := Ideal.quotEquivOfEq hmax
+  letI : Algebra (IsLocalRing.ResidueField A)
+      (B ⧸ (IsLocalRing.maximalIdeal A).map (algebraMap A B)) :=
+    Ideal.Quotient.algebraQuotientOfLEComap (by
+      rw [← Ideal.map_le_iff_le_comap])
+  letI : Module (IsLocalRing.ResidueField A) (IsLocalRing.ResidueField B) :=
+    IsLocalRing.ResidueField.instModule
+  let eRing' :
+      (B ⧸ (IsLocalRing.maximalIdeal A).map (algebraMap A B)) ≃+*
+        IsLocalRing.ResidueField B := eRing
+  let eLin :
+      (B ⧸ (IsLocalRing.maximalIdeal A).map (algebraMap A B)) ≃ₗ[
+        IsLocalRing.ResidueField A] IsLocalRing.ResidueField B :=
+    eRing'.toAddEquiv.toLinearEquiv (by
+      rintro ⟨a⟩ ⟨b⟩
+      rfl)
+  exact (Algebra.TensorProduct.quotIdealMapEquivQuotTensor B
+    (IsLocalRing.maximalIdeal A)).symm.toLinearEquiv ≪≫ₗ eLin
+
+@[simp]
+theorem residueTensorEquivOfMapMaximalIdeal_tmul
+    {A : Type u} {B : Type v} [CommRing A] [CommRing B]
+    [IsLocalRing A] [IsLocalRing B] [Algebra A B]
+    [IsLocalHom (algebraMap A B)]
+    (hmax : (IsLocalRing.maximalIdeal A).map (algebraMap A B) =
+      IsLocalRing.maximalIdeal B) (b : B) :
+    residueTensorEquivOfMapMaximalIdeal hmax (1 ⊗ₜ b) =
+      IsLocalRing.residue B b := by
+  change Ideal.quotEquivOfEq hmax
+    ((Algebra.TensorProduct.quotIdealMapEquivQuotTensor B
+      (IsLocalRing.maximalIdeal A)).symm (1 ⊗ₜ b)) =
+      Ideal.Quotient.mk (IsLocalRing.maximalIdeal B) b
+  rw [← Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk,
+    AlgEquiv.symm_apply_apply, Ideal.quotEquivOfEq_mk]
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -381,6 +426,8 @@ end PointedEtaleNeighborhood
 #print axioms IsLocalRing.ResidueField.mapEquivOfSurjective
 #print axioms Module.Basis.mapSemilinear
 #print axioms Module.Basis.mapSemilinear_apply
+#print axioms residueTensorEquivOfMapMaximalIdeal
+#print axioms residueTensorEquivOfMapMaximalIdeal_tmul
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
