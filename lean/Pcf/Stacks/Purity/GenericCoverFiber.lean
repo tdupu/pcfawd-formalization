@@ -5,7 +5,9 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Noetherian
 import Mathlib.AlgebraicGeometry.Stalk
+import Mathlib.AlgebraicGeometry.Morphisms.Flat
 import Mathlib.RingTheory.Etale.Field
+import Mathlib.RingTheory.Flat.Localization
 import Pcf.Stacks.Purity.Hartogs
 
 /-!
@@ -44,6 +46,17 @@ theorem puncturedCover_isNoetherian
     exact isCompact_iff_compactSpace.mp (isCompact_puncturedSpectrum R)
   letI : CompactSpace V.left := QuasiCompact.compactSpace_of_compactSpace V.hom
   exact { __ := LocallyOfFiniteType.isLocallyNoetherian V.hom }
+
+omit [IsLocalRing R] [IsNoetherianRing R] in
+/-- The generic point of an integral affine scheme is flat over the scheme, since its
+function field is a localization of the coordinate ring. -/
+theorem genericPoint_fromSpecStalk_flat :
+    Flat ((Spec R).fromSpecStalk (genericPoint (Spec R))) := by
+  rw [Spec.fromSpecStalk_eq']
+  apply Flat.SpecMap_iff.mpr
+  change (algebraMap R (Spec R).functionField).Flat
+  exact RingHom.flat_algebraMap_iff.mpr
+    (IsLocalization.flat (Spec R).functionField (nonZeroDivisors R))
 
 omit [IsNoetherianRing R] in
 /-- The generic point of a positive-dimensional local domain lies in its punctured spectrum. -/
