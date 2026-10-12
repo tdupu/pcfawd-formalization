@@ -426,6 +426,8 @@ hypotheses. -/
   Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_linearCombination_reduceModIdeal_bijective
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_adicCompletion_map_bijective
 #print axioms Pcf.Stacks.flat_quotient_map
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
