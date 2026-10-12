@@ -273,6 +273,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
+#print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericModel
+#print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericSchemeModel
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation

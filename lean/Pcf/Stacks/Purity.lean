@@ -20,6 +20,7 @@ import Pcf.Stacks.Purity.FiniteNormalAlgebra
 import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.FiniteNormalModel
+import Pcf.Stacks.Purity.CoverNormalModel
 
 /-!
 # Zariski--Nagata purity: assembly boundary
