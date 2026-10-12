@@ -83,4 +83,18 @@ noncomputable def puncturedCover_normalizationSpecRestrictIso
   let kScheme := (Over.forget _).mapIso k
   convert kScheme.symm ≪≫ puncturedCover_normalizationRestrictIso R V using 1; rfl
 
+/-- The affine normalization ring is exactly the integral closure of the base's global sections
+inside the cover's global sections. This is the algebra whose finiteness must be established. -/
+noncomputable def puncturedCover_normalizationSectionsIso
+    (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra Γ(Spec R, ⊤) Γ(V.left, ⊤) :=
+      (V.hom ≫ (puncturedSpectrum R).ι).appTop.hom.toAlgebra
+    Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) ≅
+      CommRingCat.of (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤)) := by
+  letI : IsFinite V.hom := V.prop.1
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  let e := f.normalizationObjIso (isAffineOpen_top (Spec R))
+  convert e using 1 <;> rfl
+
 end Pcf.Stacks
