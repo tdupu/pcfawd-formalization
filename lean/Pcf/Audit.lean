@@ -236,6 +236,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PrincipalQuotientsAvoidClosedPoint
 #print axioms Pcf.Stacks.maximalIdeal_not_mem_associatedPrimes_iff_exists_isSMulRegular_quotient
 #print axioms Pcf.Stacks.exists_regularSequence_two_of_principalQuotient_not_associated
+#print axioms Pcf.Stacks.maximalIdeal_not_isPrincipal_of_two_le_ringKrullDim
+#print axioms Pcf.Stacks.principalQuotientsAvoidClosedPoint_of_two_le_ringKrullDim
+#print axioms Pcf.Stacks.exists_regularSequence_two_of_isIntegrallyClosed
 #print axioms Pcf.Stacks.pow_dvd_of_isSMulRegular_quotient
 #print axioms Pcf.Stacks.exists_common_value_of_regular_pair
 #print axioms Pcf.Stacks.fraction_of_regular_pair_eq_algebraMap
@@ -340,6 +343,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.restrictRootsOfUnity_residue_injective
 #print axioms Pcf.Stacks.rootOfUnity_mem_integralClosure
 #print axioms Pcf.Stacks.dvrRootFraction_rootOfUnity_mem_rootAlgebra
+#print axioms Pcf.Stacks.dvrRoot_irreducible
+#print axioms Pcf.Stacks.dvrRoot_addVal_base
 #print axioms Pcf.Stacks.dvrRootFraction_power_minpoly
 #print axioms Pcf.Stacks.dvrRootFraction_power_adjoin_finrank
 #print axioms Pcf.Stacks.dvrRootFraction_power_relative_finrank
