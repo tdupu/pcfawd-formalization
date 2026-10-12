@@ -383,4 +383,21 @@ theorem puncturedCoverGenericFiber_exists_separableFields (hdim : 1 ≤ ringKrul
     exact (puncturedCoverGenericFiber_ringHom_etale R hdim V).toAlgebra
   exact (Algebra.Etale.iff_exists_algEquiv_prod (Spec R).functionField E).mp hEtale
 
+omit [IsNoetherianRing R] in
+/-- Sections of a finite étale punctured cover form a reduced ring: restriction embeds them
+in the product of fields making up the generic fibre. -/
+theorem puncturedCover_sections_isReduced (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) : IsReduced Γ(V.left, ⊤) := by
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  obtain ⟨I, hI, L, hField, _, e, _⟩ :=
+    puncturedCoverGenericFiber_exists_separableFields R hdim V
+  letI : Finite I := hI
+  letI (i : I) : Field (L i) := hField i
+  haveI : IsReduced E := isReduced_of_injective e.toRingHom e.injective
+  haveI : IsReduced Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) := by
+    change IsReduced E
+    infer_instance
+  exact isReduced_of_injective (puncturedCoverGenericFiber_sectionMap R hdim V)
+    (puncturedCoverGenericFiber_sectionMap_injective R hdim V)
+
 end Pcf.Stacks
