@@ -238,6 +238,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_regularSequence_two_of_principalQuotient_not_associated
 #print axioms Pcf.Stacks.pow_dvd_of_isSMulRegular_quotient
 #print axioms Pcf.Stacks.exists_common_value_of_regular_pair
+#print axioms Pcf.Stacks.fraction_of_regular_pair_eq_algebraMap
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
