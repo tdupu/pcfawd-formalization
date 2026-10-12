@@ -58,6 +58,30 @@ theorem flat_pi_self_of_isNoetherianRing
     simpa [φ, Fintype.linearCombination_apply, mul_comm] using
       (show φ (g j) = 0 from LinearMap.mem_ker.mp hgj)
 
+/-- A module admitting a tensor-injective map to a flat module is flat.  Applied to the
+completion-to-product map, this isolates the universal-injectivity input in Stacks Tag `06LE`. -/
+theorem Module.Flat.of_forall_ideal_lTensor_injective
+    {R : Type u} [CommRing R]
+    {M : Type v} [AddCommGroup M] [Module R M]
+    {N : Type w} [AddCommGroup N] [Module R N] [Module.Flat R N]
+    (f : M →ₗ[R] N)
+    (h : ∀ I : Ideal R, Function.Injective (f.lTensor I)) :
+    Module.Flat R M := by
+  rw [Module.Flat.iff_rTensor_injective']
+  intro I
+  apply (injective_iff_map_eq_zero _).mpr
+  intro x hx
+  apply (injective_iff_map_eq_zero _).mp (h I)
+  apply (injective_iff_map_eq_zero _).mp
+    (Module.Flat.iff_rTensor_injective'.mp (inferInstance : Module.Flat R N) I)
+  calc
+    I.subtype.rTensor N (f.lTensor I x) =
+        TensorProduct.map I.subtype f x := by
+      rw [← LinearMap.comp_apply, LinearMap.rTensor_comp_lTensor]
+    _ = f.lTensor R (I.subtype.rTensor M x) := by
+      rw [← LinearMap.comp_apply, LinearMap.lTensor_comp_rTensor]
+    _ = 0 := by rw [hx, map_zero]
+
 /-- A flat module over a local ring with nilpotent maximal ideal is free.  This is the
 infinite-rank form of Stacks Tag `051F`; the chosen lifts of a residue-field basis span because
 iterating Nakayama's relation terminates at a power of the maximal ideal. -/
@@ -741,6 +765,7 @@ theorem localColimit_isNoetherianRing_of_completion
 end PointedEtaleNeighborhood
 
 #print axioms flat_pi_self_of_isNoetherianRing
+#print axioms Module.Flat.of_forall_ideal_lTensor_injective
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
