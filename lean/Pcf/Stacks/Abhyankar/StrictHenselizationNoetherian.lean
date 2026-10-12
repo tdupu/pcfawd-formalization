@@ -366,6 +366,50 @@ theorem Finsupp.quotientSMulTopEquiv_mk
     TensorProduct.finsuppScalarRight_apply_tmul_apply, Algebra.smul_def, mul_one,
     Ideal.Quotient.algebraMap_eq]
 
+/-- The canonical map from the completion of a free module to the product of the completed
+coefficient modules. -/
+noncomputable def AdicCompletion.finsuppToPi
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v) :
+    AdicCompletion I (ι →₀ R) →ₗ[AdicCompletion I R]
+      (ι → AdicCompletion I R) :=
+  LinearMap.pi fun i ↦ AdicCompletion.map I (Finsupp.lapply i)
+
+@[simp]
+theorem AdicCompletion.finsuppToPi_apply
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v)
+    (x : AdicCompletion I (ι →₀ R)) (i : ι) :
+    AdicCompletion.finsuppToPi I ι x i =
+      AdicCompletion.map I (Finsupp.lapply i) x :=
+  rfl
+
+/-- The completion of a free module embeds in the product of the completed coefficients. -/
+theorem AdicCompletion.finsuppToPi_injective
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v) :
+    Function.Injective (AdicCompletion.finsuppToPi I ι) := by
+  intro x y hxy
+  apply AdicCompletion.ext
+  intro n
+  let e := Finsupp.quotientSMulTopEquiv (I ^ n) ι
+  apply e.injective
+  ext i
+  obtain ⟨a, ha⟩ := Submodule.Quotient.mk_surjective
+    (I ^ n • ⊤ : Submodule R (ι →₀ R)) (x.val n)
+  obtain ⟨b, hb⟩ := Submodule.Quotient.mk_surjective
+    (I ^ n • ⊤ : Submodule R (ι →₀ R)) (y.val n)
+  have hi := congrArg (fun z : AdicCompletion I R ↦ z.val n)
+    (congrFun hxy i)
+  simp only [AdicCompletion.finsuppToPi_apply,
+    AdicCompletion.map_val_apply] at hi
+  rw [← ha, ← hb, LinearMap.reduceModIdeal_apply,
+    LinearMap.reduceModIdeal_apply] at hi
+  have htop : (I ^ n • ⊤ : Submodule R R) = (I ^ n : Ideal R) := by
+    simp
+  rw [htop] at hi
+  rw [← ha, ← hb, Finsupp.quotientSMulTopEquiv_mk,
+    Finsupp.quotientSMulTopEquiv_mk]
+  simpa [Finsupp.mapRange_apply, Finsupp.lapply_apply,
+    Ideal.Quotient.mk_eq_mk] using hi
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -806,6 +850,9 @@ end PointedEtaleNeighborhood
 #print axioms residueTensorEquivOfMapMaximalIdeal_tmul
 #print axioms Finsupp.quotientSMulTopEquiv
 #print axioms Finsupp.quotientSMulTopEquiv_mk
+#print axioms AdicCompletion.finsuppToPi
+#print axioms AdicCompletion.finsuppToPi_apply
+#print axioms AdicCompletion.finsuppToPi_injective
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
