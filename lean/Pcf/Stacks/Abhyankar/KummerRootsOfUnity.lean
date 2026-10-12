@@ -9,13 +9,12 @@ import Mathlib.RingTheory.RootsOfUnity.Basic
 /-!
 # Reduction of prime-to-characteristic roots of unity
 
-This file isolates a local algebra input to the root-of-unity descent in clause (6) of
-Stacks Tag `09EV`.  If `n` is invertible in the residue field of a local domain, then reduction
-is injective on the `n`-th roots of unity already present in that domain.
-
-This is not the full descent assertion: surjectivity of a residue-field lift would require
-additional input.  In the `09EV` proof, injectivity is combined with total ramification and the
-unramified nature of adjoining prime-to-characteristic roots of unity.
+This file proves the root-of-unity descent in clause (6) of Stacks Tag `09EV`.
+If `n` is invertible in the residue field, the power basis of the integral
+Eisenstein root algebra shows that a nonconstant part of an `n`-th root of unity
+would have valuation nonzero modulo `n`, a contradiction. Integral closure then
+places roots of unity from the fraction field in this algebra, and the canonical
+fraction-field equivalence gives the assertion for the displayed root field.
 -/
 
 open Finset IsLocalRing Polynomial
