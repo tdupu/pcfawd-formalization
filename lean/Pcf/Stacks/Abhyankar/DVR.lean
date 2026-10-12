@@ -56,7 +56,42 @@ theorem isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
   rw [← Ideal.ramificationIdx_eq_one_iff]
   exact ramificationIdx_over_intermediate_eq_one_of_total_eq R S T r h
 
+set_option linter.style.haveILetI false in
+/-- An explicit-prime form of the local ramification-index criterion.
+
+This avoids forcing downstream arguments to transport the dependent
+`HasSeparableResidueFieldsAt` class across an equality `r.under S = p`: the chosen prime
+`p` and the lying-over witness are part of the statement. -/
+theorem isUnramifiedAt_of_ramificationIdx_total_eq_intermediate_at
+    (R : Type u) (S : Type v) (T : Type w)
+    [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+    [Module.Finite R S] [Module.Flat S T] [Algebra.EssFiniteType S T]
+    (p : Ideal S) [p.IsPrime]
+    (r : Ideal T) [r.IsPrime] [r.LiesOver p]
+    [Algebra.HasSeparableResidueFieldsAt S T p]
+    (h : r.ramificationIdx R = p.ramificationIdx R) :
+    Algebra.IsUnramifiedAt S r := by
+  have hram : r.ramificationIdx S = 1 :=
+    ramificationIdx_over_intermediate_eq_one_of_total_eq R S T r <| by
+      simpa only [← r.over_def p] using h
+  rw [Ideal.ramificationIdx_def, ENat.toNat_eq_iff_eq_natCast, Nat.cast_one,
+    Module.length_eq_one_iff, isSimpleModule_iff_isCoatom,
+    ← Ideal.isMaximal_def, IsLocalRing.isMaximal_iff] at hram
+  let Sp := Localization.AtPrime p
+  let Tr := Localization.AtPrime r
+  letI : Algebra Sp Tr := Localization.AtPrime.algebraOfLiesOver p r
+  haveI : Algebra.EssFiniteType Sp Tr := Algebra.EssFiniteType.of_comp S Sp Tr
+  suffices Algebra.FormallyUnramified Sp Tr from
+    Algebra.FormallyUnramified.comp S Sp Tr
+  rw [Algebra.FormallyUnramified.iff_map_maximalIdeal_eq,
+    ← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_map,
+    ← IsScalarTower.algebraMap_eq]
+  exact ⟨Algebra.HasSeparableResidueFieldsAt.isSeparable r, by
+    simpa only [← r.over_def p] using hram⟩
+
 #print axioms ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
+#print axioms isUnramifiedAt_of_ramificationIdx_total_eq_intermediate_at
 
 end Pcf.Stacks
