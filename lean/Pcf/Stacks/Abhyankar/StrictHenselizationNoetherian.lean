@@ -334,6 +334,15 @@ theorem finsuppPiLEquiv_apply
     (Finsupp.finsuppPiLEquiv (R := R) ι κ).toLinearMap x j i = x i j := by
   rfl
 
+@[simp]
+theorem finsuppPiLEquiv_symm_apply
+    {R : Type u} [CommRing R] (ι : Type v) (κ : Type w) [Finite κ]
+    (x : κ → (ι →₀ R)) (j : κ) (i : ι) :
+    (Finsupp.finsuppPiLEquiv (R := R) ι κ).symm.toLinearMap x i j = x j i := by
+  rw [← Finsupp.finsuppPiLEquiv_apply ι κ]
+  exact congrArg (fun z : κ → (ι →₀ R) ↦ z j i)
+    ((Finsupp.finsuppPiLEquiv (R := R) ι κ).apply_symm_apply x)
+
 /-- Multiplication by an ideal commutes with a direct sum of copies of a submodule. -/
 theorem ideal_smul_submodule
     {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
@@ -407,7 +416,144 @@ theorem exists_pow_inf_eq_pow_smul_submodule
 
 end Finsupp
 
+namespace Fintype
+
+/-- Apply a finite matrix of coefficients to a tuple with values in an arbitrary module. -/
+noncomputable def linearCombinationPi
+    {R : Type u} [CommRing R] {κ : Type v} [Fintype κ]
+    {η : Type w} (a : κ → η → R)
+    (M : Type t) [AddCommGroup M] [Module R M] :
+    (κ → M) →ₗ[R] η → M :=
+  LinearMap.pi (fun i ↦ ∑ j, a j i • LinearMap.proj j)
+
+@[simp]
+theorem linearCombinationPi_apply
+    {R : Type u} [CommRing R] {κ : Type v} [Fintype κ]
+    {η : Type w} (a : κ → η → R)
+    (M : Type t) [AddCommGroup M] [Module R M]
+    (x : κ → M) (i : η) :
+    Fintype.linearCombinationPi a M x i = ∑ j, a j i • x j := by
+  simp [Fintype.linearCombinationPi]
+
+end Fintype
+
+namespace Finsupp
+
+/-- Transposition intertwines a coordinatewise finite matrix with the same matrix acting on
+the finite tuple of direct sums. -/
+theorem finsuppPiLEquiv_mapRange_linearCombination
+    {R : Type u} [CommRing R] {κ : Type v} [Fintype κ]
+    {η : Type w} [Finite η] (a : κ → η → R) (ι : Type t)
+    (x : ι →₀ (κ → R)) :
+    (Finsupp.finsuppPiLEquiv (R := R) ι η).toLinearMap
+        (Finsupp.mapRange.linearMap (Fintype.linearCombination R a) x) =
+      Fintype.linearCombinationPi a (ι →₀ R)
+        ((Finsupp.finsuppPiLEquiv (R := R) ι κ).toLinearMap x) := by
+  ext i j
+  rw [Finsupp.finsuppPiLEquiv_apply, Fintype.linearCombinationPi_apply]
+  change (Fintype.linearCombination R a) (x j) i = _
+  rw [Fintype.linearCombination_apply]
+  rw [Finset.sum_apply]
+  simp only [Pi.smul_apply, smul_eq_mul]
+  change (∑ k, x j k * a k i) =
+    (Finsupp.applyAddHom j) (∑ k, a k i •
+      (Finsupp.finsuppPiLEquiv (R := R) ι κ).toLinearMap x k)
+  rw [map_sum]
+  apply Finset.sum_congr rfl
+  intro k _
+  exact mul_comm _ _
+
+end Finsupp
+
 namespace AdicCompletion
+
+/-- The finite-matrix/transpose square remains natural after adic completion. -/
+theorem piEquivFin_map_mapRange_linearCombination
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v)
+    {k l : ℕ} (a : Fin k → Fin l → R)
+    (z : AdicCompletion I (ι →₀ (Fin k → R))) :
+    AdicCompletion.piEquivOfFintype I (fun _ : Fin l ↦ ι →₀ R)
+        (AdicCompletion.map I
+          (Finsupp.finsuppPiLEquiv (R := R) ι (Fin l)).toLinearMap
+          (AdicCompletion.map I
+            (Finsupp.mapRange.linearMap (Fintype.linearCombination R a)) z)) =
+      fun i ↦ ∑ j, a j i •
+        AdicCompletion.piEquivOfFintype I (fun _ : Fin k ↦ ι →₀ R)
+          (AdicCompletion.map I
+            (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap z) j := by
+  funext i
+  simp only [AdicCompletion.piEquivOfFintype_apply]
+  change AdicCompletion.map I (LinearMap.proj i)
+      (AdicCompletion.map I
+        (Finsupp.finsuppPiLEquiv (R := R) ι (Fin l)).toLinearMap
+        (AdicCompletion.map I
+          (Finsupp.mapRange.linearMap (Fintype.linearCombination R a)) z)) = _
+  simp only [AdicCompletion.map_comp_apply]
+  have hraw :
+      LinearMap.proj i ∘ₗ
+          (Finsupp.finsuppPiLEquiv (R := R) ι (Fin l)).toLinearMap ∘ₗ
+          Finsupp.mapRange.linearMap (Fintype.linearCombination R a) =
+        ∑ j, a j i •
+          (LinearMap.proj j ∘ₗ
+            (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap) := by
+    apply LinearMap.ext
+    intro x
+    simp only [LinearMap.comp_apply, LinearMap.sum_apply, LinearMap.smul_apply]
+    simpa only [Fintype.linearCombinationPi_apply, LinearMap.proj_apply] using
+      congrArg (fun y : Fin l → (ι →₀ R) ↦ y i)
+        (Finsupp.finsuppPiLEquiv_mapRange_linearCombination a ι x)
+  rw [hraw]
+  simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply]
+  apply Finset.sum_congr rfl
+  intro j _
+  congr 1
+  exact (AdicCompletion.map_comp_apply (I := I)
+    (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap
+    (LinearMap.proj j) z).symm
+
+/-- Scalar-valued form of `piEquivFin_map_mapRange_linearCombination`. -/
+theorem map_mapRange_linearCombination_eq_sum
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v)
+    {k : ℕ} (c : Fin k → R)
+    (z : AdicCompletion I (ι →₀ (Fin k → R))) :
+    AdicCompletion.map I
+        (Finsupp.mapRange.linearMap (Fintype.linearCombination R c)) z =
+      ∑ j, c j •
+        AdicCompletion.piEquivOfFintype I (fun _ : Fin k ↦ ι →₀ R)
+          (AdicCompletion.map I
+            (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap z) j := by
+  simp only [AdicCompletion.piEquivOfFintype_apply]
+  have hraw :
+      Finsupp.mapRange.linearMap (α := ι) (Fintype.linearCombination R c) =
+        ∑ j, c j •
+          (LinearMap.proj j ∘ₗ
+            (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap) := by
+    apply LinearMap.ext
+    intro x
+    apply Finsupp.ext
+    intro i
+    simp only [LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply,
+      Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_apply]
+    change (Fintype.linearCombination R c) (x i) =
+      (Finsupp.applyAddHom i) (∑ j, c j •
+        (LinearMap.proj (R := R) j :
+          (Fin k → (ι →₀ R)) →ₗ[R] (ι →₀ R))
+          ((Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap x))
+    rw [Fintype.linearCombination_apply, map_sum]
+    apply Finset.sum_congr rfl
+    intro j _
+    change x i j * c j = c j *
+      (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap x j i
+    rw [Finsupp.finsuppPiLEquiv_apply]
+    exact mul_comm _ _
+  rw [hraw]
+  simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply]
+  apply Finset.sum_congr rfl
+  intro j _
+  congr 1
+  exact (AdicCompletion.map_comp_apply (I := I)
+    (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap
+    (LinearMap.proj j) z).symm
 
 /-- Completion preserves a coordinatewise short exact sequence obtained by taking an
 arbitrary direct sum of copies of a short exact sequence with finite middle term.  This is
@@ -462,6 +608,124 @@ theorem mapRange_injective_of_finite
     Finsupp.exists_pow_inf_eq_pow_smul_submodule I (LinearMap.range f) ι
   apply AdicCompletion.map_injective_of_pow_inf_eq_pow_smul hf'
   simpa only [Finsupp.range_mapRange_linearMap _ (LinearMap.ker_eq_bot.mpr hf)] using hk
+
+/-- A relation in the completion of an arbitrary direct sum of copies of a finite module lifts
+to the completion of the coordinatewise kernel.  The use of the range restriction, followed by
+`mapRange_injective_of_finite`, is the finite-presentation relation step in Stacks Tag `06LD`. -/
+theorem exists_mapRange_ker_preimage_of_finite
+    {R : Type u} [CommRing R] [IsNoetherianRing R] {I : Ideal R}
+    {N : Type v} [AddCommGroup N] [Module R N] [Module.Finite R N]
+    {P : Type w} [AddCommGroup P] [Module R P] [Module.Finite R P]
+    (q : N →ₗ[R] P) (ι : Type t) (x : AdicCompletion I (ι →₀ N))
+    (hx : AdicCompletion.map I (Finsupp.mapRange.linearMap (α := ι) q) x = 0) :
+    ∃ y : AdicCompletion I (ι →₀ LinearMap.ker q),
+      AdicCompletion.map I
+        (Finsupp.mapRange.linearMap (α := ι) (LinearMap.ker q).subtype) y = x := by
+  have hshort : Function.Exact (LinearMap.ker q).subtype q.rangeRestrict := by
+    rw [LinearMap.exact_iff, LinearMap.ker_rangeRestrict, Submodule.range_subtype]
+  have hsurj : Function.Surjective q.rangeRestrict :=
+    LinearMap.range_eq_top.mp (LinearMap.range_rangeRestrict q)
+  have hexact := AdicCompletion.mapRange_exact_of_finite
+    (I := I) (f := (LinearMap.ker q).subtype) (g := q.rangeRestrict)
+    (LinearMap.ker q).subtype_injective hshort hsurj ι
+  have hincl : Function.Injective
+      (AdicCompletion.map I
+        (Finsupp.mapRange.linearMap (α := ι) (LinearMap.range q).subtype)) :=
+    AdicCompletion.mapRange_injective_of_finite
+      (I := I) (LinearMap.range q).subtype_injective ι
+  have hzero : AdicCompletion.map I
+      (Finsupp.mapRange.linearMap (α := ι) q.rangeRestrict) x = 0 := by
+    apply (injective_iff_map_eq_zero _).mp hincl
+    rw [AdicCompletion.map_comp_apply]
+    have hcomp :
+        Finsupp.mapRange.linearMap (α := ι) (LinearMap.range q).subtype ∘ₗ
+            Finsupp.mapRange.linearMap (α := ι) q.rangeRestrict =
+          Finsupp.mapRange.linearMap (α := ι) q := by
+      rw [← Finsupp.mapRange.linearMap_comp]
+      rfl
+    rw [hcomp, hx]
+  exact (hexact x).mp hzero
+
+/-- The adic completion of an arbitrary free module over a Noetherian ring is flat.  This is
+Stacks Tag `06LE`, using the finite-presentation relation argument of Tag `06LD`. -/
+theorem finsupp_flat_of_isNoetherian
+    {R : Type u} [CommRing R] [IsNoetherianRing R]
+    (I : Ideal R) (ι : Type v) :
+    Module.Flat R (AdicCompletion I (ι →₀ R)) := by
+  apply Module.Flat.of_forall_isTrivialRelation
+  intro l c x hx
+  let q : (Fin l → R) →ₗ[R] R := Fintype.linearCombination R c
+  let e := Finsupp.finsuppPiLEquiv (R := R) ι (Fin l)
+  let xPi : AdicCompletion I (Fin l → (ι →₀ R)) :=
+    (AdicCompletion.piEquivOfFintype I (fun _ : Fin l ↦ ι →₀ R)).symm x
+  let xSum : AdicCompletion I (ι →₀ (Fin l → R)) :=
+    AdicCompletion.map I e.symm.toLinearMap xPi
+  have he : AdicCompletion.map I e.toLinearMap xSum = xPi := by
+    dsimp only [xSum]
+    rw [AdicCompletion.map_comp_apply]
+    rw [e.comp_symm, AdicCompletion.map_id]
+    rfl
+  have hxSum : AdicCompletion.map I
+      (Finsupp.mapRange.linearMap (α := ι) q) xSum = 0 := by
+    rw [show q = Fintype.linearCombination R c from rfl]
+    rw [AdicCompletion.map_mapRange_linearCombination_eq_sum]
+    rw [he]
+    simpa only [xPi, LinearEquiv.apply_symm_apply] using hx
+  obtain ⟨yKer, hyKer⟩ :=
+    AdicCompletion.exists_mapRange_ker_preimage_of_finite q ι xSum hxSum
+  let K := LinearMap.ker q
+  let _ : Module.Finite R K := inferInstance
+  have hfg : (⊤ : Submodule R K).FG := Module.Finite.fg_top
+  obtain ⟨k, g, hg⟩ := Submodule.fg_iff_exists_fin_generating_family.mp hfg
+  let a : (Fin k → R) →ₗ[R] K := Fintype.linearCombination R g
+  have ha : Function.Surjective a := by
+    exact (span_range_eq_top_iff_surjective_fintypeLinearCombination R g).mp hg
+  have haSum : Function.Surjective
+      (Finsupp.mapRange.linearMap (α := ι) a) := by
+    intro z
+    obtain ⟨w, hw⟩ := Finsupp.mapRange_surjective a a.map_zero ha z
+    exact ⟨w, hw⟩
+  obtain ⟨z, hz⟩ := AdicCompletion.map_surjective I haSum yKer
+  let coeff : Fin k → Fin l → R := fun j ↦ (g j : Fin l → R)
+  have hcoeff : Fintype.linearCombination R coeff = K.subtype.comp a := by
+    apply LinearMap.ext
+    intro r
+    change (∑ j, r j • (g j : Fin l → R)) =
+      ((∑ j, r j • g j : K) : Fin l → R)
+    simp only [Submodule.coe_sum, Submodule.coe_smul]
+  have hxSum' : AdicCompletion.map I
+      (Finsupp.mapRange.linearMap (α := ι)
+        (Fintype.linearCombination R coeff)) z = xSum := by
+    calc
+      AdicCompletion.map I
+          (Finsupp.mapRange.linearMap (α := ι)
+            (Fintype.linearCombination R coeff)) z =
+          AdicCompletion.map I
+            (Finsupp.mapRange.linearMap (α := ι) K.subtype ∘ₗ
+              Finsupp.mapRange.linearMap (α := ι) a) z := by
+            rw [hcoeff, ← Finsupp.mapRange.linearMap_comp]
+      _ = AdicCompletion.map I
+            (Finsupp.mapRange.linearMap (α := ι) K.subtype)
+            (AdicCompletion.map I
+              (Finsupp.mapRange.linearMap (α := ι) a) z) :=
+          (AdicCompletion.map_comp_apply (I := I) _ _ z).symm
+      _ = AdicCompletion.map I
+            (Finsupp.mapRange.linearMap (α := ι) K.subtype) yKer := by
+          rw [hz]
+      _ = xSum := hyKer
+  let y : Fin k → AdicCompletion I (ι →₀ R) :=
+    AdicCompletion.piEquivOfFintype I (fun _ : Fin k ↦ ι →₀ R)
+      (AdicCompletion.map I
+        (Finsupp.finsuppPiLEquiv (R := R) ι (Fin k)).toLinearMap z)
+  refine ⟨k, (fun i j ↦ coeff j i), y, ?_, ?_⟩
+  · intro i
+    have hnat := AdicCompletion.piEquivFin_map_mapRange_linearCombination
+      I ι coeff z
+    rw [hxSum', he] at hnat
+    exact congrFun (by simpa only [xPi, y, LinearEquiv.apply_symm_apply] using hnat) i
+  · intro j
+    have hj : q (g j : Fin l → R) = 0 := (g j).property
+    simpa only [q, Fintype.linearCombination_apply, coeff, smul_eq_mul, mul_comm] using hj
 
 end AdicCompletion
 
@@ -1219,11 +1483,19 @@ end PointedEtaleNeighborhood
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
 #print axioms Finsupp.finsuppPiLEquiv_apply
+#print axioms Finsupp.finsuppPiLEquiv_symm_apply
+#print axioms Fintype.linearCombinationPi
+#print axioms Fintype.linearCombinationPi_apply
+#print axioms Finsupp.finsuppPiLEquiv_mapRange_linearCombination
 #print axioms Finsupp.ideal_smul_submodule
 #print axioms Finsupp.submodule_inf
 #print axioms Finsupp.exists_pow_inf_eq_pow_smul_submodule
 #print axioms AdicCompletion.mapRange_exact_of_finite
 #print axioms AdicCompletion.mapRange_injective_of_finite
+#print axioms AdicCompletion.piEquivFin_map_mapRange_linearCombination
+#print axioms AdicCompletion.map_mapRange_linearCombination_eq_sum
+#print axioms AdicCompletion.exists_mapRange_ker_preimage_of_finite
+#print axioms AdicCompletion.finsupp_flat_of_isNoetherian
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
