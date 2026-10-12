@@ -70,6 +70,11 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
 import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
+import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
+import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
@@ -80,6 +85,8 @@ import Pcf.Stacks.Abhyankar.KummerFractionEquiv
 import Pcf.Stacks.Abhyankar.KummerClauses
 import Pcf.Stacks.Abhyankar.KummerTame
 import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
+import Pcf.Stacks.Abhyankar.KummerPowers
+import Pcf.Stacks.Abhyankar.KummerNormDescent
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -224,6 +231,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.isCompact_puncturedSpectrum
 #print axioms Pcf.Stacks.puncturedSpectrum_nonempty_of_one_le_ringKrullDim
 #print axioms Pcf.Stacks.puncturedSpectrum_restriction_injective
+#print axioms Pcf.Stacks.exists_nonzero_mem_maximalIdeal_of_one_le_ringKrullDim
+#print axioms Pcf.Stacks.exists_regularSequence_one_of_one_le_ringKrullDim
+#print axioms Pcf.Stacks.PrincipalQuotientsAvoidClosedPoint
+#print axioms Pcf.Stacks.maximalIdeal_not_mem_associatedPrimes_iff_exists_isSMulRegular_quotient
+#print axioms Pcf.Stacks.exists_regularSequence_two_of_principalQuotient_not_associated
+#print axioms Pcf.Stacks.pow_dvd_of_isSMulRegular_quotient
+#print axioms Pcf.Stacks.exists_common_value_of_regular_pair
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -259,6 +273,22 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_base_isLocalHom
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_le_maximalIdeal_localColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotient_localColimit_strictlyHenselianLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.baseChange
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotientStageEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotientBaseChange
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotientStagePoint_mk
+#print axioms Pcf.Stacks.QuotientStandardEtale.liftPair
+#print axioms Pcf.Stacks.QuotientStandardEtale.baseChangeEquiv
+#print axioms Pcf.Stacks.QuotientStandardEtale.tensorBaseChangeEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_quotientBaseChange_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_toColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom_mk
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitBaseChangeRingHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitBaseChangeRingHom_toLocalColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_mk
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -307,6 +337,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRootExtension_isTamelyRamifiedAt
 #print axioms Pcf.Stacks.rootOfUnity_eq_one_of_residue_eq_one
 #print axioms Pcf.Stacks.restrictRootsOfUnity_residue_injective
+#print axioms Pcf.Stacks.rootOfUnity_mem_integralClosure
+#print axioms Pcf.Stacks.dvrRootFraction_rootOfUnity_mem_rootAlgebra
+#print axioms Pcf.Stacks.dvrRootFraction_power_minpoly
+#print axioms Pcf.Stacks.dvrRootFraction_power_adjoin_finrank
+#print axioms Pcf.Stacks.dvrRootFraction_power_relative_finrank
+#print axioms Pcf.Stacks.radical_pow_relative_finrank_mem
+#print axioms Pcf.Stacks.dvrRootFraction_intermediate_eq_power
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
