@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.AdicCompletion.LocalRing
+import Mathlib.RingTheory.AdicCompletion.Functoriality
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
 import Mathlib.RingTheory.TensorProduct.Quotient
@@ -20,7 +21,7 @@ descent proves that the colimit itself is Noetherian.
 open Module
 open scoped TensorProduct
 
-universe u v
+universe u v w
 
 namespace Pcf.Stacks
 
@@ -125,6 +126,43 @@ theorem free_quotient_maximalIdeal_pow_of_flat
   change Ideal.map q I = 0
   exact Ideal.map_quotient_self I
 
+/-- A linear map that is injective modulo every power of an ideal induces an injective map on
+adic completions.  This is the inverse-limit injectivity step needed when a single family is a
+basis in every quotient in Stacks Tag `06LJ`. -/
+theorem AdicCompletion.map_injective_of_reduceModIdeal
+    {A : Type u} [CommRing A] (I : Ideal A)
+    {M : Type v} [AddCommGroup M] [Module A M]
+    {N : Type w} [AddCommGroup N] [Module A N]
+    (f : M →ₗ[A] N)
+    (h : ∀ n : ℕ, Function.Injective (f.reduceModIdeal (I ^ n))) :
+    Function.Injective (AdicCompletion.map I f) := by
+  intro x y hxy
+  apply AdicCompletion.ext
+  intro n
+  apply h n
+  simpa only [AdicCompletion.map_val_apply] using congrArg (fun z ↦ z.val n) hxy
+
+/-- A linear map that is bijective modulo every power of an ideal induces a bijection on adic
+completions.  Surjectivity already follows from surjectivity modulo the ideal, while injectivity
+is checked at every level of the inverse limit. -/
+theorem AdicCompletion.map_bijective_of_reduceModIdeal
+    {A : Type u} [CommRing A] (I : Ideal A)
+    {M : Type v} [AddCommGroup M] [Module A M]
+    {N : Type w} [AddCommGroup N] [Module A N]
+    (f : M →ₗ[A] N)
+    (h : ∀ n : ℕ, Function.Bijective (f.reduceModIdeal (I ^ n))) :
+    Function.Bijective (AdicCompletion.map I f) := by
+  refine ⟨AdicCompletion.map_injective_of_reduceModIdeal I f fun n ↦ (h n).1, ?_⟩
+  apply AdicCompletion.map_surjective_of_mkQ_comp_surjective
+  have h1 := (h 1).2
+  rw [pow_one] at h1
+  intro y
+  obtain ⟨x, hx⟩ := h1 y
+  obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective (I • ⊤ : Submodule A M) x
+  refine ⟨x, ?_⟩
+  change Submodule.Quotient.mk (f x) = y
+  exact hx
+
 /-- A local ring with finitely generated maximal ideal is Noetherian if its maximal-adic
 completion is Noetherian and flat over the ring. -/
 theorem isNoetherianRing_of_maximalAdicCompletion
@@ -212,6 +250,8 @@ end PointedEtaleNeighborhood
 
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
+#print axioms AdicCompletion.map_injective_of_reduceModIdeal
+#print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
 end Pcf.Stacks
