@@ -337,6 +337,35 @@ noncomputable def puncturedCoverGenericFiberAlgebra (hdim : 1 ≤ ringKrullDim R
     (puncturedCoverGenericFiber_ringHom R hdim V).toAlgebra
   exact .of (Spec R).functionField Γ(W.left, ⊤)
 
+/-- The injective generic restriction, now as a homomorphism of `R`-algebras with the
+canonical structures coming from the two maps to `Spec R`. -/
+noncomputable def puncturedCoverGenericFiber_sectionAlgHom
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra R Γ(V.left, ⊤) :=
+      (((Scheme.ΓSpecIso R).inv ≫
+        (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
+    let E := puncturedCoverGenericFiberAlgebra R hdim V
+    letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
+    Γ(V.left, ⊤) →ₐ[R] E := by
+  letI : Algebra R Γ(V.left, ⊤) :=
+    (((Scheme.ΓSpecIso R).inv ≫
+      (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
+  refine ⟨puncturedCoverGenericFiber_sectionMap R hdim V, ?_⟩
+  intro r
+  exact congrArg (fun f : R →+* E => f r)
+    (puncturedCoverGenericFiber_sectionMap_base R hdim V)
+
+omit [IsNoetherianRing R] in
+/-- The `R`-algebra homomorphism into generic sections is injective. -/
+theorem puncturedCoverGenericFiber_sectionAlgHom_injective
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    Function.Injective (puncturedCoverGenericFiber_sectionAlgHom R hdim V) :=
+  puncturedCoverGenericFiber_sectionMap_injective R hdim V
+
 omit [IsNoetherianRing R] in
 /-- The generic fibre of any finite étale cover of the punctured spectrum is a finite product of
 finite separable field extensions of the base function field, including the empty product. -/
