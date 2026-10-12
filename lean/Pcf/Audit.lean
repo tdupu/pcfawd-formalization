@@ -78,6 +78,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
+import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
@@ -264,6 +265,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_finite
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_etale
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
+#print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
+#print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -339,6 +342,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_finrank
 #print axioms Pcf.Stacks.standardCover_tameInCodimensionOne_charZero
 #print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.finitePresentation
+#print axioms Pcf.Stacks.standardCover_rootQuotient_isRegularRing
+#print axioms Pcf.Stacks.standardCover_finite_free_cartier_regular
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.dvrRootPoly_monic
