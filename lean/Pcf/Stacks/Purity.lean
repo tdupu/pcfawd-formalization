@@ -18,6 +18,9 @@ import Pcf.Stacks.Purity.DepthTwo
 import Pcf.Stacks.Purity.HartogsAlgebra
 import Pcf.Stacks.Purity.HartogsRecovery
 import Pcf.Stacks.Purity.FiniteNormalAlgebra
+import Pcf.Stacks.Purity.FiniteNormalHartogs
+import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
+import Pcf.Stacks.Purity.DiscriminantFiber
 import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.GenericBaseNormalization
@@ -27,6 +30,7 @@ import Pcf.Stacks.Purity.NormalizationTower
 import Pcf.Stacks.Purity.FiniteNormalModel
 import Pcf.Stacks.Purity.CoverNormalModel
 import Pcf.Stacks.Purity.NormalizationExtension
+import Pcf.Stacks.Purity.Tag0BM9Equivalence
 
 /-!
 # Zariski--Nagata purity: assembly boundary

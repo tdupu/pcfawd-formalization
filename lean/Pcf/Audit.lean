@@ -72,6 +72,10 @@ import Pcf.Stacks.Purity.GenericFiberExtension
 import Pcf.Stacks.Purity.Tag0BM9
 import Pcf.Stacks.Purity.FiniteModuleHartogs
 import Pcf.Stacks.Purity.MiracleFlatnessTwo
+import Pcf.Stacks.Purity.FiniteNormalHartogs
+import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
+import Pcf.Stacks.Purity.DiscriminantFiber
+import Pcf.Stacks.Purity.Tag0BM9Equivalence
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -257,6 +261,46 @@ hypotheses. -/
   Pcf.Stacks.isSMulRegular_quotient_of_span_maximalIdeal_of_finite_stacksNormal
 #print axioms
   Pcf.Stacks.Module.free_of_finite_torsionFree_stacksNormal_dimension_two
+#print axioms Pcf.Stacks.isUnit_of_isUnit_localizationAt_height_one
+#print axioms Pcf.Stacks.Algebra.traceMatrix_baseChange
+#print axioms Pcf.Stacks.Algebra.discr_baseChange
+#print axioms Pcf.Stacks.Algebra.traceForm_nondegenerate_of_algEquiv
+#print axioms Pcf.Stacks.Algebra.traceForm_prod_nondegenerate
+#print axioms Pcf.Stacks.Algebra.traceForm_pi_nondegenerate
+#print axioms Pcf.Stacks.Algebra.traceForm_nondegenerate_of_formallyEtale
+#print axioms Pcf.Stacks.Algebra.discr_ne_zero_of_formallyEtale_of_basis
+#print axioms Pcf.Stacks.Algebra.discr_ne_zero_of_genericFiber_formallyEtale
+#print axioms Pcf.Stacks.Algebra.isUnit_discr_of_etale_of_basis
+#print axioms Pcf.Stacks.Algebra.isUnit_map_discr_of_etale_baseChange
+#print axioms Pcf.Stacks.Algebra.isReduced_of_discr_ne_zero_of_basis
+#print axioms Pcf.Stacks.Algebra.isSeparable_of_isLocalRing_of_discr_ne_zero_of_basis
+#print axioms Pcf.Stacks.Algebra.isField_of_isLocalRing_of_discr_ne_zero_of_basis
+#print axioms Pcf.Stacks.Algebra.formallyEtale_of_isLocalRing_of_discr_ne_zero_of_basis
+#print axioms Pcf.Stacks.Algebra.formallyUnramified_of_isUnit_discr_of_basis
+#print axioms Pcf.Stacks.Algebra.etale_of_isUnit_discr_of_basis
+#print axioms Pcf.Stacks.Algebra.etale_of_discr_ne_zero_of_isUnit_at_height_one
+#print axioms
+  Pcf.Stacks.Algebra.etale_of_genericFiber_formallyEtale_of_isUnit_at_height_one
+#print axioms Pcf.Stacks.Algebra.etale_of_genericFiber_and_heightOne_baseChange
+#print axioms Pcf.Stacks.spec_algebraMap_res
+#print axioms Pcf.Stacks.openSections_algebraMap_surjective_of_module_regularPair
+#print axioms Pcf.Stacks.openSections_algebraMap_bijective_of_module_regularPair
+#print axioms Pcf.Stacks.finiteNormalAlgebra_openSections_bijective
+#print axioms Pcf.Stacks.puncturedSectionsSpecAdjunction
+#print axioms
+  Pcf.Stacks.finiteNormalPuncturedEtaleAlgebraProperty_isClosedUnderIsomorphisms
+#print axioms Pcf.Stacks.finiteNormalAlgebra_pullbackSections_bijective
+#print axioms Pcf.Stacks.puncturedSectionsSpecAdjunction_counit_isIso
+#print axioms
+  Pcf.Stacks.puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty
+#print axioms Pcf.Stacks.tag0BM9Adjunction
+#print axioms Pcf.Stacks.tag0BM9Adjunction_counit_isIso
+#print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover_fullyFaithful
+#print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover_essSurj
+#print axioms Pcf.Stacks.tag0BM9Equivalence
+#print axioms Pcf.Stacks.tag0BM9_puncturedCoverRecoveryIso
+#print axioms Pcf.Stacks.tag0BM9_finiteNormalAlgebraRecoveryIso
+#print axioms Pcf.Stacks.tag0BM9_puncturedGlobalSections_fullyFaithful
 #print axioms Pcf.Stacks.minimalPrime_under_eq_bot_of_isTorsionFree
 #print axioms Pcf.Stacks.two_le_height_of_liesOver_of_finite_torsionFree
 #print axioms Pcf.Stacks.exists_associatedPrime_liesOver_closedPoint
@@ -533,6 +577,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localCoconeIsColimit
 #print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_completion_flat
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -610,6 +656,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.maximalIdeal_under_eq_of_isIntegralClosure
 #print axioms Pcf.Stacks.exists_unit_mul_pow_eq_of_ramificationIdx_eq
 #print axioms Pcf.Stacks.dvrRootToKummerNormalization
+#print axioms Pcf.Stacks.DVRRootPuncturedBaseChange
+#print axioms Pcf.Stacks.dvrRootPuncturedBaseChangeEquivKummerLocalization
+#print axioms
+  Pcf.Stacks.dvrRootPuncturedBaseChangeEquivDVRRamificationKummerLocalization
 #print axioms Pcf.Stacks.dvrRoot_faithfulSMul_of_faithful_base
 #print axioms
   Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
