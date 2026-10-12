@@ -35,6 +35,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
 import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.TameRamification

@@ -82,6 +82,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
 import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
@@ -300,6 +301,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_normalizationRestrictIso
 #print axioms Pcf.Stacks.puncturedCover_normalizationSpecRestrictIso
 #print axioms Pcf.Stacks.puncturedCover_normalizationSectionsIso
+#print axioms Pcf.Stacks.puncturedCover_normalizationIntegralClosure_finite
+#print axioms Pcf.Stacks.puncturedCover_normalization_finite_appTop
+#print axioms Pcf.Stacks.puncturedCover_normalizationSections_finite
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -377,6 +381,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_flat
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_faithfullyFlat
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.toLocalColimitAlgHom_injective_of_isDomain
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isDomain
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
 #print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
