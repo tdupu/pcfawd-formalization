@@ -253,6 +253,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_regular_pair_span_maximalIdeal_of_dimension_two
 #print axioms
   Pcf.Stacks.Module.free_of_finitePresentation_integral_local_normal_of_dimensions_eq_two
+#print axioms
+  Pcf.Stacks.isSMulRegular_quotient_of_span_maximalIdeal_of_finite_stacksNormal
+#print axioms
+  Pcf.Stacks.Module.free_of_finite_torsionFree_stacksNormal_dimension_two
 #print axioms Pcf.Stacks.minimalPrime_under_eq_bot_of_isTorsionFree
 #print axioms Pcf.Stacks.two_le_height_of_liesOver_of_finite_torsionFree
 #print axioms Pcf.Stacks.exists_associatedPrime_liesOver_closedPoint
@@ -604,9 +608,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.kummerUnit_localizationAtPrime_isDomain
 #print axioms Pcf.Stacks.kummerUnit_localizationAtPrime_isDiscreteValuationRing
 #print axioms Pcf.Stacks.maximalIdeal_under_eq_of_isIntegralClosure
+#print axioms Pcf.Stacks.exists_unit_mul_pow_eq_of_ramificationIdx_eq
+#print axioms Pcf.Stacks.dvrRootToKummerNormalization
 #print axioms Pcf.Stacks.dvrRoot_faithfulSMul_of_faithful_base
 #print axioms
   Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
+#print axioms
+  Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of_factorization
 #print axioms Pcf.Stacks.etale_of_dvr_kummerUnit_ramification_square
 #print axioms Pcf.Stacks.etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms Pcf.Stacks.dvrRootPoly_monic

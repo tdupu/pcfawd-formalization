@@ -10,6 +10,7 @@ import Mathlib.RingTheory.LocalRing.Module
 import Mathlib.RingTheory.LocalRing.RingHom.Basic
 import Mathlib.RingTheory.Ideal.GoingUp
 import Pcf.Stacks.Purity.DepthTwo
+import Pcf.Stacks.Purity.FiniteModuleHartogs
 import Pcf.Stacks.Purity.RegularHypersurface
 
 /-!
@@ -490,5 +491,68 @@ theorem Module.free_of_finitePresentation_integral_local_normal_of_dimensions_eq
     by simpa using (FaithfulSMul.algebraMap_injective R B).ne hx
   exact Module.free_of_finitePresentation_integral_local_normal_dimension_two
     hspan hxR hyR hxB (by rw [hdimB])
+
+/-- If a pair generates the maximal ideal of the base, then the second member is regular on the
+quotient of a finite torsion-free Stacks-normal algebra by the first.  This is the global,
+possibly disconnected form of the depth-two input: any associated prime containing both
+parameters would have to be the closed point, which normality excludes. -/
+theorem isSMulRegular_quotient_of_span_maximalIdeal_of_finite_stacksNormal
+    {B : Type v} [CommRing B] [Algebra R B]
+    [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsIntegrallyClosed R]
+    [Module.IsTorsionFree R B] [Module.Finite R B]
+    (hB : IsStacksNormalRing B) (hdim : 2 ≤ ringKrullDim R)
+    {x y : R} (hspan : Ideal.span ({x, y} : Set R) = IsLocalRing.maximalIdeal R)
+    (hx : x ≠ 0) :
+    IsSMulRegular (QuotSMulTop x B) y := by
+  have hxm : x ∈ IsLocalRing.maximalIdeal R := by
+    rw [← hspan]
+    exact Ideal.subset_span (Set.mem_insert x {y})
+  have hclosed :=
+    principalQuotient_avoid_closedPoint_of_finite_stacksNormal hB hdim x hxm hx
+  by_contra hy
+  have hyUnion : y ∈
+      ⋃ p ∈ associatedPrimes R (QuotSMulTop x B), (p : Set R) := by
+    rw [biUnion_associatedPrimes_eq_compl_regular R (QuotSMulTop x B)]
+    exact hy
+  simp only [Set.mem_iUnion] at hyUnion
+  obtain ⟨p, hpAss, hyp⟩ := hyUnion
+  have hxp : x ∈ p := by
+    apply IsAssociatedPrime.annihilator_le hpAss
+    rw [Submodule.annihilator_top]
+    exact QuotSMulTop.mem_annihilator B x
+  have hp_le : p ≤ IsLocalRing.maximalIdeal R :=
+    IsLocalRing.le_maximalIdeal hpAss.isPrime.ne_top'
+  have hmax_le : IsLocalRing.maximalIdeal R ≤ p := by
+    rw [← hspan, Ideal.span_le]
+    intro z hz
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hz
+    rcases hz with (rfl | rfl)
+    · exact hxp
+    · exact hyp
+  exact hclosed ((le_antisymm hp_le hmax_le) ▸ hpAss)
+
+/-- The complete module-theoretic dimension-two case of Stacks Tag `0BMA`, allowing a
+disconnected normal finite algebra.  Over a two-dimensional normal regular local base, every
+finite torsion-free Stacks-normal algebra is free. -/
+theorem Module.free_of_finite_torsionFree_stacksNormal_dimension_two
+    {B : Type v} [CommRing B] [Algebra R B]
+    [IsRegularLocalRing R] [IsIntegrallyClosed R]
+    [Module.IsTorsionFree R B] [Module.Finite R B]
+    (hB : IsStacksNormalRing B) (hdim : ringKrullDim R = 2) :
+    Module.Free R B := by
+  letI : IsDomain R := isDomain_of_isRegularLocalRing R
+  letI : Module.FinitePresentation R B := Module.finitePresentation_of_finite R B
+  obtain ⟨x, y, hspan, hxR, hyR⟩ :=
+    exists_regular_pair_span_maximalIdeal_of_dimension_two hdim
+  have hx : x ≠ 0 := by
+    intro h
+    subst x
+    exact IsSMulRegular.not_zero hxR
+  have hxB : IsSMulRegular B x :=
+    (show IsRegular x from isRegular_iff_ne_zero.mpr hx).isSMulRegular
+  have hyB : IsSMulRegular (QuotSMulTop x B) y :=
+    isSMulRegular_quotient_of_span_maximalIdeal_of_finite_stacksNormal
+      hB (by rw [hdim]) hspan hx
+  exact Module.free_of_regular_pair_generates_maximalIdeal hspan hxR hyR hxB hyB
 
 end Pcf.Stacks
