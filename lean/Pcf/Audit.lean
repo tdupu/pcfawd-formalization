@@ -537,6 +537,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
 #print axioms Pcf.Stacks.isEtaleAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_dvr_ramificationIdx_total_eq
+#print axioms Pcf.Stacks.etale_of_dvr_ramification_square
 #print axioms Pcf.Stacks.dvrRootPoly_monic
 #print axioms Pcf.Stacks.dvrRootAlgebra_finite
 #print axioms Pcf.Stacks.dvrRootAlgebra_free
