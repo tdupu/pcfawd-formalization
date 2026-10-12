@@ -246,6 +246,16 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_common_value_of_regular_pair
 #print axioms Pcf.Stacks.fraction_of_regular_pair_eq_algebraMap
 #print axioms Pcf.Stacks.exists_fraction_intersection_pair_of_isIntegrallyClosed
+#print axioms Pcf.Stacks.basicOpen_germ_fraction
+#print axioms Pcf.Stacks.puncturedSpectrum_algebraMap_surjective
+#print axioms Pcf.Stacks.puncturedSpectrum_restriction_surjective
+#print axioms Pcf.Stacks.puncturedSpectrum_restriction_bijective
+#print axioms Pcf.Stacks.isIso_puncturedSpectrum_algebraMap
+#print axioms Pcf.Stacks.genericFiber_isArtinian
+#print axioms Pcf.Stacks.genericFiber_maximalSpectrum_finite
+#print axioms Pcf.Stacks.genericFiber_component_isField
+#print axioms Pcf.Stacks.genericFiber_isReduced
+#print axioms Pcf.Stacks.genericFiber_equivPi
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation

@@ -13,7 +13,9 @@ import Pcf.Stacks.Purity.PuncturedSpectrum
 import Pcf.Stacks.Purity.Hartogs
 import Pcf.Stacks.Purity.DepthTwo
 import Pcf.Stacks.Purity.HartogsAlgebra
+import Pcf.Stacks.Purity.HartogsRecovery
 import Pcf.Stacks.Purity.FiniteNormalAlgebra
+import Pcf.Stacks.Purity.GenericFiberDecomposition
 
 /-!
 # Zariski--Nagata purity: assembly boundary
