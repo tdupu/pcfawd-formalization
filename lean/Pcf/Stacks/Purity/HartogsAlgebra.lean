@@ -3,6 +3,7 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
+import Mathlib.RingTheory.Localization.FractionRing
 import Pcf.Stacks.Purity.DepthTwo
 
 /-!
@@ -69,6 +70,30 @@ theorem exists_common_value_of_regular_pair
   refine ⟨c, hc, ?_⟩
   apply mul_left_cancel₀ (pow_ne_zero n hx)
   rw [← h, hc]
+  ac_rfl
+
+/-- The fraction-field form of the regular-pair intersection calculation: a fraction represented
+with a power of `x` in the denominator and also with a power of `y` in the denominator already
+comes from `R`.  This is an actual statement in an arbitrary fraction field of `R`, rather than a
+surrogate predicate for the two away localizations. -/
+theorem fraction_of_regular_pair_eq_algebraMap
+    {K : Type*} [Field K] [Algebra R K] [IsFractionRing R K]
+    {x y a b : R} (hx : x ≠ 0) (hy : y ≠ 0)
+    (hreg : IsSMulRegular (QuotSMulTop x R) y) (m n : ℕ)
+    (h : algebraMap R K a / algebraMap R K (x ^ n) =
+      algebraMap R K b / algebraMap R K (y ^ m)) :
+    ∃ c : R, algebraMap R K a / algebraMap R K (x ^ n) = algebraMap R K c := by
+  have hxK : algebraMap R K (x ^ n) ≠ 0 :=
+    fun hzero ↦ pow_ne_zero n hx <| IsFractionRing.injective R K <| by simpa using hzero
+  have hyK : algebraMap R K (y ^ m) ≠ 0 :=
+    fun hzero ↦ pow_ne_zero m hy <| IsFractionRing.injective R K <| by simpa using hzero
+  have hcrossK := (div_eq_div_iff hxK hyK).mp h
+  have hcross : y ^ m * a = x ^ n * b := by
+    apply IsFractionRing.injective R K
+    simpa only [map_mul, map_pow, mul_comm] using hcrossK
+  obtain ⟨c, hc, -⟩ := exists_common_value_of_regular_pair hx hreg m n hcross
+  refine ⟨c, (div_eq_iff hxK).mpr ?_⟩
+  rw [hc, map_mul, map_pow]
   ac_rfl
 
 end Pcf.Stacks
