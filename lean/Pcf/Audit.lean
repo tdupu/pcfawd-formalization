@@ -67,6 +67,7 @@ import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
 import Pcf.Stacks.Purity.LocalFlatness
 import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Purity.GenericBaseNormalization
+import Pcf.Stacks.Purity.GenericFiberNormalization
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -85,6 +86,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
 import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
+import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -296,6 +298,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationDesc_isIso
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationRestrictIso
 #print axioms Pcf.Stacks.puncturedCover_baseGenericPullback_algebraEtale
+#print axioms Pcf.Stacks.puncturedCover_baseGenericPullback_algebraMap
+#print axioms
+  Pcf.Stacks.puncturedCover_genericFiber_normalizationSections_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
@@ -433,10 +438,16 @@ hypotheses. -/
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_adicCompletion_map_bijective
 #print axioms Pcf.Stacks.flat_quotient_map
+#print axioms Pcf.Stacks.flat_pi_self_of_isNoetherianRing
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms Pcf.Stacks.AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitPointPrime_primeCompl_le_isUnit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitToLocalColimitAlgEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localCocone
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitCoconeIsoLocalCocone
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localCoconeIsColimit
 #print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
