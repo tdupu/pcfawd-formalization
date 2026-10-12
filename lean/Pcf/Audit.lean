@@ -77,6 +77,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
+import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -332,6 +333,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.point_ker_under
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_maximalIdeal_localColimit
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
