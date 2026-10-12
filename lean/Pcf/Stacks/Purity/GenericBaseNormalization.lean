@@ -181,6 +181,43 @@ theorem puncturedCover_baseGenericPullback_algebraEtale
     RingHom.Etale.of_bijective ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance)
   exact (RingHom.Etale.stableUnderComposition _ _ hiso hq).toAlgebra
 
+/-- On the base generic pullback, the `R`-algebra map coming from its morphism to `Spec R`
+is exactly the composite through the function field. -/
+theorem puncturedCover_baseGenericPullback_algebraMap
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let K := (Spec R).functionField
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let q := pullback.fst f g
+    let j := pullback.snd f g ≫ g
+    let E := Γ(pullback f g, ⊤)
+    letI : Algebra K E := (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
+    letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+    (((Scheme.ΓSpecIso R).inv ≫ j.appTop).hom) = algebraMap R E := by
+  let K := (Spec R).functionField
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let q := pullback.fst f g
+  let j := pullback.snd f g ≫ g
+  let E := Γ(pullback f g, ⊤)
+  letI : Algebra K E := (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  let k : R ⟶ K := CommRingCat.ofHom (algebraMap R K)
+  have hf : f = Spec.map k := by
+    dsimp [f, k]
+    rw [Spec.fromSpecStalk_eq']
+    rfl
+  have hj : j = q ≫ f := pullback.condition.symm
+  have hn := Scheme.ΓSpecIso_inv_naturality k
+  rw [← hf] at hn
+  ext r
+  change (((Scheme.ΓSpecIso R).inv ≫ j.appTop).hom) r =
+    (((CommRingCat.ofHom (algebraMap R K)) ≫
+      (Scheme.ΓSpecIso K).inv ≫ q.appTop).hom) r
+  rw [hj, Scheme.Hom.comp_appTop, ← Category.assoc, ← hn]
+  rfl
+
 /-- On every affine open of a finite étale punctured cover, its sections are integrally closed
 inside the sections of the corresponding open of the generic fibre. This is the affine-local
 normality assertion extracted from smooth base change of normalization. -/
