@@ -180,6 +180,39 @@ noncomputable def IsLocalRing.ResidueField.mapEquivOfSurjective
   RingEquiv.ofBijective (IsLocalRing.ResidueField.map f)
     (IsLocalRing.ResidueField.map_bijective_of_surjective f hf)
 
+/-- Transport a basis along a semilinear equivalence whose scalar map is a ring equivalence. -/
+noncomputable def Module.Basis.mapSemilinear
+    {ι : Type u} {A : Type v} {B : Type w}
+    [Semiring A] [Semiring B]
+    {M : Type*} {N : Type*}
+    [AddCommMonoid M] [Module A M]
+    [AddCommMonoid N] [Module B N]
+    (σ : A ≃+* B)
+    [RingHomInvPair (σ : A →+* B) (σ.symm : B →+* A)]
+    [RingHomInvPair (σ.symm : B →+* A) (σ : A →+* B)]
+    (b : Module.Basis ι A M)
+    (e : @LinearEquiv A B _ _ (σ : A →+* B) (σ.symm : B →+* A) _ _ M N _ _ _ _) :
+    Module.Basis ι B N :=
+  Module.Basis.ofRepr <|
+    e.symm.trans <| b.repr.trans <|
+      Finsupp.mapRange.linearEquiv σ.toSemilinearEquiv
+
+theorem Module.Basis.mapSemilinear_apply
+    {ι : Type u} {A : Type v} {B : Type w}
+    [Semiring A] [Semiring B]
+    {M : Type*} {N : Type*}
+    [AddCommMonoid M] [Module A M]
+    [AddCommMonoid N] [Module B N]
+    (σ : A ≃+* B)
+    [RingHomInvPair (σ : A →+* B) (σ.symm : B →+* A)]
+    [RingHomInvPair (σ.symm : B →+* A) (σ : A →+* B)]
+    (b : Module.Basis ι A M)
+    (e : @LinearEquiv A B _ _ (σ : A →+* B) (σ.symm : B →+* A) _ _ M N _ _ _ _)
+    (i : ι) :
+    Module.Basis.mapSemilinear σ b e i = e (b i) := by
+  apply (Module.Basis.mapSemilinear σ b e).repr.injective
+  simp [Module.Basis.mapSemilinear]
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -346,6 +379,8 @@ end PointedEtaleNeighborhood
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
 #print axioms IsLocalRing.ResidueField.map_bijective_of_surjective
 #print axioms IsLocalRing.ResidueField.mapEquivOfSurjective
+#print axioms Module.Basis.mapSemilinear
+#print axioms Module.Basis.mapSemilinear_apply
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
