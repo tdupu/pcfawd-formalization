@@ -11,6 +11,7 @@ import Mathlib.LinearAlgebra.Finsupp.Pi
 import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
+import Mathlib.RingTheory.ReesAlgebra
 import Mathlib.RingTheory.TensorProduct.Quotient
 import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 
@@ -139,6 +140,69 @@ theorem Module.Flat.lTensor_ideal_injective_of_injective
     _ = I.subtype.rTensor N (f.lTensor I x) := by
       rw [← LinearMap.comp_apply, LinearMap.rTensor_comp_lTensor]
     _ = 0 := by rw [hx, map_zero]
+
+namespace Ideal
+
+/-- The Rees ideal whose degree-`n` coefficients are `J ∩ I ^ n`. -/
+def adicReesIdeal {R : Type u} [CommRing R] (I J : Ideal R) :
+    Ideal (reesAlgebra I) where
+  carrier := {p | ∀ n, p.1.coeff n ∈ J}
+  zero_mem' n := by simp
+  add_mem' hp hq n := by
+    simpa only [Subalgebra.coe_add, Polynomial.coeff_add] using J.add_mem (hp n) (hq n)
+  smul_mem' p q hq n := by
+    change (p.1 * q.1).coeff n ∈ J
+    rw [Polynomial.coeff_mul]
+    apply J.sum_mem
+    intro jk hjk
+    exact J.mul_mem_left _ (hq jk.2)
+
+/-- Membership in the extension of `I` to its Rees algebra raises coefficient order by one. -/
+theorem coeff_mem_pow_succ_of_mem_rees_map
+    {R : Type u} [CommRing R] {I : Ideal R} {p : reesAlgebra I}
+    (hp : p ∈ I.map (algebraMap R (reesAlgebra I))) (n : ℕ) :
+    p.1.coeff n ∈ I ^ (n + 1) := by
+  have hp' : p ∈
+      (I.map (algebraMap R (reesAlgebra I))).restrictScalars R := hp
+  rw [← Ideal.smul_top_eq_map] at hp'
+  refine Submodule.smul_induction_on hp' ?_ ?_
+  · intro r hr q _
+    change (r • q.1).coeff n ∈ I ^ (n + 1)
+    rw [Algebra.smul_def, Polynomial.algebraMap_apply,
+      Polynomial.coeff_C_mul, pow_succ']
+    exact Ideal.mul_mem_mul hr (q.2 n)
+  · intro p q hp hq
+    simpa only [Subalgebra.coe_add, Polynomial.coeff_add] using
+      (I ^ (n + 1)).add_mem hp hq
+
+/-- The quotient of the Rees algebra by the extension of `I` is Noetherian whenever
+`R ⧸ I` is Noetherian and `I` is finitely generated.  This is the associated-graded
+Noetherianity input in Stacks Tag `05GH`. -/
+theorem reesQuotient_isNoetherian
+    {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG)
+    (hquot : IsNoetherianRing (R ⧸ I)) :
+    IsNoetherianRing
+      ((reesAlgebra I) ⧸ I.map (algebraMap R (reesAlgebra I))) := by
+  let K : Ideal (reesAlgebra I) := I.map (algebraMap R (reesAlgebra I))
+  let _ : Algebra.FiniteType R (reesAlgebra I) :=
+    ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg hI)⟩
+  let _ : IsNoetherianRing (R ⧸ I) := hquot
+  have hIK : I ≤ K.comap (algebraMap R (reesAlgebra I)) :=
+    Ideal.le_comap_map
+  let _ : IsNoetherianRing
+      (R ⧸ K.comap (algebraMap R (reesAlgebra I))) :=
+    isNoetherianRing_of_surjective (R ⧸ I)
+      (R ⧸ K.comap (algebraMap R (reesAlgebra I)))
+      (Ideal.Quotient.factor hIK) (Ideal.Quotient.factor_surjective hIK)
+  let _ : Algebra.FiniteType R ((reesAlgebra I) ⧸ K) := inferInstance
+  let _ : Algebra.FiniteType
+      (R ⧸ K.comap (algebraMap R (reesAlgebra I)))
+      ((reesAlgebra I) ⧸ K) :=
+    Algebra.FiniteType.of_restrictScalars_finiteType R _ _
+  exact Algebra.FiniteType.isNoetherianRing
+    (R ⧸ K.comap (algebraMap R (reesAlgebra I))) ((reesAlgebra I) ⧸ K)
+
+end Ideal
 
 namespace AdicCompletion
 
@@ -1515,6 +1579,9 @@ end PointedEtaleNeighborhood
 #print axioms AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
 #print axioms Module.Flat.lTensor_ideal_injective_of_injective
+#print axioms Ideal.adicReesIdeal
+#print axioms Ideal.coeff_mem_pow_succ_of_mem_rees_map
+#print axioms Ideal.reesQuotient_isNoetherian
 #print axioms AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
