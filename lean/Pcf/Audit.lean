@@ -396,6 +396,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_basis_of_flat_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.IsLocalRing.ResidueField.map_bijective_of_surjective
 #print axioms Pcf.Stacks.IsLocalRing.ResidueField.mapEquivOfSurjective
+#print axioms Pcf.Stacks.Module.Basis.mapSemilinear
+#print axioms Pcf.Stacks.Module.Basis.mapSemilinear_apply
 #print axioms Pcf.Stacks.flat_quotient_map
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
@@ -421,6 +423,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_isIntegrallyClosedIn_localizationAway
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms Pcf.Stacks.isIntegralClosure_pi_of_fintype
+#print axioms Pcf.Stacks.standardCovers_isIntegralClosure_localizationsAway_of_regular
+#print axioms Pcf.Stacks.normalizationEquivStandardCoversOfGenericEquiv
+#print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfGenericEquiv
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers
