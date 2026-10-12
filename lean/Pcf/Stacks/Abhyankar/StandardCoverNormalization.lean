@@ -3,6 +3,7 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
+import Pcf.Bounding.PrincipalQuotientRegular
 import Pcf.Bounding.RegularLocalDomain
 import Pcf.Bounding.StandardPiece
 import Pcf.Stacks.Abhyankar.StandardCover
@@ -228,9 +229,95 @@ theorem standardCover_isIntegralClosure_localizationAway_of_regular
     isReduced_of_isRegularRing
   exact standardCover_isIntegralClosure_localizationAway u a he ha
 
+/-- Localizing a regular quotient at a prime over its defining ideal agrees with
+quotienting the corresponding local ring, and is therefore regular local. -/
+theorem isRegularLocalRing_quotient_localization
+    {A : Type u} [CommRing A] [IsNoetherianRing A]
+    (I q : Ideal A) [q.IsPrime] (hIq : I ≤ q)
+    [IsRegularRing (A ⧸ I)] :
+    IsRegularLocalRing
+      (Localization.AtPrime q ⧸ I.map (algebraMap A (Localization.AtPrime q))) := by
+  let D := A ⧸ I
+  let p : Ideal D := q.map (Ideal.Quotient.mk I)
+  letI : p.IsPrime := Ideal.isPrime_map_quotientMk_of_isPrime hIq
+  let L := Localization.AtPrime q
+  let J : Ideal L := I.map (algebraMap A L)
+  let Q := L ⧸ J
+  letI : Algebra D Q :=
+    (Ideal.quotientMap (I := I) J (algebraMap A L)
+      (by exact Ideal.le_comap_map)).toAlgebra
+  letI : IsLocalization (Algebra.algebraMapSubmonoid D q.primeCompl) Q := by
+    exact IsLocalization.of_surjective q.primeCompl L
+      (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+      (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective rfl
+      (by rw [Ideal.mk_ker, Ideal.mk_ker])
+  letI : p.LiesOver q := ⟨(Ideal.comap_map_mk hIq).symm⟩
+  have hM : Algebra.algebraMapSubmonoid D q.primeCompl = p.primeCompl :=
+    Ideal.algebraMapSubmonoid_primeCompl_of_liesOver_surjective p q
+      Ideal.Quotient.mk_surjective
+  letI : IsLocalization p.primeCompl Q := hM ▸ inferInstance
+  have hpreg : IsRegularLocalRing (Localization.AtPrime p) := inferInstance
+  have hQreg : IsRegularLocalRing Q :=
+    @IsRegularLocalRing.of_ringEquiv (Localization.AtPrime p) _ hpreg Q _
+      (IsLocalization.algEquiv p.primeCompl (Localization.AtPrime p) Q).toRingEquiv
+  exact hQreg
+
+/-- The localizations of the standard root algebra at primes over the branch divisor are
+regular local.  This is the local-regularity verification explicitly suggested, but
+omitted, in the proof of Stacks Tag `0EYH`.
+
+Indeed `C/(z) ≅ R/(a)` is regular, `z` is a nonzerodivisor, and the principal regular
+quotient criterion (Tag `00NU`) lifts regularity across `z`. -/
+theorem standardCover_isRegularLocalRing_atPrime_over_divisor
+    [IsNoetherianRing R] (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    (q : Ideal (AdjoinRoot (Pcf.LocalModel.localPoly u a e))) [q.IsPrime]
+    (haq : algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a ∈ q) :
+    IsRegularLocalRing (Localization.AtPrime q) := by
+  let C := AdjoinRoot (Pcf.LocalModel.localPoly u a e)
+  let z : C := AdjoinRoot.root (Pcf.LocalModel.localPoly u a e)
+  let I : Ideal C := Ideal.span {z}
+  let D := C ⧸ I
+  have hzq : z ∈ q := by
+    apply Ideal.IsPrime.mem_of_pow_mem (I := q) inferInstance e
+    dsimp only [z, C]
+    rw [Pcf.LocalModel.root_pow_eq]
+    simpa only [map_mul] using q.mul_mem_left (algebraMap R C (u : R)) haq
+  have hIq : I ≤ q := by
+    change Ideal.span ({z} : Set C) ≤ q
+    rw [Ideal.span_le]
+    simpa using hzq
+  let L := Localization.AtPrime q
+  let J : Ideal L := I.map (algebraMap C L)
+  have hDreg : IsRegularRing D := by
+    dsimp only [D, I, z, C]
+    exact IsRegularRing.of_ringEquiv
+      (Pcf.LocalModel.quotientRootEquiv u a he).toRingEquiv.symm
+  letI : IsRegularRing D := hDreg
+  have hQreg : IsRegularLocalRing (L ⧸ J) :=
+    isRegularLocalRing_quotient_localization I q hIq
+  let x : L := algebraMap C L z
+  have hxmax : x ∈ IsLocalRing.maximalIdeal L := by
+    rw [show IsLocalRing.maximalIdeal L = q.map (algebraMap C L) from
+      Localization.AtPrime.map_eq_maximalIdeal.symm]
+    exact Ideal.mem_map_of_mem _ hzq
+  have hxreg : x ∈ nonZeroDivisors L := by
+    exact IsLocalization.map_nonZeroDivisors_le q.primeCompl L
+      ⟨z, Pcf.LocalModel.root_mem_nonZeroDivisors u a he ha, rfl⟩
+  have hJ : J = Ideal.span ({x} : Set L) := by
+    change (Ideal.span ({z} : Set C)).map (algebraMap C L) =
+      Ideal.span ({x} : Set L)
+    rw [Ideal.map_span, Set.image_singleton]
+  letI : IsRegularLocalRing (L ⧸ Ideal.span ({x} : Set L)) :=
+    IsRegularLocalRing.of_ringEquiv
+      (Ideal.quotientEquivAlgOfEq ℤ hJ).toRingEquiv
+  exact Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor x hxmax hxreg
+
 #print axioms isIntegrallyClosedIn_away_of_span_isRadical
 #print axioms isReduced_of_isRegularRing
 #print axioms standardCover_isIntegralClosure_localizationAway
 #print axioms standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms standardCover_isRegularLocalRing_atPrime_over_divisor
 
 end Pcf.Stacks
