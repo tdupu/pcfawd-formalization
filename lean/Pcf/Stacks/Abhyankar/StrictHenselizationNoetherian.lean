@@ -3,6 +3,7 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
+import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.AdicCompletion.Functoriality
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
@@ -85,6 +86,13 @@ theorem flat_pi_self_of_isNoetherianRing
     (R : Type u) [CommRing R] [IsNoetherianRing R] (ι : Type v) :
     Module.Flat R (ι → R) :=
   Module.Flat.pi_of_isNoetherianRing R (fun _ : ι ↦ R)
+
+/-- Products of completed coefficient modules are flat over the original Noetherian ring. -/
+theorem AdicCompletion.pi_flat_of_isNoetherian
+    {R : Type u} [CommRing R] [IsNoetherianRing R]
+    (I : Ideal R) (ι : Type v) :
+    Module.Flat R (ι → AdicCompletion I R) :=
+  Module.Flat.pi_of_isNoetherianRing R (fun _ : ι ↦ AdicCompletion I R)
 
 /-- A module admitting a tensor-injective map to a flat module is flat.  Applied to the
 completion-to-product map, this isolates the universal-injectivity input in Stacks Tag `06LE`. -/
@@ -382,6 +390,12 @@ theorem AdicCompletion.finsuppToPi_apply
       AdicCompletion.map I (Finsupp.lapply i) x :=
   rfl
 
+/-- The completion-to-product map, viewed over the original ring. -/
+noncomputable def AdicCompletion.finsuppToPiRestrictScalars
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v) :
+    AdicCompletion I (ι →₀ R) →ₗ[R] (ι → AdicCompletion I R) :=
+  (AdicCompletion.finsuppToPi I ι).restrictScalars R
+
 /-- The completion of a free module embeds in the product of the completed coefficients. -/
 theorem AdicCompletion.finsuppToPi_injective
     {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v) :
@@ -409,6 +423,20 @@ theorem AdicCompletion.finsuppToPi_injective
     Finsupp.quotientSMulTopEquiv_mk]
   simpa [Finsupp.mapRange_apply, Finsupp.lapply_apply,
     Ideal.Quotient.mk_eq_mk] using hi
+
+/-- Flatness of the completed free module is reduced to tensor-injectivity of its canonical
+product embedding. -/
+theorem AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
+    {R : Type u} [CommRing R] [IsNoetherianRing R]
+    (I : Ideal R) (ι : Type v)
+    (h : ∀ J : Ideal R, Function.Injective
+      (LinearMap.lTensor (R := R) (↥J)
+        (AdicCompletion.finsuppToPiRestrictScalars I ι))) :
+    Module.Flat R (AdicCompletion I (ι →₀ R)) := by
+  let _ : Module.Flat R (ι → AdicCompletion I R) :=
+    AdicCompletion.pi_flat_of_isNoetherian I ι
+  exact Module.Flat.of_forall_ideal_lTensor_injective
+    (AdicCompletion.finsuppToPiRestrictScalars I ι) h
 
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
@@ -838,6 +866,7 @@ end PointedEtaleNeighborhood
 
 #print axioms Module.Flat.pi_of_isNoetherianRing
 #print axioms flat_pi_self_of_isNoetherianRing
+#print axioms AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
@@ -852,7 +881,9 @@ end PointedEtaleNeighborhood
 #print axioms Finsupp.quotientSMulTopEquiv_mk
 #print axioms AdicCompletion.finsuppToPi
 #print axioms AdicCompletion.finsuppToPi_apply
+#print axioms AdicCompletion.finsuppToPiRestrictScalars
 #print axioms AdicCompletion.finsuppToPi_injective
+#print axioms AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
