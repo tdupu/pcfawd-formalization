@@ -65,4 +65,50 @@ theorem normalizationDesc_isIso_of_fromNormalization_isIso
     · simp
   exact ⟨s, hds, hsd⟩
 
+/-- Relative normalization is unchanged when the source morphism is replaced by an isomorphic
+source. The two comparison maps come from the universal property in opposite directions. -/
+noncomputable def normalizationIsoOfSourceIso
+    {X X' Y : Scheme.{u}} (f : X ⟶ Y) (k : X' ⟶ X)
+    [IsIso k] [QuasiCompact f] [QuasiSeparated f]
+    [QuasiCompact (k ≫ f)] [QuasiSeparated (k ≫ f)] :
+    (k ≫ f).normalization ≅ f.normalization := by
+  let h := k ≫ f
+  let a : h.normalization ⟶ f.normalization :=
+    h.normalizationDesc (k ≫ f.toNormalization) f.fromNormalization (by
+      simp [h, Category.assoc])
+  let b : f.normalization ⟶ h.normalization :=
+    f.normalizationDesc (inv k ≫ h.toNormalization) h.fromNormalization (by
+      simp [h, Category.assoc])
+  have ha : a ≫ f.fromNormalization = h.fromNormalization :=
+    h.normalizationDesc_comp _ _ _
+  have hb : b ≫ h.fromNormalization = f.fromNormalization :=
+    f.normalizationDesc_comp _ _ _
+  have hab : a ≫ b = 𝟙 h.normalization := by
+    apply Scheme.Hom.normalization.hom_ext h (a ≫ b) (𝟙 _) h.fromNormalization
+    · calc
+        h.toNormalization ≫ (a ≫ b) = (h.toNormalization ≫ a) ≫ b := by
+          simp [Category.assoc]
+        _ = (k ≫ f.toNormalization) ≫ b := by
+          rw [h.toNormalization_normalizationDesc]
+        _ = h.toNormalization := by
+          rw [Category.assoc, f.toNormalization_normalizationDesc]
+          simp
+        _ = h.toNormalization ≫ 𝟙 _ := by simp
+    · simp [Category.assoc, ha, hb]
+    · simp
+  have hba : b ≫ a = 𝟙 f.normalization := by
+    apply Scheme.Hom.normalization.hom_ext f (b ≫ a) (𝟙 _) f.fromNormalization
+    · calc
+        f.toNormalization ≫ (b ≫ a) = (f.toNormalization ≫ b) ≫ a := by
+          simp [Category.assoc]
+        _ = (inv k ≫ h.toNormalization) ≫ a := by
+          rw [f.toNormalization_normalizationDesc]
+        _ = f.toNormalization := by
+          rw [Category.assoc, h.toNormalization_normalizationDesc]
+          simp
+        _ = f.toNormalization ≫ 𝟙 _ := by simp
+    · simp [Category.assoc, ha, hb]
+    · simp
+  exact ⟨a, b, hab, hba⟩
+
 end Pcf.Stacks
