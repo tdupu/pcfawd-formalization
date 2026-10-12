@@ -119,6 +119,27 @@ theorem Module.Flat.of_forall_ideal_lTensor_injective
       rw [← LinearMap.comp_apply, LinearMap.lTensor_comp_rTensor]
     _ = 0 := by rw [hx, map_zero]
 
+/-- Tensoring an injection out of a flat module with an ideal preserves injectivity. -/
+theorem Module.Flat.lTensor_ideal_injective_of_injective
+    {R : Type u} [CommRing R]
+    {M : Type v} [AddCommGroup M] [Module R M] [Module.Flat R M]
+    {N : Type w} [AddCommGroup N] [Module R N]
+    (f : M →ₗ[R] N) (hf : Function.Injective f) (I : Ideal R) :
+    Function.Injective (f.lTensor I) := by
+  apply (injective_iff_map_eq_zero _).mpr
+  intro x hx
+  apply (injective_iff_map_eq_zero _).mp
+    (Module.Flat.iff_rTensor_injective'.mp (inferInstance : Module.Flat R M) I)
+  apply (injective_iff_map_eq_zero _).mp
+    (Module.Flat.lTensor_preserves_injective_linearMap (M := R) f hf)
+  calc
+    f.lTensor R (I.subtype.rTensor M x) =
+        TensorProduct.map I.subtype f x := by
+      rw [← LinearMap.comp_apply, LinearMap.lTensor_comp_rTensor]
+    _ = I.subtype.rTensor N (f.lTensor I x) := by
+      rw [← LinearMap.comp_apply, LinearMap.rTensor_comp_lTensor]
+    _ = 0 := by rw [hx, map_zero]
+
 namespace AdicCompletion
 
 section ExactOfArtinRees
@@ -1049,6 +1070,20 @@ theorem AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
   exact Module.Flat.of_forall_ideal_lTensor_injective
     (AdicCompletion.finsuppToPiRestrictScalars I ι) h
 
+/-- Tensoring the completion-to-product embedding with an arbitrary ideal is injective.  This
+is the ideal-valued universal-injectivity consequence of Stacks Tag `06LD`. -/
+theorem AdicCompletion.finsuppToPiRestrictScalars_lTensor_injective
+    {R : Type u} [CommRing R] [IsNoetherianRing R]
+    (I : Ideal R) (ι : Type v) (J : Ideal R) :
+    Function.Injective
+      (LinearMap.lTensor (R := R) (↥J)
+        (AdicCompletion.finsuppToPiRestrictScalars I ι)) := by
+  let _ : Module.Flat R (AdicCompletion I (ι →₀ R)) :=
+    AdicCompletion.finsupp_flat_of_isNoetherian I ι
+  exact Module.Flat.lTensor_ideal_injective_of_injective
+    (AdicCompletion.finsuppToPiRestrictScalars I ι)
+    (AdicCompletion.finsuppToPi_injective I ι) J
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -1479,6 +1514,7 @@ end PointedEtaleNeighborhood
 #print axioms flat_pi_self_of_isNoetherianRing
 #print axioms AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
+#print axioms Module.Flat.lTensor_ideal_injective_of_injective
 #print axioms AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
@@ -1512,6 +1548,7 @@ end PointedEtaleNeighborhood
 #print axioms AdicCompletion.finsuppToPiRestrictScalars
 #print axioms AdicCompletion.finsuppToPi_injective
 #print axioms AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
+#print axioms AdicCompletion.finsuppToPiRestrictScalars_lTensor_injective
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
