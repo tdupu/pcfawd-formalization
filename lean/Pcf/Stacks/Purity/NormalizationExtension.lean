@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Normalization
+import Mathlib.Algebra.Algebra.Subalgebra.Tower
 import Pcf.Stacks.Purity.CoverNormalModel
 
 /-!
@@ -96,5 +97,46 @@ noncomputable def puncturedCover_normalizationSectionsIso
   let f := V.hom ≫ (puncturedSpectrum R).ι
   let e := f.normalizationObjIso (isAffineOpen_top (Spec R))
   convert e using 1 <;> rfl
+
+/-- The integral closure appearing in the normalization-section formula is finite over the
+global section ring of `Spec R`. This transports finiteness across the canonical affine
+section isomorphism, rather than silently identifying that ring with `R`. -/
+theorem puncturedCover_normalizationIntegralClosure_finite
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra Γ(Spec R, ⊤) Γ(V.left, ⊤) :=
+      (V.hom ≫ (puncturedSpectrum R).ι).appTop.hom.toAlgebra
+    Module.Finite Γ(Spec R, ⊤)
+      (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤)) := by
+  let S := Γ(Spec R, ⊤)
+  let T := Γ(V.left, ⊤)
+  letI : Algebra S T := (V.hom ≫ (puncturedSpectrum R).ι).appTop.hom.toAlgebra
+  let φ : R ≃+* S := (Scheme.ΓSpecIso R).symm.commRingCatIsoToRingEquiv
+  letI : Algebra R S := φ.toRingHom.toAlgebra
+  letI : Algebra R T :=
+    ((V.hom ≫ (puncturedSpectrum R).ι).appTop.hom.comp φ.toRingHom).toAlgebra
+  letI : IsScalarTower R S T := .of_algebraMap_eq' rfl
+  have hT : Module.Finite R (integralClosure R T) :=
+    puncturedCover_sections_integralClosure_finite R hdim V
+  let B : Subalgebra R T := (integralClosure S T).restrictScalars R
+  let C : Subalgebra R T := integralClosure R T
+  have hcomp : (algebraMap S T).comp φ.toRingHom = algebraMap R T := rfl
+  have hBC : B ≤ C := by
+    intro x hx
+    exact (φ.isIntegral_iff hcomp x).mpr hx
+  let j : B →ₐ[R] C := Subalgebra.inclusion hBC
+  have hj : Function.Injective j := by
+    intro x y h
+    apply Subtype.ext
+    exact congrArg (fun z : C => (z : T)) h
+  have hB : Module.Finite R B := Module.Finite.of_injective j.toLinearMap hj
+  letI : Algebra R (integralClosure S T) :=
+    Algebra.compHom (integralClosure S T) φ.toRingHom
+  have hB' : Module.Finite R (integralClosure S T) := by
+    change Module.Finite R B
+    exact hB
+  exact Module.Finite.of_restrictScalars_finite R S (integralClosure S T)
 
 end Pcf.Stacks
