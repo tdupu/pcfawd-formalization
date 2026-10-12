@@ -569,6 +569,88 @@ theorem exists_localColimit_basis_quotient_maximalIdeal_powers :
   exact ⟨b, hb⟩
 
 omit [IsNoetherianRing R] in
+/-- The compatible lifted residue basis defines a free-module map that is an isomorphism
+modulo every maximal-ideal power. -/
+theorem exists_localColimit_linearCombination_reduceModIdeal_bijective :
+    ∃ v : Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+        (IsLocalRing.ResidueField (LocalColimit R Ω)) → LocalColimit R Ω,
+      ∀ n : ℕ, Function.Bijective
+        ((Finsupp.linearCombination R v).reduceModIdeal
+          (IsLocalRing.maximalIdeal R ^ n)) := by
+  obtain ⟨v, hv⟩ :=
+    exists_localColimit_basis_quotient_maximalIdeal_powers (R := R) (Ω := Ω)
+  refine ⟨v, ?_⟩
+  intro n
+  by_cases hn : n = 0
+  · subst n
+    let _ : Subsingleton
+        ((Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+          (IsLocalRing.ResidueField (LocalColimit R Ω)) →₀ R) ⧸
+            (IsLocalRing.maximalIdeal R ^ 0 •
+              (⊤ : Submodule R
+                (Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+                  (IsLocalRing.ResidueField (LocalColimit R Ω)) →₀ R)))) :=
+      ⟨fun x y ↦ by
+        obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+        exact (Submodule.Quotient.eq _).2 (by
+          rw [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
+          exact (show x - y ∈ (⊤ : Submodule R _) from Submodule.mem_top))⟩
+    let _ : Subsingleton
+        (LocalColimit R Ω ⧸
+          (IsLocalRing.maximalIdeal R ^ 0 • ⊤ : Submodule R (LocalColimit R Ω))) :=
+      ⟨fun x y ↦ by
+        obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+        exact (Submodule.Quotient.eq _).2 (by
+          rw [pow_zero, Ideal.one_eq_top, Submodule.top_smul]
+          exact (show x - y ∈ (⊤ : Submodule R _) from Submodule.mem_top))⟩
+    exact Function.bijective_of_subsingleton' _
+  obtain ⟨b, hb⟩ := hv n hn
+  let ι := Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+    (IsLocalRing.ResidueField (LocalColimit R Ω))
+  let I := IsLocalRing.maximalIdeal R ^ n
+  let eDom := Finsupp.quotientSMulTopEquiv I ι
+  let eCod := localColimitQuotientSMulTopEquiv (R := R) (Ω := Ω) n
+  let red := (Finsupp.linearCombination R v).reduceModIdeal I
+  have hcomm : eCod.toLinearMap.comp red =
+      b.repr.symm.toLinearMap.comp eDom.toLinearMap := by
+    apply LinearMap.ext
+    intro x
+    obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+    rw [LinearMap.comp_apply, LinearMap.comp_apply, LinearMap.reduceModIdeal_apply]
+    change localColimitQuotientSMulTopEquiv (R := R) (Ω := Ω) n
+      (Submodule.Quotient.mk ((Finsupp.linearCombination R v) x)) =
+      b.repr.symm (Finsupp.quotientSMulTopEquiv I ι (Submodule.Quotient.mk x))
+    rw [localColimitQuotientSMulTopEquiv_mk, Finsupp.quotientSMulTopEquiv_mk]
+    rw [Basis.repr_symm_apply]
+    simp only [Finsupp.linearCombination_apply]
+    classical
+    rw [map_finsuppSum]
+    rw [Finsupp.sum_mapRange_index (by simp)]
+    apply Finsupp.sum_congr
+    intro i _
+    rw [hb]
+    rfl
+  refine ⟨?_, ?_⟩
+  · intro x y hxy
+    apply eDom.injective
+    apply b.repr.symm.injective
+    calc
+      b.repr.symm (eDom x) = eCod (red x) := (LinearMap.congr_fun hcomm x).symm
+      _ = eCod (red y) := congrArg eCod hxy
+      _ = b.repr.symm (eDom y) := LinearMap.congr_fun hcomm y
+  · intro y
+    refine ⟨eDom.symm (b.repr (eCod y)), ?_⟩
+    apply eCod.injective
+    calc
+      eCod (red (eDom.symm (b.repr (eCod y)))) =
+          b.repr.symm (eDom (eDom.symm (b.repr (eCod y)))) :=
+        LinearMap.congr_fun hcomm _
+      _ = b.repr.symm (b.repr (eCod y)) := by rw [LinearEquiv.apply_symm_apply]
+      _ = eCod y := LinearEquiv.symm_apply_apply _ _
+
+omit [IsNoetherianRing R] in
 /-- Every positive maximal-ideal-power quotient of the strict local colimit is a free module
 over the corresponding quotient of the base.  This is the quotient-power comparison and
 freeness step used before the inverse-limit argument in Stacks Tag `06LJ`. -/
@@ -629,6 +711,8 @@ end PointedEtaleNeighborhood
 #print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
 #print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv_mk
 #print axioms PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
+#print axioms
+  PointedEtaleNeighborhood.exists_localColimit_linearCombination_reduceModIdeal_bijective
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
 end Pcf.Stacks
