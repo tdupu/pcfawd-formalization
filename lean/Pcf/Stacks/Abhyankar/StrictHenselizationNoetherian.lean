@@ -7,6 +7,7 @@ import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.AdicCompletion.Functoriality
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
+import Mathlib.LinearAlgebra.Finsupp.Pi
 import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
@@ -117,6 +118,255 @@ theorem Module.Flat.of_forall_ideal_lTensor_injective
     _ = f.lTensor R (I.subtype.rTensor M x) := by
       rw [← LinearMap.comp_apply, LinearMap.lTensor_comp_rTensor]
     _ = 0 := by rw [hx, map_zero]
+
+namespace AdicCompletion
+
+section ExactOfArtinRees
+
+variable {R : Type u} [CommRing R] {I : Ideal R}
+variable {M : Type v} [AddCommGroup M] [Module R M]
+variable {N : Type w} [AddCommGroup N] [Module R N]
+variable {P : Type t} [AddCommGroup P] [Module R P]
+variable {f : M →ₗ[R] N} {g : N →ₗ[R] P}
+
+/-- The correction step in adic exactness only uses the displayed Artin–Rees equality,
+not finite generation itself.  Keeping that equality explicit lets us apply the argument to a
+coordinatewise finite relation module. -/
+private noncomputable def mapExactAuxDeltaOfPowInf
+    {k n : ℕ}
+    (hf : Function.Injective f)
+    (hkn : ∀ n ≥ k,
+      I ^ n • (⊤ : Submodule R N) ⊓ LinearMap.range f =
+        I ^ (n - k) • (I ^ k • (⊤ : Submodule R N) ⊓ LinearMap.range f))
+    (x : ℕ → N)
+    (hx : ∀ {m n}, m ≤ n →
+      x m ≡ x n [SMOD (I ^ m • ⊤ : Submodule R N)])
+    {d : N} (hdmem : d ∈ (I ^ (k + n + 1) • ⊤ : Submodule R N))
+    {y yₙ : M} (hd : f y = x (k + n + 1) - d)
+    (hyₙ : f yₙ - x (k + n) ∈ (I ^ (k + n) • ⊤ : Submodule R N)) :
+    {d : (I ^ n • ⊤ : Submodule R M) |
+      f (yₙ + d) - x (k + n + 1) ∈ (I ^ (k + n + 1) • ⊤ : Submodule R N)} := by
+  have h : f (y - yₙ) ∈ (I ^ (k + n) • ⊤ : Submodule R N) := by
+    simp only [map_sub, hd]
+    convert_to x (k + n + 1) - x (k + n) - d - (f yₙ - x (k + n)) ∈
+      I ^ (k + n) • (⊤ : Submodule R N)
+    · abel
+    · refine Submodule.sub_mem _ (Submodule.sub_mem _ ?_ ?_) hyₙ
+      · rw [← Submodule.Quotient.eq]
+        exact (hx (by lia)).symm
+      · exact (Submodule.smul_mono_left (Ideal.pow_le_pow_right (by lia))) hdmem
+  have hincl : I ^ (k + n - k) • (I ^ k • ⊤ ⊓ LinearMap.range f) ≤
+      I ^ (k + n - k) • LinearMap.range f :=
+    smul_mono_right _ inf_le_right
+  have hyyₙ : y - yₙ ∈ (I ^ n • ⊤ : Submodule R M) := by
+    convert_to y - yₙ ∈ (I ^ (k + n - k) • ⊤ : Submodule R M)
+    · simp
+    · rw [← Submodule.comap_map_eq_of_injective hf
+          (I ^ (k + n - k) • ⊤ : Submodule R M)]
+      rw [Submodule.map_smul'', Submodule.map_top]
+      apply hincl
+      rw [← hkn (k + n) (by lia)]
+      exact ⟨h, ⟨y - yₙ, rfl⟩⟩
+  exact ⟨⟨y - yₙ, hyyₙ⟩, by
+    simpa [hd, Nat.succ_eq_add_one, Nat.add_assoc]⟩
+
+/-- A compatible preimage sequence in the proof of adic exactness with an explicit
+Artin–Rees constant. -/
+private noncomputable def mapExactAuxOfPowInf
+    (hf : Function.Injective f) (hfg : Function.Exact f g)
+    (hg : Function.Surjective g) {k : ℕ}
+    (hkn : ∀ n ≥ k,
+      I ^ n • (⊤ : Submodule R N) ⊓ LinearMap.range f =
+        I ^ (n - k) • (I ^ k • (⊤ : Submodule R N) ⊓ LinearMap.range f))
+    (x : ℕ → N)
+    (hx : ∀ {m n}, m ≤ n →
+      x m ≡ x n [SMOD (I ^ m • ⊤ : Submodule R N)])
+    (hker : ∀ n : ℕ, g (x n) ∈ (I ^ n • ⊤ : Submodule R P)) :
+    (n : ℕ) →
+      {a : M | f a - x (k + n) ∈ (I ^ (k + n) • ⊤ : Submodule R N)}
+  | .zero =>
+      let d := (h2 0).choose
+      let y := (h2 0).choose_spec.choose
+      have hdy : f y = x (k + 0) - d := (h2 0).choose_spec.choose_spec.right
+      have hdmem : d ∈ (I ^ (k + 0) • ⊤ : Submodule R N) :=
+        (h2 0).choose_spec.choose_spec.left
+      ⟨y, by simpa [hdy] using hdmem⟩
+  | .succ n =>
+      let d := (h2 (n + 1)).choose
+      let y := (h2 (n + 1)).choose_spec.choose
+      have hdy : f y = x (k + (n + 1)) - d :=
+        (h2 (n + 1)).choose_spec.choose_spec.right
+      have hdmem := (h2 (n + 1)).choose_spec.choose_spec.left
+      let ⟨yₙ, (hyₙ : f yₙ - x (k + n) ∈
+          (I ^ (k + n) • ⊤ : Submodule R N))⟩ :=
+        mapExactAuxOfPowInf hf hfg hg hkn x hx hker n
+      let ⟨d, hd⟩ := mapExactAuxDeltaOfPowInf hf hkn x hx hdmem hdy hyₙ
+      ⟨yₙ + d, hd⟩
+where
+  h1 (n : ℕ) : g (x (k + n)) ∈
+      Submodule.map g (I ^ (k + n) • ⊤ : Submodule R N) := by
+    rw [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.mpr hg]
+    exact hker (k + n)
+  h2 (n : ℕ) : ∃ (d : N) (y : M),
+      d ∈ (I ^ (k + n) • ⊤ : Submodule R N) ∧ f y = x (k + n) - d := by
+    obtain ⟨d, hdmem, hd⟩ := h1 n
+    obtain ⟨y, hdy⟩ := (hfg (x (k + n) - d)).mp (by simp [hd])
+    exact ⟨d, y, hdmem, hdy⟩
+
+/-- Adic completion preserves a short exact sequence whenever the middle submodule satisfies
+the explicit Artin–Rees equality.  This is the proof of Mathlib's finite-module exactness with
+the finiteness hypothesis replaced by the only consequence of it that the proof uses. -/
+theorem map_exact_of_pow_inf_eq_pow_smul
+    (hf : Function.Injective f) (hfg : Function.Exact f g)
+    (hg : Function.Surjective g) {k : ℕ}
+    (hkn : ∀ n ≥ k,
+      I ^ n • (⊤ : Submodule R N) ⊓ LinearMap.range f =
+        I ^ (n - k) • (I ^ k • (⊤ : Submodule R N) ⊓ LinearMap.range f)) :
+    Function.Exact (AdicCompletion.map I f) (AdicCompletion.map I g) := by
+  refine LinearMap.exact_of_comp_eq_zero_of_ker_le_range ?_ (fun y ↦ ?_)
+  · rw [AdicCompletion.map_comp, hfg.linearMap_comp_eq_zero, AdicCompletion.map_zero]
+  · intro hy
+    choose b hb using fun n ↦
+      Submodule.Quotient.mk_surjective (I ^ n • ⊤ : Submodule R N) (y.val n)
+    have hbCauchy : ∀ {m n}, m ≤ n →
+        b m ≡ b n [SMOD (I ^ m • ⊤ : Submodule R N)] := by
+      intro m n hmn
+      rw [SModEq.def]
+      calc
+        Submodule.Quotient.mk (b m) = y.val m := hb m
+        _ = AdicCompletion.transitionMap I N hmn (y.val n) := (y.property hmn).symm
+        _ = AdicCompletion.transitionMap I N hmn
+            (Submodule.Quotient.mk (b n)) := congrArg _ (hb n).symm
+        _ = Submodule.Quotient.mk (b n) := rfl
+    have hbker (n : ℕ) : g (b n) ∈ (I ^ n • ⊤ : Submodule R P) := by
+      have hz := congrArg (fun x ↦ x.val n) (LinearMap.mem_ker.mp hy)
+      simp only [AdicCompletion.map_val_apply, AdicCompletion.val_zero_apply] at hz
+      rw [← hb n, LinearMap.reduceModIdeal_apply] at hz
+      rw [← Submodule.Quotient.mk_eq_zero]
+      exact hz
+    let a := mapExactAuxOfPowInf hf hfg hg hkn b hbCauchy hbker
+    have haSucc (n : ℕ) :
+        (a n : M) ≡ (a (n + 1) : M) [SMOD (I ^ n • ⊤ : Submodule R M)] := by
+      simp [a, mapExactAuxOfPowInf, SModEq]
+    have haCauchy : ∀ {m n}, m ≤ n →
+        (a m : M) ≡ (a n : M) [SMOD (I ^ m • ⊤ : Submodule R M)] := by
+      intro m n hmn
+      induction n, hmn using Nat.le_induction with
+      | base => rfl
+      | succ n hmn ih =>
+          exact ih.trans ((haSucc n).mono
+            (Submodule.smul_mono_left (Ideal.pow_le_pow_right hmn)))
+    let z : AdicCompletion I M :=
+      ⟨fun n ↦ Submodule.Quotient.mk (a n : M), fun hmn ↦ by
+        change Submodule.Quotient.mk (a _ : M) = Submodule.Quotient.mk (a _ : M)
+        exact (haCauchy hmn).symm⟩
+    refine ⟨z, ?_⟩
+    ext n
+    change Submodule.Quotient.mk (f (a n : M)) = y.val n
+    rw [← hb n, Submodule.Quotient.eq]
+    have hle : (I ^ (k + n) • ⊤ : Submodule R N) ≤
+        (I ^ n • ⊤ : Submodule R N) :=
+      Submodule.smul_mono_left (Ideal.pow_le_pow_right (by lia))
+    have hb' := (hbCauchy (show n ≤ k + n by lia)).symm
+    rw [SModEq.sub_mem] at hb'
+    convert Submodule.add_mem _ (hle (a n).property) hb' using 1
+    all_goals abel
+
+end ExactOfArtinRees
+
+end AdicCompletion
+
+namespace Finsupp
+
+/-- Transpose an arbitrary direct sum past a finite product. -/
+noncomputable def finsuppPiLEquiv
+    {R : Type u} [CommRing R] (ι : Type v) (κ : Type w) [Finite κ] :
+    (ι →₀ (κ → R)) ≃ₗ[R] κ → (ι →₀ R) :=
+  Finsupp.mapRange.linearEquiv (Finsupp.linearEquivFunOnFinite R R κ).symm ≪≫ₗ
+    (Finsupp.curryLinearEquiv R).symm ≪≫ₗ
+    Finsupp.domLCongr (Equiv.prodComm ι κ) ≪≫ₗ
+    Finsupp.curryLinearEquiv R ≪≫ₗ
+    Finsupp.linearEquivFunOnFinite R (ι →₀ R) κ
+
+@[simp]
+theorem finsuppPiLEquiv_apply
+    {R : Type u} [CommRing R] (ι : Type v) (κ : Type w) [Finite κ]
+    (x : ι →₀ (κ → R)) (j : κ) (i : ι) :
+    (Finsupp.finsuppPiLEquiv (R := R) ι κ).toLinearMap x j i = x i j := by
+  rfl
+
+/-- Multiplication by an ideal commutes with a direct sum of copies of a submodule. -/
+theorem ideal_smul_submodule
+    {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
+    (J : Ideal R) (S : Submodule R M) (ι : Type w) :
+    J • Finsupp.submodule (fun _ : ι ↦ S) =
+      Finsupp.submodule (fun _ : ι ↦ J • S) := by
+  apply le_antisymm
+  · rw [Submodule.smul_le]
+    intro r hr x hx
+    rw [Finsupp.mem_submodule_iff] at hx ⊢
+    intro i
+    exact Submodule.smul_mem_smul hr (hx i)
+  · intro x hx
+    rw [← Finsupp.sum_single x]
+    apply Submodule.sum_mem
+    intro i _
+    have hxi : x i ∈ J • S := hx i
+    refine Submodule.smul_induction_on hxi ?_ ?_
+    · intro r hr y hy
+      rw [← Finsupp.smul_single]
+      exact Submodule.smul_mem_smul hr (by
+        rw [Finsupp.mem_submodule_iff]
+        intro j
+        by_cases hji : j = i
+        · subst j
+          simpa using hy
+        · simp [hji])
+    · intro y z hy hz
+      simpa only [Finsupp.single_add] using Submodule.add_mem _ hy hz
+
+/-- Intersections of coordinatewise submodules are computed coordinatewise. -/
+@[simp]
+theorem submodule_inf
+    {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
+    {ι : Type w} (S T : ι → Submodule R M) :
+    Finsupp.submodule S ⊓ Finsupp.submodule T =
+      Finsupp.submodule (fun i ↦ S i ⊓ T i) := by
+  ext x
+  simp only [Submodule.mem_inf, Finsupp.mem_submodule_iff]
+  aesop
+
+/-- The Artin–Rees equality for a finite submodule remains uniform after taking an arbitrary
+direct sum of copies.  This is the uniform shift used in Stacks Tag `06LD`. -/
+theorem exists_pow_inf_eq_pow_smul_submodule
+    {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
+    [IsNoetherianRing R] [Module.Finite R M]
+    (I : Ideal R) (S : Submodule R M) (ι : Type w) :
+    ∃ k : ℕ, ∀ n ≥ k,
+      I ^ n • (⊤ : Submodule R (ι →₀ M)) ⊓
+          Finsupp.submodule (fun _ : ι ↦ S) =
+        I ^ (n - k) •
+          (I ^ k • (⊤ : Submodule R (ι →₀ M)) ⊓
+            Finsupp.submodule (fun _ : ι ↦ S)) := by
+  obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul I S
+  refine ⟨k, fun n hn ↦ ?_⟩
+  calc
+    I ^ n • (⊤ : Submodule R (ι →₀ M)) ⊓
+          Finsupp.submodule (fun _ : ι ↦ S) =
+        Finsupp.submodule (fun _ : ι ↦ I ^ n • (⊤ : Submodule R M) ⊓ S) := by
+      rw [← Finsupp.submodule_top (R := R) (M := M) (α := ι),
+        Finsupp.ideal_smul_submodule, Finsupp.submodule_inf]
+    _ = Finsupp.submodule (fun _ : ι ↦
+          I ^ (n - k) • (I ^ k • (⊤ : Submodule R M) ⊓ S)) := by
+      rw [hk n hn]
+    _ = I ^ (n - k) •
+          (I ^ k • (⊤ : Submodule R (ι →₀ M)) ⊓
+            Finsupp.submodule (fun _ : ι ↦ S)) := by
+      rw [← Finsupp.submodule_top (R := R) (M := M) (α := ι),
+        Finsupp.ideal_smul_submodule, Finsupp.submodule_inf,
+        Finsupp.ideal_smul_submodule]
+
+end Finsupp
 
 /-- A flat module over a local ring with nilpotent maximal ideal is free.  This is the
 infinite-rank form of Stacks Tag `051F`; the chosen lifts of a residue-field basis span because
@@ -868,6 +1118,12 @@ end PointedEtaleNeighborhood
 #print axioms flat_pi_self_of_isNoetherianRing
 #print axioms AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
+#print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
+#print axioms Finsupp.finsuppPiLEquiv
+#print axioms Finsupp.finsuppPiLEquiv_apply
+#print axioms Finsupp.ideal_smul_submodule
+#print axioms Finsupp.submodule_inf
+#print axioms Finsupp.exists_pow_inf_eq_pow_smul_submodule
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
