@@ -223,4 +223,43 @@ theorem puncturedCover_genericFiber_normalizationDesc_isIso
     puncturedCover_genericFiber_fromNormalization_isIso R V
   exact normalizationDesc_isIso_of_fromNormalization_isIso h V.hom
 
+/-- Normalize the actual generic fibre over the entire affine spectrum, then restrict this
+normalization to the puncture: the result is the original arbitrary finite étale cover. This is
+the exact geometric comparison in Stacks Tag `0BM9`, prior to identifying the affine
+normalization with the explicit finite normal algebra. -/
+noncomputable def puncturedCover_genericFiber_normalizationRestrictIso
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let h := pullback.snd f g
+    let p := h ≫ V.hom
+    let i := (puncturedSpectrum R).ι
+    pullback (p ≫ i).fromNormalization i ≅ V.left := by
+  dsimp
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let h := pullback.snd f g
+  let p := h ≫ V.hom
+  let i := (puncturedSpectrum R).ι
+  letI : IsFinite V.hom := V.prop.1
+  letI : QuasiCompact f := inferInstance
+  letI : QuasiSeparated f := inferInstance
+  letI : QuasiCompact h := inferInstance
+  letI : QuasiSeparated h := inferInstance
+  letI : QuasiCompact p := inferInstance
+  letI : QuasiSeparated p := inferInstance
+  letI : QuasiCompact i := inferInstance
+  letI : QuasiSeparated i := inferInstance
+  letI : QuasiCompact (p ≫ i) := inferInstance
+  letI : QuasiSeparated (p ≫ i) := inferInstance
+  letI : IsOpenImmersion i := inferInstance
+  let e₁ := normalizationRestrictIsoOfOpenImmersion p i
+  haveI : IsIso (p.normalizationDesc h V.hom rfl) :=
+    puncturedCover_genericFiber_normalizationDesc_isIso R V
+  let e₂ : p.normalization ≅ V.left :=
+    asIso (p.normalizationDesc h V.hom rfl)
+  exact e₁ ≪≫ e₂
+
 end Pcf.Stacks
