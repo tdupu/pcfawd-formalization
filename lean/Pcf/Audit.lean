@@ -73,6 +73,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationBase
 import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -242,6 +243,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.pow_dvd_of_isSMulRegular_quotient
 #print axioms Pcf.Stacks.exists_common_value_of_regular_pair
 #print axioms Pcf.Stacks.fraction_of_regular_pair_eq_algebraMap
+#print axioms Pcf.Stacks.exists_fraction_intersection_pair_of_isIntegrallyClosed
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -285,6 +287,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.QuotientStandardEtale.baseChangeEquiv
 #print axioms Pcf.Stacks.QuotientStandardEtale.tensorBaseChangeEquiv
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_quotientBaseChange_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_quotientBaseChange_equalizing_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotientBaseChange_final
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_toColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom
