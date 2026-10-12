@@ -58,6 +58,32 @@ theorem genericPoint_fromSpecStalk_flat :
   exact RingHom.flat_algebraMap_iff.mpr
     (IsLocalization.flat (Spec R).functionField (nonZeroDivisors R))
 
+/-- Flat base change of global sections from the affine base `Spec R` to its generic point is an
+isomorphism for every finite étale punctured cover. The cover is Noetherian, hence qcqs, which is
+the substantive hypothesis in Mathlib's base-change theorem. -/
+theorem puncturedCover_genericBaseChange_isIso
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let iX := V.hom ≫ (puncturedSpectrum R).ι
+    IsIso (pushoutSection (IsPullback.of_hasPullback iX f)
+      (show (⊤ : (Spec (Spec R).functionField).Opens) ≤ f ⁻¹ᵁ (⊤ : (Spec R).Opens) from by simp)
+      (show (⊤ : V.left.Opens) ≤ iX ⁻¹ᵁ (⊤ : (Spec R).Opens) from by simp)
+      (show (⊤ : (Limits.pullback iX f).Opens) =
+        Limits.pullback.fst iX f ⁻¹ᵁ (⊤ : V.left.Opens) ⊓
+          Limits.pullback.snd iX f ⁻¹ᵁ
+            (⊤ : (Spec (Spec R).functionField).Opens) from by simp)) := by
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let iX := V.hom ≫ (puncturedSpectrum R).ι
+  letI : Flat f := genericPoint_fromSpecStalk_flat R
+  letI : IsNoetherian ((𝟭 Scheme).obj V.left) := by
+    change IsNoetherian V.left
+    exact puncturedCover_isNoetherian R V
+  exact isIso_pushoutSection_of_isQuasiSeparated_of_flat_right
+    (IsPullback.of_hasPullback iX f) (by simp) (by simp) (by simp)
+    (isAffineOpen_top (Spec R))
+    (isAffineOpen_top (Spec (Spec R).functionField))
+    CompactSpace.isCompact_univ isQuasiSeparated_univ
+
 omit [IsNoetherianRing R] in
 /-- The generic point of a positive-dimensional local domain lies in its punctured spectrum. -/
 theorem genericPoint_mem_puncturedSpectrum (hdim : 1 ≤ ringKrullDim R) :
