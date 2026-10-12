@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.Smooth.IntegralClosure
+import Mathlib.RingTheory.Localization.BaseChange
 
 /-!
 # Integral closure after smooth base change
@@ -92,7 +93,51 @@ theorem smoothBaseChange_isIntegralClosure [Algebra.Smooth R R'] :
       rw [← smoothBaseChangeIntegralClosureEquiv_val]
       exact (e y).2
 
+/-- The localization form used literally in Tag `0EYH`: if `N` is the normalization of
+`R` in `N[1/a]`, then after smooth base change `R → R'`, the tensor product `R' ⊗[R] N`
+is the normalization of `R'` in its localization away from the image of `a`.
+
+The proof first applies the tensor-product form of Tag `03GV`, then uses the canonical
+base-change equivalence between `R' ⊗[R] N[1/a]` and `(R' ⊗[R] N)[1/a]`. -/
+theorem smoothBaseChange_isIntegralClosure_localizationAway
+    {S : Type u} [CommRing S] [Algebra R S]
+    [Algebra.Smooth R R'] (a : R)
+    [IsIntegralClosure S R (Localization.Away (algebraMap R S a))] :
+    IsIntegralClosure (R' ⊗[R] S) R'
+      (Localization.Away
+        (algebraMap R' (R' ⊗[R] S) (algebraMap R R' a))) := by
+  let B := Localization.Away (algebraMap R S a)
+  let T := R' ⊗[R] S
+  let _ : Algebra T (R' ⊗[R] B) :=
+    normalizationBaseChangeAlgebra (R := R) (R' := R') (N := S) (B := B)
+  have hIC : IsIntegralClosure T R' (R' ⊗[R] B) :=
+    smoothBaseChange_isIntegralClosure (R := R) (R' := R') (N := S) (B := B)
+  let _ : IsIntegralClosure T R' (R' ⊗[R] B) := hIC
+  let F : R' ⊗[R] B ≃ₐ[R']
+      Localization.Away ((1 : R') ⊗ₜ[R] algebraMap R S a) :=
+    IsLocalization.Away.tensorProductEquivTMulRight R R'
+      (algebraMap R S a) B
+  have hbase : (1 : R') ⊗ₜ[R] algebraMap R S a =
+      algebraMap R' T (algebraMap R R' a) := by
+    change (1 : R') ⊗ₜ[R] algebraMap R S a =
+      algebraMap R R' a ⊗ₜ[R] (1 : S)
+    exact (Algebra.TensorProduct.tmul_one_eq_one_tmul a).symm
+  rw [← hbase]
+  apply IsIntegralClosure.of_algEquiv T F
+  intro x
+  induction x using TensorProduct.inductionOn with
+  | add x y hx hy => simp only [map_add, hx, hy]
+  | tmul x y =>
+      change algebraMap T (Localization.Away
+          ((1 : R') ⊗ₜ[R] algebraMap R S a)) (x ⊗ₜ[R] y) =
+        F ((Algebra.TensorProduct.map (AlgHom.id R' R')
+          (IsScalarTower.toAlgHom R S B)) (x ⊗ₜ[R] y))
+      rw [Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
+      exact (IsLocalization.Away.tensorProductEquivTMulRight_tmul
+        (R := R) (S := R') S (algebraMap R S a) B x y).symm
+
 #print axioms smoothBaseChangeIntegralClosureEquiv_val
 #print axioms smoothBaseChange_isIntegralClosure
+#print axioms smoothBaseChange_isIntegralClosure_localizationAway
 
 end Pcf.Stacks
