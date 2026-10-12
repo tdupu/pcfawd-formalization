@@ -96,6 +96,16 @@ theorem map_liftPair_g (I : Ideal R) (P : StandardEtalePair (R ⧸ I)) :
     map_liftPolynomial]
   rw [← Polynomial.derivative_map, map_liftMonic, bezoutEquation, pow_succ']
 
+/-- The tautological standard-etale presentation of the ring attached to a standard pair. -/
+noncomputable def pairPresentation (P : StandardEtalePair R) :
+    StandardEtalePresentation R P.Ring where
+  P := P
+  x := P.X
+  hasMap := P.hasMap_X
+  lift_bijective := by
+    simpa [StandardEtalePair.lift_X_left] using
+      (Function.bijective_id : Function.Bijective (id : P.Ring → P.Ring))
+
 /-- After quotient base change, the lifted standard etale pair defines the same algebra as the
 original pair. -/
 noncomputable def baseChangeEquiv (I : Ideal R) (P : StandardEtalePair (R ⧸ I)) :
@@ -125,5 +135,12 @@ noncomputable def baseChangeEquiv (I : Ideal R) (P : StandardEtalePair (R ⧸ I)
     (Q.hom_ext (by
       simp only [AlgHom.comp_apply, toHom, invHom, StandardEtalePair.lift_X]
       rfl))
+
+/-- The tensor-product base change of the lifted standard-etale algebra is equivalent to the
+original standard-etale algebra over the quotient. -/
+noncomputable def tensorBaseChangeEquiv (I : Ideal R)
+    (P : StandardEtalePair (R ⧸ I)) :
+    TensorProduct R (R ⧸ I) (liftPair I P).Ring ≃ₐ[R ⧸ I] P.Ring :=
+  ((pairPresentation (liftPair I P)).baseChange.equivRing).trans (baseChangeEquiv I P)
 
 end Pcf.Stacks.QuotientStandardEtale
