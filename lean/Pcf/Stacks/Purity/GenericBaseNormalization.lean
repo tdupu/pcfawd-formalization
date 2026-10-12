@@ -17,7 +17,7 @@ needed when applying Mathlib's smooth base-change theorem for relative normaliza
 
 noncomputable section
 
-open AlgebraicGeometry CategoryTheory
+open AlgebraicGeometry CategoryTheory Limits
 set_option linter.style.haveILetI false
 
 universe u
@@ -119,5 +119,31 @@ theorem genericPoint_fromNormalization_isIso
   have hSpec : IsIso (Spec.map f.fromNormalization.appTop) := inferInstance
   exact (MorphismProperty.arrow_mk_iso_iff (MorphismProperty.isomorphisms _)
     (arrowIsoSpecΓOfIsAffine f.fromNormalization)).mpr hSpec
+
+/-- A finite étale punctured cover equals the relative normalization of its actual generic
+fibre over the cover. This is smooth base change of the base's generic-point normalization;
+it does not assume connectedness of the cover. -/
+theorem puncturedCover_genericFiber_fromNormalization_isIso
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    IsIso (pullback.snd f g).fromNormalization := by
+  dsimp
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  letI : QuasiCompact f := inferInstance
+  letI : QuasiSeparated f := inferInstance
+  letI : IsIso f.fromNormalization := genericPoint_fromNormalization_isIso R
+  letI : Etale V.hom := V.prop.2
+  letI : Etale g := by
+    dsimp [g]
+    infer_instance
+  letI : Smooth g := inferInstance
+  haveI : IsIso (f.normalizationPullback g) := inferInstance
+  haveI : IsIso (pullback.snd f.fromNormalization g) := inferInstance
+  rw [← f.normalizationPullback_snd g]
+  infer_instance
 
 end Pcf.Stacks
