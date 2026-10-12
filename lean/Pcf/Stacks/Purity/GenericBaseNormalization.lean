@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Normalization
+import Mathlib.AlgebraicGeometry.Morphisms.IsIso
 import Pcf.Stacks.Purity.GenericCoverFiber
 
 /-!
@@ -83,5 +84,40 @@ theorem genericPoint_sections_isIntegrallyClosedIn
   change ψ (((algebraMap S T).comp φ.toRingHom) y) = ψ x
   rw [hcomp, hnat y]
   exact hy
+
+/-- The relative normalization of the generic point over a normal affine domain is the base
+scheme itself. This is the precise geometric base case for smooth base change of normalization. -/
+theorem genericPoint_fromNormalization_isIso
+    (R : CommRingCat.{u}) [IsDomain R] [IsIntegrallyClosed R] :
+    IsIso ((Spec R).fromSpecStalk (genericPoint (Spec R))).fromNormalization := by
+  let K := (Spec R).functionField
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let S := Γ(Spec R, ⊤)
+  let T := Γ(Spec K, f ⁻¹ᵁ (⊤ : (Spec R).Opens))
+  letI : Algebra S T := (f.app ⊤).hom.toAlgebra
+  have hnormal : IsIntegrallyClosedIn S T := by
+    convert genericPoint_sections_isIntegrallyClosedIn R using 1
+    rfl
+  let B := integralClosure S T
+  have hbij : Function.Bijective (algebraMap S B) := by
+    constructor
+    · intro a b h
+      apply (isIntegrallyClosedIn_iff.mp hnormal).1
+      exact congrArg (Subalgebra.val B) h
+    · intro x
+      obtain ⟨s, hs⟩ := (isIntegrallyClosedIn_iff.mp hnormal).2 x.property
+      refine ⟨s, ?_⟩
+      apply Subtype.ext
+      exact hs
+  have hTop : IsIso f.fromNormalization.appTop := by
+    change IsIso (f.fromNormalization.app ⊤)
+    rw [f.fromNormalization_app (isAffineOpen_top (Spec R))]
+    haveI : IsIso (CommRingCat.ofHom (algebraMap S B)) :=
+      (ConcreteCategory.isIso_iff_bijective _).mpr hbij
+    infer_instance
+  letI : IsAffine f.normalization := isAffine_of_isAffineHom f.fromNormalization
+  have hSpec : IsIso (Spec.map f.fromNormalization.appTop) := inferInstance
+  exact (MorphismProperty.arrow_mk_iso_iff (MorphismProperty.isomorphisms _)
+    (arrowIsoSpecΓOfIsAffine f.fromNormalization)).mpr hSpec
 
 end Pcf.Stacks
