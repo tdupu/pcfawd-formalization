@@ -8,6 +8,7 @@ import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 
 /-!
 # Dimension of the strict local colimit
@@ -143,5 +144,30 @@ theorem localColimit_faithfullyFlat [IsLocalRing R]
     Module.FaithfullyFlat R (LocalColimit R Ω) := by
   let _ : Module.Flat R (LocalColimit R Ω) := localColimit_flat (R := R) (Ω := Ω)
   exact Module.FaithfullyFlat.of_flat_of_isLocalHom
+
+/-- The strict local colimit has the same Krull dimension as its base, provided it is
+Noetherian. -/
+theorem ringKrullDim_localColimit [IsLocalRing R] [IsNoetherianRing R]
+    [Algebra (IsLocalRing.ResidueField R) Ω]
+    [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
+    [IsSepClosure (IsLocalRing.ResidueField R) Ω]
+    [IsNoetherianRing (LocalColimit R Ω)] :
+    ringKrullDim R = ringKrullDim (LocalColimit R Ω) := by
+  let _ : Module.Flat R (LocalColimit R Ω) := localColimit_flat (R := R) (Ω := Ω)
+  let p := IsLocalRing.maximalIdeal R
+  let P := IsLocalRing.maximalIdeal (LocalColimit R Ω)
+  let _ : P.LiesOver p := ⟨by
+    change p = Ideal.comap (algebraMap R (LocalColimit R Ω)) P
+    simpa [p, P] using
+      (IsLocalRing.maximalIdeal_comap
+        (algebraMap R (LocalColimit R Ω))).symm⟩
+  have hheight :=
+    Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown p P
+  have hmap := map_maximalIdeal_localColimit (R := R) (Ω := Ω)
+  have hheight' : P.height = p.height := by
+    rw [hmap, Ideal.map_quotient_self, Ideal.height_bot, add_zero] at hheight
+    exact hheight
+  rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim,
+    ← IsLocalRing.maximalIdeal_height_eq_ringKrullDim, hheight']
 
 end Pcf.Stacks.PointedEtaleNeighborhood
