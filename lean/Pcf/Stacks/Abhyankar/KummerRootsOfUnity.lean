@@ -20,7 +20,7 @@ unramified nature of adjoining prime-to-characteristic roots of unity.
 
 open Finset IsLocalRing
 
-universe u
+universe u v
 
 namespace Pcf.Stacks
 
@@ -77,6 +77,41 @@ theorem restrictRootsOfUnity_residue_injective {n : ℕ}
   apply mul_inv_eq_one.mp
   simpa only [zUnit] using hzoneUnit
 
+/-- A root of unity in the fraction field of an integral closure already lies in that
+closure.  In the root extension of Tag `09EV`, this places roots of unity in the DVR
+where residue reduction is available. -/
+theorem rootOfUnity_mem_integralClosure
+    (A : Type u) (B : Type v) [CommRing A] [CommRing B] [IsDomain B]
+    [Algebra A (FractionRing B)] [IsIntegralClosure B A (FractionRing B)]
+    {n : ℕ} (hn : 0 < n) {z : FractionRing B} (hz : z ^ n = 1) :
+    ∃ b : B, b ^ n = 1 ∧ algebraMap B (FractionRing B) b = z := by
+  have hzi : IsIntegral A z := by
+    apply IsIntegral.of_pow hn
+    rw [hz]
+    exact isIntegral_one
+  obtain ⟨b, hb⟩ := (IsIntegralClosure.isIntegral_iff (A := B)).mp hzi
+  refine ⟨b, ?_, hb⟩
+  apply IsFractionRing.injective B (FractionRing B)
+  simpa only [map_pow, map_one, hb] using hz
+
+/-- Every `n`-th root of unity in the fraction field of the `09EV` root algebra is represented
+by an `n`-th root of unity in the integral root algebra. -/
+theorem dvrRootFraction_rootOfUnity_mem_rootAlgebra
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
+    (π : A) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π)
+    {z : FractionRing (AdjoinRoot (dvrRootPoly π n))} (hz : z ^ n = 1) :
+    ∃ b : AdjoinRoot (dvrRootPoly π n),
+      b ^ n = 1 ∧
+        algebraMap (AdjoinRoot (dvrRootPoly π n))
+          (FractionRing (AdjoinRoot (dvrRootPoly π n))) b = z := by
+  letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) := dvrRootAlgebra_isDomain π hn hπ
+  letI : IsIntegralClosure (AdjoinRoot (dvrRootPoly π n)) A
+      (FractionRing (AdjoinRoot (dvrRootPoly π n))) :=
+    dvrRootAlgebra_isIntegralClosure_fractionRing π hn hπ
+  exact rootOfUnity_mem_integralClosure A _ hn hz
+
+#print axioms rootOfUnity_mem_integralClosure
+#print axioms dvrRootFraction_rootOfUnity_mem_rootAlgebra
 #print axioms rootOfUnity_eq_one_of_residue_eq_one
 #print axioms restrictRootsOfUnity_residue_injective
 
