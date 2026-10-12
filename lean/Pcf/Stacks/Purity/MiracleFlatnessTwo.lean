@@ -5,6 +5,8 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.Regular.Category
 import Mathlib.RingTheory.Regular.RegularSequence
+import Mathlib.LinearAlgebra.TensorProduct.Prod
+import Mathlib.RingTheory.LocalRing.Module
 
 /-!
 # The two-dimensional miracle-flatness relation
@@ -18,7 +20,7 @@ This is a genuine algebraic consequence of module regularity.  It does not assum
 the conclusion of the purity theorem.
 -/
 
-open RingTheory.Sequence
+open RingTheory.Sequence TensorProduct
 open scoped Pointwise
 
 universe u v
@@ -45,6 +47,42 @@ def koszulPairRight (x y : R) : M × M →ₗ[R] M where
   map_smul' r c := by
     simp only [Prod.smul_fst, Prod.smul_snd, RingHom.id_apply, smul_add, smul_smul]
     module
+
+/-- The canonical identification of the tensor product of a rank-two free module with two
+copies of the coefficient module. -/
+noncomputable def koszulPairTensorEquiv : (R × R) ⊗[R] M ≃ₗ[R] (M × M) :=
+  TensorProduct.prodLeft R R R R M ≪≫ₗ
+    (TensorProduct.lid R M).prodCongr (TensorProduct.lid R M)
+
+@[simp]
+theorem koszulPairTensorEquiv_tmul (a b : R) (m : M) :
+    koszulPairTensorEquiv ((a, b) ⊗ₜ[R] m) = (a • m, b • m) := by
+  rfl
+
+/-- Tensoring the first Koszul differential and applying the canonical tensor identifications
+gives the first Koszul differential on the coefficient module. -/
+theorem koszulPairTensorEquiv_rTensor_left
+    (x y : R) :
+    (koszulPairTensorEquiv (R := R) (M := M)).toLinearMap.comp
+        ((koszulPairLeft (M := R) x y).rTensor M) =
+      (koszulPairLeft (M := M) x y).comp (TensorProduct.lid R M).toLinearMap := by
+  apply TensorProduct.ext'
+  intro r m
+  change ((-(y * r)) • m, (x * r) • m) = (-(y • (r • m)), x • (r • m))
+  ext <;> module
+
+/-- Tensoring the second Koszul differential and applying the canonical tensor identifications
+gives the second Koszul differential on the coefficient module. -/
+theorem lid_rTensor_koszulPairRight
+    (x y : R) :
+    (TensorProduct.lid R M).toLinearMap.comp
+        ((koszulPairRight (M := R) x y).rTensor M) =
+      (koszulPairRight (M := M) x y).comp
+        (koszulPairTensorEquiv (R := R) (M := M)).toLinearMap := by
+  apply TensorProduct.ext'
+  rintro ⟨a, b⟩ m
+  change (x * a + y * b) • m = x • (a • m) + y • (b • m)
+  module
 
 /-- Exactness at the middle of the two-element Koszul complex for an `M`-regular pair.
 
@@ -100,5 +138,137 @@ theorem exact_koszulPair_of_isSMulRegular
     change x • (-(y • c)) + y • (x • c) = 0
     simp only [smul_neg, smul_smul]
     rw [mul_comm x y, neg_add_cancel]
+
+/-- After tensoring the rank-two Koszul complex with M, it remains exact in the middle when
+x, y is an M-regular pair.  This is the tensor form needed to prove injectivity of the
+maximal-ideal multiplication map in the dimension-two miracle-flatness argument. -/
+theorem exact_rTensor_koszulPair_of_isSMulRegular
+    {x y : R}
+    (hx : IsSMulRegular M x)
+    (hy : IsSMulRegular (QuotSMulTop x M) y) :
+    Function.Exact
+      ((koszulPairLeft (M := R) x y).rTensor M)
+      ((koszulPairRight (M := R) x y).rTensor M) := by
+  let e₁ := TensorProduct.lid R M
+  let e₂ := koszulPairTensorEquiv (R := R) (M := M)
+  have hcomm₁ := koszulPairTensorEquiv_rTensor_left (M := M) x y
+  have hcomm₂ := lid_rTensor_koszulPairRight (M := M) x y
+  have hexact := exact_koszulPair_of_isSMulRegular hx hy
+  intro z
+  constructor
+  · intro hz
+    have hz' : koszulPairRight (M := M) x y (e₂ z) = 0 := by
+      calc
+        koszulPairRight (M := M) x y (e₂ z) =
+            e₁ (((koszulPairRight (M := R) x y).rTensor M) z) :=
+          (LinearMap.congr_fun hcomm₂ z).symm
+        _ = 0 := by rw [hz, map_zero]
+    obtain ⟨c, hc⟩ := (hexact (e₂ z)).mp hz'
+    refine ⟨e₁.symm c, ?_⟩
+    apply e₂.injective
+    calc
+      e₂ (((koszulPairLeft (M := R) x y).rTensor M) (e₁.symm c)) =
+          koszulPairLeft (M := M) x y (e₁ (e₁.symm c)) :=
+        LinearMap.congr_fun hcomm₁ (e₁.symm c)
+      _ = e₂ z := by rw [e₁.apply_symm_apply, hc]
+  · rintro ⟨w, rfl⟩
+    apply e₁.injective
+    calc
+      e₁ (((koszulPairRight (M := R) x y).rTensor M)
+          (((koszulPairLeft (M := R) x y).rTensor M) w)) =
+          koszulPairRight (M := M) x y
+            (e₂ (((koszulPairLeft (M := R) x y).rTensor M) w)) :=
+        LinearMap.congr_fun hcomm₂ _
+      _ = koszulPairRight (M := M) x y (koszulPairLeft (M := M) x y (e₁ w)) := by
+        exact congrArg (koszulPairRight (M := M) x y)
+          (LinearMap.congr_fun hcomm₁ w)
+      _ = 0 := (hexact (koszulPairLeft (M := M) x y (e₁ w))).mpr ⟨e₁ w, rfl⟩
+      _ = e₁ 0 := (map_zero e₁).symm
+
+/-- If `x, y` is a regular pair both on the base ring and on `M`, tensoring the inclusion
+of the ideal `(x, y)` into the base ring with `M` is injective.
+
+This is the precise two-generator ideal criterion needed by the elementary
+dimension-two miracle-flatness argument.  The proof compares the two tensorized Koszul
+complexes: exactness for the ring identifies the tensor product of the ideal as the
+cokernel of the first differential, while exactness for `M` prevents the inclusion from
+acquiring a kernel. -/
+theorem range_koszulPairRight_subtype_rTensor_injective_of_isSMulRegular
+    {x y : R}
+    (hxR : IsSMulRegular R x)
+    (hyR : IsSMulRegular (QuotSMulTop x R) y)
+    (hxM : IsSMulRegular M x)
+    (hyM : IsSMulRegular (QuotSMulTop x M) y) :
+    Function.Injective
+      ((LinearMap.range (koszulPairRight (M := R) x y)).subtype.rTensor M) := by
+  let f := koszulPairLeft (M := R) x y
+  let g₀ := koszulPairRight (M := R) x y
+  let I := LinearMap.range g₀
+  let g : R × R →ₗ[R] I := g₀.rangeRestrict
+  let i : I →ₗ[R] R := I.subtype
+  have hsurj : Function.Surjective g := g₀.surjective_rangeRestrict
+  have hexactRing : Function.Exact f g := by
+    rw [LinearMap.exact_iff, LinearMap.ker_rangeRestrict]
+    exact LinearMap.exact_iff.mp (exact_koszulPair_of_isSMulRegular hxR hyR)
+  have hexactRange : Function.Exact (f.rTensor M) (g.rTensor M) :=
+    _root_.rTensor_exact M hexactRing hsurj
+  have hexactModule : Function.Exact (f.rTensor M) (g₀.rTensor M) :=
+    exact_rTensor_koszulPair_of_isSMulRegular hxM hyM
+  apply LinearMap.ker_eq_bot.mp
+  apply le_antisymm
+  · intro z hz
+    rw [Submodule.mem_bot]
+    have hz' : (i.rTensor M) z = 0 := LinearMap.mem_ker.mp hz
+    obtain ⟨w, hw⟩ := g.rTensor_surjective M hsurj z
+    have hg₀w : (g₀.rTensor M) w = 0 := by
+      calc
+        (g₀.rTensor M) w = ((i.comp g).rTensor M) w := rfl
+        _ = (i.rTensor M) ((g.rTensor M) w) :=
+          LinearMap.rTensor_comp_apply M i g w
+        _ = (i.rTensor M) z := by rw [hw]
+        _ = 0 := hz'
+    have hwRange : w ∈ LinearMap.range (f.rTensor M) := (hexactModule w).mp hg₀w
+    have hgw : (g.rTensor M) w = 0 := (hexactRange w).mpr hwRange
+    exact hw.symm.trans hgw
+  · exact bot_le
+
+/-- The range of the second two-element Koszul differential over the base ring is the
+two-generated ideal `(x, y)`. -/
+theorem range_koszulPairRight_eq_span (x y : R) :
+    LinearMap.range (koszulPairRight (M := R) x y) =
+      Ideal.span ({x, y} : Set R) := by
+  ext z
+  constructor
+  · rintro ⟨⟨a, b⟩, rfl⟩
+    rw [Ideal.mem_span_pair]
+    exact ⟨a, b, by change a * x + b * y = x * a + y * b; ring⟩
+  · intro hz
+    rw [Ideal.mem_span_pair] at hz
+    obtain ⟨a, b, hab⟩ := hz
+    refine ⟨(a, b), ?_⟩
+    change x * a + y * b = z
+    calc
+      x * a + y * b = a * x + b * y := by ring
+      _ = z := hab
+
+/-- Elementary two-dimensional miracle flatness for a chosen regular parameter pair.
+
+If the maximal ideal of a local ring is generated by `x, y`, that pair is regular on the
+ring, and it is also regular on a finitely presented module `M`, then `M` is free.  This
+packages the exact algebraic conclusion used in the two-dimensional branch of Stacks Tag
+`0BMA`; geometric applications must still construct the parameter pair and prove its
+regularity on the finite normal algebra. -/
+theorem Module.free_of_regular_pair_generates_maximalIdeal
+    [IsLocalRing R] [Module.FinitePresentation R M]
+    {x y : R}
+    (hspan : Ideal.span ({x, y} : Set R) = IsLocalRing.maximalIdeal R)
+    (hxR : IsSMulRegular R x)
+    (hyR : IsSMulRegular (QuotSMulTop x R) y)
+    (hxM : IsSMulRegular M x)
+    (hyM : IsSMulRegular (QuotSMulTop x M) y) :
+    Module.Free R M := by
+  apply Module.free_of_maximalIdeal_rTensor_injective
+  rw [← hspan, ← range_koszulPairRight_eq_span x y]
+  exact range_koszulPairRight_subtype_rTensor_injective_of_isSMulRegular hxR hyR hxM hyM
 
 end Pcf.Stacks

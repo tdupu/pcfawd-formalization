@@ -14,6 +14,9 @@ import Pcf.Wiring
 import Pcf.AllTheWayDown
 import Pcf.SpectrumDynamics
 import Pcf.Stacks.Purity
+import Pcf.Stacks.Purity.Tag0BM9
+import Pcf.Stacks.Purity.FiniteModuleHartogs
+import Pcf.Stacks.Purity.MiracleFlatnessTwo
 import Pcf.Stacks.Abhyankar
 import Pcf.Stacks.Abhyankar.EtaleDescent
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
@@ -52,6 +55,7 @@ import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
+import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
 import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction

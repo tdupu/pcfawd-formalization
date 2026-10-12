@@ -69,6 +69,9 @@ import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Purity.GenericBaseNormalization
 import Pcf.Stacks.Purity.GenericFiberNormalization
 import Pcf.Stacks.Purity.GenericFiberExtension
+import Pcf.Stacks.Purity.Tag0BM9
+import Pcf.Stacks.Purity.FiniteModuleHartogs
+import Pcf.Stacks.Purity.MiracleFlatnessTwo
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -102,6 +105,7 @@ import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
+import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
 import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction
@@ -230,6 +234,21 @@ hypotheses. -/
 #print axioms Pcf.Stacks.ringKrullDim_quotient_minimalGenerator_eq
 #print axioms Pcf.Stacks.exists_regularLocalRing_quotient_minimalGenerator
 #print axioms Pcf.Stacks.exists_regularLocalRing_quotient_of_ringKrullDim_eq_succ
+#print axioms Pcf.Stacks.koszulPairLeft
+#print axioms Pcf.Stacks.koszulPairRight
+#print axioms Pcf.Stacks.koszulPairTensorEquiv
+#print axioms Pcf.Stacks.koszulPairTensorEquiv_tmul
+#print axioms Pcf.Stacks.koszulPairTensorEquiv_rTensor_left
+#print axioms Pcf.Stacks.lid_rTensor_koszulPairRight
+#print axioms Pcf.Stacks.exists_koszul_relation_of_isSMulRegular_pair
+#print axioms Pcf.Stacks.exact_koszulPair_of_isSMulRegular
+#print axioms Pcf.Stacks.exact_rTensor_koszulPair_of_isSMulRegular
+#print axioms
+  Pcf.Stacks.range_koszulPairRight_subtype_rTensor_injective_of_isSMulRegular
+#print axioms Pcf.Stacks.range_koszulPairRight_eq_span
+#print axioms Pcf.Stacks.Module.free_of_regular_pair_generates_maximalIdeal
+#print axioms Pcf.Stacks.exists_eq_pow_smul_of_regular_pair
+#print axioms Pcf.Stacks.exists_common_value_of_module_regular_pair
 #print axioms Pcf.Stacks.etale_of_fpqc_pullback
 #print axioms Pcf.Stacks.formallyEtale_of_flat_of_formallyUnramified_of_isLocalization
 #print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
@@ -310,6 +329,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalization_isFinite
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecMap
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecRestrictIso
+#print axioms Pcf.Stacks.normalizationIsoOfSourceIsoEq
+#print axioms Pcf.Stacks.normalizationIsoOfSourceIsoEq_hom_fromNormalization
+#print axioms Pcf.Stacks.normalizationRestrictOverIsoOfOpenImmersion
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecRestrictOverIso
+#print axioms
+  Pcf.Stacks.puncturedCover_genericFiber_normalizationSections_isTorsionFree
+#print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalExtension
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
@@ -459,6 +485,15 @@ hypotheses. -/
 #print axioms Pcf.Stacks.flat_pi_self_of_isNoetherianRing
 #print axioms Pcf.Stacks.Module.Flat.pi_of_isNoetherianRing
 #print axioms Pcf.Stacks.Module.Flat.of_forall_ideal_lTensor_injective
+#print axioms Pcf.Stacks.AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
+#print axioms Pcf.Stacks.AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
+#print axioms Pcf.Stacks.AdicCompletion.mapRange_exact_of_finite
+#print axioms Pcf.Stacks.AdicCompletion.mapRange_injective_of_finite
+#print axioms Pcf.Stacks.Finsupp.finsuppPiLEquiv
+#print axioms Pcf.Stacks.Finsupp.finsuppPiLEquiv_apply
+#print axioms Pcf.Stacks.Finsupp.ideal_smul_submodule
+#print axioms Pcf.Stacks.Finsupp.submodule_inf
+#print axioms Pcf.Stacks.Finsupp.exists_pow_inf_eq_pow_smul_submodule
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_apply
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_injective
@@ -533,11 +568,21 @@ hypotheses. -/
 #print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_standard
 #print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_standardCover
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
+#print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate_at
+#print axioms Pcf.Stacks.hasSeparableResidueFieldsAt_comp_formallyUnramified
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
 #print axioms Pcf.Stacks.isEtaleAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_dvr_ramificationIdx_total_eq
 #print axioms Pcf.Stacks.etale_of_dvr_ramification_square
+#print axioms Pcf.Stacks.isUnramifiedAt_of_local_ramification_square
+#print axioms Pcf.Stacks.etale_of_equiv_localization_kummerUnit
+#print axioms Pcf.Stacks.isUnramifiedAt_of_kummerUnit_local_ramification_square
+#print axioms Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerUnit_local_square
+#print axioms
+  Pcf.Stacks.isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
+#print axioms Pcf.Stacks.etale_of_dvr_kummerUnit_ramification_square
+#print axioms Pcf.Stacks.etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms Pcf.Stacks.dvrRootPoly_monic
 #print axioms Pcf.Stacks.dvrRootAlgebra_finite
 #print axioms Pcf.Stacks.dvrRootAlgebra_free
