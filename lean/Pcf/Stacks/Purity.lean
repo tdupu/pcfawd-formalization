@@ -11,6 +11,7 @@ import Pcf.Stacks.Purity.NormalRing
 import Pcf.Stacks.Purity.IntegralClosure
 import Pcf.Stacks.Purity.PuncturedSpectrum
 import Pcf.Stacks.Purity.Hartogs
+import Pcf.Stacks.Purity.DepthTwo
 import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
 /-!
@@ -32,6 +33,7 @@ the proved pieces of its Stacks Tag `0BMB` proof.
   component of the construction in Tag `0BM9`.
 * quasi-compactness of the Noetherian punctured spectrum, together with injectivity of restriction
   of functions from a positive-dimensional local domain.
+* the regular-sequence/associated-prime reduction of the missing depth-two (Serre S2) input.
 
 ## Remaining Stacks spine
 

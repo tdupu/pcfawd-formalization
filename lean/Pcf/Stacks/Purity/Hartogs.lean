@@ -37,20 +37,24 @@ theorem isCompact_puncturedSpectrum [IsNoetherianRing R] :
     IsCompact (puncturedSpectrum R).1 :=
   NoetherianSpace.isCompact _
 
+/-- The maximal ideal of a positive-dimensional local domain is nonzero. -/
+theorem maximalIdeal_ne_bot_of_one_le_ringKrullDim [IsDomain R]
+    (hdim : 1 ≤ ringKrullDim R) : IsLocalRing.maximalIdeal R ≠ ⊥ := by
+  intro hm
+  have hheight : (IsLocalRing.maximalIdeal R).height = 0 :=
+    Ideal.height_eq_zero_iff_eq_bot.mpr hm
+  have hdim0 : ringKrullDim R = 0 := by
+    rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim]
+    simp [hheight]
+  have hzero : ¬(1 ≤ ringKrullDim R) := by
+    rw [hdim0]
+    exact not_le_of_gt zero_lt_one
+  exact hzero hdim
+
 /-- A local domain of positive Krull dimension has a nonempty punctured spectrum. -/
 theorem puncturedSpectrum_nonempty_of_one_le_ringKrullDim [IsDomain R]
     (hdim : 1 ≤ ringKrullDim R) : Nonempty (puncturedSpectrum R) := by
-  have hm : IsLocalRing.maximalIdeal R ≠ ⊥ := by
-    intro hm
-    have hheight : (IsLocalRing.maximalIdeal R).height = 0 :=
-      Ideal.height_eq_zero_iff_eq_bot.mpr hm
-    have hdim0 : ringKrullDim R = 0 := by
-      rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim]
-      simp [hheight]
-    have hzero : ¬(1 ≤ ringKrullDim R) := by
-      rw [hdim0]
-      exact not_le_of_gt zero_lt_one
-    exact hzero hdim
+  have hm := maximalIdeal_ne_bot_of_one_le_ringKrullDim R hdim
   change Nonempty {x : PrimeSpectrum R // x ≠ IsLocalRing.closedPoint R}
   refine ⟨⟨⊥, ?_⟩⟩
   intro h
