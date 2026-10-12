@@ -5,7 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.Algebra.Module.SpanRank
 import Mathlib.RingTheory.RegularLocalRing.Defs
-import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 
 /-!
 # The final regularity step for strict henselization
@@ -15,8 +15,15 @@ strict henselization.  Its last implication uses two earlier structural facts: t
 Noetherian, its maximal ideal is extended from the base, and its Krull dimension is unchanged.
 
 This file formalizes that last implication in reusable form and specializes it to the
-pointed-etale-colimit construction.  It deliberately does not assert the full tag until the
-Noetherianity and dimension theorems for that construction are available.
+pointed-etale-colimit construction.  The terminal theorem supplies target Noetherianity from
+the completion route of Stacks Tag `06LJ` (using Tags `05GH` and `032B` internally), so its only
+remaining completion input is flatness over the strict local colimit.
+
+The endpoint is precisely the forward implication `R` regular implies `Rˢʰ` regular used by the
+PCFAWD proof.  It does not package the converse or the comparison with `Rʰ` from the full
+three-way equivalence in Tag `06LN`: doing so for this concrete construction additionally requires
+the faithfully-flat cotangent-space dimension comparison.  This is a scope boundary, not an
+extra hypothesis of the forward endpoint below.
 -/
 
 universe u
@@ -71,6 +78,28 @@ theorem localColimit_isRegularLocalRing_of_isNoetherianRing
   localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
     (map_maximalIdeal_localColimit (R := R) (Ω := Ω))
     (ringKrullDim_localColimit (R := R) (Ω := Ω))
+
+/-- The `R → Rˢʰ` regularity endpoint of Stacks Tag `06LN` for the pointed-etale-colimit
+construction.  Flatness of the maximal-adic completion supplies Noetherianity through Tag `06LJ`;
+the extended-maximal-ideal and dimension comparisons then identify regularity. -/
+theorem localColimit_isRegularLocalRing_of_completion_flat
+    [IsRegularLocalRing R]
+    [Algebra (IsLocalRing.ResidueField R) Ω]
+    [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
+    [IsSepClosure (IsLocalRing.ResidueField R) Ω]
+    (hflat : Module.Flat (LocalColimit R Ω)
+      (AdicCompletion
+        (IsLocalRing.maximalIdeal (LocalColimit R Ω))
+        (LocalColimit R Ω))) :
+    IsRegularLocalRing (LocalColimit R Ω) := by
+  let _ : IsNoetherianRing (LocalColimit R Ω) :=
+    localColimit_isNoetherianRing_of_completion hflat
+  exact localColimit_isRegularLocalRing_of_isNoetherianRing
+
+#print axioms IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
+#print axioms localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
+#print axioms localColimit_isRegularLocalRing_of_isNoetherianRing
+#print axioms localColimit_isRegularLocalRing_of_completion_flat
 
 end PointedEtaleNeighborhood
 
