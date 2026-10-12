@@ -22,6 +22,7 @@ import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.GenericBaseNormalization
 import Pcf.Stacks.Purity.GenericFiberNormalization
+import Pcf.Stacks.Purity.GenericFiberExtension
 import Pcf.Stacks.Purity.NormalizationTower
 import Pcf.Stacks.Purity.FiniteNormalModel
 import Pcf.Stacks.Purity.CoverNormalModel

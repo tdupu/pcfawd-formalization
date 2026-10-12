@@ -68,6 +68,7 @@ import Pcf.Stacks.Purity.LocalFlatness
 import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Purity.GenericBaseNormalization
 import Pcf.Stacks.Purity.GenericFiberNormalization
+import Pcf.Stacks.Purity.GenericFiberExtension
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -304,6 +305,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationIntegralClosure_finite
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_fromNormalization_finite_appTop
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSections_finite
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalization_isFinite
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecMap
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecRestrictIso
+#print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalExtension
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
@@ -450,6 +455,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_apply
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_injective
+#print axioms Pcf.Stacks.AdicCompletion.pi_flat_of_isNoetherian
+#print axioms Pcf.Stacks.AdicCompletion.finsuppToPiRestrictScalars
+#print axioms Pcf.Stacks.AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms Pcf.Stacks.AdicCompletion.map_bijective_of_reduceModIdeal
