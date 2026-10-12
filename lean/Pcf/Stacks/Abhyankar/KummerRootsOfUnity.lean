@@ -456,6 +456,79 @@ theorem dvrRootAlgebra_rootOfUnity_mem_base
     simpa [Nat.add_mod, Nat.mod_eq_of_lt i.isLt] using hm
   exact (hi0nat hi).elim
 
+/-- Roots of unity in the fraction field of the integral Kummer algebra descend to the
+base fraction field. -/
+theorem dvrRootFractionRing_rootOfUnity_mem_base
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
+    (π : A) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
+    (hunit : IsUnit ((n : ℕ) : ResidueField A)) :
+    letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) :=
+      dvrRootAlgebra_isDomain π (by omega : 1 ≤ n) hπ
+    letI : Algebra (FractionRing A)
+      (FractionRing (AdjoinRoot (dvrRootPoly π n))) :=
+      dvrRootFractionRingAlgebra π (by omega : 1 ≤ n) hπ
+    ∀ z : FractionRing (AdjoinRoot (dvrRootPoly π n)), z ^ n = 1 →
+      ∃ k : FractionRing A,
+        algebraMap (FractionRing A)
+          (FractionRing (AdjoinRoot (dvrRootPoly π n))) k = z := by
+  let hn1 : 1 ≤ n := by omega
+  let B := AdjoinRoot (dvrRootPoly π n)
+  letI : IsDomain B := dvrRootAlgebra_isDomain π hn1 hπ
+  letI : Algebra (FractionRing A) (FractionRing B) :=
+    dvrRootFractionRingAlgebra π hn1 hπ
+  letI : FaithfulSMul A B :=
+    AdjoinRoot.faithfulSMul_of_monic_of_degree_pos (dvrRootPoly_monic π hn1) <| by
+      rw [← Polynomial.natDegree_pos_iff_degree_pos, dvrRootPoly,
+        Polynomial.natDegree_X_pow_sub_C]
+      exact hn1
+  letI : FaithfulSMul A (FractionRing B) := FaithfulSMul.trans A B _
+  letI : IsScalarTower A (FractionRing A) (FractionRing B) :=
+    FractionRing.isScalarTower_liftAlgebra A (FractionRing B)
+  intro z hz
+  obtain ⟨b, hb, hbz⟩ := dvrRootFraction_rootOfUnity_mem_rootAlgebra π hn1 hπ hz
+  obtain ⟨a, ha⟩ := dvrRootAlgebra_rootOfUnity_mem_base π hn hπ hunit hb
+  refine ⟨algebraMap A (FractionRing A) a, ?_⟩
+  rw [← hbz, ← ha]
+  calc
+    algebraMap (FractionRing A) (FractionRing B) (algebraMap A (FractionRing A) a) =
+        algebraMap A (FractionRing B) a :=
+      (IsScalarTower.algebraMap_apply A (FractionRing A) (FractionRing B) a).symm
+    _ = algebraMap B (FractionRing B) (algebraMap A B a) :=
+      IsScalarTower.algebraMap_apply A B (FractionRing B) a
+
+/-- Clause (6) of Stacks Tag `09EV`: when `n` is invertible in the residue field,
+every `n`-th root of unity in the displayed Eisenstein root field belongs to the
+base fraction field. -/
+theorem dvrRootFraction_rootOfUnity_mem_base
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
+    (π : A) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
+    (hunit : IsUnit ((n : ℕ) : ResidueField A)) :
+    letI : Field (AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) n)) :=
+      (dvrRootFractionAlgebra_isField π (by omega : 1 ≤ n) hπ).toField
+    ∀ z : AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) n),
+      z ^ n = 1 → ∃ k : FractionRing A,
+        algebraMap (FractionRing A)
+          (AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) n)) k = z := by
+  let hn1 : 1 ≤ n := by omega
+  let B := AdjoinRoot (dvrRootPoly π n)
+  let K := FractionRing A
+  let L := AdjoinRoot (dvrRootPoly (algebraMap A K π) n)
+  letI : IsDomain B := dvrRootAlgebra_isDomain π hn1 hπ
+  letI : Algebra K (FractionRing B) := dvrRootFractionRingAlgebra π hn1 hπ
+  letI : Field L := (dvrRootFractionAlgebra_isField π hn1 hπ).toField
+  let e : FractionRing B ≃ₐ[K] L := dvrRootFractionEquiv π hn1 hπ
+  intro z hz
+  have hz' : (e.symm z) ^ n = 1 := by
+    apply e.injective
+    simpa only [map_pow, map_one, e.apply_symm_apply] using hz
+  obtain ⟨k, hk⟩ := dvrRootFractionRing_rootOfUnity_mem_base π hn hπ hunit (e.symm z) hz'
+  refine ⟨k, ?_⟩
+  calc
+    algebraMap K L k = e (algebraMap K (FractionRing B) k) :=
+      (e.commutes k).symm
+    _ = e (e.symm z) := by rw [hk]
+    _ = z := e.apply_symm_apply z
+
 #print axioms rootOfUnity_mem_integralClosure
 #print axioms dvrRootFraction_rootOfUnity_mem_rootAlgebra
 #print axioms rootOfUnity_eq_one_of_residue_eq_one
@@ -470,5 +543,7 @@ theorem dvrRootAlgebra_rootOfUnity_mem_base
 #print axioms dvrRootBasis_apply
 #print axioms dvrRoot_split
 #print axioms dvrRootAlgebra_rootOfUnity_mem_base
+#print axioms dvrRootFractionRing_rootOfUnity_mem_base
+#print axioms dvrRootFraction_rootOfUnity_mem_base
 
 end Pcf.Stacks
