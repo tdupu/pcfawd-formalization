@@ -20,6 +20,18 @@ namespace Pcf.Stacks
 
 open TensorProduct
 
+/-- A single standard root cover is, tautologically, a finite disjoint union of standard tame
+covers indexed by a singleton. -/
+theorem standardCover_isFiniteDisjointUnionOfStandardTameCovers
+    {R : Type u} [CommRing R] (unit : Rˣ) (a : R) {e : ℕ}
+    (he : e ≠ 0) (heUnit : IsUnit (e : R)) :
+    IsFiniteDisjointUnionOfStandardTameCovers R
+      (AdjoinRoot (Pcf.LocalModel.localPoly unit a e)) a := by
+  refine ⟨PUnit, inferInstance, fun _ ↦ e, fun _ ↦ unit,
+    fun _ ↦ he, fun _ ↦ heUnit, ?_⟩
+  exact ⟨(AlgEquiv.funUnique R PUnit
+    (AdjoinRoot (Pcf.LocalModel.localPoly unit a e))).symm⟩
+
 /-- A standard-cover presentation is preserved by base change along the identity of the base.
 The only content is transport across `R ⊗[R] S ≃ₐ[R] S`. -/
 theorem IsFiniteDisjointUnionOfStandardTameCovers.selfBaseChange
@@ -48,7 +60,23 @@ theorem hasAbhyankarStandardCoverAt_of_standard
   · simpa using (inferInstance : IsRegularRing (R ⧸ Ideal.span ({a} : Set R)))
   · simpa using hstandard.selfBaseChange
 
+/-- A single standard tame root cover satisfies the exact local Abhyankar conclusion at every
+point, by taking the identity étale neighbourhood. -/
+theorem hasAbhyankarStandardCoverAt_standardCover
+    (R : Type u) [CommRing R] [IsNoetherianRing R]
+    (unit : Rˣ) (a : R) {e : ℕ}
+    (he : e ≠ 0) (heUnit : IsUnit (e : R))
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    (y : PrimeSpectrum R) :
+    HasAbhyankarStandardCoverAt R
+      (AdjoinRoot (Pcf.LocalModel.localPoly unit a e)) a y :=
+  hasAbhyankarStandardCoverAt_of_standard R _ a ha
+    (standardCover_isFiniteDisjointUnionOfStandardTameCovers unit a he heUnit) y
+
+#print axioms standardCover_isFiniteDisjointUnionOfStandardTameCovers
 #print axioms IsFiniteDisjointUnionOfStandardTameCovers.selfBaseChange
 #print axioms hasAbhyankarStandardCoverAt_of_standard
+#print axioms hasAbhyankarStandardCoverAt_standardCover
 
 end Pcf.Stacks

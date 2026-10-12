@@ -423,8 +423,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway_of_regular
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
+#print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers
 #print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.selfBaseChange
 #print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_standard
+#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_standardCover
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
