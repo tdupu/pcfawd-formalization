@@ -132,6 +132,21 @@ theorem genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant
   letI : IsReduced (puncturedSpectrumScheme R) := isReduced_of_isOpenImmersion i
   exact IsSchemeTheoreticallyDominant.of_isDominant g
 
+omit [IsNoetherianRing R] in
+/-- The generic-point map into the puncture is quasi-compact, as it factors through the
+quasi-separated open immersion into the affine spectrum. -/
+theorem genericPoint_toPuncturedSpectrum_quasiCompact
+    (hdim : 1 ≤ ringKrullDim R) :
+    QuasiCompact ((puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+      (genericPoint_mem_puncturedSpectrum R hdim)) := by
+  let i := (puncturedSpectrum R).ι
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  have : QuasiCompact (g ≫ i) := by
+    rw [(puncturedSpectrum R).fromSpecStalkOfMem_ι]
+    infer_instance
+  exact QuasiCompact.of_comp g i
+
 /-- Pull a finite étale punctured cover back along the generic point. -/
 noncomputable def puncturedCoverGenericFiber (hdim : 1 ≤ ringKrullDim R) :
     FiniteEtaleCover (puncturedSpectrumScheme R) ⥤
@@ -158,6 +173,26 @@ noncomputable def puncturedCoverGenericFiber_iso_basePullback
     (puncturedSpectrum R).fromSpecStalkOfMem_ι _ _
   rw [← hg]
   exact h.isoPullback
+
+omit [IsNoetherianRing R] in
+/-- A section of a finite étale punctured cover is determined by its restriction to the
+generic fibre. This is the scheme-theoretic-dominance step in the normalization argument. -/
+theorem puncturedCover_genericPullback_sections_injective
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    Function.Injective ((Limits.pullback.fst V.hom
+      ((puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+        (genericPoint_mem_puncturedSpectrum R hdim))).appTop) := by
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  letI : Etale V.hom := V.prop.2
+  letI : Flat V.hom := inferInstance
+  letI : IsSchemeTheoreticallyDominant g :=
+    genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant R hdim
+  letI : QuasiCompact g := genericPoint_toPuncturedSpectrum_quasiCompact R hdim
+  letI : IsSchemeTheoreticallyDominant (Limits.pullback.fst V.hom g) := inferInstance
+  letI : QuasiCompact (Limits.pullback.fst V.hom g) := inferInstance
+  exact (Limits.pullback.fst V.hom g).app_injective ⊤
 
 omit [IsNoetherianRing R] in
 /-- The generic fibre of any finite étale punctured cover is affine. -/
