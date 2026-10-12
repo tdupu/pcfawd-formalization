@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.AlgebraicGeometry.Noetherian
 import Mathlib.AlgebraicGeometry.Stalk
 import Mathlib.AlgebraicGeometry.Morphisms.Flat
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
 import Mathlib.RingTheory.Etale.Field
 import Mathlib.RingTheory.Flat.Localization
 import Pcf.Stacks.Purity.Hartogs
@@ -21,7 +22,7 @@ construction.
 
 noncomputable section
 
-open AlgebraicGeometry CategoryTheory
+open AlgebraicGeometry CategoryTheory Limits
 set_option linter.style.haveILetI false
 
 universe u
@@ -100,6 +101,25 @@ noncomputable def puncturedCoverGenericFiber (hdim : 1 ≤ ringKrullDim R) :
   FiniteEtaleCover.pullback _
     ((puncturedSpectrum R).fromSpecStalkOfMem
       (genericPoint (Spec R)) (genericPoint_mem_puncturedSpectrum R hdim))
+
+/-- The generic fibre formed over the puncture is the same scheme as base change over
+`Spec R` along its generic point. -/
+noncomputable def puncturedCoverGenericFiber_iso_basePullback
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    ((puncturedCoverGenericFiber R hdim).obj V).left ≅
+      Limits.pullback (V.hom ≫ (puncturedSpectrum R).ι)
+        ((Spec R).fromSpecStalk (genericPoint (Spec R))) := by
+  let i := (puncturedSpectrum R).ι
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem
+    (genericPoint (Spec R)) (genericPoint_mem_puncturedSpectrum R hdim)
+  let h : IsPullback (Limits.pullback.fst V.hom g) (Limits.pullback.snd V.hom g)
+      (V.hom ≫ i) (g ≫ i) :=
+    IsPullback.of_isLimit (pullbackIsPullbackOfCompMono V.hom g i)
+  have hg : g ≫ i = (Spec R).fromSpecStalk (genericPoint (Spec R)) :=
+    (puncturedSpectrum R).fromSpecStalkOfMem_ι _ _
+  rw [← hg]
+  exact h.isoPullback
 
 omit [IsNoetherianRing R] in
 /-- The generic fibre of any finite étale punctured cover is affine. -/
