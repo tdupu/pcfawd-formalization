@@ -52,7 +52,7 @@ noncomputable instance (X : PointedEtaleNeighborhood R Ω) :
 
 /-- A scalar-extended pointed etale neighbourhood, re-encoded by a finite presentation over the
 new base. -/
-noncomputable def baseChangeObj (X : PointedEtaleNeighborhood R Ω) :
+noncomputable abbrev baseChangeObj (X : PointedEtaleNeighborhood R Ω) :
     PointedEtaleNeighborhood S Ω :=
   ofEtaleAlgebra (S ⊗[R] X) (baseChangePoint (S := S) X)
 
