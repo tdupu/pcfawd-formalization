@@ -3,6 +3,7 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
+import Mathlib.AlgebraicGeometry.Noetherian
 import Mathlib.AlgebraicGeometry.Stalk
 import Mathlib.RingTheory.Etale.Field
 import Pcf.Stacks.Purity.Hartogs
@@ -26,6 +27,23 @@ universe u
 namespace Pcf.Stacks
 
 variable (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+
+omit [IsDomain R] in
+/-- A finite étale cover of a punctured Noetherian local spectrum is itself Noetherian. In
+particular it is quasi-compact and quasi-separated for flat base change of global sections. -/
+theorem puncturedCover_isNoetherian
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) : IsNoetherian V.left := by
+  letI : IsFinite V.hom := V.prop.1
+  letI : IsLocallyNoetherian
+      ((Functor.fromPUnit (puncturedSpectrumScheme R)).obj V.right) := by
+    change IsLocallyNoetherian (puncturedSpectrumScheme R)
+    exact isLocallyNoetherian_of_isOpenImmersion (puncturedSpectrum R).ι
+  letI : CompactSpace
+      ((Functor.fromPUnit (puncturedSpectrumScheme R)).obj V.right) := by
+    change CompactSpace (puncturedSpectrumScheme R)
+    exact isCompact_iff_compactSpace.mp (isCompact_puncturedSpectrum R)
+  letI : CompactSpace V.left := QuasiCompact.compactSpace_of_compactSpace V.hom
+  exact { __ := LocallyOfFiniteType.isLocallyNoetherian V.hom }
 
 omit [IsNoetherianRing R] in
 /-- The generic point of a positive-dimensional local domain lies in its punctured spectrum. -/
