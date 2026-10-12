@@ -35,15 +35,19 @@ variable (R : Type u) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
 
 /-- The object property defining the algebra category in Tag `0BM9`.
 
-An object is an `R`-algebra `B`, regarded oppositely, which is finite as an `R`-module, normal in
-the literal Stacks sense, and whose affine spectrum becomes étale after pullback to the punctured
-spectrum. -/
+An object is an `R`-algebra `B`, regarded oppositely, which is finite and torsion-free as an
+`R`-module, normal in the literal Stacks sense, and whose affine spectrum becomes étale after
+pullback to the punctured spectrum.  Torsion-freeness is essential here: without it one could add
+a normal factor supported only at the closed point, which restriction to the punctured spectrum
+would forget.  Equivalently, this condition forces every component relevant to this category to
+dominate the base. -/
 def finiteNormalPuncturedEtaleAlgebraProperty :
     ObjectProperty ((CommAlgCat R)ᵒᵖ) :=
   fun B ↦ Module.Finite R B.unop ∧
-    IsStacksNormalRing B.unop ∧
-      Etale (((Over.pullback (puncturedSpectrum R).ι).obj
-        ((algSpec (.of R)).obj B)).hom)
+    Module.IsTorsionFree R B.unop ∧
+      IsStacksNormalRing B.unop ∧
+        Etale (((Over.pullback (puncturedSpectrum R).ι).obj
+          ((algSpec (.of R)).obj B)).hom)
 
 /-- The opposite category of finite normal `R`-algebras whose spectra are étale over the
 punctured spectrum.  This is the target category of Tag `0BM9`, with arrows oriented so that
@@ -59,14 +63,20 @@ instance (B : FiniteNormalPuncturedEtaleAlgebra R) : Module.Finite R B.obj.unop 
   B.property.1
 
 omit [IsNoetherianRing R] in
+/-- Objects in the Tag `0BM9` target have no vertical `R`-torsion. -/
+instance (B : FiniteNormalPuncturedEtaleAlgebra R) :
+    Module.IsTorsionFree R B.obj.unop :=
+  B.property.2.1
+
+omit [IsNoetherianRing R] in
 theorem isStacksNormalRing (B : FiniteNormalPuncturedEtaleAlgebra R) :
     IsStacksNormalRing B.obj.unop :=
-  B.property.2.1
+  B.property.2.2.1
 
 instance (B : FiniteNormalPuncturedEtaleAlgebra R) :
     Etale (((Over.pullback (puncturedSpectrum R).ι).obj
       ((algSpec (.of R)).obj B.obj)).hom) :=
-  B.property.2.2
+  B.property.2.2.2
 
 set_option backward.isDefEq.respectTransparency.types false in
 omit [IsNoetherianRing R] in
@@ -99,7 +109,7 @@ noncomputable def finiteNormalAlgebraToPuncturedCover :
         change IsFinite (Limits.pullback.snd
           ((algSpec (.of R)).obj B.obj).hom (puncturedSpectrum R).ι)
         infer_instance
-      · exact B.property.2.2)
+      · exact B.property.2.2.2)
   map f := MorphismProperty.Over.Hom.mk
     ((finiteNormalAlgebraOverPuncturedSpectrum R).map f) trivial
   map_id B := by
