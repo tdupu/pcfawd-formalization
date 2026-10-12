@@ -48,6 +48,91 @@ theorem etale_of_equiv_localization_kummerUnit
     Algebra.FinitePresentation.of_finiteType.mp inferInstance
   exact ⟨inferInstance, inferInstance⟩
 
+/-- The local root-of-a-unit leg in the `0BRM` ramification square.
+
+The displayed equivalence supplies all three properties of the auxiliary leg needed by
+`isUnramifiedAt_of_local_ramification_square`: its localization is flat and essentially of
+finite type over `S`, and is formally unramified because the Kummer algebra is etale.  Thus
+only the structural flatness and essential finite type of the desired leg `A → T` remain
+as hypotheses.  In particular, no finiteness hypothesis is imposed on the local ring `T`. -/
+theorem isUnramifiedAt_of_kummerUnit_local_ramification_square
+    (R : Type u) (S : Type v) (A : Type w) (T : Type x)
+    [CommRing R] [CommRing S] [CommRing A] [CommRing T]
+    [IsLocalRing S] [IsLocalRing A] [IsLocalRing T]
+    [Algebra R S] [Algebra R A] [Algebra R T] [Algebra S T] [Algebra A T]
+    [IsScalarTower R S T] [IsScalarTower R A T]
+    [Module.Finite R S] [Module.Finite R A]
+    [Module.Flat A T] [Algebra.EssFiniteType A T]
+    [IsLocalHom (algebraMap S T)] [IsLocalHom (algebraMap A T)]
+    [Algebra.HasSeparableResidueFieldsAt A T ((maximalIdeal T).under A)]
+    (unit : Sˣ) (e : ℕ) (he : e ≠ 0) (heUnit : IsUnit (e : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit e))) [q.IsPrime]
+    (equiv : T ≃ₐ[S] Localization.AtPrime q)
+    (hindex : (maximalIdeal S).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R) :
+    Algebra.IsUnramifiedAt A (maximalIdeal T) := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit e)
+  letI : Algebra.Etale S U := Abhyankar.etale unit he heUnit
+  letI : Module.Flat S (Localization.AtPrime q) := inferInstance
+  letI : Module.Flat S T := Module.Flat.of_linearEquiv equiv.toLinearEquiv
+  letI : Algebra.EssFiniteType S (Localization.AtPrime q) := inferInstance
+  letI : Algebra.EssFiniteType S T :=
+    (Algebra.EssFiniteType.iff_of_algEquiv equiv).mpr inferInstance
+  letI : Algebra.FormallyEtale S (Localization.AtPrime q) := inferInstance
+  letI : Algebra.FormallyEtale S T :=
+    Algebra.FormallyEtale.of_equiv equiv.symm
+  letI : Algebra.IsUnramifiedAt S (maximalIdeal T) :=
+    Algebra.formallyUnramified_iff_forall.mp inferInstance
+      ⟨maximalIdeal T, inferInstance⟩
+  exact isUnramifiedAt_of_local_ramification_square R S A T hindex
+
+/-- The local standard-root specialization of the `0BRM` square.
+
+The lower ramified leg is the literal standard root DVR `R[π^(1/e)]`.  Its index is
+computed by the `09EV` clauses, while the root-of-a-unit localization equivalence supplies
+the flat unramified auxiliary leg.  The conclusion is precisely unramifiedness at the
+closed point of the desired local leg; unlike the finite-etale specialization below, this
+matches the local rings used in Tag `0BRM`. -/
+theorem isUnramifiedAt_of_standardRoot_kummerUnit_local_square
+    (R : Type u) (S : Type v) (T : Type x)
+    [CommRing R] [CommRing S] [CommRing T]
+    [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [IsLocalRing T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+    [Module.Finite R S] [IsLocalHom (algebraMap S T)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    [Algebra (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [IsScalarTower R (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [Module.Flat (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [Algebra.EssFiniteType (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [IsLocalHom
+      (algebraMap (AdjoinRoot (dvrRootPoly pi exponent)) T)]
+    [Algebra.HasSeparableResidueFieldsAt
+      (AdjoinRoot (dvrRootPoly pi exponent)) T
+      ((maximalIdeal T).under (AdjoinRoot (dvrRootPoly pi exponent)))]
+    (unit : Sˣ) (heUnit : IsUnit (exponent : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (equiv : T ≃ₐ[S] Localization.AtPrime q)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    Algebra.IsUnramifiedAt
+      (AdjoinRoot (dvrRootPoly pi exponent)) (maximalIdeal T) := by
+  let A := AdjoinRoot (dvrRootPoly pi exponent)
+  letI : IsDomain A := dvrRootAlgebra_isDomain pi hexponent hpi
+  letI : IsLocalRing A := dvrRootAlgebra_isLocalRing pi hexponent hpi
+  letI : Module.Finite R A :=
+    (dvrRootPoly_monic pi hexponent).finite_adjoinRoot
+  have hmaximal : maximalIdeal A =
+      Ideal.span {AdjoinRoot.root (dvrRootPoly pi exponent)} :=
+    (IsLocalRing.eq_maximalIdeal (dvrRootIdeal_isMaximal pi hexponent hpi)).symm
+  have hindex : (maximalIdeal S).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R := by
+    rw [hramification, hmaximal]
+    exact (dvrRootIdeal_ramificationIdx pi hexponent hpi).symm
+  exact isUnramifiedAt_of_kummerUnit_local_ramification_square
+    R S A T unit exponent (by omega) heUnit q equiv hindex
+
 /-- The root-of-a-unit specialization of the final ramification square in Tag `0BRM`.
 
 The lower extensions `S/R` and `A/R` have the same ramification index.  The chosen top ring
@@ -125,6 +210,8 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
     R S A T unit exponent (by omega) heUnit q equiv hindex
 
 #print axioms etale_of_equiv_localization_kummerUnit
+#print axioms isUnramifiedAt_of_kummerUnit_local_ramification_square
+#print axioms isUnramifiedAt_of_standardRoot_kummerUnit_local_square
 #print axioms etale_of_dvr_kummerUnit_ramification_square
 #print axioms etale_of_dvr_standardRoot_kummerUnit_square
 
