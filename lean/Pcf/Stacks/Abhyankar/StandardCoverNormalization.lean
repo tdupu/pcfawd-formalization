@@ -229,6 +229,152 @@ theorem standardCover_isIntegralClosure_localizationAway_of_regular
     isReduced_of_isRegularRing
   exact standardCover_isIntegralClosure_localizationAway u a he ha
 
+/-- A finite product of integral closures is the integral closure in the corresponding
+finite product of ambient rings.
+
+For the nontrivial direction, choose a monic equation for every component of a tuple and
+take the product of those finitely many equations.  This formulation also covers an empty
+index type: then both products are the zero ring, and the pointwise proof is vacuous. -/
+theorem isIntegralClosure_pi_of_fintype
+    {ι : Type} [Finite ι]
+    {A B : ι → Type u}
+    [∀ i, CommRing (A i)] [∀ i, CommRing (B i)]
+    [∀ i, Algebra R (A i)] [∀ i, Algebra R (B i)]
+    [∀ i, Algebra (A i) (B i)]
+    [∀ i, IsScalarTower R (A i) (B i)]
+    [∀ i, IsIntegralClosure (A i) R (B i)] :
+    IsIntegralClosure (∀ i, A i) R (∀ i, B i) := by
+  classical
+  letI := Fintype.ofFinite ι
+  constructor
+  · intro x y hxy
+    funext i
+    apply IsIntegralClosure.algebraMap_injective (A i) R (B i)
+    exact congrFun hxy i
+  · intro x
+    constructor
+    · intro hx
+      have hxi : ∀ i, IsIntegral R (x i) := fun i =>
+        hx.map (Pi.evalAlgHom R B i)
+      choose y hy using fun i =>
+        (IsIntegralClosure.isIntegral_iff (A := A i)).mp (hxi i)
+      refine ⟨fun i => y i, funext fun i => ?_⟩
+      exact hy i
+    · rintro ⟨y, rfl⟩
+      have hi : ∀ i, IsIntegral R (algebraMap (A i) (B i) (y i)) := fun i =>
+        IsIntegral.algebraMap (IsIntegralClosure.isIntegral R (B i) (y i))
+      choose p hpmon hproot using hi
+      refine ⟨∏ i, p i, monic_prod_of_monic Finset.univ p (fun i _ => hpmon i), ?_⟩
+      ext i
+      change (Pi.evalRingHom B i) (Polynomial.eval₂
+        (algebraMap R (∀ i, B i))
+        (algebraMap (∀ i, A i) (∀ i, B i) y) (∏ i, p i)) = 0
+      rw [Polynomial.hom_eval₂]
+      change Polynomial.eval₂ (algebraMap R (B i))
+        (algebraMap (A i) (B i) (y i)) (∏ i, p i) = 0
+      rw [Polynomial.eval₂_finsetProd]
+      exact Finset.prod_eq_zero (Finset.mem_univ i) (hproot i)
+
+/-- The coordinate ring of a finite disjoint union of standard root covers is the
+integral closure of `R` in the product of the generic-away coordinate rings.
+
+This is the finite-disjoint-union version of the calculation omitted in Tag `0EYH`. -/
+theorem standardCovers_isIntegralClosure_localizationsAway_of_regular
+    [IsNoetherianRing R]
+    {ι : Type} [Finite ι]
+    (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))] :
+    IsIntegralClosure
+      (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) R
+      (∀ i, Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)) := by
+  letI (i : ι) : IsIntegralClosure
+      (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) R
+      (Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)) :=
+    standardCover_isIntegralClosure_localizationAway_of_regular (u i) a (he i) ha
+  exact isIntegralClosure_pi_of_fintype
+
+/-- Identify an arbitrary normalization with the finite disjoint union of standard root
+covers once their generic-away algebras have been identified.
+
+This is the uniqueness step implicit in Tag `0EYH`.  The input equivalence is precisely the
+generic standard-cover description supplied by Tag `0EYG`; the conclusion is not assumed.
+The normalization hypothesis on `N` and the proved standard-cover integral-closure theorem
+put both algebras inside the same ambient generic ring, where uniqueness of integral closure
+gives the result. -/
+noncomputable def normalizationEquivStandardCoversOfGenericEquiv
+    {N : Type u} [CommRing N] [Algebra R N]
+    [IsNoetherianRing R]
+    {ι : Type} [Fintype ι]
+    (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    [IsIntegralClosure N R (Localization.Away (algebraMap R N a))]
+    (g : Localization.Away (algebraMap R N a) ≃ₐ[R]
+      (∀ i, Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a))) :
+    N ≃ₐ[R] (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) := by
+  let C := ∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))
+  let TN := Localization.Away (algebraMap R N a)
+  let TC := ∀ i, Localization.Away
+    (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)
+  letI : Algebra N TC :=
+    (g.toAlgHom.toRingHom.comp (algebraMap N TN)).toAlgebra
+  letI : IsScalarTower R N TC := IsScalarTower.of_algebraMap_eq fun r => by
+    change algebraMap R TC r = g (algebraMap N TN (algebraMap R N r))
+    rw [← IsScalarTower.algebraMap_apply R N TN]
+    exact (g.commutes r).symm
+  let hN : IsIntegralClosure N R TC :=
+    IsIntegralClosure.of_algEquiv N g (fun _ => rfl)
+  letI : IsIntegralClosure N R TC := hN
+  let hC : IsIntegralClosure C R TC :=
+    standardCovers_isIntegralClosure_localizationsAway_of_regular u a e he ha
+  letI : IsIntegralClosure C R TC := hC
+  exact IsIntegralClosure.equiv R N TC C
+
+/-- The arbitrary-normalization equivalence is compatible with the two embeddings into the
+identified generic-away algebra.  Thus the preceding equivalence is the normalization
+comparison required by `0EYH`, rather than merely an abstract ring equivalence. -/
+theorem algebraMap_normalizationEquivStandardCoversOfGenericEquiv
+    {N : Type u} [CommRing N] [Algebra R N]
+    [IsNoetherianRing R]
+    {ι : Type} [Fintype ι]
+    (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    [IsIntegralClosure N R (Localization.Away (algebraMap R N a))]
+    (g : Localization.Away (algebraMap R N a) ≃ₐ[R]
+      (∀ i, Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)))
+    (x : N) :
+    algebraMap (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i)))
+        (∀ i, Localization.Away
+          (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a))
+        (normalizationEquivStandardCoversOfGenericEquiv u a e he ha g x) =
+      g (algebraMap N (Localization.Away (algebraMap R N a)) x) := by
+  let C := ∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))
+  let TN := Localization.Away (algebraMap R N a)
+  let TC := ∀ i, Localization.Away
+    (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)
+  letI : Algebra N TC :=
+    (g.toAlgHom.toRingHom.comp (algebraMap N TN)).toAlgebra
+  letI : IsScalarTower R N TC := IsScalarTower.of_algebraMap_eq fun r => by
+    change algebraMap R TC r = g (algebraMap N TN (algebraMap R N r))
+    rw [← IsScalarTower.algebraMap_apply R N TN]
+    exact (g.commutes r).symm
+  let hN : IsIntegralClosure N R TC :=
+    IsIntegralClosure.of_algEquiv N g (fun _ => rfl)
+  letI : IsIntegralClosure N R TC := hN
+  let hC : IsIntegralClosure C R TC :=
+    standardCovers_isIntegralClosure_localizationsAway_of_regular u a e he ha
+  letI : IsIntegralClosure C R TC := hC
+  change algebraMap C TC
+    (normalizationEquivStandardCoversOfGenericEquiv u a e he ha g x) = algebraMap N TC x
+  rw [normalizationEquivStandardCoversOfGenericEquiv]
+  exact IsIntegralClosure.algebraMap_equiv R N TC C x
+
 /-- Localizing a regular quotient at a prime over its defining ideal agrees with
 quotienting the corresponding local ring, and is therefore regular local. -/
 theorem isRegularLocalRing_quotient_localization
@@ -318,6 +464,10 @@ theorem standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms isReduced_of_isRegularRing
 #print axioms standardCover_isIntegralClosure_localizationAway
 #print axioms standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms isIntegralClosure_pi_of_fintype
+#print axioms standardCovers_isIntegralClosure_localizationsAway_of_regular
+#print axioms normalizationEquivStandardCoversOfGenericEquiv
+#print axioms algebraMap_normalizationEquivStandardCoversOfGenericEquiv
 #print axioms standardCover_isRegularLocalRing_atPrime_over_divisor
 
 end Pcf.Stacks
