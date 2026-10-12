@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.RingTheory.Etale.Locus
 import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.RingTheory.Smooth.Fiber
+import Mathlib.RingTheory.Smooth.Flat
 import Pcf.Stacks.Abhyankar.DVR
 
 /-!
@@ -101,8 +102,50 @@ theorem etale_of_dvr_ramificationIdx_total_eq
       simpa only [hunder] using h
   exact etale_of_isEtaleAt_maximalIdeal S T
 
+/-- The final ramification square in Stacks Tag `0BRM`.
+
+Here `R → S → T` and `R → A → T` are the two towers after the ramified base
+change.  The auxiliary leg `S → T` is finite etale, so its ramification index is one.
+If `S/R` and `A/R` have the same ramification index, multiplicativity in the first tower
+therefore identifies the total index of `T/R` with the index of `A/R`; the faithful DVR
+terminal step then proves that `A → T` is finite etale.
+
+In the literal proof of `0BRM`, the equality of the two lower indices comes from the standard
+root DVR, while etaleness of `S → T` comes from adjoining a root of a unit.  Thus neither
+hypothesis assumes the desired conclusion about `A → T`. -/
+theorem etale_of_dvr_ramification_square
+    (R : Type u) (S : Type v) (A : Type w) (T : Type*)
+    [CommRing R] [CommRing S] [CommRing A] [CommRing T]
+    [IsDomain R] [IsDomain S] [IsDomain A] [IsDomain T]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [IsDiscreteValuationRing A] [IsDiscreteValuationRing T]
+    [Algebra R S] [Algebra R A] [Algebra R T] [Algebra S T] [Algebra A T]
+    [IsScalarTower R S T] [IsScalarTower R A T]
+    [Module.Finite R S] [Module.Finite R A] [Module.Finite S T] [Module.Finite A T]
+    [FaithfulSMul A T]
+    [IsLocalHom (algebraMap S T)] [IsLocalHom (algebraMap A T)]
+    [Algebra.Etale S T]
+    [Algebra.HasSeparableResidueFieldsAt A T ((maximalIdeal T).under A)]
+    (hindex : (maximalIdeal S).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R) :
+    Algebra.Etale A T := by
+  have hunderS : (maximalIdeal T).under S = maximalIdeal S :=
+    IsLocalRing.maximalIdeal_comap (algebraMap S T)
+  have hunderA : (maximalIdeal T).under A = maximalIdeal A :=
+    IsLocalRing.maximalIdeal_comap (algebraMap A T)
+  have htopOverS : (maximalIdeal T).ramificationIdx S = 1 :=
+    Ideal.ramificationIdx_eq_one (maximalIdeal T) S
+  have htower := Ideal.ramificationIdx_tower
+    (R := R) (S := S) (T := T) ((maximalIdeal T).under S) (maximalIdeal T)
+  have htotal : (maximalIdeal T).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R := by
+    rw [htower, hunderS, htopOverS, mul_one, hindex]
+  apply etale_of_dvr_ramificationIdx_total_eq R A T
+  simpa only [hunderA] using htotal
+
 #print axioms etale_of_isEtaleAt_maximalIdeal
 #print axioms isEtaleAt_of_ramificationIdx_total_eq_intermediate
 #print axioms etale_of_dvr_ramificationIdx_total_eq
+#print axioms etale_of_dvr_ramification_square
 
 end Pcf.Stacks
