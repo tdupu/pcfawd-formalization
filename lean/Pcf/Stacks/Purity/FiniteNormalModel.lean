@@ -191,4 +191,55 @@ theorem finiteEtaleAlgebra_integralClosure_isStacksNormalRing
   exact IsStacksNormalRing.of_ringEquiv eR.mapIntegralClosure.toRingEquiv
     (finiteSeparableProduct_integralClosure_isStacksNormalRing R K I L)
 
+/-- The same integral closure is finite over the normal Noetherian base. -/
+theorem finiteEtaleAlgebra_integralClosure_finite
+    (E : Type u) [CommRing E] [Algebra K E] [Algebra.Etale K E] :
+    letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+    Module.Finite R (integralClosure R E) := by
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  obtain ⟨I, hI, L, hField, hAlg, e, hProps⟩ :=
+    (Algebra.Etale.iff_exists_algEquiv_prod K E).mp inferInstance
+  letI : Finite I := hI
+  letI (i : I) : Field (L i) := hField i
+  letI (i : I) : Algebra K (L i) := hAlg i
+  letI (i : I) : FiniteDimensional K (L i) := (hProps i).1
+  letI (i : I) : Algebra.IsSeparable K (L i) := (hProps i).2
+  letI (i : I) : Algebra R (L i) := Algebra.compHom (L i) (algebraMap R K)
+  letI (i : I) : IsScalarTower R K (L i) := .of_algebraMap_eq' rfl
+  letI : IsScalarTower R K E := .of_algebraMap_eq' rfl
+  have hpi : Module.Finite R (integralClosure R (∀ i, L i)) :=
+    finiteSeparableProduct_integralClosure_finite R K I L
+  let eR : E ≃ₐ[R] (∀ i, L i) := e.restrictScalars R
+  let eC := eR.mapIntegralClosure
+  exact Module.Finite.of_injective eC.toLinearMap eC.injective
+
+/-- Finiteness of an integral closure transfers across an isomorphism of base rings.  The
+proof uses the ring equivalence of the two closures and the finite maps in the commuting
+square of algebra maps. -/
+theorem integralClosure_finite_of_baseRingEquiv
+    (A B T : Type*) [CommRing A] [CommRing B] [CommRing T]
+    [Algebra A T] [Algebra B T]
+    (φ : A ≃+* B)
+    (hcomp : (algebraMap B T).comp φ.toRingHom = algebraMap A T)
+    [Module.Finite A (integralClosure A T)] :
+    Module.Finite B (integralClosure B T) := by
+  let C := integralClosure A T
+  let D := integralClosure B T
+  let e := integralClosure_ringEquiv_of_baseRingEquiv A B T φ hcomp
+  have hmap : algebraMap B D =
+      e.symm.toRingHom.comp ((algebraMap A C).comp φ.symm.toRingHom) := by
+    ext b
+    obtain ⟨a, rfl⟩ := φ.surjective b
+    change (algebraMap B T) (φ a) = (algebraMap A T) (φ.symm (φ a))
+    have ha := congrArg (fun f : A →+* T => f a) hcomp
+    change (algebraMap B T) (φ a) = (algebraMap A T) a at ha
+    simpa only [RingEquiv.symm_apply_apply] using ha
+  have hφ : φ.symm.toRingHom.Finite :=
+    RingHom.Finite.of_surjective _ φ.symm.surjective
+  have hC : (algebraMap A C).Finite := RingHom.finite_algebraMap.mpr inferInstance
+  have he : e.symm.toRingHom.Finite := RingHom.Finite.of_surjective _ e.symm.surjective
+  apply RingHom.finite_algebraMap.mp
+  rw [hmap]
+  exact he.comp (hC.comp hφ)
+
 end Pcf.Stacks

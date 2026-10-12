@@ -109,8 +109,23 @@ theorem pi {ι : Type*} {A : ι → Type*} [∀ i, CommRing (A i)] [Finite ι]
 
 end IsStacksNormalRing
 
+/-- Integral closures along a base-ring isomorphism have the same underlying elements of the
+ambient algebra. -/
+noncomputable def integralClosure_ringEquiv_of_baseRingEquiv
+    (R S T : Type*) [CommRing R] [CommRing S] [CommRing T]
+    [Algebra R T] [Algebra S T]
+    (φ : R ≃+* S)
+    (hcomp : (algebraMap S T).comp φ.toRingHom = algebraMap R T) :
+    integralClosure S T ≃+* integralClosure R T := {
+    toFun := fun x => ⟨x.1, (φ.isIntegral_iff hcomp x.1).mpr x.2⟩
+    invFun := fun x => ⟨x.1, (φ.isIntegral_iff hcomp x.1).mp x.2⟩
+    left_inv := by intro x; apply Subtype.ext; rfl
+    right_inv := by intro x; apply Subtype.ext; rfl
+    map_mul' := by intro x y; apply Subtype.ext; rfl
+    map_add' := by intro x y; apply Subtype.ext; rfl }
+
 /-- Normality of an integral closure is unchanged when its base ring is reidentified by a ring
-isomorphism.  The two closure rings have the same underlying elements of the ambient algebra. -/
+isomorphism. -/
 theorem integralClosure_isStacksNormalRing_of_baseRingEquiv
     (R S T : Type*) [CommRing R] [CommRing S] [CommRing T]
     [Algebra R T] [Algebra S T]
@@ -119,13 +134,7 @@ theorem integralClosure_isStacksNormalRing_of_baseRingEquiv
     IsStacksNormalRing (integralClosure R T) →
       IsStacksNormalRing (integralClosure S T) := by
   intro h
-  let e : integralClosure S T ≃+* integralClosure R T := {
-    toFun := fun x => ⟨x.1, (φ.isIntegral_iff hcomp x.1).mpr x.2⟩
-    invFun := fun x => ⟨x.1, (φ.isIntegral_iff hcomp x.1).mp x.2⟩
-    left_inv := by intro x; apply Subtype.ext; rfl
-    right_inv := by intro x; apply Subtype.ext; rfl
-    map_mul' := by intro x y; apply Subtype.ext; rfl
-    map_add' := by intro x y; apply Subtype.ext; rfl }
-  exact IsStacksNormalRing.of_ringEquiv e h
+  exact IsStacksNormalRing.of_ringEquiv
+    (integralClosure_ringEquiv_of_baseRingEquiv R S T φ hcomp) h
 
 end Pcf.Stacks
