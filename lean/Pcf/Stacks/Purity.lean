@@ -32,11 +32,12 @@ the proved pieces of its Stacks Tag `0BMB` proof.
   algebra target category of Tag `0BM9`, including its obvious `Spec`-and-restrict functor.
 * finiteness and Stacks-normality of the integral closure in the finite separable field-extension
   component of the construction in Tag `0BM9`.
-* quasi-compactness of the Noetherian punctured spectrum, together with injectivity of restriction
-  of functions from a positive-dimensional local domain.
+* quasi-compactness and a finite maximal-ideal basic-open cover of the Noetherian punctured
+  spectrum, together with injectivity of restriction of functions from a positive-dimensional
+  local domain.
 * the regular-sequence/associated-prime reduction of the missing depth-two (Serre S2) input.
-* the power-divisibility calculation underlying the intersection of two away localizations along
-  a regular pair.
+* the numerator-denominator common-value calculation underlying the intersection of two away
+  localizations along a regular pair.
 
 ## Remaining Stacks spine
 

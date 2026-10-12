@@ -58,4 +58,17 @@ theorem pow_dvd_of_isSMulRegular_quotient
       rw [hc, pow_succ']
       ac_rfl
 
+/-- Two fractions with denominators supported on the two members of a regular pair have a common
+value in the base ring.  This is the numerator-denominator form of the intersection calculation;
+it avoids choosing a particular implementation of the fraction field or of away localization. -/
+theorem exists_common_value_of_regular_pair
+    {x y a b : R} (hx : x ≠ 0) (hy : IsSMulRegular (QuotSMulTop x R) y)
+    (m n : ℕ) (h : y ^ m * a = x ^ n * b) :
+    ∃ c : R, a = x ^ n * c ∧ b = y ^ m * c := by
+  obtain ⟨c, hc⟩ := pow_dvd_of_isSMulRegular_quotient hx hy m n h
+  refine ⟨c, hc, ?_⟩
+  apply mul_left_cancel₀ (pow_ne_zero n hx)
+  rw [← h, hc]
+  ac_rfl
+
 end Pcf.Stacks
