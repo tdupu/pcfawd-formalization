@@ -651,6 +651,19 @@ theorem exists_localColimit_linearCombination_reduceModIdeal_bijective :
       _ = eCod y := LinearEquiv.symm_apply_apply _ _
 
 omit [IsNoetherianRing R] in
+/-- The compatible basis map induces a bijection between the maximal-adic completions of the
+free module and the strict local colimit. -/
+theorem exists_localColimit_adicCompletion_map_bijective :
+    ∃ v : Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+        (IsLocalRing.ResidueField (LocalColimit R Ω)) → LocalColimit R Ω,
+      Function.Bijective
+        (AdicCompletion.map (IsLocalRing.maximalIdeal R)
+          (Finsupp.linearCombination R v)) := by
+  obtain ⟨v, hv⟩ :=
+    exists_localColimit_linearCombination_reduceModIdeal_bijective (R := R) (Ω := Ω)
+  exact ⟨v, AdicCompletion.map_bijective_of_reduceModIdeal _ _ hv⟩
+
+omit [IsNoetherianRing R] in
 /-- Every positive maximal-ideal-power quotient of the strict local colimit is a free module
 over the corresponding quotient of the base.  This is the quotient-power comparison and
 freeness step used before the inverse-limit argument in Stacks Tag `06LJ`. -/
@@ -713,6 +726,7 @@ end PointedEtaleNeighborhood
 #print axioms PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms
   PointedEtaleNeighborhood.exists_localColimit_linearCombination_reduceModIdeal_bijective
+#print axioms PointedEtaleNeighborhood.exists_localColimit_adicCompletion_map_bijective
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
 end Pcf.Stacks
