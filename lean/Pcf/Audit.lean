@@ -77,6 +77,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
+import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
@@ -256,6 +257,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.genericFiber_component_isField
 #print axioms Pcf.Stacks.genericFiber_isReduced
 #print axioms Pcf.Stacks.genericFiber_equivPi
+#print axioms Pcf.Stacks.genericPoint_mem_puncturedSpectrum
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_isAffine
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_finite_appTop
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_etale_appTop
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_finite
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_etale
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -318,6 +326,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_injective
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_bijective
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgEquiv
+#print axioms Pcf.Stacks.IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
