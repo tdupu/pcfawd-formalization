@@ -183,4 +183,209 @@ theorem colimitQuotientBaseChangeAlgHom_bijective (I : Ideal R)
   ⟨colimitQuotientBaseChangeAlgHom_injective I φ,
     colimitQuotientBaseChangeAlgHom_surjective I φ⟩
 
+/-- The unfactored quotient-base-change map on colimits is surjective. -/
+theorem quotientColimitBaseChangeRingHom_surjective (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    Function.Surjective (quotientColimitBaseChangeRingHom I φ) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change Function.Surjective (quotientColimitBaseChangeRingHom I φ)
+  intro z
+  obtain ⟨q, hq⟩ := colimitQuotientBaseChangeAlgHom_surjective I φ z
+  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective q
+  exact ⟨c, hq⟩
+
+/-- The kernel of the unfactored quotient-base-change map is exactly the ideal extended from the
+original base ring. -/
+theorem ker_quotientColimitBaseChangeRingHom (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    RingHom.ker (quotientColimitBaseChangeRingHom I φ) =
+      I.map (algebraMap R (Colimit R Ω)) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change RingHom.ker (quotientColimitBaseChangeRingHom I φ) =
+    I.map (algebraMap R (Colimit R Ω))
+  apply le_antisymm
+  · intro c hc
+    apply Ideal.Quotient.eq_zero_iff_mem.mp
+    apply colimitQuotientBaseChangeAlgHom_injective I φ
+    rw [map_zero, colimitQuotientBaseChangeAlgHom_mk]
+    exact RingHom.mem_ker.mp hc
+  · exact map_le_ker_quotientColimitBaseChangeRingHom I φ
+
+/-- Under quotient base change, the image of the complement of the chosen point prime is exactly
+the complement of the point prime on the quotient colimit. -/
+theorem map_colimitPointPrime_primeCompl_quotientColimitBaseChangeRingHom (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    (colimitPointPrime (R := R) (Ω := Ω)).primeCompl.map
+        (quotientColimitBaseChangeRingHom I φ) =
+      (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change (colimitPointPrime (R := R) (Ω := Ω)).primeCompl.map
+      (colimitBaseChangeRingHom (R := R) (S := R ⧸ I) (Ω := Ω)) =
+    (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl
+  ext z
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    exact colimitBaseChangeRingHom_mem_primeCompl
+      (R := R) (S := R ⧸ I) (Ω := Ω) ⟨x, hx⟩
+  · intro hz
+    obtain ⟨x, rfl⟩ := quotientColimitBaseChangeRingHom_surjective I φ z
+    refine ⟨x, ?_, rfl⟩
+    apply Ideal.mem_primeCompl_iff.mpr
+    intro hx
+    apply (Ideal.mem_primeCompl_iff.mp hz)
+    change colimitPoint (R := R ⧸ I) (Ω := Ω)
+      (colimitBaseChangeRingHom (R := R) (S := R ⧸ I) (Ω := Ω) x) = 0
+    have hp := DFunLike.congr_fun
+      (colimitPoint_comp_colimitBaseChangeRingHom
+        (R := R) (S := R ⧸ I) (Ω := Ω)) x
+    change colimitPoint (R := R ⧸ I) (Ω := Ω)
+        (colimitBaseChangeRingHom (R := R) (S := R ⧸ I) (Ω := Ω) x) =
+      colimitPoint (R := R) (Ω := Ω) x at hp
+    rw [hp]
+    exact RingHom.mem_ker.mp hx
+
+/-- The quotient-base-change map sends every denominator at the original point prime to a
+denominator at the quotient point prime. -/
+theorem colimitPointPrime_primeCompl_le_comap_quotientColimitBaseChangeRingHom
+    (I : Ideal R) (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    (colimitPointPrime (R := R) (Ω := Ω)).primeCompl ≤
+      Submonoid.comap (quotientColimitBaseChangeRingHom I φ)
+        (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change (colimitPointPrime (R := R) (Ω := Ω)).primeCompl ≤
+    Submonoid.comap (quotientColimitBaseChangeRingHom I φ)
+      (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl
+  intro x hx
+  exact colimitBaseChangeRingHom_mem_primeCompl
+    (R := R) (S := R ⧸ I) (Ω := Ω) ⟨x, hx⟩
+
+/-- The quotient-base-change map on local colimits is surjective. -/
+theorem quotientLocalColimitBaseChangeRingHom_surjective (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    Function.Surjective (quotientLocalColimitBaseChangeRingHom I φ) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change Function.Surjective
+    (localColimitBaseChangeRingHom (R := R) (S := R ⧸ I) (Ω := Ω))
+  let M := (colimitPointPrime (R := R) (Ω := Ω)).primeCompl
+  let T := (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl
+  let g := quotientColimitBaseChangeRingHom I φ
+  have hMT : M.map g = T :=
+    map_colimitPointPrime_primeCompl_quotientColimitBaseChangeRingHom I φ
+  let _ : IsLocalization (M.map g) (LocalColimit (R ⧸ I) Ω) :=
+    hMT.symm ▸ (inferInstance : IsLocalization T (LocalColimit (R ⧸ I) Ω))
+  have hsurj : Function.Surjective
+      (IsLocalization.map
+        (M := M) (T := M.map g) (LocalColimit (R ⧸ I) Ω) g M.le_comap_map) :=
+    IsLocalization.map_surjective_of_surjective M (LocalColimit R Ω)
+      (LocalColimit (R ⧸ I) Ω)
+      (quotientColimitBaseChangeRingHom_surjective I φ)
+  have hlocal : localColimitBaseChangeRingHom
+      (R := R) (S := R ⧸ I) (Ω := Ω) =
+      IsLocalization.map
+        (M := M) (T := M.map g) (LocalColimit (R ⧸ I) Ω) g M.le_comap_map := by
+    symm
+    apply IsLocalization.map_unique
+    intro c
+    exact localColimitBaseChangeRingHom_toLocalColimit
+      (R := R) (S := R ⧸ I) (Ω := Ω) c
+  rw [hlocal]
+  exact hsurj
+
+/-- The kernel of the quotient-base-change map on local colimits is exactly the ideal extended
+from the original base ring. -/
+theorem ker_quotientLocalColimitBaseChangeRingHom (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    RingHom.ker (quotientLocalColimitBaseChangeRingHom I φ) =
+      I.map (algebraMap R (LocalColimit R Ω)) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change RingHom.ker
+      (localColimitBaseChangeRingHom (R := R) (S := R ⧸ I) (Ω := Ω)) =
+    I.map (algebraMap R (LocalColimit R Ω))
+  let M := (colimitPointPrime (R := R) (Ω := Ω)).primeCompl
+  let T := (colimitPointPrime (R := R ⧸ I) (Ω := Ω)).primeCompl
+  let g := quotientColimitBaseChangeRingHom I φ
+  have hMT : M.map g = T :=
+    map_colimitPointPrime_primeCompl_quotientColimitBaseChangeRingHom I φ
+  let hM : M ≤ Submonoid.comap g T := hMT.symm ▸ M.le_comap_map
+  have hlocal : localColimitBaseChangeRingHom
+      (R := R) (S := R ⧸ I) (Ω := Ω) =
+      IsLocalization.map
+        (M := M) (T := T) (LocalColimit (R ⧸ I) Ω) g hM := by
+    symm
+    apply IsLocalization.map_unique
+    intro c
+    exact localColimitBaseChangeRingHom_toLocalColimit
+      (R := R) (S := R ⧸ I) (Ω := Ω) c
+  rw [hlocal, IsLocalization.ker_map
+    (S := LocalColimit R Ω) (Q := LocalColimit (R ⧸ I) Ω) g hMT,
+    ker_quotientColimitBaseChangeRingHom I φ, Ideal.map_map]
+  congr 1
+
+/-- The factored quotient comparison on local colimits is surjective. -/
+theorem localQuotientBaseChangeAlgHom_surjective (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    Function.Surjective (localQuotientBaseChangeAlgHom I φ) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change Function.Surjective (localQuotientBaseChangeAlgHom I φ)
+  intro z
+  obtain ⟨x, hx⟩ := quotientLocalColimitBaseChangeRingHom_surjective I φ z
+  exact ⟨Ideal.Quotient.mk _ x, hx⟩
+
+/-- The factored quotient comparison on local colimits is injective. -/
+theorem localQuotientBaseChangeAlgHom_injective (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    Function.Injective (localQuotientBaseChangeAlgHom I φ) := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  let _ : IsScalarTower R (R ⧸ I) Ω :=
+    IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
+  change Function.Injective (localQuotientBaseChangeAlgHom I φ)
+  rw [injective_iff_map_eq_zero]
+  intro q hq
+  obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective q
+  apply Ideal.Quotient.eq_zero_iff_mem.mpr
+  rw [← ker_quotientLocalColimitBaseChangeRingHom I φ]
+  exact hq
+
+/-- The canonical localized quotient comparison is bijective. -/
+theorem localQuotientBaseChangeAlgHom_bijective (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    Function.Bijective (localQuotientBaseChangeAlgHom I φ) :=
+  ⟨localQuotientBaseChangeAlgHom_injective I φ,
+    localQuotientBaseChangeAlgHom_surjective I φ⟩
+
+/-- The quotient of the constructed strict henselization by an ideal from the base is canonically
+equivalent to the constructed strict henselization of the quotient.  This is the algebra
+equivalence in Stacks Tag `05WS` for the pointed-etale-colimit model. -/
+noncomputable def localQuotientBaseChangeAlgEquiv (I : Ideal R)
+    (φ : R ⧸ I →ₐ[R] Ω) :
+    let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+    (LocalColimit R Ω ⧸ I.map (algebraMap R (LocalColimit R Ω))) ≃ₐ[R ⧸ I]
+      LocalColimit (R ⧸ I) Ω := by
+  let _ : Algebra (R ⧸ I) Ω := φ.toRingHom.toAlgebra
+  exact AlgEquiv.ofBijective (localQuotientBaseChangeAlgHom I φ)
+    (localQuotientBaseChangeAlgHom_bijective I φ)
+
 end Pcf.Stacks.PointedEtaleNeighborhood
