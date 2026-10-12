@@ -1,0 +1,236 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
+-/
+import Pcf.Bounding.RegularLocalDomain
+import Pcf.Bounding.StandardPiece
+import Pcf.Stacks.Abhyankar.StandardCover
+import Mathlib.RingTheory.Localization.Ideal
+import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
+import Mathlib.RingTheory.LocalProperties.Reduced
+
+/-!
+# The integral-closure calculation for the standard root cover
+
+Stacks Project Tag `0EYH` uses, without spelling out the algebra, that the integral closure
+of `R` in
+
+`R[1/a][z] / (z ^ e - u * a)`
+
+is `R[z] / (z ^ e - u * a)` when `a` is a nonzerodivisor and `R/(a)` is regular.  This
+file proves that omitted calculation.
+
+The key elementary lemma is slightly more general: if `r` is a nonzerodivisor and `(r)` is
+radical, then `A` is integrally closed in `A[1/r]`.  Applying it to the distinguished root
+`z` works because `C/(z) ≅ R/(a)`, while `C[1/z] = C[1/a]` follows from
+`z ^ e = u * a`.
+
+The final declaration has the Noetherian and regular-quotient hypotheses appearing in the
+affine standard model in `0EYH`.  The stronger preceding declaration records that regularity
+is used only through reducedness of `R/(a)`.  These are the integral-closure calculation,
+not the full geometric statement of Tag `0EYH`.
+-/
+
+universe u
+
+open Polynomial
+
+set_option linter.style.haveILetI false
+set_option linter.unnecessarySimpa false
+
+namespace Pcf.Stacks
+
+variable {R : Type u} [CommRing R]
+
+/-- If `r` is a nonzerodivisor and `(r)` is radical, then `A` is integrally closed in
+every localization of `A` away from `r`.
+
+For an integral fraction `b / r^(n+1)`, scale a monic equation by `r^(n+1)` and reduce
+modulo `r`.  Radicality gives `r ∣ b`, so one denominator can be cancelled; induction on
+`n` finishes. -/
+theorem isIntegrallyClosedIn_away_of_span_isRadical
+    {A S : Type u} [CommRing A] [CommRing S] [Algebra A S] {r : A}
+    [IsLocalization.Away r S]
+    (hr : r ∈ nonZeroDivisors A) (hrad : (Ideal.span ({r} : Set A)).IsRadical) :
+    IsIntegrallyClosedIn A S := by
+  rw [isIntegrallyClosedIn_iff]
+  have hpowers : Submonoid.powers r ≤ nonZeroDivisors A := by
+    rw [Submonoid.powers_le]
+    exact hr
+  refine ⟨IsLocalization.injective S hpowers, ?_⟩
+  intro x hx
+  by_cases hunit : IsUnit r
+  · let e : A ≃ₐ[A] S := IsLocalization.atUnit A S r hunit
+    obtain ⟨y, hy⟩ := e.surjective x
+    exact ⟨y, (e.commutes y).trans hy⟩
+  letI : Nontrivial (A ⧸ Ideal.span ({r} : Set A)) :=
+    Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hunit)
+  obtain ⟨b, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.exists_mk'_eq (Submonoid.powers r) x
+  induction n generalizing b with
+  | zero =>
+      refine ⟨b, ?_⟩
+      rw [eq_comm, IsLocalization.mk'_eq_iff_eq_mul]
+      simp
+  | succ n ih =>
+      let den : A := r ^ (n + 1)
+      let sden : Submonoid.powers r := ⟨den, n + 1, rfl⟩
+      have hx0 := hx
+      obtain ⟨p, hpmonic, hproot⟩ := hx
+      have hscaledLoc : Polynomial.eval₂ (algebraMap A S)
+          (algebraMap A S den * IsLocalization.mk' S b sden)
+          (p.scaleRoots den) = 0 :=
+        Polynomial.scaleRoots_eval₂_eq_zero (algebraMap A S) hproot
+      have hdenmul : algebraMap A S den * IsLocalization.mk' S b sden =
+            algebraMap A S b :=
+        IsLocalization.mk'_spec' (S := S) b sden
+      rw [hdenmul] at hscaledLoc
+      have hscaled : Polynomial.eval b (p.scaleRoots den) = 0 := by
+        apply IsLocalization.injective S hpowers
+        rw [map_zero, ← Polynomial.eval₂_at_apply]
+        exact hscaledLoc
+      let f : A →+* A ⧸ Ideal.span ({r} : Set A) :=
+        Ideal.Quotient.mk (Ideal.span ({r} : Set A))
+      have hfden : f den = 0 := by
+        apply Ideal.Quotient.eq_zero_iff_mem.mpr
+        simpa [den, pow_succ] using
+          Ideal.mul_mem_left (Ideal.span ({r} : Set A)) (r ^ n)
+            (Ideal.mem_span_singleton_self r)
+      have hmapPoly : (p.scaleRoots den).map f = X ^ p.natDegree := by
+        rw [Polynomial.map_scaleRoots p den f]
+        · rw [hfden, Polynomial.scaleRoots_zero, (hpmonic.map f).leadingCoeff,
+            one_smul, hpmonic.natDegree_map f]
+        · rw [hpmonic.leadingCoeff, map_one]
+          exact one_ne_zero
+      have hbpow : b ^ p.natDegree ∈ Ideal.span ({r} : Set A) := by
+        rw [← Ideal.Quotient.eq_zero_iff_mem]
+        rw [map_pow]
+        calc
+          f b ^ p.natDegree = Polynomial.eval (f b) (X ^ p.natDegree) := by simp
+          _ = Polynomial.eval (f b) ((p.scaleRoots den).map f) := by rw [hmapPoly]
+          _ = f (Polynomial.eval b (p.scaleRoots den)) := by
+            rw [Polynomial.eval_map]
+            simpa [Polynomial.eval₂_at_apply] using
+              (Polynomial.hom_eval₂ (p.scaleRoots den) (RingHom.id A) f b).symm
+          _ = 0 := by rw [hscaled, map_zero]
+      have hbmem : b ∈ Ideal.span ({r} : Set A) :=
+        hrad (Ideal.mem_radical_iff.mpr ⟨p.natDegree, hbpow⟩)
+      obtain ⟨b', hb'⟩ := Ideal.mem_span_singleton.mp hbmem
+      let ssmall : Submonoid.powers r := ⟨r ^ n, n, rfl⟩
+      have heq : IsLocalization.mk' S b' ssmall = IsLocalization.mk' S b sden := by
+        apply IsLocalization.mk'_eq_of_eq
+        dsimp only [ssmall, sden, den]
+        rw [hb', pow_succ]
+        ring
+      have hx' : IsIntegral A (IsLocalization.mk' S b' ssmall) := by
+        rw [heq]
+        exact hx0
+      obtain ⟨y, hy⟩ := ih b' hx'
+      exact ⟨y, hy.trans heq⟩
+
+/-- A regular ring is reduced.  This is the reducedness consequence of Stacks Tag `0567`
+needed by the standard-cover normalization calculation: localize at each maximal ideal,
+use that a regular local ring is a domain (Tag `00NP`), then descend reducedness. -/
+theorem isReduced_of_isRegularRing
+    {A : Type u} [CommRing A] [IsRegularRing A] : IsReduced A := by
+  apply isReduced_ofLocalizationMaximal A
+  intro q hq
+  letI : q.IsPrime := hq.isPrime
+  letI : IsDomain (Localization.AtPrime q) :=
+    Pcf.Stacks.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
+  infer_instance
+
+/-- Inverting `a` in the standard root algebra also inverts the distinguished root `z`.
+Thus `C[1/a]` is a localization of `C` away from `z`. -/
+theorem standardCover_isLocalizationAway_root
+    (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
+    IsLocalization.Away
+      (AdjoinRoot.root (Pcf.LocalModel.localPoly u a e))
+      (Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a)) := by
+  let C := AdjoinRoot (Pcf.LocalModel.localPoly u a e)
+  let z : C := AdjoinRoot.root (Pcf.LocalModel.localPoly u a e)
+  let ac : C := algebraMap R C a
+  let T := Localization.Away ac
+  have hassoc : Associated (z ^ e) ac := by
+    rw [show z ^ e = algebraMap R C ((u : R) * a) from
+      Pcf.LocalModel.root_pow_eq u a e, map_mul]
+    exact associated_unit_mul_left ac (algebraMap R C (u : R))
+      ((Units.isUnit u).map (algebraMap R C))
+  letI : IsLocalization.Away (z ^ e) T :=
+    IsLocalization.Away.of_associated hassoc.symm
+  have hle : Submonoid.powers (z ^ e) ≤ Submonoid.powers z := by
+    intro x hx
+    obtain ⟨n, rfl⟩ := hx
+    refine ⟨e * n, ?_⟩
+    change z ^ (e * n) = (z ^ e) ^ n
+    exact pow_mul z e n
+  have hdvd : ∀ x ∈ Submonoid.powers z,
+      ∃ m ∈ Submonoid.powers (z ^ e), x ∣ m := by
+    intro x hx
+    obtain ⟨n, rfl⟩ := hx
+    refine ⟨(z ^ e) ^ n, ⟨n, rfl⟩, ?_⟩
+    change z ^ n ∣ (z ^ e) ^ n
+    simpa only [pow_mul] using pow_dvd_pow z (Nat.le_mul_of_pos_left n he)
+  exact (IsLocalization.iff_of_le_of_exists_dvd
+    (Submonoid.powers (z ^ e)) (Submonoid.powers z) hle hdvd).mp inferInstance
+
+/-- The standard root algebra is integrally closed in its generic-away algebra, assuming
+only that `a` is a nonzerodivisor and `R/(a)` is reduced. -/
+theorem standardCover_isIntegrallyClosedIn_localizationAway
+    (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsReduced (R ⧸ Ideal.span ({a} : Set R))] :
+    IsIntegrallyClosedIn
+      (AdjoinRoot (Pcf.LocalModel.localPoly u a e))
+      (Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a)) := by
+  let C := AdjoinRoot (Pcf.LocalModel.localPoly u a e)
+  let z : C := AdjoinRoot.root (Pcf.LocalModel.localPoly u a e)
+  let T := Localization.Away (algebraMap R C a)
+  letI : IsLocalization.Away z T :=
+    standardCover_isLocalizationAway_root u a he
+  exact isIntegrallyClosedIn_away_of_span_isRadical
+    (Pcf.LocalModel.root_mem_nonZeroDivisors u a he ha)
+    (Pcf.LocalModel.span_root_isRadical u a he)
+
+/-- The standard root algebra is the integral closure of `R` in its generic-away algebra,
+assuming only that `a` is a nonzerodivisor and `R/(a)` is reduced. -/
+theorem standardCover_isIntegralClosure_localizationAway
+    (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsReduced (R ⧸ Ideal.span ({a} : Set R))] :
+    IsIntegralClosure
+      (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) R
+      (Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a)) := by
+  let C := AdjoinRoot (Pcf.LocalModel.localPoly u a e)
+  let T := Localization.Away (algebraMap R C a)
+  let _ : IsIntegrallyClosedIn C T :=
+    standardCover_isIntegrallyClosedIn_localizationAway u a he ha
+  let _ : Algebra.IsIntegral R C :=
+    AdjoinRoot.isIntegral_of_monic (Pcf.LocalModel.localPoly_monic u a he)
+  exact IsIntegralClosure.of_isIntegrallyClosedIn
+
+/-- The exact affine integral-closure calculation omitted in the proof of Stacks Tag
+`0EYH`: for Noetherian `R`, a nonzerodivisor `a`, regular `R/(a)`, positive `e`, and unit
+coefficient `u`, the standard root algebra is the integral closure in `C[1/a]`. -/
+theorem standardCover_isIntegralClosure_localizationAway_of_regular
+    [IsNoetherianRing R]
+    (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))] :
+    IsIntegralClosure
+      (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) R
+      (Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a)) := by
+  letI : IsReduced (R ⧸ Ideal.span ({a} : Set R)) :=
+    isReduced_of_isRegularRing
+  exact standardCover_isIntegralClosure_localizationAway u a he ha
+
+#print axioms isIntegrallyClosedIn_away_of_span_isRadical
+#print axioms isReduced_of_isRegularRing
+#print axioms standardCover_isIntegralClosure_localizationAway
+#print axioms standardCover_isIntegralClosure_localizationAway_of_regular
+
+end Pcf.Stacks
