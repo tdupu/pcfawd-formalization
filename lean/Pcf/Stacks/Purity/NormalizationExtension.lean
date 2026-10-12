@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Normalization
 import Mathlib.Algebra.Algebra.Subalgebra.Tower
+import Mathlib.AlgebraicGeometry.Morphisms.Finite
 import Pcf.Stacks.Purity.CoverNormalModel
 
 /-!
@@ -184,5 +185,21 @@ theorem puncturedCover_normalizationSections_finite
       ((ConcreteCategory.isIso_iff_bijective (Scheme.ΓSpecIso R).inv).mp
         inferInstance).surjective
   exact (puncturedCover_normalization_finite_appTop R hdim V).comp h₁
+
+/-- The relative normalization is actually a finite morphism over `Spec R`, not merely an
+integral morphism with a finite section algebra. -/
+theorem puncturedCover_normalization_isFinite
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    IsFinite ((V.hom ≫ (puncturedSpectrum R).ι).fromNormalization) := by
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  letI : IsAffine f.normalization := puncturedCover_normalization_isAffine R V
+  rw [IsFinite.iff_isIntegralHom_and_locallyOfFiniteType]
+  constructor
+  · infer_instance
+  · apply (HasRingHomProperty.iff_of_isAffine (P := @LocallyOfFiniteType)).mpr
+    exact (puncturedCover_normalization_finite_appTop R hdim V).finiteType
 
 end Pcf.Stacks
