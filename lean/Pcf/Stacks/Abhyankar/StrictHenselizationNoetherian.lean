@@ -154,6 +154,32 @@ theorem exists_basis_of_flat_of_isNilpotent_maximalIdeal
   let bA := Basis.mk hliA hspan.ge
   exact ⟨bA, fun i ↦ by simp [bA]⟩
 
+/-- A surjective local ring map induces an isomorphism on residue fields.  We first record the
+bijectivity of Mathlib's canonical residue-field map so quotient maps by ideal powers can reuse
+the functorial map rather than a hand-built double-quotient equivalence. -/
+theorem IsLocalRing.ResidueField.map_bijective_of_surjective
+    {A : Type u} {B : Type v} [CommRing A] [CommRing B]
+    [IsLocalRing A] [IsLocalRing B]
+    (f : A →+* B) [IsLocalHom f] (hf : Function.Surjective f) :
+    Function.Bijective (IsLocalRing.ResidueField.map f) := by
+  refine ⟨RingHom.injective _, ?_⟩
+  intro y
+  obtain ⟨b, rfl⟩ :=
+    (Ideal.Quotient.mk_surjective (I := IsLocalRing.maximalIdeal B)) y
+  obtain ⟨a, rfl⟩ := hf b
+  exact ⟨IsLocalRing.residue A a, by
+    rw [IsLocalRing.ResidueField.map_residue]
+    rfl⟩
+
+/-- The residue-field equivalence induced by a surjective local ring map. -/
+noncomputable def IsLocalRing.ResidueField.mapEquivOfSurjective
+    {A : Type u} {B : Type v} [CommRing A] [CommRing B]
+    [IsLocalRing A] [IsLocalRing B]
+    (f : A →+* B) [IsLocalHom f] (hf : Function.Surjective f) :
+    IsLocalRing.ResidueField A ≃+* IsLocalRing.ResidueField B :=
+  RingEquiv.ofBijective (IsLocalRing.ResidueField.map f)
+    (IsLocalRing.ResidueField.map_bijective_of_surjective f hf)
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -318,6 +344,8 @@ end PointedEtaleNeighborhood
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
+#print axioms IsLocalRing.ResidueField.map_bijective_of_surjective
+#print axioms IsLocalRing.ResidueField.mapEquivOfSurjective
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
