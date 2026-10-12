@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.AlgebraicGeometry.Noetherian
 import Mathlib.AlgebraicGeometry.Stalk
 import Mathlib.AlgebraicGeometry.Morphisms.Flat
+import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
 import Mathlib.RingTheory.Etale.Field
 import Mathlib.RingTheory.Flat.Localization
@@ -22,7 +23,7 @@ construction.
 
 noncomputable section
 
-open AlgebraicGeometry CategoryTheory Limits
+open AlgebraicGeometry CategoryTheory Limits IsLocalRing
 set_option linter.style.haveILetI false
 
 universe u
@@ -93,6 +94,43 @@ theorem genericPoint_mem_puncturedSpectrum (hdim : 1 ≤ ringKrullDim R) :
     puncturedSpectrum_nonempty_of_one_le_ringKrullDim R hdim
   exact ((genericPoint_spec (Spec R)).mem_open_set_iff
     (puncturedSpectrum R).isOpen).mpr (by simpa using hnon)
+
+omit [IsLocalRing R] [IsNoetherianRing R] in
+/-- The canonical map from the function-field spectrum has dense image. -/
+theorem genericPoint_fromSpecStalk_dominant :
+    IsDominant ((Spec R).fromSpecStalk (genericPoint (Spec R))) := by
+  constructor
+  apply denseRange_iff_closure_range.mpr
+  have hmem : genericPoint (Spec R) ∈
+      Set.range ((Spec R).fromSpecStalk (genericPoint (Spec R))) := by
+    exact ⟨closedPoint ((Spec R).presheaf.stalk (genericPoint (Spec R))),
+      Scheme.fromSpecStalk_closedPoint⟩
+  apply Set.eq_univ_of_univ_subset
+  calc
+    Set.univ = closure ({genericPoint (Spec R)} : Set (Spec R)) :=
+      (genericPoint_closure (Spec R)).symm
+    _ ⊆ closure (Set.range ((Spec R).fromSpecStalk (genericPoint (Spec R)))) :=
+      closure_mono (Set.singleton_subset_iff.mpr hmem)
+
+omit [IsNoetherianRing R] in
+/-- The generic-point map to the puncture is scheme-theoretically dominant. This remains
+valid before taking any finite étale cover and is the input for generic-section injectivity. -/
+theorem genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant
+    (hdim : 1 ≤ ringKrullDim R) :
+    IsSchemeTheoreticallyDominant
+      ((puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+        (genericPoint_mem_puncturedSpectrum R hdim)) := by
+  let i := (puncturedSpectrum R).ι
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  have hdom : IsDominant g := by
+    have : IsDominant (g ≫ i) := by
+      rw [(puncturedSpectrum R).fromSpecStalkOfMem_ι]
+      exact genericPoint_fromSpecStalk_dominant R
+    exact IsDominant.of_comp_of_isOpenImmersion g i
+  letI : IsDominant g := hdom
+  letI : IsReduced (puncturedSpectrumScheme R) := isReduced_of_isOpenImmersion i
+  exact IsSchemeTheoreticallyDominant.of_isDominant g
 
 /-- Pull a finite étale punctured cover back along the generic point. -/
 noncomputable def puncturedCoverGenericFiber (hdim : 1 ≤ ringKrullDim R) :
