@@ -95,6 +95,7 @@ import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverGeometry
+import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
 import Pcf.Stacks.Abhyankar.NormalizationGeometry
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
@@ -507,6 +508,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCovers_radical_span_algebraMap_eq_reducedDivisorIdeal
 #print axioms Pcf.Stacks.standardCovers_finite
 #print axioms Pcf.Stacks.standardCovers_free
+#print axioms Pcf.Stacks.standardCoverBaseChangeEquiv
+#print axioms Pcf.Stacks.standardCoversBaseChangeEquiv
 #print axioms Pcf.Stacks.standardCoversReducedDivisorQuotientEquiv
 #print axioms Pcf.Stacks.standardCoversReducedDivisor_isRegularRing
 #print axioms Pcf.Stacks.normalizationOfLocalizedPresentation_finite
