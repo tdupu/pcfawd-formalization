@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.AlgebraicGeometry.Normalization
 import Mathlib.AlgebraicGeometry.Morphisms.IsIso
 import Pcf.Stacks.Purity.GenericCoverFiber
+import Pcf.Stacks.Purity.NormalizationTower
 
 /-!
 # Normality of the generic-point map
@@ -193,5 +194,33 @@ theorem puncturedCover_affineSections_isIntegrallyClosedInGeneric
     obtain ⟨a, ha⟩ := hsurj ⟨x, hx⟩
     refine ⟨a, ?_⟩
     exact congrArg (Subalgebra.val B) ha
+
+/-- The finite étale cover `V` itself is the relative normalization of its generic fibre over
+the punctured spectrum. This follows from local normality over `V` and transitivity across the
+integral morphism `V → U`; it is the comparison needed for extending the generic fibre's finite
+normal model back over the puncture. -/
+theorem puncturedCover_genericFiber_normalizationDesc_isIso
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let h := pullback.snd f g
+    IsIso ((h ≫ V.hom).normalizationDesc h V.hom rfl) := by
+  dsimp
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let h := pullback.snd f g
+  letI : IsFinite V.hom := V.prop.1
+  letI : IsIntegralHom V.hom := inferInstance
+  letI : QuasiCompact f := inferInstance
+  letI : QuasiSeparated f := inferInstance
+  letI : QuasiCompact h := inferInstance
+  letI : QuasiSeparated h := inferInstance
+  letI : QuasiCompact (h ≫ V.hom) := inferInstance
+  letI : QuasiSeparated (h ≫ V.hom) := inferInstance
+  letI : IsIso h.fromNormalization :=
+    puncturedCover_genericFiber_fromNormalization_isIso R V
+  exact normalizationDesc_isIso_of_fromNormalization_isIso h V.hom
 
 end Pcf.Stacks
