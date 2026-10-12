@@ -171,4 +171,105 @@ noncomputable def puncturedCover_genericFiber_normalizationSpecRestrictOverIso
         Over.isoMk (asIso (p.normalizationDesc h V.hom rfl)) (by simp)
   exact k'.symm ≪≫ e₀' ≪≫ e
 
+/-- The section algebra of the generic-fibre normalization has no `R`-torsion.
+
+It embeds into the generic fibre, which is a module over the function field of `R`.  This also
+covers the empty cover: the zero module is torsion-free. -/
+theorem puncturedCover_genericFiber_normalizationSections_isTorsionFree
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let j := pullback.snd f g ≫ g
+    letI : Algebra R Γ(j.normalization, ⊤) :=
+      (((Scheme.ΓSpecIso R).inv ≫ j.fromNormalization.appTop).hom).toAlgebra
+    Module.IsTorsionFree R Γ(j.normalization, ⊤) := by
+  let K := (Spec R).functionField
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let W := pullback f g
+  let q := pullback.fst f g
+  let j := pullback.snd f g ≫ g
+  let S := Γ(Spec (CommRingCat.of R), ⊤)
+  let B := Γ(j.normalization, ⊤)
+  let E := Γ(W, ⊤)
+  letI : Algebra K E := (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  letI : IsScalarTower R K E := .of_algebraMap_eq' rfl
+  letI : Algebra S E := j.appTop.hom.toAlgebra
+  letI : Algebra R Γ(j.normalization, ⊤) :=
+    (((Scheme.ΓSpecIso R).inv ≫ j.fromNormalization.appTop).hom).toAlgebra
+  haveI : Module.IsTorsionFree K E := inferInstance
+  haveI : Module.IsTorsionFree R K := inferInstance
+  haveI : Module.IsTorsionFree R E :=
+    Module.IsTorsionFree.trans (M := E) K
+  letI : Algebra Γ(Spec (CommRingCat.of R), ⊤) Γ(pullback f g, j ⁻¹ᵁ ⊤) :=
+    (j.app ⊤).hom.toAlgebra
+  let e := j.normalizationObjIso (isAffineOpen_top (Spec R))
+  have hinj : Function.Injective j.toNormalization.appTop.hom := by
+    have hinj' : Function.Injective (e.hom ≫ CommRingCat.ofHom
+        (Subalgebra.val (integralClosure Γ(Spec (CommRingCat.of R), ⊤)
+          Γ(pullback f g, j ⁻¹ᵁ ⊤))).toRingHom).hom :=
+      Subtype.val_injective.comp
+        ((ConcreteCategory.isIso_iff_bijective e.hom).mp inferInstance).injective
+    rw [j.normalizationObjIso_hom_val (isAffineOpen_top (Spec R))] at hinj'
+    intro x y hxy
+    apply hinj'
+    convert hxy using 1 <;>
+      simp [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE] <;> congr
+  refine Function.Injective.moduleIsTorsionFree j.toNormalization.appTop.hom hinj ?_
+  intro r b
+  change j.toNormalization.appTop.hom ((algebraMap R B) r * b) =
+    (algebraMap R E) r * j.toNormalization.appTop.hom b
+  rw [map_mul]
+  congr 1
+  change (((Scheme.ΓSpecIso R).inv ≫ j.fromNormalization.appTop ≫
+    j.toNormalization.appTop).hom) r = (algebraMap R E) r
+  rw [← Scheme.Hom.comp_appTop, j.toNormalization_fromNormalization]
+  exact DFunLike.congr_fun (puncturedCover_baseGenericPullback_algebraMap R V) r
+
+/-- Every finite étale cover of the puncture is the restriction of an object of the exact
+finite-normal, torsion-free target category in Tag `0BM9`, and the comparison is an isomorphism of
+finite étale objects over the puncture. -/
+theorem puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    ∃ B : FiniteNormalPuncturedEtaleAlgebra R,
+      Nonempty ((finiteNormalAlgebraToPuncturedCover R).obj B ≅ V) := by
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let j := pullback.snd f g ≫ g
+  letI : Algebra R Γ(j.normalization, ⊤) :=
+    (((Scheme.ΓSpecIso R).inv ≫ j.fromNormalization.appTop).hom).toAlgebra
+  let A : CommAlgCat R := .of R Γ(j.normalization, ⊤)
+  have hfin : Module.Finite R A :=
+    puncturedCover_genericFiber_normalizationSections_finite R hdim V
+  have htf : Module.IsTorsionFree R A :=
+    puncturedCover_genericFiber_normalizationSections_isTorsionFree R V
+  have hnormal : IsStacksNormalRing A :=
+    puncturedCover_genericFiber_normalizationSections_isStacksNormalRing R hdim V
+  let e := puncturedCover_genericFiber_normalizationSpecRestrictOverIso R V
+  have hetale : Etale (((Over.pullback (puncturedSpectrum R).ι).obj
+      ((algSpec (.of R)).obj (Opposite.op A))).hom) := by
+    letI : MorphismProperty.RespectsIso (@Etale) := by
+      rw [HasRingHomProperty.eq_affineLocally (@Etale)]
+      exact affineLocally_respectsIso _ RingHom.Etale.respectsIso
+    let eScheme := (Over.forget _).mapIso e
+    haveI : IsIso e.hom.left := by
+      change IsIso eScheme.hom
+      infer_instance
+    have hsource : Etale (((Over.pullback (puncturedSpectrum R).ι).obj
+        (Over.mk (puncturedCover_genericFiber_normalizationSpecMap R V))).hom) := by
+      rw [← e.hom.w]
+      apply (MorphismProperty.cancel_left_of_respectsIso @Etale _ _).mpr
+      exact V.prop.2
+    exact hsource
+  let B : FiniteNormalPuncturedEtaleAlgebra R :=
+    ⟨Opposite.op A, hfin, htf, hnormal, hetale⟩
+  refine ⟨B, ?_⟩
+  exact ⟨MorphismProperty.Comma.isoFromComma e⟩
+
 end Pcf.Stacks
