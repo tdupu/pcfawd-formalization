@@ -261,6 +261,51 @@ noncomputable def puncturedCoverGenericFiber_ringHom (hdim : 1 ≤ ringKrullDim 
     ((puncturedCoverGenericFiber R hdim).obj V).hom.appTop).hom
 
 omit [IsNoetherianRing R] in
+/-- Restriction to the generic fibre respects the canonical action of `R`: pulling a function
+through `V → U → Spec R` agrees with pulling it through `Spec K → Spec R`. -/
+theorem puncturedCoverGenericFiber_sectionMap_base
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    (puncturedCoverGenericFiber_sectionMap R hdim V).comp
+      (((Scheme.ΓSpecIso R).inv ≫
+        (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom) =
+      (puncturedCoverGenericFiber_ringHom R hdim V).comp
+        (algebraMap R (Spec R).functionField) := by
+  let i := (puncturedSpectrum R).ι
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let p := Limits.pullback.fst V.hom g
+  let q := Limits.pullback.snd V.hom g
+  have hpb : p ≫ V.hom = q ≫ g := Limits.pullback.condition
+  have hg : g ≫ i = f := by
+    dsimp [g, i, f]
+    exact (puncturedSpectrum R).fromSpecStalkOfMem_ι _ _
+  have hscheme : (p ≫ V.hom) ≫ i = q ≫ f := by
+    calc
+      (p ≫ V.hom) ≫ i = (q ≫ g) ≫ i := by rw [hpb]
+      _ = q ≫ f := by rw [Category.assoc, hg]
+  have hf : f = Spec.map
+      (CommRingCat.ofHom (algebraMap R (Spec R).functionField)) := by
+    dsimp [f]
+    rw [Spec.fromSpecStalk_eq']
+    rfl
+  have hr : ((Scheme.ΓSpecIso R).inv ≫ (V.hom ≫ i).appTop) ≫ p.appTop =
+      ((CommRingCat.ofHom (algebraMap R (Spec R).functionField) ≫
+        (Scheme.ΓSpecIso (Spec R).functionField).inv) ≫ q.appTop) := by
+    calc
+      ((Scheme.ΓSpecIso R).inv ≫ (V.hom ≫ i).appTop) ≫ p.appTop =
+          (Scheme.ΓSpecIso R).inv ≫ (((p ≫ V.hom) ≫ i).appTop) := by
+            simp only [Scheme.Hom.comp_appTop, Category.assoc]
+      _ = (Scheme.ΓSpecIso R).inv ≫ (q ≫ f).appTop := by rw [hscheme]
+      _ = (CommRingCat.ofHom (algebraMap R (Spec R).functionField) ≫
+          (Scheme.ΓSpecIso (Spec R).functionField).inv) ≫ q.appTop := by
+            rw [Scheme.Hom.comp_appTop, ← Category.assoc, hf,
+              ← Scheme.ΓSpecIso_inv_naturality]
+            rfl
+  exact congrArg CommRingCat.Hom.hom hr
+
+omit [IsNoetherianRing R] in
 /-- The generic-fibre algebra of any finite étale punctured cover is module-finite over the
 function field. -/
 theorem puncturedCoverGenericFiber_ringHom_finite (hdim : 1 ≤ ringKrullDim R)
