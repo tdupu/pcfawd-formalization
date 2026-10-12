@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 import Mathlib.RingTheory.LocalProperties.Reduced
+import Mathlib.RingTheory.Localization.AtPrime.Basic
 import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
 /-!
@@ -73,6 +74,21 @@ theorem isReduced (hR : IsStacksNormalRing R) : IsReduced R := by
   let _ : p.IsPrime := hp.isPrime
   let _ : IsDomain (Localization.AtPrime p) := (hR ⟨p, inferInstance⟩).1
   infer_instance
+
+/-- Stacks-normality is invariant under ring isomorphism. -/
+theorem of_ringEquiv {A B : Type*} [CommRing A] [CommRing B]
+    (e : A ≃+* B) (hB : IsStacksNormalRing B) : IsStacksNormalRing A := by
+  intro p
+  let q : PrimeSpectrum B := ⟨p.asIdeal.comap e.symm.toRingHom, inferInstance⟩
+  have hpq : p.asIdeal = q.asIdeal.comap e.toRingHom := by
+    dsimp [q]
+    rw [Ideal.comap_comap, ← RingEquiv.toRingHom_eq_coe]
+    simp
+  let t : Localization.AtPrime p.asIdeal ≃+* Localization.AtPrime q.asIdeal :=
+    Localization.localRingEquiv p.asIdeal q.asIdeal e hpq
+  let _ : IsDomain (Localization.AtPrime q.asIdeal) := (hB q).1
+  let _ : IsIntegrallyClosed (Localization.AtPrime q.asIdeal) := (hB q).2
+  exact ⟨t.toMulEquiv.isDomain _, IsIntegrallyClosed.of_equiv t.symm⟩
 
 /-- A finite product of Stacks-normal rings is Stacks-normal.  This is the elementary
 disconnected closure property needed for the componentwise reduction in Tag `0BM9`. -/

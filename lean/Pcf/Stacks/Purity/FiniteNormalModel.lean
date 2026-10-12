@@ -127,4 +127,46 @@ theorem finiteSeparableProduct_integralClosure_finite
     exact congrArg (fun z : ∀ i, integralClosure R (L i) => (z i : L i)) h
   exact Module.Finite.of_injective φ.toLinearMap hφ
 
+/-- Integral closure in a finite product of field extensions is the product of the individual
+integral closures.  This also covers an empty product. -/
+noncomputable def finiteSeparableProduct_integralClosure_equiv
+    [∀ i, Algebra R (L i)] [∀ i, IsScalarTower R K (L i)] :
+    (integralClosure R (∀ i, L i)) ≃ₐ[R] (∀ i, integralClosure R (L i)) := by
+  letI (i : I) : Module.Finite R (integralClosure R (L i)) :=
+    IsIntegralClosure.moduleFinite_of_finiteSeparableExtension
+      (A := R) (K := K) (L := L i) (C := integralClosure R (L i))
+  let C := ∀ i, integralClosure R (L i)
+  let E := ∀ i, L i
+  letI : Module.Finite R C := inferInstance
+  let valPi : C →ₐ[R] E :=
+    AlgHom.pi (fun i => (Subalgebra.val (integralClosure R (L i))).comp
+      (Pi.evalAlgHom R (fun i => integralClosure R (L i)) i))
+  have hInt (y : C) : IsIntegral R (valPi y) :=
+    IsIntegral.map valPi (Algebra.IsIntegral.isIntegral y)
+  let φ : integralClosure R E →ₐ[R] C :=
+    AlgHom.pi (fun i => (Pi.evalAlgHom R L i).mapIntegralClosure)
+  have hφinj : Function.Injective φ := by
+    intro x y h
+    apply Subtype.ext
+    funext i
+    exact congrArg (fun z : C => (z i : L i)) h
+  have hφsurj : Function.Surjective φ := by
+    intro y
+    refine ⟨⟨valPi y, hInt y⟩, ?_⟩
+    funext i
+    apply Subtype.ext
+    rfl
+  exact AlgEquiv.ofBijective φ ⟨hφinj, hφsurj⟩
+
+/-- The integral closure inside a finite separable product is Stacks-normal. -/
+theorem finiteSeparableProduct_integralClosure_isStacksNormalRing
+    [∀ i, Algebra R (L i)] [∀ i, IsScalarTower R K (L i)] :
+    IsStacksNormalRing (integralClosure R (∀ i, L i)) := by
+  let e := finiteSeparableProduct_integralClosure_equiv R K I L
+  have hprod : IsStacksNormalRing (∀ i, integralClosure R (L i)) := by
+    exact IsStacksNormalRing.pi (fun i =>
+      IsIntegralClosure.isStacksNormalRing_of_finiteExtension
+        (A := R) (K := K) (L := L i) (C := integralClosure R (L i)))
+  exact IsStacksNormalRing.of_ringEquiv e.toRingEquiv hprod
+
 end Pcf.Stacks
