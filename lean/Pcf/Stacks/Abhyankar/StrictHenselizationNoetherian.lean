@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.AdicCompletion.Functoriality
 import Mathlib.LinearAlgebra.DirectSum.Finsupp
+import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
 import Mathlib.RingTheory.TensorProduct.Quotient
@@ -25,6 +26,37 @@ open scoped TensorProduct
 universe u v w
 
 namespace Pcf.Stacks
+
+/-- Arbitrary products of the base ring are flat when the base is Noetherian.  This is the
+product-flatness input in the proof of Stacks Tag `06LE`. -/
+theorem flat_pi_self_of_isNoetherianRing
+    (R : Type u) [CommRing R] [IsNoetherianRing R] (ι : Type v) :
+    Module.Flat R (ι → R) := by
+  apply Module.Flat.of_forall_isTrivialRelation
+  intro l f x h
+  let φ := Fintype.linearCombination R f
+  have hker : φ.ker.FG := by
+    apply Submodule.FG.of_le (T := ⊤) Module.Finite.fg_top
+    exact le_top
+  obtain ⟨k, g, hg⟩ :=
+    Submodule.fg_iff_exists_fin_generating_family.mp hker
+  let z (t : ι) : Fin l → R := fun i ↦ x i t
+  have hz (t : ι) : z t ∈ φ.ker := by
+    rw [LinearMap.mem_ker]
+    simpa [φ, z, Fintype.linearCombination_apply, Pi.smul_apply, mul_comm] using congrFun h t
+  choose c hc using fun t ↦
+    (Submodule.mem_span_range_iff_exists_fun R).mp (hg ▸ hz t)
+  refine ⟨k, (fun i j ↦ g j i), (fun j t ↦ c t j), ?_, ?_⟩
+  · intro i
+    funext t
+    have hit := congrArg (fun q : Fin l → R ↦ q i) (hc t)
+    simpa [Pi.smul_apply, mul_comm] using hit.symm
+  · intro j
+    have hgj : g j ∈ φ.ker := by
+      rw [← hg]
+      exact Submodule.subset_span (Set.mem_range_self j)
+    simpa [φ, Fintype.linearCombination_apply, mul_comm] using
+      (show φ (g j) = 0 from LinearMap.mem_ker.mp hgj)
 
 /-- A flat module over a local ring with nilpotent maximal ideal is free.  This is the
 infinite-rank form of Stacks Tag `051F`; the chosen lifts of a residue-field basis span because
@@ -708,6 +740,7 @@ theorem localColimit_isNoetherianRing_of_completion
 
 end PointedEtaleNeighborhood
 
+#print axioms flat_pi_self_of_isNoetherianRing
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
