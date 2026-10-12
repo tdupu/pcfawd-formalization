@@ -5,6 +5,8 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Pcf.Stacks.Purity.Defs
 import Pcf.Stacks.Purity.LocalEtale
+import Pcf.Stacks.Purity.LocalFlatness
+import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Purity.DimensionOne
 import Pcf.Stacks.Purity.EtaleLocalization
 import Pcf.Stacks.Purity.NormalRing

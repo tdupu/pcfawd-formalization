@@ -63,6 +63,8 @@ import Pcf.Bounding.SchemeAllTheWayDown
 import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+import Pcf.Stacks.Purity.LocalFlatness
+import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -207,6 +209,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.ZariskiNagataPurityInputsAt
 #print axioms Pcf.Stacks.HasZariskiNagataPurityAt
 #print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
+#print axioms Pcf.Stacks.algebraMap_flat_iff_localRingHom_flat
+#print axioms Pcf.Stacks.etale_of_fpqc_pullback
 #print axioms Pcf.Stacks.formallyEtale_of_flat_of_formallyUnramified_of_isLocalization
 #print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
 #print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_height_eq_one
@@ -268,6 +272,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
+#print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
