@@ -91,6 +91,7 @@ import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Stacks.Abhyankar.NormalizationBaseChange
+import Pcf.Stacks.Abhyankar.StandardCoverGeometry
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
@@ -456,6 +457,15 @@ hypotheses. -/
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv_val
 #print axioms Pcf.Stacks.smoothBaseChange_isIntegralClosure
+#print axioms Pcf.Stacks.radical_pi_of_finite
+#print axioms Pcf.Stacks.quotientPiRingEquiv
+#print axioms Pcf.Stacks.isRegularRing_pi_of_finite
+#print axioms Pcf.Stacks.standardCoversReducedDivisorIdeal
+#print axioms Pcf.Stacks.standardCovers_radical_span_algebraMap_eq_reducedDivisorIdeal
+#print axioms Pcf.Stacks.standardCovers_finite
+#print axioms Pcf.Stacks.standardCovers_free
+#print axioms Pcf.Stacks.standardCoversReducedDivisorQuotientEquiv
+#print axioms Pcf.Stacks.standardCoversReducedDivisor_isRegularRing
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers
