@@ -10,6 +10,7 @@ import Mathlib.RingTheory.LocalRing.Module
 import Mathlib.RingTheory.LocalRing.RingHom.Basic
 import Mathlib.RingTheory.Ideal.GoingUp
 import Pcf.Stacks.Purity.DepthTwo
+import Pcf.Stacks.Purity.RegularHypersurface
 
 /-!
 # The two-dimensional miracle-flatness relation
@@ -29,6 +30,8 @@ open scoped Pointwise
 universe u v
 
 namespace Pcf.Stacks
+
+set_option linter.style.haveILetI false
 
 variable {R : Type u} {M : Type v}
   [CommRing R] [AddCommGroup M] [Module R M]
@@ -254,6 +257,99 @@ theorem range_koszulPairRight_eq_span (x y : R) :
       x * a + y * b = a * x + b * y := by ring
       _ = z := hab
 
+/-- A two-dimensional regular local ring admits a regular pair which generates its maximal
+ideal.  The first element is chosen as a minimal generator; its quotient is a one-dimensional
+regular local domain, whose principal maximal ideal supplies the second element. -/
+theorem exists_regular_pair_span_maximalIdeal_of_dimension_two
+    {A : Type u} [CommRing A] [hregA : IsRegularLocalRing A]
+    (hdim : ringKrullDim A = 2) :
+    ∃ x y : A,
+      Ideal.span ({x, y} : Set A) = IsLocalRing.maximalIdeal A ∧
+      IsSMulRegular A x ∧ IsSMulRegular (QuotSMulTop x A) y := by
+  classical
+  obtain ⟨x, hxm, hx2, hregQ, hdimQ⟩ :=
+    exists_regularLocalRing_quotient_of_ringKrullDim_eq_succ A 1 (by
+      convert hdim using 1
+      norm_num)
+  let I : Ideal A := Ideal.span ({x} : Set A)
+  let Q := A ⧸ I
+  letI : IsDomain A := isDomain_of_isRegularLocalRing A
+  have hx : x ≠ 0 := by
+    intro hx0
+    apply hx2
+    rw [hx0]
+    exact Submodule.zero_mem _
+  have hIne : I ≠ ⊤ := by
+    apply ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal A).ne_top
+    rw [Ideal.span_le, Set.singleton_subset_iff]
+    exact hxm
+  letI : Nontrivial Q := Ideal.Quotient.nontrivial_iff.mpr hIne
+  letI : IsLocalHom (Ideal.Quotient.mk I) :=
+    IsLocalHom.of_surjective (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  letI : IsRegularLocalRing Q := hregQ
+  letI : IsDomain Q := isDomain_of_isRegularLocalRing Q
+  have hfinQ : Module.finrank (IsLocalRing.ResidueField Q)
+      (IsLocalRing.CotangentSpace Q) = 1 := by
+    have hreg := (IsRegularLocalRing.iff_finrank_cotangentSpace Q).mp inferInstance
+    rw [hdimQ] at hreg
+    exact_mod_cast hreg
+  have hprincipal : (IsLocalRing.maximalIdeal Q).IsPrincipal :=
+    IsLocalRing.finrank_cotangentSpace_le_one_iff.mp hfinQ.le
+  obtain ⟨yb, hyb⟩ := hprincipal
+  have hmaxQne : IsLocalRing.maximalIdeal Q ≠ ⊥ :=
+    maximalIdeal_ne_bot_of_one_le_ringKrullDim Q (by rw [hdimQ]; exact le_rfl)
+  have hyb0 : yb ≠ 0 := by
+    intro hy0
+    apply hmaxQne
+    rw [hyb, hy0]
+    simp
+  obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective yb
+  have hym : y ∈ IsLocalRing.maximalIdeal A := by
+    rw [← IsLocalRing.maximalIdeal_comap (Ideal.Quotient.mk I)]
+    change Ideal.Quotient.mk I y ∈ IsLocalRing.maximalIdeal Q
+    rw [hy]
+    rw [hyb]
+    exact Ideal.mem_span_singleton_self yb
+  have hspan : Ideal.span ({x, y} : Set A) = IsLocalRing.maximalIdeal A := by
+    let q : A →+* Q := Ideal.Quotient.mk I
+    haveI : IsLocalHom q :=
+      IsLocalHom.of_surjective q Ideal.Quotient.mk_surjective
+    have hmap : (Ideal.span ({x, y} : Set A)).map q = IsLocalRing.maximalIdeal Q := by
+      rw [Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
+      change Ideal.span ({Ideal.Quotient.mk I x, Ideal.Quotient.mk I y} : Set Q) = _
+      rw [show Ideal.Quotient.mk I x = 0 by
+        exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self x), hy]
+      rw [Ideal.span_pair_comm, Ideal.span_pair_zero]
+      exact hyb.symm
+    have hker : RingHom.ker q = I := Ideal.mk_ker
+    have hker_le : RingHom.ker q ≤ Ideal.span ({x, y} : Set A) := by
+      rw [hker, Ideal.span_le]
+      intro z hz
+      simp only [Set.mem_singleton_iff] at hz
+      subst z
+      exact Ideal.subset_span (Set.mem_insert x {y})
+    calc
+      Ideal.span ({x, y} : Set A) =
+          ((Ideal.span ({x, y} : Set A)).map q).comap q := by
+            rw [Ideal.comap_map_of_surjective q Ideal.Quotient.mk_surjective,
+              ← RingHom.ker_eq_comap_bot, sup_eq_left.mpr hker_le]
+      _ = (IsLocalRing.maximalIdeal Q).comap q := by rw [hmap]
+      _ = IsLocalRing.maximalIdeal A := IsLocalRing.maximalIdeal_comap q
+  have hxreg : IsSMulRegular A x := isSMulRegular_self_of_ne_zero A hx
+  have hyQ : IsSMulRegular Q (Ideal.Quotient.mk I y) := by
+    apply isSMulRegular_self_of_ne_zero Q
+    rw [hy]
+    exact hyb0
+  have hyQR : IsSMulRegular Q y :=
+    (isSMulRegular_algebraMap_iff Q).mp (by simpa [Q] using hyQ)
+  let e : QuotSMulTop x A ≃ₗ[A] Q :=
+    Submodule.quotEquivOfEq (x • (⊤ : Submodule A A)) I (by
+      rw [← Submodule.ideal_span_singleton_smul]
+      simp [I])
+  have hyreg : IsSMulRegular (QuotSMulTop x A) y :=
+    (e.isSMulRegular_congr y).mpr hyQR
+  exact ⟨x, y, hspan, hxreg, hyreg⟩
+
 /-- Elementary two-dimensional miracle flatness for a chosen regular parameter pair.
 
 If the maximal ideal of a local ring is generated by `x, y`, that pair is regular on the
@@ -368,5 +464,31 @@ theorem Module.free_of_finitePresentation_integral_local_normal_dimension_two
   have hpair := (isWeaklyRegular_cons_iff B x [y]).mp hweak
   have hyB := ((isWeaklyRegular_cons_iff (QuotSMulTop x B) y []).mp hpair.2).1
   exact Module.free_of_regular_pair_generates_maximalIdeal hspan hxR hyR hpair.1 hyB
+
+/-- Parameter-free form of the dimension-two miracle-flatness result.
+
+For a faithful integral local map from a two-dimensional regular local ring to a
+two-dimensional normal local domain, finite presentation implies freeness.  This is the exact
+module-theoretic conclusion of the dimension-two case in Stacks Tag `0BMA`; the remaining purity
+work is the discriminant/branch-locus argument which turns this finite free map into an étale one.
+-/
+theorem Module.free_of_finitePresentation_integral_local_normal_of_dimensions_eq_two
+    {B : Type v} [CommRing B] [Algebra R B]
+    [IsRegularLocalRing R] [IsLocalRing B] [IsLocalHom (algebraMap R B)]
+    [IsNoetherianRing B] [IsDomain B] [IsIntegrallyClosed B]
+    [Algebra.IsIntegral R B] [FaithfulSMul R B] [Module.FinitePresentation R B]
+    (hdimR : ringKrullDim R = 2)
+    (hdimB : ringKrullDim B = 2) :
+    Module.Free R B := by
+  obtain ⟨x, y, hspan, hxR, hyR⟩ :=
+    exists_regular_pair_span_maximalIdeal_of_dimension_two hdimR
+  have hx : x ≠ 0 := by
+    intro h
+    subst x
+    exact IsSMulRegular.not_zero hxR
+  have hxB : algebraMap R B x ≠ 0 :=
+    by simpa using (FaithfulSMul.algebraMap_injective R B).ne hx
+  exact Module.free_of_finitePresentation_integral_local_normal_dimension_two
+    hspan hxR hyR hxB (by rw [hdimB])
 
 end Pcf.Stacks

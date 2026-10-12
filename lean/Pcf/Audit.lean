@@ -250,6 +250,17 @@ hypotheses. -/
 #print axioms Pcf.Stacks.isWeaklyRegular_pair_of_integral_local_normal
 #print axioms
   Pcf.Stacks.Module.free_of_finitePresentation_integral_local_normal_dimension_two
+#print axioms Pcf.Stacks.exists_regular_pair_span_maximalIdeal_of_dimension_two
+#print axioms
+  Pcf.Stacks.Module.free_of_finitePresentation_integral_local_normal_of_dimensions_eq_two
+#print axioms Pcf.Stacks.minimalPrime_under_eq_bot_of_isTorsionFree
+#print axioms Pcf.Stacks.two_le_height_of_liesOver_of_finite_torsionFree
+#print axioms Pcf.Stacks.exists_associatedPrime_liesOver_closedPoint
+#print axioms Pcf.Stacks.localized_span_singleton_eq_smul_top
+#print axioms Pcf.Stacks.principalQuotient_avoid_closedPoint_of_finite_stacksNormal
+#print axioms Pcf.Stacks.exists_isSMulRegular_quotient_mem_maximalIdeal_of_finite
+#print axioms Pcf.Stacks.exists_module_regular_pair_of_finite_stacksNormal
+#print axioms Pcf.Stacks.exists_module_permutable_regular_pair_of_finite_stacksNormal
 #print axioms Pcf.Stacks.exists_eq_pow_smul_of_regular_pair
 #print axioms Pcf.Stacks.exists_common_value_of_module_regular_pair
 #print axioms Pcf.Stacks.etale_of_fpqc_pullback
@@ -504,6 +515,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_injective
 #print axioms Pcf.Stacks.AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Pcf.Stacks.AdicCompletion.finsuppToPiRestrictScalars
+#print axioms Pcf.Stacks.Module.Flat.lTensor_ideal_injective_of_injective
+#print axioms Pcf.Stacks.AdicCompletion.finsuppToPiRestrictScalars_lTensor_injective
 #print axioms Pcf.Stacks.AdicCompletion.finsupp_flat_of_forall_ideal_lTensor_injective
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
@@ -586,6 +599,14 @@ hypotheses. -/
 #print axioms Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerUnit_local_square
 #print axioms
   Pcf.Stacks.isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
+#print axioms Pcf.Stacks.kummerUnit_isIntegralClosure_localizationAway_uniformizer
+#print axioms Pcf.Stacks.kummerUnit_localizationAtPrime_isRegularLocalRing
+#print axioms Pcf.Stacks.kummerUnit_localizationAtPrime_isDomain
+#print axioms Pcf.Stacks.kummerUnit_localizationAtPrime_isDiscreteValuationRing
+#print axioms Pcf.Stacks.maximalIdeal_under_eq_of_isIntegralClosure
+#print axioms Pcf.Stacks.dvrRoot_faithfulSMul_of_faithful_base
+#print axioms
+  Pcf.Stacks.isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
 #print axioms Pcf.Stacks.etale_of_dvr_kummerUnit_ramification_square
 #print axioms Pcf.Stacks.etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms Pcf.Stacks.dvrRootPoly_monic
