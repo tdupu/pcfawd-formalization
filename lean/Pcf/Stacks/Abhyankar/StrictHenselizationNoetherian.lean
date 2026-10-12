@@ -375,6 +375,131 @@ noncomputable instance localColimitQuotientPowAlgebra (n : ℕ) :
       map_maximalIdeal_localColimit (R := R) (Ω := Ω)])
 
 omit [IsNoetherianRing R] in
+/-- A single family of lifts of a residue-field basis is a basis modulo every positive power
+of the maximal ideal.  This is the compatible-basis step in Stacks Tag `07QM`. -/
+theorem exists_localColimit_basis_quotient_maximalIdeal_powers :
+    ∃ v : Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+        (IsLocalRing.ResidueField (LocalColimit R Ω)) → LocalColimit R Ω,
+      ∀ n : ℕ, n ≠ 0 →
+        ∃ b : Basis (Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+            (IsLocalRing.ResidueField (LocalColimit R Ω)))
+          (R ⧸ IsLocalRing.maximalIdeal R ^ n)
+          (LocalColimit R Ω ⧸ IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n),
+          ∀ i, b i = Ideal.Quotient.mk _ (v i) := by
+  let C := LocalColimit R Ω
+  let ι := Module.Free.ChooseBasisIndex (IsLocalRing.ResidueField R)
+    (IsLocalRing.ResidueField C)
+  let b₀ := Module.Free.chooseBasis (IsLocalRing.ResidueField R)
+    (IsLocalRing.ResidueField C)
+  choose v hv using fun i ↦ IsLocalRing.residue_surjective (b₀ i)
+  refine ⟨v, ?_⟩
+  intro n hn
+  let I := IsLocalRing.maximalIdeal R ^ n
+  let J := IsLocalRing.maximalIdeal C ^ n
+  have hIle : I ≤ IsLocalRing.maximalIdeal R := Ideal.pow_le_self hn
+  have hJle : J ≤ IsLocalRing.maximalIdeal C := Ideal.pow_le_self hn
+  have hIne : I ≠ ⊤ := fun h ↦
+    (inferInstance : (IsLocalRing.maximalIdeal R).IsMaximal).ne_top
+      (eq_top_iff.mpr (h ▸ hIle))
+  have hJne : J ≠ ⊤ := fun h ↦
+    (inferInstance : (IsLocalRing.maximalIdeal C).IsMaximal).ne_top
+      (eq_top_iff.mpr (h ▸ hJle))
+  let _ : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIne
+  let _ : Nontrivial (C ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJne
+  let _ : IsLocalRing (R ⧸ I) :=
+    IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  let _ : IsLocalRing (C ⧸ J) :=
+    IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
+  have hpow : I.map (algebraMap R C) = J := by
+    dsimp [I, J]
+    rw [Ideal.map_pow, map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+  let qA : R →+* R ⧸ I := Ideal.Quotient.mk I
+  let qB : C →+* C ⧸ J := Ideal.Quotient.mk J
+  have hmaxA : (IsLocalRing.maximalIdeal R).map qA =
+      IsLocalRing.maximalIdeal (R ⧸ I) :=
+    IsLocalRing.map_maximalIdeal_of_surjective qA Ideal.Quotient.mk_surjective
+  have hmaxB : (IsLocalRing.maximalIdeal C).map qB =
+      IsLocalRing.maximalIdeal (C ⧸ J) :=
+    IsLocalRing.map_maximalIdeal_of_surjective qB Ideal.Quotient.mk_surjective
+  have hcomp : (algebraMap (R ⧸ I) (C ⧸ J)).comp qA =
+      qB.comp (algebraMap R C) := by
+    ext a
+    rfl
+  have hmaxQ : (IsLocalRing.maximalIdeal (R ⧸ I)).map
+      (algebraMap (R ⧸ I) (C ⧸ J)) =
+      IsLocalRing.maximalIdeal (C ⧸ J) := by
+    rw [← hmaxA, ← hmaxB, Ideal.map_map, hcomp, ← Ideal.map_map,
+      map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+  let _ : IsLocalHom (algebraMap (R ⧸ I) (C ⧸ J)) :=
+    ((IsLocalRing.local_hom_TFAE _).out 3 1).mp hmaxQ.le
+  let _ : IsLocalHom qA := IsLocalHom.of_surjective qA Ideal.Quotient.mk_surjective
+  let _ : IsLocalHom qB := IsLocalHom.of_surjective qB Ideal.Quotient.mk_surjective
+  let eA := IsLocalRing.ResidueField.mapEquivOfSurjective qA
+    Ideal.Quotient.mk_surjective
+  let eB := IsLocalRing.ResidueField.mapEquivOfSurjective qB
+    Ideal.Quotient.mk_surjective
+  let _ : RingHomInvPair
+      (eA : IsLocalRing.ResidueField R →+* IsLocalRing.ResidueField (R ⧸ I)) eA.symm :=
+    RingHomInvPair.of_ringEquiv eA
+  let _ : RingHomInvPair
+      (eA.symm : IsLocalRing.ResidueField (R ⧸ I) →+* IsLocalRing.ResidueField R) eA :=
+    RingHomInvPair.of_ringEquiv_symm eA
+  let eResid :
+      @LinearEquiv (IsLocalRing.ResidueField R)
+        (IsLocalRing.ResidueField (R ⧸ I)) _ _
+        (eA : IsLocalRing.ResidueField R →+*
+          IsLocalRing.ResidueField (R ⧸ I))
+        (eA.symm : IsLocalRing.ResidueField (R ⧸ I) →+*
+          IsLocalRing.ResidueField R) _ _
+        (IsLocalRing.ResidueField C)
+        (IsLocalRing.ResidueField (C ⧸ J)) _ _ _ _ :=
+    { __ := eB.toAddEquiv
+      map_smul' := by
+        intro a x
+        rw [Algebra.smul_def, Algebra.smul_def]
+        change eB (algebraMap (IsLocalRing.ResidueField R)
+          (IsLocalRing.ResidueField C) a * x) =
+          algebraMap (IsLocalRing.ResidueField (R ⧸ I))
+            (IsLocalRing.ResidueField (C ⧸ J)) (eA a) * eB x
+        rw [map_mul]
+        congr 1
+        obtain ⟨r, rfl⟩ := IsLocalRing.residue_surjective a
+        rfl }
+  let bResid := Module.Basis.mapSemilinear eA b₀ eResid
+  have hbResid (i : ι) : bResid i =
+      IsLocalRing.residue (C ⧸ J) (Ideal.Quotient.mk J (v i)) := by
+    rw [Module.Basis.mapSemilinear_apply]
+    change eB (b₀ i) = _
+    rw [← hv]
+    rfl
+  let eFiber := residueTensorEquivOfMapMaximalIdeal hmaxQ
+  let bTensor := bResid.map eFiber.symm
+  have hbTensor (i : ι) : bTensor i =
+      1 ⊗ₜ Ideal.Quotient.mk J (v i) := by
+    apply eFiber.injective
+    rw [Basis.map_apply, LinearEquiv.apply_symm_apply,
+      residueTensorEquivOfMapMaximalIdeal_tmul, hbResid]
+  let _ : Module.Flat R C := localColimit_flat (R := R) (Ω := Ω)
+  let _ : Module.Flat (R ⧸ I) (C ⧸ I.map (algebraMap R C)) :=
+    flat_quotient_map R C I
+  let eQuot : (C ⧸ J) ≃ₗ[R ⧸ I] (C ⧸ I.map (algebraMap R C)) :=
+    { __ := (Ideal.quotEquivOfEq hpow).symm.toAddEquiv
+      map_smul' := by
+        rintro ⟨r⟩ ⟨c⟩
+        rfl }
+  let _ : Module.Flat (R ⧸ I) (C ⧸ J) := Module.Flat.of_linearEquiv eQuot
+  have hnil : IsNilpotent (IsLocalRing.maximalIdeal (R ⧸ I)) := by
+    refine ⟨n, ?_⟩
+    rw [← hmaxA, ← Ideal.map_pow]
+    change Ideal.map qA I = 0
+    exact Ideal.map_quotient_self I
+  obtain ⟨b, hb⟩ := exists_basis_of_flat_of_isNilpotent_maximalIdeal hnil
+    (fun i : ι ↦ Ideal.Quotient.mk J (v i)) bTensor (by
+      funext i
+      exact (hbTensor i).symm)
+  exact ⟨b, hb⟩
+
+omit [IsNoetherianRing R] in
 /-- Every positive maximal-ideal-power quotient of the strict local colimit is a free module
 over the corresponding quotient of the base.  This is the quotient-power comparison and
 freeness step used before the inverse-limit argument in Stacks Tag `06LJ`. -/
@@ -430,6 +555,7 @@ end PointedEtaleNeighborhood
 #print axioms residueTensorEquivOfMapMaximalIdeal_tmul
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
+#print axioms PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
 end Pcf.Stacks
