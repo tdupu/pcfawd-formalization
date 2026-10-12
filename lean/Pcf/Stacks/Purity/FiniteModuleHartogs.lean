@@ -318,6 +318,33 @@ theorem exists_isSMulRegular_quotient_mem_maximalIdeal_of_finite
   have hp : p = maximalIdeal R := le_antisymm hp_le hmp
   exact hAss (hp ▸ hpAss)
 
+/-- Over a Noetherian local ring, the second member of a finite-module regular pair is regular on
+the module itself.  The kernel of multiplication by `y` is contained in `x` times itself, so
+Nakayama's lemma kills it. -/
+theorem isSMulRegular_of_isSMulRegular_quotient_of_finite
+    [IsLocalRing R] [IsNoetherianRing R] [Module.Finite R M]
+    {x y : R} (hxm : x ∈ maximalIdeal R) (hx : IsSMulRegular M x)
+    (hy : IsSMulRegular (QuotSMulTop x M) y) :
+    IsSMulRegular M y := by
+  rw [isSMulRegular_iff_ker_lsmul_eq_bot]
+  let N := LinearMap.ker (LinearMap.lsmul R M y)
+  apply Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
+    (Ideal.span {x}) N (IsNoetherian.noetherian _)
+  · rw [Submodule.ideal_span_singleton_smul]
+    intro b hb
+    have hyb : y • b = 0 := LinearMap.mem_ker.mp hb
+    have hb_x : b ∈ x • (⊤ : Submodule R M) :=
+      mem_of_isSMulRegular_quotient_of_smul_mem hy (hyb ▸ Submodule.zero_mem _)
+    obtain ⟨c, -, hc⟩ := hb_x
+    change x • c = b at hc
+    refine ⟨c, ?_, hc⟩
+    apply LinearMap.mem_ker.mpr
+    apply hx
+    change x • (y • c) = x • (0 : M)
+    rw [smul_comm, hc, hyb, smul_zero]
+  · exact (Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hxm)).trans
+      (IsLocalRing.maximalIdeal_le_jacobson _)
+
 /-- A finite torsion-free Stacks-normal algebra over a normal Noetherian local domain of dimension
 at least two admits a base regular pair.  This is the exact module-depth input for Hartogs recovery
 of the algebra. -/
@@ -335,5 +362,19 @@ theorem exists_module_regular_pair_of_finite_stacksNormal
   have hxreg : IsSMulRegular B x :=
     IsTorsionFree.isSMulRegular (show IsRegular x from isRegular_iff_ne_zero.mpr hx)
   exact ⟨x, y, hxm, hym, hxreg, hy⟩
+
+/-- The same regular pair can be chosen so that each member is regular on the finite algebra,
+while the second remains regular modulo the first. -/
+theorem exists_module_permutable_regular_pair_of_finite_stacksNormal
+    [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsIntegrallyClosed R]
+    [Module.IsTorsionFree R B] [Module.Finite R B]
+    (hB : IsStacksNormalRing B) (hdim : 2 ≤ ringKrullDim R) :
+    ∃ x y : R, x ∈ maximalIdeal R ∧ y ∈ maximalIdeal R ∧
+      IsSMulRegular B x ∧ IsSMulRegular B y ∧
+        IsSMulRegular (QuotSMulTop x B) y := by
+  obtain ⟨x, y, hxm, hym, hx, hy⟩ :=
+    exists_module_regular_pair_of_finite_stacksNormal hB hdim
+  exact ⟨x, y, hxm, hym, hx,
+    isSMulRegular_of_isSMulRegular_quotient_of_finite hxm hx hy, hy⟩
 
 end Pcf.Stacks
