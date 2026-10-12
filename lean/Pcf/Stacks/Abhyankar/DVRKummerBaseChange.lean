@@ -6,8 +6,10 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Pcf.Abhyankar
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
 import Pcf.Stacks.Abhyankar.KummerClauses
+import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Bounding.SmoothRegularLocal
+import Mathlib.RingTheory.Localization.BaseChange
 
 /-!
 # The root-of-a-unit leg in the DVR Abhyankar square
@@ -22,6 +24,7 @@ of choosing a prime of the Kummer algebra; it does not assume etaleness of the d
 -/
 
 open IsLocalRing
+open scoped TensorProduct
 
 universe u v w x y
 
@@ -435,6 +438,177 @@ abbrev DVRRamificationKummerLocalization
     (algebraMap S
       (DVRRamificationKummerAlgebra
         R S pi hpi piS hpiS exponent hramification) piS)
+
+/-- Universe-polymorphic form of `standardCoverBaseChangeEquiv` used for the two DVRs,
+which need not live in the same universe. -/
+private noncomputable def standardCoverBaseChangeEquiv'
+    {R : Type u} {T : Type v} [CommRing R] [CommRing T] [Algebra R T]
+    (unit : Rˣ) (a : R) (exponent : ℕ) :
+    T ⊗[R] AdjoinRoot (Pcf.LocalModel.localPoly unit a exponent) ≃ₐ[T]
+      AdjoinRoot (Pcf.LocalModel.localPoly
+        (Units.map (algebraMap R T) unit) (algebraMap R T a) exponent) := by
+  let p := Pcf.LocalModel.localPoly unit a exponent
+  let q := p.map
+    (Algebra.TensorProduct.includeRight (R := R) (A := T) (B := R)).toRingHom
+  let qT := Pcf.LocalModel.localPoly
+    (Units.map (algebraMap R T) unit) (algebraMap R T a) exponent
+  refine (AdjoinRoot.tensorAlgEquiv p q rfl).trans
+    (AdjoinRoot.mapAlgEquiv (Algebra.TensorProduct.rid R T T) q qT ?_)
+  rw [show Polynomial.map (Algebra.TensorProduct.rid R T T) q = qT by
+    simp [p, q, qT, Pcf.LocalModel.localPoly, Algebra.smul_def]]
+
+/-- The generic fibre of the standard `09EV` root extension after base change to the
+punctured spectrum of the upper DVR.
+
+This is the affine generic algebra which occurs before applying Tag `0EYE`: first base
+change `R[z]/(z^e - pi)` to `S`, then invert the upper uniformizer `piS`.  Keeping the two
+base changes visible makes the comparison square below literal. -/
+abbrev DVRRootPuncturedBaseChange
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [Algebra R S]
+    (pi : R) (piS : S) (exponent : ℕ) :=
+  Localization.Away piS ⊗[S]
+    (S ⊗[R] AdjoinRoot (dvrRootPoly pi exponent))
+
+/-- The generic base-change square in the last paragraph of Tag `0BRM`.
+
+If `pi = unit * piS ^ exponent`, then over the punctured upper DVR the base change of
+the `09EV` standard root extension is the localization of the root-of-a-unit Kummer
+algebra.  The equivalence is the composite of the two canonical root-algebra base-change
+equivalences, the substitution `z = piS * y`, and localization commuting with base
+change.  In particular this constructs, rather than assumes, the generic equivalence used
+after the `0EYE` extension step. -/
+noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [Algebra R S]
+    (pi : R) (piS : S) (unit : Sˣ) (exponent : ℕ)
+    (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent) :
+    DVRRootPuncturedBaseChange R S pi piS exponent ≃ₐ[S]
+      Localization.Away
+        (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS) := by
+  let K := Localization.Away piS
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let unitK : Kˣ := Units.map (algebraMap S K) unit
+  let piK : Kˣ := (IsLocalization.Away.algebraMap_isUnit piS).unit
+  let eRS :
+      S ⊗[R] AdjoinRoot (dvrRootPoly pi exponent) ≃ₐ[S]
+        AdjoinRoot (Pcf.LocalModel.localPoly
+          (1 : Sˣ) (algebraMap R S pi) exponent) := by
+    rw [dvrRootPoly_eq_localPoly]
+    let eBaseChangeRS := standardCoverBaseChangeEquiv'
+      (R := R) (T := S) (1 : Rˣ) pi exponent
+    have hMappedOneS : Units.map (algebraMap R S) (1 : Rˣ) = (1 : Sˣ) :=
+      map_one _
+    have hPolynomialS :
+        Pcf.LocalModel.localPoly
+            (Units.map (algebraMap R S) (1 : Rˣ)) (algebraMap R S pi) exponent =
+          Pcf.LocalModel.localPoly (1 : Sˣ) (algebraMap R S pi) exponent := by
+      rw [hMappedOneS]
+    exact eBaseChangeRS.trans (AdjoinRoot.algEquivOfEq S _ _ hPolynomialS)
+  let eTensor :
+      K ⊗[S] (S ⊗[R] AdjoinRoot (dvrRootPoly pi exponent)) ≃ₐ[K]
+        K ⊗[S] AdjoinRoot (Pcf.LocalModel.localPoly
+          (1 : Sˣ) (algebraMap R S pi) exponent) :=
+    Algebra.TensorProduct.congr (AlgEquiv.refl : K ≃ₐ[K] K) eRS
+  let eBaseChange :
+      K ⊗[S] AdjoinRoot (Pcf.LocalModel.localPoly
+          (1 : Sˣ) (algebraMap R S pi) exponent) ≃ₐ[K]
+        AdjoinRoot (Pcf.LocalModel.localPoly
+          (1 : Kˣ) (algebraMap S K (algebraMap R S pi)) exponent) := by
+    let eBaseChangeSK := standardCoverBaseChangeEquiv'
+      (R := S) (T := K) (1 : Sˣ) (algebraMap R S pi) exponent
+    have hMappedOneK : Units.map (algebraMap S K) (1 : Sˣ) = (1 : Kˣ) :=
+      map_one _
+    have hPolynomialK :
+        Pcf.LocalModel.localPoly
+            (Units.map (algebraMap S K) (1 : Sˣ))
+              (algebraMap S K (algebraMap R S pi)) exponent =
+          Pcf.LocalModel.localPoly
+            (1 : Kˣ) (algebraMap S K (algebraMap R S pi)) exponent := by
+      rw [hMappedOneK]
+    exact eBaseChangeSK.trans (AdjoinRoot.algEquivOfEq K _ _ hPolynomialK)
+  have hfactorK : algebraMap S K (algebraMap R S pi) =
+      (unitK : K) * (piK : K) ^ exponent := by
+    rw [hfactor, map_mul, map_pow]
+    change algebraMap S K (unit : S) * algebraMap S K piS ^ exponent =
+      algebraMap S K (unit : S) * algebraMap S K piS ^ exponent
+    rfl
+  let ePolynomial :
+      AdjoinRoot (Pcf.LocalModel.localPoly
+          (1 : Kˣ) (algebraMap S K (algebraMap R S pi)) exponent) ≃ₐ[K]
+        AdjoinRoot (Abhyankar.ramifiedPoly
+          unitK ((piK : K) ^ exponent) exponent) :=
+    AdjoinRoot.algEquivOfEq K _ _ <| by
+      simp [Pcf.LocalModel.localPoly, Abhyankar.ramifiedPoly, hfactorK]
+  let eSubstitution :
+      AdjoinRoot (Abhyankar.ramifiedPoly
+          unitK ((piK : K) ^ exponent) exponent) ≃ₐ[K]
+        AdjoinRoot (Abhyankar.kummerPoly unitK exponent) :=
+    Abhyankar.substEquiv unitK piK exponent
+  let eKummerBaseChange :
+      K ⊗[S] U ≃ₐ[K]
+        AdjoinRoot (Abhyankar.kummerPoly unitK exponent) := by
+    let ePolynomialS :
+        U ≃ₐ[S] AdjoinRoot
+          (Pcf.LocalModel.localPoly unit 1 exponent) :=
+      AdjoinRoot.algEquivOfEq S _ _ <| by
+        simp [Abhyankar.kummerPoly, Pcf.LocalModel.localPoly]
+    let eTensorS :
+        K ⊗[S] U ≃ₐ[K]
+          K ⊗[S] AdjoinRoot (Pcf.LocalModel.localPoly unit 1 exponent) :=
+      Algebra.TensorProduct.congr (AlgEquiv.refl : K ≃ₐ[K] K) ePolynomialS
+    let eBaseChangeS := standardCoverBaseChangeEquiv'
+      (R := S) (T := K) unit 1 exponent
+    let ePolynomialK :
+        AdjoinRoot (Pcf.LocalModel.localPoly
+          (Units.map (algebraMap S K) unit) (algebraMap S K 1) exponent) ≃ₐ[K]
+          AdjoinRoot (Abhyankar.kummerPoly unitK exponent) :=
+      AdjoinRoot.algEquivOfEq K _ _ <| by
+        simp [unitK, Abhyankar.kummerPoly, Pcf.LocalModel.localPoly]
+    exact (eTensorS.trans eBaseChangeS).trans ePolynomialK
+  let eLocalization := Localization.tensorRightAlgEquiv (Submonoid.powers piS) U
+  have hLocalizationSubmonoid :
+      Algebra.algebraMapSubmonoid U (Submonoid.powers piS) =
+        Submonoid.powers (algebraMap S U piS) :=
+    Algebra.algebraMapSubmonoid_powers piS
+  let eAway :
+      Localization (Algebra.algebraMapSubmonoid U (Submonoid.powers piS)) ≃ₐ[S]
+        Localization.Away (algebraMap S U piS) :=
+    IsLocalization.algEquivOfAlgEquiv
+      (A := S) (R := U) (P := U)
+      (M := Algebra.algebraMapSubmonoid U (Submonoid.powers piS))
+      (T := Submonoid.powers (algebraMap S U piS))
+      (Localization (Algebra.algebraMapSubmonoid U (Submonoid.powers piS)))
+      (Localization.Away (algebraMap S U piS))
+      (AlgEquiv.refl : U ≃ₐ[S] U) <| by
+        change Submonoid.map (MonoidHom.id U)
+          (Algebra.algebraMapSubmonoid U (Submonoid.powers piS)) =
+            Submonoid.powers (algebraMap S U piS)
+        rw [Submonoid.map_id, hLocalizationSubmonoid]
+  exact (((((eTensor.trans eBaseChange).trans ePolynomial).trans eSubstitution).trans
+    (eKummerBaseChange.symm.trans eLocalization)).restrictScalars S).trans eAway
+
+/-- The canonical generic equivalence obtained from the exact ramification-index
+factorization.  This is the `genericEquiv` input for the `0EYE` normalization endpoint,
+with the generic algebra fixed to the punctured base change of the `09EV` root field. -/
+noncomputable def dvrRootPuncturedBaseChangeEquivDVRRamificationKummerLocalization
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [FaithfulSMul R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
+    (exponent : ℕ)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    DVRRootPuncturedBaseChange R S pi piS exponent ≃ₐ[S]
+      DVRRamificationKummerLocalization
+        R S pi hpi piS hpiS exponent hramification :=
+  dvrRootPuncturedBaseChangeEquivKummerLocalization
+    R S pi piS
+      (dvrRamificationUnit R S pi hpi piS hpiS exponent hramification)
+      exponent
+      (dvrRamificationUnit_spec
+        R S pi hpi piS hpiS exponent hramification)
 
 /-- Faithfulness of the standard-root leg follows from faithfulness on the original DVR
 base.
@@ -1128,6 +1302,9 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms dvrRootToKummerNormalization
 #print axioms exists_unit_mul_pow_eq_of_ramificationIdx_eq
 #print axioms dvrRamificationUnit_spec
+#print axioms dvrRootPuncturedBaseChangeEquivKummerLocalization
+#print axioms
+  dvrRootPuncturedBaseChangeEquivDVRRamificationKummerLocalization
 #print axioms dvrRoot_faithfulSMul_of_faithful_base
 #print axioms hasSeparableResidueFieldsAt_comp_formallyUnramified
 #print axioms isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
