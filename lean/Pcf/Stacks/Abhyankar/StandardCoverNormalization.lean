@@ -229,6 +229,82 @@ theorem standardCover_isIntegralClosure_localizationAway_of_regular
     isReduced_of_isRegularRing
   exact standardCover_isIntegralClosure_localizationAway u a he ha
 
+/-- Localizing the integral standard root model is the same as first localizing the base
+and then adjoining a root of the base-changed polynomial.
+
+This is the algebraic bridge between the generic presentation in Tag `0EYG`, written as
+`R[1/a][x]/(x^e-u*a)`, and the canonical localization of the integral model used in the
+normalization calculation of Tag `0EYH`. -/
+noncomputable def standardCoverLocalizationEquiv (u : Rˣ) (a : R) (e : ℕ) :
+    Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a) ≃ₐ[R]
+      AdjoinRoot (localizedStandardPoly u a e) := by
+  let p := Pcf.LocalModel.localPoly u a e
+  let C := AdjoinRoot p
+  let Ra := Localization.Away a
+  let q : Ra[X] := p.map (algebraMap R Ra)
+  let B := AdjoinRoot q
+  let T := Localization.Away (algebraMap R C a)
+  let φ : C →+* B := AdjoinRoot.map (algebraMap R Ra) p q (dvd_refl q)
+  letI : Algebra C B := φ.toAlgebra
+  letI : IsScalarTower R C B := IsScalarTower.of_algebraMap_eq fun r => by
+    change algebraMap R B r = φ (AdjoinRoot.of p r)
+    dsimp only [φ]
+    rw [AdjoinRoot.map_of]
+    rw [IsScalarTower.algebraMap_apply R Ra B, AdjoinRoot.algebraMap_eq]
+  letI : Algebra R[X] Ra[X] := Polynomial.algebra R Ra
+  let hpowers : Submonoid.map Polynomial.C (Submonoid.powers a) =
+      Submonoid.powers (Polynomial.C a) := Submonoid.map_powers Polynomial.C a
+  letI : IsLocalization (Submonoid.powers (Polynomial.C a)) Ra[X] :=
+    hpowers ▸ Polynomial.isLocalization (Submonoid.powers a) Ra
+  have hloc : IsLocalization (Submonoid.powers (algebraMap R C a)) B := by
+    have hraw := IsLocalization.of_surjective
+      (Submonoid.powers (Polynomial.C a)) Ra[X]
+      (AdjoinRoot.mk p) AdjoinRoot.mk_surjective
+      (AdjoinRoot.mk q) AdjoinRoot.mk_surjective
+      (by
+        apply Polynomial.ringHom_ext
+        · intro r
+          rw [RingHom.algebraMap_toAlgebra φ]
+          rw [RingHom.comp_apply, RingHom.comp_apply]
+          change AdjoinRoot.mk q
+              (Polynomial.mapRingHom (algebraMap R Ra) (Polynomial.C r)) =
+            φ (AdjoinRoot.mk p (Polynomial.C r))
+          rw [Polynomial.coe_mapRingHom, Polynomial.map_C,
+            AdjoinRoot.mk_C, AdjoinRoot.mk_C]
+          dsimp only [φ]
+          rw [AdjoinRoot.map_of]
+        · rw [RingHom.comp_apply, RingHom.comp_apply,
+            show algebraMap R[X] Ra[X] X = X by
+              change Polynomial.mapRingHom (algebraMap R Ra) X = X
+              rw [Polynomial.coe_mapRingHom, Polynomial.map_X],
+            AdjoinRoot.mk_X, RingHom.algebraMap_toAlgebra, AdjoinRoot.mk_X]
+          dsimp only [φ]
+          rw [AdjoinRoot.map_root])
+      (by
+        change RingHom.ker (Ideal.Quotient.mk (Ideal.span {q})) ≤
+          Ideal.map (algebraMap R[X] Ra[X])
+            (RingHom.ker (Ideal.Quotient.mk (Ideal.span {p})))
+        rw [Ideal.mk_ker, Ideal.mk_ker, Ideal.map_span]
+        simp [p, q])
+    have hsub : Submonoid.map (AdjoinRoot.mk p)
+        (Submonoid.powers (Polynomial.C a)) =
+        Submonoid.powers (algebraMap R C a) := by
+      rw [Submonoid.map_powers, AdjoinRoot.mk_C, AdjoinRoot.algebraMap_eq]
+    exact hsub ▸ hraw
+  letI : IsLocalization (Submonoid.powers (algebraMap R C a)) B := hloc
+  exact ((IsLocalization.algEquiv
+    (Submonoid.powers (algebraMap R C a)) T B).restrictScalars R)
+
+/-- The preceding localization/base-change equivalence, componentwise for a family of
+standard root covers. -/
+noncomputable def standardCoversLocalizationEquiv
+    {ι : Type} (u : ι → Rˣ) (a : R) (e : ι → ℕ) :
+    (∀ i, Localization.Away
+        (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a)) ≃ₐ[R]
+      (∀ i, AdjoinRoot (localizedStandardPoly (u i) a (e i))) :=
+  AlgEquiv.piCongrRight fun i => standardCoverLocalizationEquiv (u i) a (e i)
+
 /-- A finite product of integral closures is the integral closure in the corresponding
 finite product of ambient rings.
 
@@ -375,6 +451,52 @@ theorem algebraMap_normalizationEquivStandardCoversOfGenericEquiv
   rw [normalizationEquivStandardCoversOfGenericEquiv]
   exact IsIntegralClosure.algebraMap_equiv R N TC C x
 
+/-- The literal `0EYG`-to-`0EYH` normalization comparison.  Here the generic-away
+presentation is written exactly as a finite product of root algebras over `R[1/a]`, as in
+the Stacks proof, rather than as localizations of the integral standard models.
+
+The localization/base-change equivalence converts that presentation to the ambient ring
+used by `normalizationEquivStandardCoversOfGenericEquiv`; uniqueness of integral closure
+then identifies the arbitrary normalization with the finite product of integral models. -/
+noncomputable def normalizationEquivStandardCoversOfLocalizedPresentation
+    {N : Type u} [CommRing N] [Algebra R N]
+    [IsNoetherianRing R]
+    {ι : Type} [Fintype ι]
+    (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    [IsIntegralClosure N R (Localization.Away (algebraMap R N a))]
+    (g : Localization.Away (algebraMap R N a) ≃ₐ[R]
+      (∀ i, AdjoinRoot (localizedStandardPoly (u i) a (e i)))) :
+    N ≃ₐ[R] (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) :=
+  normalizationEquivStandardCoversOfGenericEquiv u a e he ha
+    (g.trans (standardCoversLocalizationEquiv u a e).symm)
+
+/-- The literal `0EYG`-to-`0EYH` comparison commutes with the embeddings into the generic
+presentation `∏ i, R[1/a][x]/(x^(e i)-u i*a)`. -/
+theorem algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
+    {N : Type u} [CommRing N] [Algebra R N]
+    [IsNoetherianRing R]
+    {ι : Type} [Fintype ι]
+    (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
+    (ha : a ∈ nonZeroDivisors R)
+    [IsRegularRing (R ⧸ Ideal.span ({a} : Set R))]
+    [IsIntegralClosure N R (Localization.Away (algebraMap R N a))]
+    (g : Localization.Away (algebraMap R N a) ≃ₐ[R]
+      (∀ i, AdjoinRoot (localizedStandardPoly (u i) a (e i))))
+    (x : N) :
+    standardCoversLocalizationEquiv u a e
+        (algebraMap (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i)))
+          (∀ i, Localization.Away
+            (algebraMap R (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a))
+          (normalizationEquivStandardCoversOfLocalizedPresentation u a e he ha g x)) =
+      g (algebraMap N (Localization.Away (algebraMap R N a)) x) := by
+  let E := standardCoversLocalizationEquiv u a e
+  have h := algebraMap_normalizationEquivStandardCoversOfGenericEquiv
+    u a e he ha (g.trans E.symm) x
+  exact (congrArg E h).trans (E.apply_symm_apply (g
+    (algebraMap N (Localization.Away (algebraMap R N a)) x)))
+
 /-- Localizing a regular quotient at a prime over its defining ideal agrees with
 quotienting the corresponding local ring, and is therefore regular local. -/
 theorem isRegularLocalRing_quotient_localization
@@ -464,10 +586,14 @@ theorem standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms isReduced_of_isRegularRing
 #print axioms standardCover_isIntegralClosure_localizationAway
 #print axioms standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms standardCoverLocalizationEquiv
+#print axioms standardCoversLocalizationEquiv
 #print axioms isIntegralClosure_pi_of_fintype
 #print axioms standardCovers_isIntegralClosure_localizationsAway_of_regular
 #print axioms normalizationEquivStandardCoversOfGenericEquiv
 #print axioms algebraMap_normalizationEquivStandardCoversOfGenericEquiv
+#print axioms normalizationEquivStandardCoversOfLocalizedPresentation
+#print axioms algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms standardCover_isRegularLocalRing_atPrime_over_divisor
 
 end Pcf.Stacks
