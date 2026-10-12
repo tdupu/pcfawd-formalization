@@ -41,6 +41,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum

@@ -90,6 +90,7 @@ import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
@@ -288,6 +289,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_fromNormalization_isIso
 #print axioms Pcf.Stacks.puncturedCover_affineSections_isIntegrallyClosedInGeneric
 #print axioms Pcf.Stacks.normalizationDesc_isIso_of_fromNormalization_isIso
+#print axioms Pcf.Stacks.normalizationIsoOfSourceIso
+#print axioms Pcf.Stacks.normalizationRestrictIsoOfOpenImmersion
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationDesc_isIso
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationRestrictIso
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
@@ -408,6 +413,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.Module.Basis.mapSemilinear_apply
 #print axioms Pcf.Stacks.residueTensorEquivOfMapMaximalIdeal
 #print axioms Pcf.Stacks.residueTensorEquivOfMapMaximalIdeal_tmul
+#print axioms Pcf.Stacks.Finsupp.quotientSMulTopEquiv
+#print axioms Pcf.Stacks.Finsupp.quotientSMulTopEquiv_mk
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv_mk
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms Pcf.Stacks.flat_quotient_map
@@ -443,6 +452,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfGenericEquiv
 #print axioms Pcf.Stacks.normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
+#print axioms Pcf.Stacks.normalizationBaseChangeAlgebra
+#print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv
+#print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv_val
+#print axioms Pcf.Stacks.smoothBaseChange_isIntegralClosure
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers
