@@ -97,6 +97,34 @@ theorem puncturedCoverGenericFiber_integralClosure_finite
   let eC := eR.mapIntegralClosure
   exact Module.Finite.of_injective eC.toLinearMap eC.injective
 
+/-- The integral closure in the actual (possibly disconnected) generic-fibre algebra is
+Stacks-normal. -/
+theorem puncturedCoverGenericFiber_integralClosure_isStacksNormalRing
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let E := puncturedCoverGenericFiberAlgebra R hdim V
+    letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
+    IsStacksNormalRing (integralClosure R E) := by
+  let K := (Spec R).functionField
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  obtain ⟨I, hI, L, hField, hAlg, e, hProps⟩ :=
+    puncturedCoverGenericFiber_exists_separableFields R hdim V
+  letI : Finite I := hI
+  letI (i : I) : Field (L i) := hField i
+  letI (i : I) : Algebra K (L i) := hAlg i
+  letI (i : I) : FiniteDimensional K (L i) := (hProps i).1
+  letI (i : I) : Algebra.IsSeparable K (L i) := (hProps i).2
+  letI (i : I) : Algebra R (L i) := Algebra.compHom (L i) (algebraMap R K)
+  letI (i : I) : IsScalarTower R K (L i) := .of_algebraMap_eq' rfl
+  letI : IsScalarTower R K E := .of_algebraMap_eq' rfl
+  let eR : E ≃ₐ[R] (∀ i, L i) := e.restrictScalars R
+  let eC := eR.mapIntegralClosure
+  exact IsStacksNormalRing.of_ringEquiv eC.toRingEquiv
+    (finiteSeparableProduct_integralClosure_isStacksNormalRing R K I L)
+
 /-- The integral closure of `R` inside the section ring of an arbitrary finite étale cover of
 its puncture is module-finite. Inject the section ring into the actual generic-fibre algebra,
 whose integral closure is finite by the separable-field decomposition. -/
