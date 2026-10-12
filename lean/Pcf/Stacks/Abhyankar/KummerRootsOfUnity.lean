@@ -110,9 +110,58 @@ theorem dvrRootFraction_rootOfUnity_mem_rootAlgebra
     dvrRootAlgebra_isIntegralClosure_fractionRing π hn hπ
   exact rootOfUnity_mem_integralClosure A _ hn hz
 
+/-- The distinguished root is a uniformizer of the integral root algebra. -/
+theorem dvrRoot_irreducible
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
+    (π : A) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π) :
+    letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) := dvrRootAlgebra_isDomain π hn hπ
+    Irreducible (AdjoinRoot.root (dvrRootPoly π n)) := by
+  letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) := dvrRootAlgebra_isDomain π hn hπ
+  letI : IsLocalRing (AdjoinRoot (dvrRootPoly π n)) := dvrRootAlgebra_isLocalRing π hn hπ
+  letI : IsDiscreteValuationRing (AdjoinRoot (dvrRootPoly π n)) :=
+    dvrRootAlgebra_isDiscreteValuationRing π hn hπ
+  apply (IsDiscreteValuationRing.irreducible_iff_uniformizer _).mpr
+  exact (IsLocalRing.eq_maximalIdeal (dvrRootIdeal_isMaximal π hn hπ)).symm
+
+/-- In the root DVR, a base element has valuation divisible by the ramification degree.
+This uses the explicit equation `π = α^n` rather than an abstract tower theorem. -/
+theorem dvrRoot_addVal_base
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
+    (π : A) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π) (a : A) :
+    letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) := dvrRootAlgebra_isDomain π hn hπ
+    letI : IsDiscreteValuationRing (AdjoinRoot (dvrRootPoly π n)) :=
+      dvrRootAlgebra_isDiscreteValuationRing π hn hπ
+    IsDiscreteValuationRing.addVal (AdjoinRoot (dvrRootPoly π n))
+      (algebraMap A (AdjoinRoot (dvrRootPoly π n)) a) =
+      n * IsDiscreteValuationRing.addVal A a := by
+  let B := AdjoinRoot (dvrRootPoly π n)
+  letI : IsDomain B := dvrRootAlgebra_isDomain π hn hπ
+  letI : IsDiscreteValuationRing B := dvrRootAlgebra_isDiscreteValuationRing π hn hπ
+  let α : B := AdjoinRoot.root (dvrRootPoly π n)
+  have hα : Irreducible α := dvrRoot_irreducible π hn hπ
+  by_cases ha : a = 0
+  · subst a
+    have hn0 : (n : ℕ∞) ≠ 0 := by exact_mod_cast (show n ≠ 0 by omega)
+    simp [hn0]
+  obtain ⟨k, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible ha hπ
+  rw [hu, map_mul, map_pow, ← dvrRoot_pow_eq]
+  have hunit : IsUnit (algebraMap A B (u : A)) := (Units.isUnit u).map _
+  have huval : IsDiscreteValuationRing.addVal B (algebraMap A B (u : A)) = 0 :=
+    IsDiscreteValuationRing.addVal_eq_zero_iff.mpr hunit
+  have hαval : IsDiscreteValuationRing.addVal B α = 1 :=
+    IsDiscreteValuationRing.addVal_uniformizer hα
+  have hπval : IsDiscreteValuationRing.addVal A π = 1 :=
+    IsDiscreteValuationRing.addVal_uniformizer hπ
+  change (IsDiscreteValuationRing.addVal B)
+    (algebraMap A B (u : A) * (α ^ n) ^ k) =
+    (n : ℕ∞) * (IsDiscreteValuationRing.addVal A) ((u : A) * π ^ k)
+  simp [huval, hαval, hπval, nsmul_eq_mul, mul_comm]
+
 #print axioms rootOfUnity_mem_integralClosure
 #print axioms dvrRootFraction_rootOfUnity_mem_rootAlgebra
 #print axioms rootOfUnity_eq_one_of_residue_eq_one
 #print axioms restrictRootsOfUnity_residue_injective
+#print axioms dvrRoot_irreducible
+#print axioms dvrRoot_addVal_base
 
 end Pcf.Stacks
