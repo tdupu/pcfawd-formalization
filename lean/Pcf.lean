@@ -22,6 +22,9 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
 import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
+import Pcf.Stacks.Abhyankar.StrictHenselizationBase
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
@@ -29,6 +32,9 @@ import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction
 import Pcf.Stacks.Abhyankar.KummerFractionEquiv
+import Pcf.Stacks.Abhyankar.KummerClauses
+import Pcf.Stacks.Abhyankar.KummerTame
+import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
 import Pcf.Stacks.Common.RegularDimensionOne
 import Pcf.Bounding.RegularLocalDomain
 import Pcf.Bounding.Stacks

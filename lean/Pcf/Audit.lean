@@ -67,6 +67,9 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
 import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
+import Pcf.Stacks.Abhyankar.StrictHenselizationBase
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.DVR
@@ -74,6 +77,9 @@ import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
 import Pcf.Stacks.Abhyankar.KummerFraction
 import Pcf.Stacks.Abhyankar.KummerFractionEquiv
+import Pcf.Stacks.Abhyankar.KummerClauses
+import Pcf.Stacks.Abhyankar.KummerTame
+import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -198,6 +204,26 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedFiniteEtaleExtensionCover
 #print axioms Pcf.Stacks.puncturedFiniteEtaleRecoveryIso
 #print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrum_essSurj
+#print axioms Pcf.Stacks.PuncturedFiniteEtaleMorphismsExtend
+#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful
+#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrumEquivalence
+#print axioms Pcf.Stacks.IsStacksNormalRing
+#print axioms Pcf.Stacks.IsStacksNormalRing.isReduced
+#print axioms Pcf.Stacks.IsStacksNormalRing.pi
+#print axioms Pcf.Stacks.finiteNormalPuncturedEtaleAlgebraProperty
+#print axioms Pcf.Stacks.FiniteNormalPuncturedEtaleAlgebra.isFinite_algSpec
+#print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover
+#print axioms Pcf.Stacks.puncturedCoverRecoveryIso
+#print axioms Pcf.Stacks.PuncturedGlobalSectionsMorphismsExtend
+#print axioms Pcf.Stacks.tag0BM9EquivalenceOfMorphismExtension
+#print axioms Pcf.Stacks.tag0BM9EquivalenceOfRecovery
+#print axioms Pcf.Stacks.IsIntegralClosure.isDomain_of_isIntegralClosureInField
+#print axioms Pcf.Stacks.IsIntegralClosure.isIntegrallyClosed_of_finiteExtension
+#print axioms Pcf.Stacks.IsIntegralClosure.isStacksNormalRing_of_finiteExtension
+#print axioms Pcf.Stacks.IsIntegralClosure.moduleFinite_of_finiteSeparableExtension
+#print axioms Pcf.Stacks.isCompact_puncturedSpectrum
+#print axioms Pcf.Stacks.puncturedSpectrum_nonempty_of_one_le_ringKrullDim
+#print axioms Pcf.Stacks.puncturedSpectrum_restriction_injective
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -220,6 +246,19 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_containing_finite_colimit_set
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_of_localColimit_element
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_containing_finite_localColimit_set
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.residueFieldAlgEquiv_residue_toLocalColimitAlgHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_polynomial_with_simple_point
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_root_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_root_lifting_simple_residue_root
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_henselianLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_strictlyHenselianLocalRing
+#print axioms Pcf.Stacks.HenselianLocalRing.quotient_of_le_maximalIdeal
+#print axioms Pcf.Stacks.residueFieldMap_bijective_of_surjective
+#print axioms Pcf.Stacks.isSepClosed_of_ringEquiv
+#print axioms Pcf.Stacks.StrictlyHenselianLocalRing.quotient_of_le_maximalIdeal
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_base_isLocalHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_le_maximalIdeal_localColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotient_localColimit_strictlyHenselianLocalRing
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -257,6 +296,17 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRootFractionRing_finrank
 #print axioms Pcf.Stacks.dvrRootFractionLiftAlgHom_bijective
 #print axioms Pcf.Stacks.dvrRootFractionEquiv
+#print axioms Pcf.Stacks.inertiaDeg_eq_one_of_residue_algebraMap_bijective
+#print axioms Pcf.Stacks.residue_algebraMap_bijective_of_algEquiv
+#print axioms Pcf.Stacks.dvrRootIdeal_under
+#print axioms Pcf.Stacks.dvrRootIdeal_liesOver
+#print axioms Pcf.Stacks.dvrRootIdeal_inertiaDeg
+#print axioms Pcf.Stacks.dvrRootExtension_isTotallyRamifiedAt
+#print axioms Pcf.Stacks.dvrRootExtension_clauses_one_to_five
+#print axioms Pcf.Stacks.isSeparable_of_finrank_eq_one
+#print axioms Pcf.Stacks.dvrRootExtension_isTamelyRamifiedAt
+#print axioms Pcf.Stacks.rootOfUnity_eq_one_of_residue_eq_one
+#print axioms Pcf.Stacks.restrictRootsOfUnity_residue_injective
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
