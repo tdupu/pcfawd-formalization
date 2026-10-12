@@ -202,6 +202,106 @@ theorem reesQuotient_isNoetherian
   exact Algebra.FiniteType.isNoetherianRing
     (R ⧸ K.comap (algebraMap R (reesAlgebra I))) ((reesAlgebra I) ⧸ K)
 
+/-- The convergence step in Stacks Tag `05GH`.  A finite family whose coefficients improve
+adic order by one at each approximation generates the whole ideal in an adically complete
+ring.  The degree offsets allow this to be applied directly to coefficients of finitely many
+Rees polynomials. -/
+theorem fg_of_adic_approximation
+    {R : Type u} [CommRing R] (I J : Ideal R) [IsAdicComplete I R]
+    {k : ℕ} (g : Fin k → R) (d : Fin k → ℕ)
+    (hg : ∀ i, g i ∈ J)
+    (happrox : ∀ (n : ℕ) (x : R), x ∈ J → x ∈ I ^ n →
+      ∃ a : Fin k → R, (∀ i, a i ∈ I ^ (n - d i)) ∧
+        x - ∑ i, a i * g i ∈ J ⊓ I ^ (n + 1)) :
+    J.FG := by
+  classical
+  let D : ℕ := ∑ i, d i
+  have hd (i : Fin k) : d i ≤ D :=
+    Finset.single_le_sum (fun _ _ ↦ Nat.zero_le _) (Finset.mem_univ i)
+  let corr : ℕ → R → (Fin k → R) := fun n x ↦
+    if hx : x ∈ J ∧ x ∈ I ^ n then Classical.choose (happrox n x hx.1 hx.2) else 0
+  have hcorr {n : ℕ} {x : R} (hxJ : x ∈ J) (hxI : x ∈ I ^ n) :
+      (∀ i, corr n x i ∈ I ^ (n - d i)) ∧
+        x - ∑ i, corr n x i * g i ∈ J ⊓ I ^ (n + 1) := by
+    have hmem : x ∈ J ∧ x ∈ I ^ n := ⟨hxJ, hxI⟩
+    have heq : corr n x = Classical.choose (happrox n x hxJ hxI) := by
+      exact dite_eq_left hmem
+    rw [heq]
+    exact Classical.choose_spec (happrox n x hxJ hxI)
+  refine ⟨Finset.univ.image g, ?_⟩
+  rw [Finset.coe_image, Finset.coe_univ, Set.image_univ]
+  apply le_antisymm
+  · rw [Submodule.span_le]
+    rintro _ ⟨i, rfl⟩
+    exact hg i
+  · intro x hx
+    let rem : ℕ → R := fun n ↦ Nat.rec x
+      (fun n y ↦ y - ∑ i, corr n y i * g i) n
+    have hrem : ∀ n, rem n ∈ (J : Set R) ∧ rem n ∈ ((I ^ n : Ideal R) : Set R) := by
+      intro n
+      induction n with
+      | zero => exact ⟨by simpa [rem] using hx, by simp⟩
+      | succ n ih =>
+        have hh := (hcorr ih.1 ih.2).2
+        exact ⟨by simpa only [rem] using hh.1, by simpa only [rem] using hh.2⟩
+    let coeff : ℕ → Fin k → R := fun n i ↦ ∑ j ∈ Finset.range n, corr j (rem j) i
+    have hcoeff_succ (n : ℕ) (i : Fin k) :
+        coeff (n + 1) i = coeff n i + corr n (rem n) i := by
+      simp only [coeff, Finset.sum_range_succ]
+    have hrem_eq (n : ℕ) : rem n = x - ∑ i, coeff n i * g i := by
+      induction n with
+      | zero => simp [rem, coeff]
+      | succ n ih =>
+        simp only [rem, ih, hcoeff_succ]
+        simp_rw [add_mul, Finset.sum_add_distrib]
+        ring
+    have hcoeff_cauchy (i : Fin k) : ∀ {m n : ℕ}, m ≤ n →
+        coeff (m + D) i ≡ coeff (n + D) i [SMOD (I ^ m : Ideal R)] := by
+      intro m n hmn
+      induction n, hmn using Nat.le_induction with
+      | base => rfl
+      | succ n hmn ih =>
+        rw [show n + 1 + D = (n + D) + 1 by omega, hcoeff_succ]
+        refine ih.trans ?_
+        rw [SModEq.sub_mem, sub_add_eq_sub_sub, sub_self, zero_sub, Ideal.neg_mem_iff]
+        exact Ideal.pow_le_pow_right (I := I) (by have := hd i; omega)
+          ((hcorr (hrem (n + D)).1 (hrem (n + D)).2).1 i)
+    have hlimit : ∀ i : Fin k, ∃ a : R, ∀ n,
+        coeff (n + D) i ≡ a [SMOD (I ^ n : Ideal R)] := by
+      intro i
+      have hc : ∀ {m n}, m ≤ n → coeff (m + D) i ≡ coeff (n + D) i
+          [SMOD (I ^ m • (⊤ : Submodule R R))] := by
+        simpa only [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] using
+          (@hcoeff_cauchy i)
+      simpa only [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one] using
+        IsPrecomplete.prec' (fun n ↦ coeff (n + D) i) hc
+    choose a ha using hlimit
+    rw [Submodule.mem_span_range_iff_exists_fun R]
+    refine ⟨a, ?_⟩
+    apply Eq.symm
+    rw [IsHausdorff.eq_iff_smodEq (I := I)]
+    intro n
+    rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_one, SModEq.sub_mem]
+    have hry := hrem_eq (n + D)
+    have hryI := (hrem (n + D)).2
+    rw [hry] at hryI
+    have hryI' : x - ∑ i, coeff (n + D) i * g i ∈ I ^ n :=
+      Ideal.pow_le_pow_right (Nat.le_add_right n D) hryI
+    have hsum : ∑ i, (coeff (n + D) i - a i) * g i ∈ I ^ n := by
+      apply Ideal.sum_mem
+      intro i _
+      apply Ideal.mul_mem_right
+      simpa [SModEq.sub_mem] using ha i n
+    have hmul (b : Fin k → R) : ∑ i, b i * g i = ∑ i, g i * b i := by
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [mul_comm]
+    convert Ideal.add_mem (I ^ n) hryI' hsum using 1
+    simp only [smul_eq_mul]
+    rw [hmul a, hmul (coeff (n + D)), hmul (fun i ↦ coeff (n + D) i - a i)]
+    simp_rw [mul_sub, Finset.sum_sub_distrib]
+    ring
+
 end Ideal
 
 namespace AdicCompletion
@@ -1582,6 +1682,7 @@ end PointedEtaleNeighborhood
 #print axioms Ideal.adicReesIdeal
 #print axioms Ideal.coeff_mem_pow_succ_of_mem_rees_map
 #print axioms Ideal.reesQuotient_isNoetherian
+#print axioms Ideal.fg_of_adic_approximation
 #print axioms AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
