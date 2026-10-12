@@ -304,7 +304,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
-#print axioms Pcf.Stacks.IsStacksNormalRing.integralClosure_isStacksNormalRing_of_baseRingEquiv
+#print axioms Pcf.Stacks.integralClosure_isStacksNormalRing_of_baseRingEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_equiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_integralClosure_isStacksNormalRing
@@ -439,6 +439,7 @@ hypotheses. -/
   Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_adicCompletion_map_bijective
 #print axioms Pcf.Stacks.flat_quotient_map
 #print axioms Pcf.Stacks.flat_pi_self_of_isNoetherianRing
+#print axioms Pcf.Stacks.Module.Flat.of_forall_ideal_lTensor_injective
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms Pcf.Stacks.AdicCompletion.map_bijective_of_reduceModIdeal
