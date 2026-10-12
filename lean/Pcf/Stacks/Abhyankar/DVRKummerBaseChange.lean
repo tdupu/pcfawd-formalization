@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Pcf.Abhyankar
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
+import Pcf.Stacks.Abhyankar.KummerClauses
 
 /-!
 # The root-of-a-unit leg in the DVR Abhyankar square
@@ -75,7 +76,56 @@ theorem etale_of_dvr_kummerUnit_ramification_square
     etale_of_equiv_localization_kummerUnit S T unit e he heUnit q equiv
   exact etale_of_dvr_ramification_square R S A T hindex
 
+/-- The standard-root specialization of the `0BRM` square used in Tag `0EYG`.
+
+The lower ramified leg is now the literal DVR `R[π^(1/e)]`.  The `09EV` calculation proves
+that its ramification index is `e`, so the only numerical input is that the original DVR
+extension `S/R` also has index `e`.  The other top leg is the chosen local factor of the
+root-of-a-unit Kummer algebra over `S`. -/
+theorem etale_of_dvr_standardRoot_kummerUnit_square
+    (R : Type u) (S : Type v) (T : Type x)
+    [CommRing R] [CommRing S] [CommRing T]
+    [IsDomain R] [IsDomain S] [IsDomain T]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [IsDiscreteValuationRing T]
+    [Algebra R S] [Algebra R T] [Algebra S T] [IsScalarTower R S T]
+    [Module.Finite R S] [Module.Finite S T]
+    [IsLocalHom (algebraMap S T)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    [Algebra (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [IsScalarTower R (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [Module.Finite (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [FaithfulSMul (AdjoinRoot (dvrRootPoly pi exponent)) T]
+    [IsLocalHom
+      (algebraMap (AdjoinRoot (dvrRootPoly pi exponent)) T)]
+    [Algebra.HasSeparableResidueFieldsAt
+      (AdjoinRoot (dvrRootPoly pi exponent)) T
+      ((maximalIdeal T).under (AdjoinRoot (dvrRootPoly pi exponent)))]
+    (unit : Sˣ) (heUnit : IsUnit (exponent : S))
+    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (equiv : T ≃ₐ[S] Localization.AtPrime q)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    Algebra.Etale (AdjoinRoot (dvrRootPoly pi exponent)) T := by
+  let A := AdjoinRoot (dvrRootPoly pi exponent)
+  letI : IsDomain A := dvrRootAlgebra_isDomain pi hexponent hpi
+  letI : IsLocalRing A := dvrRootAlgebra_isLocalRing pi hexponent hpi
+  letI : IsDiscreteValuationRing A :=
+    dvrRootAlgebra_isDiscreteValuationRing pi hexponent hpi
+  letI : Module.Finite R A :=
+    (dvrRootPoly_monic pi hexponent).finite_adjoinRoot
+  have hmaximal : maximalIdeal A =
+      Ideal.span {AdjoinRoot.root (dvrRootPoly pi exponent)} :=
+    (IsLocalRing.eq_maximalIdeal (dvrRootIdeal_isMaximal pi hexponent hpi)).symm
+  have hindex : (maximalIdeal S).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R := by
+    rw [hramification, hmaximal]
+    exact (dvrRootIdeal_ramificationIdx pi hexponent hpi).symm
+  exact etale_of_dvr_kummerUnit_ramification_square
+    R S A T unit exponent (by omega) heUnit q equiv hindex
+
 #print axioms etale_of_equiv_localization_kummerUnit
 #print axioms etale_of_dvr_kummerUnit_ramification_square
+#print axioms etale_of_dvr_standardRoot_kummerUnit_square
 
 end Pcf.Stacks
