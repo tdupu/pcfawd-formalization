@@ -21,6 +21,8 @@ import Pcf.Stacks.Purity.FiniteNormalAlgebra
 import Pcf.Stacks.Purity.FiniteNormalHartogs
 import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 import Pcf.Stacks.Purity.DiscriminantFiber
+import Pcf.Stacks.Purity.HeightOneEtaleBridge
+import Pcf.Stacks.Purity.OuterInduction
 import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.GenericBaseNormalization
@@ -59,15 +61,20 @@ the proved pieces of its Stacks Tag `0BMB` proof.
   two.
 * the actual relative normalization of the generic point over a normal affine domain is an
   isomorphism, ready for smooth base change.
+* the complete height-one bridge from codimension-one unramifiedness to the finite-free
+  discriminant criterion of Tags `0BJH`/`0BJF`.
+* the outer regular-hypersurface induction step for Tag `0BMA`, conditional only on the exact
+  hypersurface finite-etale lifting statement of Tag `0BLM`.
 
 ## Remaining Stacks spine
 
-The higher-dimensional induction still requires punctured-spectrum purity (Tag `0BMA`). At the
-pinned Mathlib revision, the key étale-local finite factor of Tag `02LK` is already available as
-Tag `00UJ`, `Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. Ring-level Hartogs is
-complete; the remaining Tag `0BM9` work is the arbitrary-cover Stacks-normality and categorical
-recovery step. The dimension-two flatness/discriminant case and the hyperplane-section lifting
-theorem (Tag `0BLM`) also remain.
+The higher-dimensional induction still requires the hypersurface finite-etale lifting theorem
+(Tag `0BLM`). At the pinned Mathlib revision, the key étale-local finite factor of Tag `02LK` is
+already available as Tag `00UJ`,
+`Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. Tag `0BM9`, the dimension-two
+finite-free/discriminant branch, the height-one bridge, and the outer `0BMA` induction assembly
+are complete. After `0BLM`, the remaining work is the terminal `0BMA` base/induction theorem and
+the pointwise `0BMB` quasi-finite localization assembly.
 
 No declaration in this assembly file asserts the unproved terminal theorem.
 -/

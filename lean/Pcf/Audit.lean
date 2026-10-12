@@ -75,6 +75,8 @@ import Pcf.Stacks.Purity.MiracleFlatnessTwo
 import Pcf.Stacks.Purity.FiniteNormalHartogs
 import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 import Pcf.Stacks.Purity.DiscriminantFiber
+import Pcf.Stacks.Purity.HeightOneEtaleBridge
+import Pcf.Stacks.Purity.OuterInduction
 import Pcf.Stacks.Purity.Tag0BM9Equivalence
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
@@ -119,6 +121,8 @@ import Pcf.Stacks.Abhyankar.KummerTame
 import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
 import Pcf.Stacks.Abhyankar.KummerPowers
 import Pcf.Stacks.Abhyankar.KummerNormDescent
+import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
+import Pcf.Stacks.Abhyankar.StrictStandardConclusion
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -282,6 +286,16 @@ hypotheses. -/
 #print axioms
   Pcf.Stacks.Algebra.etale_of_genericFiber_formallyEtale_of_isUnit_at_height_one
 #print axioms Pcf.Stacks.Algebra.etale_of_genericFiber_and_heightOne_baseChange
+#print axioms Pcf.Stacks.Ideal.height_under_eq_of_finite_of_flat
+#print axioms Pcf.Stacks.heightOneBaseChange_maximal_under_under
+#print axioms Pcf.Stacks.Algebra.etale_heightOne_baseChange_of_unramifiedAt_height_one
+#print axioms Pcf.Stacks.Algebra.etale_of_genericFiber_and_unramifiedAt_height_one
+#print axioms Pcf.Stacks.puncturedHypersurfaceMap
+#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedHypersurface
+#print axioms Pcf.Stacks.PuncturedSpectrumPurity
+#print axioms Pcf.Stacks.HypersurfaceFiniteEtaleLifting
+#print axioms Pcf.Stacks.puncturedSpectrumPurity_of_hypersurface_lifting
+#print axioms Pcf.Stacks.regularLocal_puncturedSpectrumPurity_induction_step
 #print axioms Pcf.Stacks.spec_algebraMap_res
 #print axioms Pcf.Stacks.openSections_algebraMap_surjective_of_module_regularPair
 #print axioms Pcf.Stacks.openSections_algebraMap_bijective_of_module_regularPair
@@ -455,6 +469,11 @@ hypotheses. -/
   Pcf.Stacks.EtaleDescent.StageAlgebra.EquivalenceDescent.exists_stage_standardTameCover_of_limit_equiv
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtale_standardTameCover_of_strict
+#print axioms Pcf.Stacks.isRegularLocalRing_of_flat_of_formallyUnramified
+#print axioms Pcf.Stacks.isRegularRing_of_etale
+#print axioms Pcf.Stacks.quotient_span_isRegularRing_of_etale
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.presentationModelEquiv
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_common_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_equalizing_refinement
@@ -656,6 +675,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.maximalIdeal_under_eq_of_isIntegralClosure
 #print axioms Pcf.Stacks.exists_unit_mul_pow_eq_of_ramificationIdx_eq
 #print axioms Pcf.Stacks.dvrRootToKummerNormalization
+#print axioms Pcf.Stacks.DVRRootPuncturedNormalization
+#print axioms Pcf.Stacks.dvrRootPuncturedNormalizationAlgebra
+#print axioms Pcf.Stacks.dvrRootPuncturedNormalization_isScalarTower
+#print axioms Pcf.Stacks.dvrRootPuncturedNormalization_isIntegralClosure
+#print axioms
+  Pcf.Stacks.isUnramifiedAt_of_standardRoot_dvrRootPuncturedNormalization_localFactor
 #print axioms Pcf.Stacks.DVRRootPuncturedBaseChange
 #print axioms Pcf.Stacks.dvrRootPuncturedBaseChangeEquivKummerLocalization
 #print axioms
