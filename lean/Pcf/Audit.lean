@@ -247,6 +247,9 @@ hypotheses. -/
   Pcf.Stacks.range_koszulPairRight_subtype_rTensor_injective_of_isSMulRegular
 #print axioms Pcf.Stacks.range_koszulPairRight_eq_span
 #print axioms Pcf.Stacks.Module.free_of_regular_pair_generates_maximalIdeal
+#print axioms Pcf.Stacks.isWeaklyRegular_pair_of_integral_local_normal
+#print axioms
+  Pcf.Stacks.Module.free_of_finitePresentation_integral_local_normal_dimension_two
 #print axioms Pcf.Stacks.exists_eq_pow_smul_of_regular_pair
 #print axioms Pcf.Stacks.exists_common_value_of_module_regular_pair
 #print axioms Pcf.Stacks.etale_of_fpqc_pullback
@@ -489,6 +492,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms Pcf.Stacks.AdicCompletion.mapRange_exact_of_finite
 #print axioms Pcf.Stacks.AdicCompletion.mapRange_injective_of_finite
+#print axioms Pcf.Stacks.AdicCompletion.exists_mapRange_ker_preimage_of_finite
+#print axioms Pcf.Stacks.AdicCompletion.finsupp_flat_of_isNoetherian
 #print axioms Pcf.Stacks.Finsupp.finsuppPiLEquiv
 #print axioms Pcf.Stacks.Finsupp.finsuppPiLEquiv_apply
 #print axioms Pcf.Stacks.Finsupp.ideal_smul_submodule

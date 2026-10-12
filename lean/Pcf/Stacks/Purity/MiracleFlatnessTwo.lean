@@ -7,6 +7,9 @@ import Mathlib.RingTheory.Regular.Category
 import Mathlib.RingTheory.Regular.RegularSequence
 import Mathlib.LinearAlgebra.TensorProduct.Prod
 import Mathlib.RingTheory.LocalRing.Module
+import Mathlib.RingTheory.LocalRing.RingHom.Basic
+import Mathlib.RingTheory.Ideal.GoingUp
+import Pcf.Stacks.Purity.DepthTwo
 
 /-!
 # The two-dimensional miracle-flatness relation
@@ -270,5 +273,100 @@ theorem Module.free_of_regular_pair_generates_maximalIdeal
   apply Module.free_of_maximalIdeal_rTensor_injective
   rw [← hspan, ← range_koszulPairRight_eq_span x y]
   exact range_koszulPairRight_subtype_rTensor_injective_of_isSMulRegular hxR hyR hxM hyM
+
+/-- A system of two parameters pulled back along an integral local map to a normal local domain
+is a regular pair, provided the first parameter remains nonzero.
+
+The point is the local `S₂` argument in the dimension-two case of Stacks Tag `0BMA`.  If the
+second parameter lay in an associated prime of the first principal quotient, then that prime
+would contain both parameters.  Integrality and incomparability force it to be the closed point,
+contradicting normality and dimension at least two. -/
+theorem isWeaklyRegular_pair_of_integral_local_normal
+    {B : Type v} [CommRing B] [Algebra R B]
+    [IsLocalRing R] [IsLocalRing B] [IsLocalHom (algebraMap R B)]
+    [IsNoetherianRing B] [IsDomain B] [IsIntegrallyClosed B]
+    [Algebra.IsIntegral R B]
+    {x y : R}
+    (hspan : Ideal.span ({x, y} : Set R) = IsLocalRing.maximalIdeal R)
+    (hxB : algebraMap R B x ≠ 0)
+    (hdimB : 2 ≤ ringKrullDim B) :
+    IsWeaklyRegular B [x, y] := by
+  let xb : B := algebraMap R B x
+  let yb : B := algebraMap R B y
+  have hxm : x ∈ IsLocalRing.maximalIdeal R := by
+    rw [← hspan]
+    exact Ideal.subset_span (Set.mem_insert x {y})
+  have hxbm : xb ∈ IsLocalRing.maximalIdeal B :=
+    map_nonunit (algebraMap R B) x hxm
+  have hxb : IsSMulRegular B xb := isSMulRegular_self_of_ne_zero B hxB
+  have hclosed : IsLocalRing.maximalIdeal B ∉
+      associatedPrimes B (QuotSMulTop xb B) :=
+    principalQuotientsAvoidClosedPoint_of_two_le_ringKrullDim B hdimB xb hxbm hxB
+  have hyb : IsSMulRegular (QuotSMulTop xb B) yb := by
+    by_contra hyb
+    have hyUnion : yb ∈
+        ⋃ p ∈ associatedPrimes B (QuotSMulTop xb B), (p : Set B) := by
+      rw [biUnion_associatedPrimes_eq_compl_regular B (QuotSMulTop xb B)]
+      change ¬IsSMulRegular (QuotSMulTop xb B) yb
+      exact hyb
+    simp only [Set.mem_iUnion] at hyUnion
+    obtain ⟨p, hpAss, hyp⟩ := hyUnion
+    have hpPrime : p.IsPrime := IsAssociatedPrime.isPrime hpAss
+    have hxp : xb ∈ p := by
+      apply IsAssociatedPrime.annihilator_le hpAss
+      rw [Submodule.annihilator_top]
+      exact QuotSMulTop.mem_annihilator B xb
+    have hpUnderPrime : (p.comap (algebraMap R B)).IsPrime := hpPrime.comap _
+    have hcomap : p.comap (algebraMap R B) = IsLocalRing.maximalIdeal R := by
+      apply le_antisymm
+      · exact IsLocalRing.le_maximalIdeal hpUnderPrime.ne_top'
+      · rw [← hspan, Ideal.span_le]
+        intro z hz
+        simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hz
+        rcases hz with (rfl | rfl)
+        · exact hxp
+        · exact hyp
+    have hp_le : p ≤ IsLocalRing.maximalIdeal B :=
+      IsLocalRing.le_maximalIdeal hpPrime.ne_top'
+    have hp_eq : p = IsLocalRing.maximalIdeal B := by
+      apply le_antisymm hp_le
+      by_contra hnot
+      have hp_ne : p ≠ IsLocalRing.maximalIdeal B := by
+        intro hp
+        exact hnot (hp ▸ le_rfl)
+      have hp_lt : p < IsLocalRing.maximalIdeal B := lt_of_le_of_ne hp_le hp_ne
+      have hunder_lt := Ideal.IsIntegral.under_lt_under (R := R) hp_lt
+      rw [Ideal.under_def, Ideal.under_def, hcomap,
+        IsLocalRing.maximalIdeal_comap (algebraMap R B)] at hunder_lt
+      exact (lt_irrefl _ hunder_lt)
+    exact hclosed (hp_eq ▸ hpAss)
+  have hweakB : IsWeaklyRegular B [xb, yb] :=
+    IsWeaklyRegular.cons hxb
+      (IsWeaklyRegular.cons hyb (IsWeaklyRegular.nil B _))
+  rw [← isWeaklyRegular_map_algebraMap_iff (S := B) (M := B) [x, y]]
+  simpa [xb, yb] using hweakB
+
+/-- The dimension-two finite normal local case of miracle flatness.
+
+This is the flatness/freeness conclusion used in the dimension-two branch of Stacks Tag `0BMA`:
+an integral local finite-presentation algebra which is a normal local domain of dimension at
+least two is free once a regular parameter pair on the base generates the maximal ideal and the
+first parameter remains nonzero upstairs. -/
+theorem Module.free_of_finitePresentation_integral_local_normal_dimension_two
+    {B : Type v} [CommRing B] [Algebra R B]
+    [IsLocalRing R] [IsLocalRing B] [IsLocalHom (algebraMap R B)]
+    [IsNoetherianRing B] [IsDomain B] [IsIntegrallyClosed B]
+    [Algebra.IsIntegral R B] [Module.FinitePresentation R B]
+    {x y : R}
+    (hspan : Ideal.span ({x, y} : Set R) = IsLocalRing.maximalIdeal R)
+    (hxR : IsSMulRegular R x)
+    (hyR : IsSMulRegular (QuotSMulTop x R) y)
+    (hxB : algebraMap R B x ≠ 0)
+    (hdimB : 2 ≤ ringKrullDim B) :
+    Module.Free R B := by
+  have hweak := isWeaklyRegular_pair_of_integral_local_normal hspan hxB hdimB
+  have hpair := (isWeaklyRegular_cons_iff B x [y]).mp hweak
+  have hyB := ((isWeaklyRegular_cons_iff (QuotSMulTop x B) y []).mp hpair.2).1
+  exact Module.free_of_regular_pair_generates_maximalIdeal hspan hxR hyR hpair.1 hyB
 
 end Pcf.Stacks
