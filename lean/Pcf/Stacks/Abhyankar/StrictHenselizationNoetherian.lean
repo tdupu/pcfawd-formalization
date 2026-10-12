@@ -27,11 +27,14 @@ universe u v w
 
 namespace Pcf.Stacks
 
-/-- Arbitrary products of the base ring are flat when the base is Noetherian.  This is the
+/-- Arbitrary products of flat modules over a Noetherian ring are flat.  This is the
 product-flatness input in the proof of Stacks Tag `06LE`. -/
-theorem flat_pi_self_of_isNoetherianRing
-    (R : Type u) [CommRing R] [IsNoetherianRing R] (ι : Type v) :
-    Module.Flat R (ι → R) := by
+theorem Module.Flat.pi_of_isNoetherianRing
+    (R : Type u) [CommRing R] [IsNoetherianRing R]
+    {ι : Type v} (M : ι → Type w)
+    [∀ t, AddCommGroup (M t)] [∀ t, Module R (M t)]
+    [∀ t, Module.Flat R (M t)] :
+    Module.Flat R (∀ t, M t) := by
   apply Module.Flat.of_forall_isTrivialRelation
   intro l f x h
   let φ := Fintype.linearCombination R f
@@ -40,23 +43,48 @@ theorem flat_pi_self_of_isNoetherianRing
     exact le_top
   obtain ⟨k, g, hg⟩ :=
     Submodule.fg_iff_exists_fin_generating_family.mp hker
-  let z (t : ι) : Fin l → R := fun i ↦ x i t
-  have hz (t : ι) : z t ∈ φ.ker := by
+  have hrel (t : ι) : ∑ i, f i • x i t = 0 := by
+    simpa [Pi.smul_apply] using congrFun h t
+  choose kt a y hxy ha using fun t ↦
+    Module.Flat.isTrivialRelation_of_sum_smul_eq_zero (hrel t)
+  have hacol (t : ι) (j : Fin (kt t)) :
+      (fun i ↦ a t i j) ∈ φ.ker := by
     rw [LinearMap.mem_ker]
-    simpa [φ, z, Fintype.linearCombination_apply, Pi.smul_apply, mul_comm] using congrFun h t
-  choose c hc using fun t ↦
-    (Submodule.mem_span_range_iff_exists_fun R).mp (hg ▸ hz t)
-  refine ⟨k, (fun i j ↦ g j i), (fun j t ↦ c t j), ?_, ?_⟩
+    simpa [φ, Fintype.linearCombination_apply, mul_comm] using ha t j
+  choose c hc using fun t (j : Fin (kt t)) ↦
+    (Submodule.mem_span_range_iff_exists_fun R).mp (hg ▸ hacol t j)
+  refine ⟨k, (fun i s ↦ g s i),
+    (fun s t ↦ ∑ j, c t j s • y t j), ?_, ?_⟩
   · intro i
     funext t
-    have hit := congrArg (fun q : Fin l → R ↦ q i) (hc t)
-    simpa [Pi.smul_apply, mul_comm] using hit.symm
-  · intro j
-    have hgj : g j ∈ φ.ker := by
+    simp only [Pi.smul_apply, Finset.sum_apply]
+    calc
+      x i t = ∑ j, a t i j • y t j := hxy t i
+      _ = ∑ j, (∑ s, c t j s * g s i) • y t j := by
+        apply Finset.sum_congr rfl
+        intro j _
+        congr 1
+        simpa [Pi.smul_apply, mul_comm] using
+          (congrArg (fun q : Fin l → R ↦ q i) (hc t j)).symm
+      _ = ∑ j, ∑ s, (c t j s * g s i) • y t j := by
+        simp_rw [Finset.sum_smul]
+      _ = ∑ s, ∑ j, (g s i * c t j s) • y t j := by
+        rw [Finset.sum_comm]
+        simp only [mul_comm]
+      _ = ∑ s, g s i • ∑ j, c t j s • y t j := by
+        simp_rw [Finset.smul_sum, mul_smul]
+  · intro s
+    have hgs : g s ∈ φ.ker := by
       rw [← hg]
-      exact Submodule.subset_span (Set.mem_range_self j)
+      exact Submodule.subset_span (Set.mem_range_self s)
     simpa [φ, Fintype.linearCombination_apply, mul_comm] using
-      (show φ (g j) = 0 from LinearMap.mem_ker.mp hgj)
+      (show φ (g s) = 0 from LinearMap.mem_ker.mp hgs)
+
+/-- Arbitrary products of the base ring are flat when the base is Noetherian. -/
+theorem flat_pi_self_of_isNoetherianRing
+    (R : Type u) [CommRing R] [IsNoetherianRing R] (ι : Type v) :
+    Module.Flat R (ι → R) :=
+  Module.Flat.pi_of_isNoetherianRing R (fun _ : ι ↦ R)
 
 /-- A module admitting a tensor-injective map to a flat module is flat.  Applied to the
 completion-to-product map, this isolates the universal-injectivity input in Stacks Tag `06LE`. -/
@@ -764,6 +792,7 @@ theorem localColimit_isNoetherianRing_of_completion
 
 end PointedEtaleNeighborhood
 
+#print axioms Module.Flat.pi_of_isNoetherianRing
 #print axioms flat_pi_self_of_isNoetherianRing
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
 #print axioms flat_quotient_map
