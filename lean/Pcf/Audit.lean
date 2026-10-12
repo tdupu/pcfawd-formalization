@@ -88,6 +88,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
+import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
@@ -275,6 +276,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_finite
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_etale
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
+#print axioms Pcf.Stacks.puncturedCover_sections_isReduced
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
@@ -302,8 +304,11 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_normalizationSpecRestrictIso
 #print axioms Pcf.Stacks.puncturedCover_normalizationSectionsIso
 #print axioms Pcf.Stacks.puncturedCover_normalizationIntegralClosure_finite
+#print axioms Pcf.Stacks.puncturedCover_normalizationSections_isReduced
+#print axioms Pcf.Stacks.puncturedCover_normalization_isReduced
 #print axioms Pcf.Stacks.puncturedCover_normalization_finite_appTop
 #print axioms Pcf.Stacks.puncturedCover_normalizationSections_finite
+#print axioms Pcf.Stacks.puncturedCover_normalization_isFinite
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
@@ -385,6 +390,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isDomain
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
 #print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
+#print axioms Pcf.Stacks.exists_basis_of_flat_of_isNilpotent_maximalIdeal
+#print axioms Pcf.Stacks.flat_quotient_map
+#print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
+#print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
+#print axioms Pcf.Stacks.AdicCompletion.map_bijective_of_reduceModIdeal
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 #print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
@@ -399,6 +410,14 @@ hypotheses. -/
 #print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.finitePresentation
 #print axioms Pcf.Stacks.standardCover_rootQuotient_isRegularRing
 #print axioms Pcf.Stacks.standardCover_finite_free_cartier_regular
+#print axioms Pcf.Stacks.isIntegrallyClosedIn_away_of_span_isRadical
+#print axioms Pcf.Stacks.isReduced_of_isRegularRing
+#print axioms Pcf.Stacks.standardCover_isLocalizationAway_root
+#print axioms Pcf.Stacks.standardCover_isIntegrallyClosedIn_localizationAway
+#print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway
+#print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
+#print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
