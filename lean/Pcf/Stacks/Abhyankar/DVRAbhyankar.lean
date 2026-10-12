@@ -143,9 +143,52 @@ theorem etale_of_dvr_ramification_square
   apply etale_of_dvr_ramificationIdx_total_eq R A T
   simpa only [hunderA] using htotal
 
+/-- The local, not-necessarily-finite version of the final ramification square in
+Stacks Tag `0BRM`.
+
+This is the form needed for the local rings occurring in the tag.  The auxiliary leg
+`S → T` is only assumed unramified at the closed point, rather than finite etale, and
+the desired leg `A → T` is only required to be flat and essentially of finite type.
+The two ramification-index tower formulas still force the top index over `A` to be one;
+separability of the residue extension then gives unramifiedness at the closed point.
+
+Unlike `etale_of_dvr_ramification_square`, this theorem does not promote the local
+conclusion to global finite etaleness and hence does not impose module-finiteness on either
+top leg. -/
+theorem isUnramifiedAt_of_local_ramification_square
+    (R : Type u) (S : Type v) (A : Type w) (T : Type*)
+    [CommRing R] [CommRing S] [CommRing A] [CommRing T]
+    [IsLocalRing S] [IsLocalRing A] [IsLocalRing T]
+    [Algebra R S] [Algebra R A] [Algebra R T] [Algebra S T] [Algebra A T]
+    [IsScalarTower R S T] [IsScalarTower R A T]
+    [Module.Finite R S] [Module.Finite R A]
+    [Module.Flat S T] [Module.Flat A T]
+    [Algebra.EssFiniteType S T] [Algebra.EssFiniteType A T]
+    [IsLocalHom (algebraMap S T)] [IsLocalHom (algebraMap A T)]
+    [Algebra.IsUnramifiedAt S (maximalIdeal T)]
+    [Algebra.HasSeparableResidueFieldsAt A T ((maximalIdeal T).under A)]
+    (hindex : (maximalIdeal S).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R) :
+    Algebra.IsUnramifiedAt A (maximalIdeal T) := by
+  have hunderS : (maximalIdeal T).under S = maximalIdeal S :=
+    IsLocalRing.maximalIdeal_comap (algebraMap S T)
+  have hunderA : (maximalIdeal T).under A = maximalIdeal A :=
+    IsLocalRing.maximalIdeal_comap (algebraMap A T)
+  have htopOverS : (maximalIdeal T).ramificationIdx S = 1 :=
+    Ideal.ramificationIdx_eq_one (maximalIdeal T) S
+  have htower := Ideal.ramificationIdx_tower
+    (R := R) (S := S) (T := T) ((maximalIdeal T).under S) (maximalIdeal T)
+  have htotal : (maximalIdeal T).ramificationIdx R =
+      (maximalIdeal A).ramificationIdx R := by
+    rw [htower, hunderS, htopOverS, mul_one, hindex]
+  apply isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
+    R A T (maximalIdeal T)
+  simpa only [hunderA] using htotal
+
 #print axioms etale_of_isEtaleAt_maximalIdeal
 #print axioms isEtaleAt_of_ramificationIdx_total_eq_intermediate
 #print axioms etale_of_dvr_ramificationIdx_total_eq
 #print axioms etale_of_dvr_ramification_square
+#print axioms isUnramifiedAt_of_local_ramification_square
 
 end Pcf.Stacks
