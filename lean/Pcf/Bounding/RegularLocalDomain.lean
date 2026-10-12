@@ -146,8 +146,11 @@ private theorem quotient_spanRank_add_one_le
     _ = Cardinal.mk s := hscard.symm
     _ = (maxl R).spanRank := hs2
 
-/-- Quotienting a regular local ring by a minimal generator again gives a regular local ring. -/
-private theorem regularLocalRing_quotient
+/-- Quotienting a regular local ring by a minimal generator again gives a regular local ring.
+
+This is the regular-hypersurface input used in the induction of Stacks Tag `0BMA`: the
+hypothesis `x ∉ m²` says that `x` is part of a minimal generating set of the maximal ideal. -/
+theorem isRegularLocalRing_quotient_minimalGenerator
     {x : R} [IsRegularLocalRing R] [Nontrivial (R ⧸ Ideal.span {x})]
     (hx1 : x ∈ maxl R) (hx2 : x ∉ (maxl R) ^ 2) :
     IsRegularLocalRing (R ⧸ Ideal.span {x}) := by
@@ -174,6 +177,46 @@ private theorem regularLocalRing_quotient
       _ ≤ ((maxl R).spanFinrank : WithBot ℕ∞) := by exact_mod_cast hspanfinrank
       _ ≤ ringKrullDim (R ⧸ Ideal.span {x}) + 1 := hdim
   exact ENat.WithBot.add_le_add_one_right_iff.mp hadd
+
+/-- Quotienting by a minimal generator lowers the dimension of a regular local ring by exactly
+one. This is the dimension calculation paired with the regular-hypersurface theorem in the
+induction of Stacks Tag `0BMA`. -/
+theorem ringKrullDim_quotient_minimalGenerator_eq
+    {x : R} [IsRegularLocalRing R] [Nontrivial (R ⧸ Ideal.span {x})]
+    (hx1 : x ∈ maxl R) (hx2 : x ∉ (maxl R) ^ 2) (d : ℕ)
+    (hdim : ringKrullDim R = d + 1) :
+    ringKrullDim (R ⧸ Ideal.span {x}) = d := by
+  let _ : IsRegularLocalRing (R ⧸ Ideal.span {x}) :=
+    isRegularLocalRing_quotient_minimalGenerator hx1 hx2
+  have hdrop := quotient_spanRank_add_one_le hx1 hx2
+  rw [Submodule.fg_iff_spanRank_eq_spanFinrank.mpr
+      (maxl R).fg_of_isNoetherianRing,
+    Submodule.fg_iff_spanRank_eq_spanFinrank.mpr
+      (maxl (R ⧸ Ideal.span {x})).fg_of_isNoetherianRing] at hdrop
+  have hdropNat : (maxl (R ⧸ Ideal.span {x})).spanFinrank + 1 ≤
+      (maxl R).spanFinrank := by
+    exact_mod_cast hdrop
+  have hrank : (maxl R).spanFinrank = d + 1 := by
+    have hrank' : ((maxl R).spanFinrank : WithBot ℕ∞) = d + 1 := by
+      rw [IsRegularLocalRing.spanFinrank_maximalIdeal]
+      exact hdim
+    exact_mod_cast hrank'
+  have hheight : ringKrullDim R ≤ ringKrullDim (R ⧸ Ideal.span {x}) + 1 := by
+    simpa only [IsLocalRing.maximalIdeal_height_eq_ringKrullDim] using
+      (Ideal.height_le_ringKrullDim_quotient_add_one (p := maxl R) hx1)
+  rw [← IsRegularLocalRing.spanFinrank_maximalIdeal]
+  apply le_antisymm
+  · apply ENat.WithBot.add_le_add_one_right_iff.mp
+    calc
+      ((maxl (R ⧸ Ideal.span {x})).spanFinrank : WithBot ℕ∞) + 1 ≤
+          ((maxl R).spanFinrank : WithBot ℕ∞) := by exact_mod_cast hdropNat
+      _ = (d : WithBot ℕ∞) + 1 := by rw [hrank]; norm_num
+  · apply ENat.WithBot.add_le_add_one_right_iff.mp
+    calc
+      (d : WithBot ℕ∞) + 1 = ringKrullDim R := hdim.symm
+      _ ≤ ringKrullDim (R ⧸ Ideal.span {x}) + 1 := hheight
+      _ = ((maxl (R ⧸ Ideal.span {x})).spanFinrank : WithBot ℕ∞) + 1 := by
+        rw [IsRegularLocalRing.spanFinrank_maximalIdeal]
 
 end Cotangent
 
@@ -273,7 +316,8 @@ private theorem isDomain_induction :
                 (maxl (A ⧸ Ideal.span {x})).fg_of_isNoetherianRing] at hdrop
             have hdrop' : (maxl (A ⧸ Ideal.span {x})).spanFinrank + 1 ≤ n + 1 := by
               exact_mod_cast hn ▸ hdrop
-            have hdimquot := (regularLocalRing_quotient hx hx2).spanFinrank_maximalIdeal
+            have hdimquot :=
+              (isRegularLocalRing_quotient_minimalGenerator hx hx2).spanFinrank_maximalIdeal
             have hdimle : ringKrullDim A ≤ ringKrullDim (A ⧸ Ideal.span {x}) + 1 := by
               simpa only [IsLocalRing.maximalIdeal_height_eq_ringKrullDim] using
                 (Ideal.height_le_ringKrullDim_quotient_add_one (p := maxl A) hx)
@@ -282,7 +326,8 @@ private theorem isDomain_induction :
             have hreverse : n + 1 ≤ (maxl (A ⧸ Ideal.span {x})).spanFinrank + 1 := by
               exact_mod_cast hdimle
             omega
-          let _ : IsRegularLocalRing (A ⧸ Ideal.span {x}) := regularLocalRing_quotient hx hx2
+          let _ : IsRegularLocalRing (A ⧸ Ideal.span {x}) :=
+            isRegularLocalRing_quotient_minimalGenerator hx hx2
           exact ih (A ⧸ Ideal.span {x}) hquot
         by_contra hnotMin
         exact hnotDomain (isDomain_of_span_singleton_prime_not_minimal x hnotMin)

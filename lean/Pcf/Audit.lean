@@ -218,6 +218,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.HasZariskiNagataPurityAt
 #print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
 #print axioms Pcf.Stacks.algebraMap_flat_iff_localRingHom_flat
+#print axioms Pcf.Stacks.isRegularLocalRing_quotient_minimalGenerator
+#print axioms Pcf.Stacks.ringKrullDim_quotient_minimalGenerator_eq
+#print axioms Pcf.Stacks.exists_regularLocalRing_quotient_minimalGenerator
+#print axioms Pcf.Stacks.exists_regularLocalRing_quotient_of_ringKrullDim_eq_succ
 #print axioms Pcf.Stacks.etale_of_fpqc_pullback
 #print axioms Pcf.Stacks.formallyEtale_of_flat_of_formallyUnramified_of_isLocalization
 #print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
@@ -280,6 +284,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
 #print axioms Pcf.Stacks.puncturedCover_sections_isReduced
 #print axioms Pcf.Stacks.genericPoint_sections_isIntegrallyClosedIn
+#print axioms Pcf.Stacks.genericPoint_fromNormalization_isIso
+#print axioms Pcf.Stacks.puncturedCover_genericFiber_fromNormalization_isIso
+#print axioms Pcf.Stacks.puncturedCover_affineSections_isIntegrallyClosedInGeneric
+#print axioms Pcf.Stacks.normalizationDesc_isIso_of_fromNormalization_isIso
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
@@ -398,6 +406,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.IsLocalRing.ResidueField.mapEquivOfSurjective
 #print axioms Pcf.Stacks.Module.Basis.mapSemilinear
 #print axioms Pcf.Stacks.Module.Basis.mapSemilinear_apply
+#print axioms Pcf.Stacks.residueTensorEquivOfMapMaximalIdeal
+#print axioms Pcf.Stacks.residueTensorEquivOfMapMaximalIdeal_tmul
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms Pcf.Stacks.flat_quotient_map
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
@@ -423,10 +435,14 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_isIntegrallyClosedIn_localizationAway
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway_of_regular
+#print axioms Pcf.Stacks.standardCoverLocalizationEquiv
+#print axioms Pcf.Stacks.standardCoversLocalizationEquiv
 #print axioms Pcf.Stacks.isIntegralClosure_pi_of_fintype
 #print axioms Pcf.Stacks.standardCovers_isIntegralClosure_localizationsAway_of_regular
 #print axioms Pcf.Stacks.normalizationEquivStandardCoversOfGenericEquiv
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfGenericEquiv
+#print axioms Pcf.Stacks.normalizationEquivStandardCoversOfLocalizedPresentation
+#print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers

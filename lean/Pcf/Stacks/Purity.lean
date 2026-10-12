@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Pcf.Stacks.Purity.Defs
 import Pcf.Stacks.Purity.LocalEtale
 import Pcf.Stacks.Purity.LocalFlatness
+import Pcf.Stacks.Purity.RegularHypersurface
 import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Purity.DimensionOne
 import Pcf.Stacks.Purity.EtaleLocalization
@@ -20,6 +21,7 @@ import Pcf.Stacks.Purity.FiniteNormalAlgebra
 import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.GenericBaseNormalization
+import Pcf.Stacks.Purity.NormalizationTower
 import Pcf.Stacks.Purity.FiniteNormalModel
 import Pcf.Stacks.Purity.CoverNormalModel
 import Pcf.Stacks.Purity.NormalizationExtension
@@ -47,14 +49,19 @@ the proved pieces of its Stacks Tag `0BMB` proof.
 * the regular-sequence/associated-prime reduction of the missing depth-two (Serre S2) input.
 * the numerator-denominator common-value calculation underlying the intersection of two away
   localizations along a regular pair.
+* the resulting Hartogs isomorphism for a normal Noetherian local domain of dimension at least
+  two.
+* the actual relative normalization of the generic point over a normal affine domain is an
+  isomorphism, ready for smooth base change.
 
 ## Remaining Stacks spine
 
 The higher-dimensional induction still requires punctured-spectrum purity (Tag `0BMA`). At the
 pinned Mathlib revision, the key étale-local finite factor of Tag `02LK` is already available as
-Tag `00UJ`, `Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. The categorical
-depth-two/reflexive Hartogs recovery theorem needed to prove the equivalence in Tag `0BM9`, and
-the hyperplane-section lifting theorem (Tag `0BLM`), remain absent.
+Tag `00UJ`, `Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. Ring-level Hartogs is
+complete; the remaining Tag `0BM9` work is the arbitrary-cover Stacks-normality and categorical
+recovery step. The dimension-two flatness/discriminant case and the hyperplane-section lifting
+theorem (Tag `0BLM`) also remain.
 
 No declaration in this assembly file asserts the unproved terminal theorem.
 -/
