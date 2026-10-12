@@ -97,4 +97,32 @@ theorem puncturedCoverGenericFiber_integralClosure_finite
   let eC := eR.mapIntegralClosure
   exact Module.Finite.of_injective eC.toLinearMap eC.injective
 
+/-- The integral closure of `R` inside the section ring of an arbitrary finite étale cover of
+its puncture is module-finite. Inject the section ring into the actual generic-fibre algebra,
+whose integral closure is finite by the separable-field decomposition. -/
+theorem puncturedCover_sections_integralClosure_finite
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra R Γ(V.left, ⊤) :=
+      (((Scheme.ΓSpecIso R).inv ≫
+        (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
+    Module.Finite R (integralClosure R Γ(V.left, ⊤)) := by
+  letI : Algebra R Γ(V.left, ⊤) :=
+    (((Scheme.ΓSpecIso R).inv ≫
+      (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
+  have hE : Module.Finite R (integralClosure R E) :=
+    puncturedCoverGenericFiber_integralClosure_finite R hdim V
+  let f := puncturedCoverGenericFiber_sectionAlgHom R hdim V
+  let fC := f.mapIntegralClosure
+  have hfC : Function.Injective fC := by
+    intro x y h
+    apply Subtype.ext
+    apply puncturedCoverGenericFiber_sectionAlgHom_injective R hdim V
+    exact congrArg (fun z : integralClosure R E => (z : E)) h
+  exact Module.Finite.of_injective fC.toLinearMap hfC
+
 end Pcf.Stacks
