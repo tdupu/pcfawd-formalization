@@ -238,6 +238,45 @@ theorem maximalIdeal_under_eq_of_isIntegralClosure
   exact IsLocalRing.eq_maximalIdeal
     (Ideal.isMaximal_under_of_isIntegral_of_isMaximal m)
 
+/-- The standard-root algebra maps canonically to a normalization identified with the
+root-of-a-unit Kummer algebra.
+
+The displayed factorization `pi = unit * piS ^ exponent` is the DVR equation in the
+last paragraph of Tag `0BRM`.  Under the uniqueness equivalence for the two integral
+closures, the standard root is sent to `piS` times the Kummer root.  Thus this definition
+constructs the horizontal map in the ramification square from the normalization data,
+rather than postulating an algebra structure on the normalization. -/
+noncomputable def dvrRootToKummerNormalization
+    (R : Type u) (S : Type v) (N : Type w) (C : Type x)
+    [CommRing R] [CommRing S] [CommRing N] [CommRing C]
+    [Algebra R S] [Algebra S N] [Algebra R N] [IsScalarTower R S N]
+    [Algebra S C] [Algebra N C] [IsScalarTower S N C]
+    [IsIntegralClosure N S C]
+    (pi : R) (piS : S) (unit : Sˣ) (exponent : ℕ)
+    (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent)
+    [Algebra (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
+    [IsScalarTower S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
+    [IsIntegralClosure
+      (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) S C] :
+    AdjoinRoot (dvrRootPoly pi exponent) →ₐ[R] N := by
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let g : N ≃ₐ[S] U := IsIntegralClosure.equiv S N C U
+  let rootN : N := g.symm
+    (algebraMap S U piS * AdjoinRoot.root (Abhyankar.kummerPoly unit exponent))
+  apply AdjoinRoot.liftAlgHom _ (Algebra.ofId R N) rootN
+  change Polynomial.aeval rootN (dvrRootPoly pi exponent) = 0
+  rw [dvrRootPoly, map_sub, Polynomial.aeval_X_pow, Polynomial.aeval_C]
+  apply g.injective
+  rw [map_zero]
+  rw [map_sub, map_pow]
+  simp only [rootN, g.apply_symm_apply]
+  rw [mul_pow, Abhyankar.root_pow]
+  have hpi : g (algebraMap R N pi) = algebraMap S U (algebraMap R S pi) := by
+    rw [IsScalarTower.algebraMap_apply R S N]
+    exact g.commutes (algebraMap R S pi)
+  rw [hpi, hfactor, map_mul, map_pow]
+  ring
+
 /-- Faithfulness of the standard-root leg follows from faithfulness on the original DVR
 base.
 
@@ -564,6 +603,64 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
   exact isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
     R S N C pi exponent hexponent hpi unit heUnit m hmS hmAT hramification
 
+/-- The literal `0BRM` local factor with its standard-root map constructed from the
+displayed DVR factorization.
+
+Compared with `isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor`,
+this theorem does not assume an algebra structure from the standard root DVR to the
+normalization.  It constructs that map by sending the root to `piS` times the Kummer root
+under uniqueness of integral closure.  The factorization equation is exactly the remaining
+piece of the displayed 0BRM square. -/
+theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of_factorization
+    (R : Type u) (S : Type v) (N : Type w)
+    [CommRing R] [CommRing S] [CommRing N]
+    [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [Module.Finite R S] [FaithfulSMul R S]
+    [IsLocalHom (algebraMap R S)]
+    [Algebra.HasSeparableResidueFieldsAt R S (maximalIdeal R)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    (piS : S) (hpiS : Irreducible piS)
+    (unit : Sˣ) (heUnit : IsUnit (exponent : S))
+    (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent)
+    [Algebra S N] [Algebra R N] [IsScalarTower R S N]
+    [Algebra N (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    [IsScalarTower S N (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    [IsIntegralClosure N S (Localization.Away
+      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+    (m : Ideal N) [m.IsMaximal]
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let C := Localization.Away (algebraMap S U piS)
+    let _ : IsIntegralClosure U S C :=
+      kummerUnit_isIntegralClosure_localizationAway_uniformizer
+        S piS hpiS unit exponent hexponent heUnit
+    let rootMap := dvrRootToKummerNormalization
+      R S N C pi piS unit exponent hfactor
+    let _ : Algebra (AdjoinRoot (dvrRootPoly pi exponent)) N :=
+      rootMap.toRingHom.toAlgebra
+    Algebra.IsUnramifiedAt
+      (AdjoinRoot (dvrRootPoly pi exponent))
+      (maximalIdeal (Localization.AtPrime m)) := by
+  dsimp only
+  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let C := Localization.Away (algebraMap S U piS)
+  letI : IsIntegralClosure U S C :=
+    kummerUnit_isIntegralClosure_localizationAway_uniformizer
+      S piS hpiS unit exponent hexponent heUnit
+  let rootMap : AdjoinRoot (dvrRootPoly pi exponent) →ₐ[R] N :=
+    dvrRootToKummerNormalization
+      R S N C pi piS unit exponent hfactor
+  letI : Algebra (AdjoinRoot (dvrRootPoly pi exponent)) N :=
+    rootMap.toRingHom.toAlgebra
+  letI : IsScalarTower R (AdjoinRoot (dvrRootPoly pi exponent)) N :=
+    IsScalarTower.of_algebraMap_eq' rootMap.comp_algebraMap.symm
+  exact isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
+    R S N pi exponent hexponent hpi piS hpiS unit heUnit m hramification
+
 /-- A finite algebra identified with a local factor of a root-of-a-unit Kummer algebra is
 etale over the base DVR.
 
@@ -754,10 +851,13 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms isLocalHom_of_maximalIdeal_under_eq
 #print axioms isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal
 #print axioms maximalIdeal_under_eq_of_isIntegralClosure
+#print axioms dvrRootToKummerNormalization
 #print axioms dvrRoot_faithfulSMul_of_faithful_base
 #print axioms hasSeparableResidueFieldsAt_comp_formallyUnramified
 #print axioms isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
 #print axioms isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
+#print axioms
+  isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of_factorization
 #print axioms etale_of_equiv_localization_kummerUnit
 #print axioms isUnramifiedAt_of_kummerUnit_local_ramification_square
 #print axioms isUnramifiedAt_of_standardRoot_kummerUnit_local_square
