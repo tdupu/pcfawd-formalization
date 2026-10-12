@@ -129,6 +129,45 @@ variable {N : Type w} [AddCommGroup N] [Module R N]
 variable {P : Type t} [AddCommGroup P] [Module R P]
 variable {f : M →ₗ[R] N} {g : N →ₗ[R] P}
 
+/-- Adic completion preserves an injective map whenever its range satisfies the explicit
+Artin–Rees equality.  This is the injectivity argument from Stacks Tag `06LD`, stated so that
+it applies to uniform coordinatewise Artin–Rees equalities on arbitrary direct sums. -/
+theorem map_injective_of_pow_inf_eq_pow_smul
+    (hf : Function.Injective f) {k : ℕ}
+    (hkn : ∀ n ≥ k,
+      I ^ n • (⊤ : Submodule R N) ⊓ LinearMap.range f =
+        I ^ (n - k) • (I ^ k • (⊤ : Submodule R N) ⊓ LinearMap.range f)) :
+    Function.Injective (AdicCompletion.map I f) := by
+  rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
+  intro x hx
+  ext n
+  obtain ⟨b, hb⟩ :=
+    Submodule.Quotient.mk_surjective (I ^ (n + k) • ⊤ : Submodule R M) (x.val (n + k))
+  have hfb : f b ∈ (I ^ (n + k) • ⊤ : Submodule R N) := by
+    have hz := congrArg (fun z ↦ z.val (n + k)) hx
+    simp only [AdicCompletion.map_val_apply, AdicCompletion.val_zero_apply] at hz
+    rw [← Submodule.Quotient.mk_eq_zero]
+    change (LinearMap.reduceModIdeal (I ^ (n + k)) f)
+      (Submodule.Quotient.mk b) = 0
+    rw [hb]
+    exact hz
+  have hbmem : b ∈ (I ^ n • ⊤ : Submodule R M) := by
+    rw [← Submodule.comap_map_eq_of_injective hf (I ^ n • ⊤ : Submodule R M),
+      Submodule.map_smul'', Submodule.map_top]
+    change f b ∈ I ^ n • LinearMap.range f
+    apply (smul_mono_right _ inf_le_right :
+      I ^ n • (I ^ k • ⊤ ⊓ LinearMap.range f) ≤ _)
+    nth_rw 1 [show n = n + k - k by lia]
+    rw [← hkn (n + k) (by lia)]
+    exact ⟨hfb, ⟨b, rfl⟩⟩
+  calc
+    x.val n = AdicCompletion.transitionMap I M (show n ≤ n + k by lia) (x.val (n + k)) :=
+      (x.property (show n ≤ n + k by lia)).symm
+    _ = AdicCompletion.transitionMap I M (show n ≤ n + k by lia)
+        (Submodule.Quotient.mk b) := congrArg _ hb.symm
+    _ = Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R M)) b := rfl
+    _ = 0 := by rw [Submodule.Quotient.mk_eq_zero]; exact hbmem
+
 /-- The correction step in adic exactness only uses the displayed Artin–Rees equality,
 not finite generation itself.  Keeping that equality explicit lets us apply the argument to a
 coordinatewise finite relation module. -/
@@ -367,6 +406,64 @@ theorem exists_pow_inf_eq_pow_smul_submodule
         Finsupp.ideal_smul_submodule]
 
 end Finsupp
+
+namespace AdicCompletion
+
+/-- Completion preserves a coordinatewise short exact sequence obtained by taking an
+arbitrary direct sum of copies of a short exact sequence with finite middle term.  This is
+the exactness form of the Artin–Rees argument in Stacks Tag `06LD`. -/
+theorem mapRange_exact_of_finite
+    {R : Type u} [CommRing R] [IsNoetherianRing R] {I : Ideal R}
+    {M : Type v} [AddCommGroup M] [Module R M]
+    {N : Type w} [AddCommGroup N] [Module R N] [Module.Finite R N]
+    {P : Type t} [AddCommGroup P] [Module R P]
+    {f : M →ₗ[R] N} {g : N →ₗ[R] P}
+    (hf : Function.Injective f) (hfg : Function.Exact f g)
+    (hg : Function.Surjective g) (ι : Type*) :
+    Function.Exact
+      (AdicCompletion.map I (Finsupp.mapRange.linearMap (α := ι) f))
+      (AdicCompletion.map I (Finsupp.mapRange.linearMap (α := ι) g)) := by
+  have hf' : Function.Injective (Finsupp.mapRange.linearMap (α := ι) f) := by
+    intro x y hxy
+    ext i
+    apply hf
+    exact congrArg (fun z ↦ z i) hxy
+  have hg' : Function.Surjective (Finsupp.mapRange.linearMap (α := ι) g) := by
+    intro y
+    obtain ⟨x, hx⟩ := Finsupp.mapRange_surjective g g.map_zero hg y
+    exact ⟨x, hx⟩
+  have hfg' : Function.Exact
+      (Finsupp.mapRange.linearMap (α := ι) f)
+      (Finsupp.mapRange.linearMap (α := ι) g) := by
+    rw [LinearMap.exact_iff, Finsupp.ker_mapRange,
+      Finsupp.range_mapRange_linearMap _ (LinearMap.ker_eq_bot.mpr hf),
+      hfg.linearMap_ker_eq]
+  obtain ⟨k, hk⟩ :=
+    Finsupp.exists_pow_inf_eq_pow_smul_submodule I (LinearMap.range f) ι
+  apply AdicCompletion.map_exact_of_pow_inf_eq_pow_smul hf' hfg' hg'
+  simpa only [Finsupp.range_mapRange_linearMap _ (LinearMap.ker_eq_bot.mpr hf)] using hk
+
+/-- Completion preserves injectivity after taking an arbitrary direct sum of copies of an
+injective map with finite target.  This is the universal injectivity form of Stacks Tag
+`06LD`. -/
+theorem mapRange_injective_of_finite
+    {R : Type u} [CommRing R] [IsNoetherianRing R] {I : Ideal R}
+    {M : Type v} [AddCommGroup M] [Module R M]
+    {N : Type w} [AddCommGroup N] [Module R N] [Module.Finite R N]
+    {f : M →ₗ[R] N} (hf : Function.Injective f) (ι : Type*) :
+    Function.Injective
+      (AdicCompletion.map I (Finsupp.mapRange.linearMap (α := ι) f)) := by
+  have hf' : Function.Injective (Finsupp.mapRange.linearMap (α := ι) f) := by
+    intro x y hxy
+    ext i
+    apply hf
+    exact congrArg (fun z ↦ z i) hxy
+  obtain ⟨k, hk⟩ :=
+    Finsupp.exists_pow_inf_eq_pow_smul_submodule I (LinearMap.range f) ι
+  apply AdicCompletion.map_injective_of_pow_inf_eq_pow_smul hf'
+  simpa only [Finsupp.range_mapRange_linearMap _ (LinearMap.ker_eq_bot.mpr hf)] using hk
+
+end AdicCompletion
 
 /-- A flat module over a local ring with nilpotent maximal ideal is free.  This is the
 infinite-rank form of Stacks Tag `051F`; the chosen lifts of a residue-field basis span because
@@ -1118,12 +1215,15 @@ end PointedEtaleNeighborhood
 #print axioms flat_pi_self_of_isNoetherianRing
 #print axioms AdicCompletion.pi_flat_of_isNoetherian
 #print axioms Module.Flat.of_forall_ideal_lTensor_injective
+#print axioms AdicCompletion.map_injective_of_pow_inf_eq_pow_smul
 #print axioms AdicCompletion.map_exact_of_pow_inf_eq_pow_smul
 #print axioms Finsupp.finsuppPiLEquiv
 #print axioms Finsupp.finsuppPiLEquiv_apply
 #print axioms Finsupp.ideal_smul_submodule
 #print axioms Finsupp.submodule_inf
 #print axioms Finsupp.exists_pow_inf_eq_pow_smul_submodule
+#print axioms AdicCompletion.mapRange_exact_of_finite
+#print axioms AdicCompletion.mapRange_injective_of_finite
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
 #print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
