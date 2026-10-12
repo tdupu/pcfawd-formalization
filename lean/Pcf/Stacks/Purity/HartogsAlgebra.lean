@@ -96,4 +96,33 @@ theorem fraction_of_regular_pair_eq_algebraMap
   rw [hc, map_mul, map_pow]
   ac_rfl
 
+/-- In a normal Noetherian local domain of dimension at least two, some two nonunits form a
+regular pair whose away-localization fractions intersect only in the base ring. -/
+theorem exists_fraction_intersection_pair_of_isIntegrallyClosed
+    [IsLocalRing R] [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 2 ≤ ringKrullDim R) :
+    ∃ x y : R, x ∈ IsLocalRing.maximalIdeal R ∧ y ∈ IsLocalRing.maximalIdeal R ∧
+      x ≠ 0 ∧ y ≠ 0 ∧
+      ∀ {K : Type*} [Field K] [Algebra R K] [IsFractionRing R K]
+        {a b : R} (m n : ℕ),
+        algebraMap R K a / algebraMap R K (x ^ n) =
+          algebraMap R K b / algebraMap R K (y ^ m) →
+        ∃ c : R, algebraMap R K a / algebraMap R K (x ^ n) = algebraMap R K c := by
+  obtain ⟨x, y, hxm, hym, hreg⟩ :=
+    exists_regularSequence_two_of_isIntegrallyClosed R hdim
+  have ⟨hxreg, htail⟩ := (isRegular_cons_iff R x [y]).mp hreg
+  have hyreg : IsSMulRegular (QuotSMulTop x R) y :=
+    ((isRegular_cons_iff (QuotSMulTop x R) y []).mp htail).1
+  have hx : x ≠ 0 := by
+    intro h
+    subst x
+    exact IsSMulRegular.not_zero hxreg
+  have hy : y ≠ 0 := by
+    intro h
+    subst y
+    exact (@IsSMulRegular.not_zero R (QuotSMulTop x R) _ _ _ htail.nontrivial) hyreg
+  refine ⟨x, y, hxm, hym, hx, hy, ?_⟩
+  intro K _ _ _ a b m n h
+  exact fraction_of_regular_pair_eq_algebraMap hx hy hyreg m n h
+
 end Pcf.Stacks
