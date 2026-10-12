@@ -74,6 +74,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -289,6 +290,10 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_quotientBaseChange_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_quotientBaseChange_equalizing_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotientBaseChange_final
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_baseChange_refinement_of_toColimit_eq
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom_surjective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom_injective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom_bijective
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_toColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitQuotientBaseChangeAlgHom

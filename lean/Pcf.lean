@@ -29,6 +29,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
 import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
+import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.TameRamification
