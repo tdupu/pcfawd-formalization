@@ -63,6 +63,7 @@ import Pcf.Bounding.SchemeAllTheWayDown
 import Pcf.Bounding.DimensionTermination
 import Pcf.Bounding.PcfAllTheWayDownCharZero
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
 import Pcf.Stacks.Purity.LocalFlatness
 import Pcf.Stacks.Purity.FpqcEtaleDescent
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
@@ -80,6 +81,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -273,12 +275,25 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
+#print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_finite
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericModel
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericSchemeModel
+#print axioms Pcf.Stacks.puncturedCoverGenericFiber_integralClosure_finite
+#print axioms Pcf.Stacks.puncturedCover_normalization_isAffine
+#print axioms Pcf.Stacks.puncturedCover_normalizationSpecMap
+#print axioms Pcf.Stacks.puncturedCover_normalizationRestrictIso
+#print axioms Pcf.Stacks.puncturedCover_normalizationSpecRestrictIso
+#print axioms Pcf.Stacks.puncturedCover_normalizationSectionsIso
 #print axioms Pcf.Stacks.EtaleDescent.exists_stage_containing_finite_set
 #print axioms Pcf.Stacks.EtaleDescent.exists_finitePresentation_model_of_isColimit
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_factorizations_of_finitePresentation
 #print axioms Pcf.Stacks.EtaleDescent.exists_common_stage_for_two_eventual_eq_of_finitePresentation
+#print axioms Pcf.Stacks.EtaleDescent.ringCoconeAboveIsColimit
+#print axioms Pcf.Stacks.EtaleDescent.baseChangeCoconeIsColimit
+#print axioms Pcf.Stacks.EtaleDescent.exists_descendedMapPair
+#print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv
+#print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv_of_standardTameCover
+#print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv_of_standardTameCovers
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.presentationModelEquiv
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_common_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_equalizing_refinement
@@ -342,6 +357,11 @@ hypotheses. -/
   Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.point_ker_under
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_maximalIdeal_localColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_flat
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_faithfullyFlat
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit

@@ -17,6 +17,7 @@ import Pcf.Stacks.Purity
 import Pcf.Stacks.Abhyankar
 import Pcf.Stacks.Abhyankar.EtaleDescent
 import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
 import Pcf.Stacks.Abhyankar.StrictHenselization
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
@@ -33,6 +34,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
