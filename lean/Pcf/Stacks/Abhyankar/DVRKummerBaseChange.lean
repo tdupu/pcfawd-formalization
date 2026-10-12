@@ -23,7 +23,7 @@ of choosing a prime of the Kummer algebra; it does not assume etaleness of the d
 
 open IsLocalRing
 
-universe u v w x
+universe u v w x y
 
 namespace Pcf.Stacks
 
@@ -198,6 +198,56 @@ noncomputable def localizationEquivKummerUnit_of_isIntegralClosure
   exact Localization.localAlgEquiv m (m.map g) g
     (Ideal.comap_map_of_bijective g g.bijective).symm
 
+/-- Transport the embedding of a normalization into a generically equivalent ambient
+algebra.
+
+This is the algebra structure underlying the base-change-normalization step `03GV` used
+inside Tags `0EYG` and `0EYH`: an actual normalization in `D`, together with an
+`S`-algebra equivalence `D ≃ C`, gives its canonical embedding in `C`. -/
+@[instance_reducible]
+noncomputable def normalizationAlgebraOfGenericEquiv
+    (S : Type v) (N : Type w) (D : Type x) (C : Type y)
+    [CommRing S] [CommRing N] [CommRing D] [CommRing C]
+    [Algebra S N] [Algebra S D] [Algebra N D] [IsScalarTower S N D]
+    [Algebra S C] (g : D ≃ₐ[S] C) : Algebra N C :=
+  (g.toRingHom.comp (algebraMap N D)).toAlgebra
+
+/-- The transported normalization embedding is compatible with the base algebra. -/
+theorem normalizationAlgebraOfGenericEquiv_isScalarTower
+    (S : Type v) (N : Type w) (D : Type x) (C : Type y)
+    [CommRing S] [CommRing N] [CommRing D] [CommRing C]
+    [Algebra S N] [Algebra S D] [Algebra N D] [IsScalarTower S N D]
+    [Algebra S C] (g : D ≃ₐ[S] C) :
+    let _ : Algebra N C := normalizationAlgebraOfGenericEquiv S N D C g
+    IsScalarTower S N C := by
+  letI : Algebra N C := normalizationAlgebraOfGenericEquiv S N D C g
+  apply IsScalarTower.of_algebraMap_eq
+  intro s
+  change algebraMap S C s = g (algebraMap N D (algebraMap S N s))
+  rw [← IsScalarTower.algebraMap_apply S N D]
+  exact (g.commutes s).symm
+
+/-- Integral closure is preserved when the generic ambient algebra is replaced by an
+equivalent one.
+
+Consequently the 0EYE normalization realization and the generic Kummer presentation give
+the exact `IsIntegralClosure N S C` input used by the local `0BRM` square; it need not be
+assumed independently. -/
+theorem isIntegralClosure_of_genericEquiv
+    (S : Type v) (N : Type w) (D : Type x) (C : Type y)
+    [CommRing S] [CommRing N] [CommRing D] [CommRing C]
+    [Algebra S N] [Algebra S D] [Algebra N D] [IsScalarTower S N D]
+    [IsIntegralClosure N S D]
+    [Algebra S C] (g : D ≃ₐ[S] C) :
+    let _ : Algebra N C := normalizationAlgebraOfGenericEquiv S N D C g
+    let _ : IsScalarTower S N C :=
+      normalizationAlgebraOfGenericEquiv_isScalarTower S N D C g
+    IsIntegralClosure N S C := by
+  letI : Algebra N C := normalizationAlgebraOfGenericEquiv S N D C g
+  letI : IsScalarTower S N C :=
+    normalizationAlgebraOfGenericEquiv_isScalarTower S N D C g
+  exact IsIntegralClosure.of_algEquiv N g (fun _ => rfl)
+
 /-- A map of local rings is local when the closed point of the target lies over the
 closed point of the source. -/
 theorem isLocalHom_of_maximalIdeal_under_eq
@@ -322,6 +372,69 @@ theorem exists_unit_mul_pow_eq_of_ramificationIdx_eq
       hmap, multiplicity_pow_self_of_prime hq_prime]
   have : power = exponent := hpower.symm.trans hramification
   exact ⟨unit, this ▸ hfactor⟩
+
+/-- A canonical choice of the unit in the DVR factorization determined by the
+ramification index. -/
+noncomputable def dvrRamificationUnit
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [FaithfulSMul R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
+    (exponent : ℕ)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) : Sˣ :=
+  Classical.choose <|
+    exists_unit_mul_pow_eq_of_ramificationIdx_eq
+      R S pi hpi piS hpiS exponent hramification
+
+/-- The chosen ramification unit satisfies the displayed equation with the exact
+ramification exponent. -/
+theorem dvrRamificationUnit_spec
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [FaithfulSMul R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
+    (exponent : ℕ)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
+    algebraMap R S pi =
+      (dvrRamificationUnit R S pi hpi piS hpiS exponent hramification : S) *
+        piS ^ exponent :=
+  Classical.choose_spec <|
+    exists_unit_mul_pow_eq_of_ramificationIdx_eq
+      R S pi hpi piS hpiS exponent hramification
+
+/-- The root-of-a-unit Kummer algebra canonically determined by a DVR ramification-index
+calculation. -/
+abbrev DVRRamificationKummerAlgebra
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [FaithfulSMul R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
+    (exponent : ℕ)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :=
+  AdjoinRoot (Abhyankar.kummerPoly
+    (dvrRamificationUnit R S pi hpi piS hpiS exponent hramification) exponent)
+
+/-- The generic Kummer ambient algebra canonically determined by the DVR ramification
+index. -/
+abbrev DVRRamificationKummerLocalization
+    (R : Type u) (S : Type v)
+    [CommRing R] [CommRing S] [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [FaithfulSMul R S] [Module.Finite R S]
+    [IsLocalHom (algebraMap R S)]
+    (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
+    (exponent : ℕ)
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent) :=
+  Localization.Away
+    (algebraMap S
+      (DVRRamificationKummerAlgebra
+        R S pi hpi piS hpiS exponent hramification) piS)
 
 /-- Faithfulness of the standard-root leg follows from faithfulness on the original DVR
 base.
@@ -707,6 +820,119 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of
   exact isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
     R S N pi exponent hexponent hpi piS hpiS unit heUnit m hramification
 
+/-- The strongest local `0BRM` endpoint for the canonical Kummer normalization.
+
+The unit and the displayed equation `pi = unit * piS ^ exponent` are both derived from
+the ramification-index equality.  The standard-root map, its scalar-tower structure, the
+closed-point contraction, faithfulness, and both DVR structures are then constructed by
+the preceding theorems.  Thus the only normalization input is that the actual 0EYE model
+is the integral closure in the canonical generic Kummer algebra. -/
+theorem isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor
+    (R : Type u) (S : Type v) (N : Type w)
+    [CommRing R] [CommRing S] [CommRing N]
+    [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [Module.Finite R S] [FaithfulSMul R S]
+    [IsLocalHom (algebraMap R S)]
+    [Algebra.HasSeparableResidueFieldsAt R S (maximalIdeal R)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    (piS : S) (hpiS : Irreducible piS)
+    (heUnit : IsUnit (exponent : S))
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent)
+    [Algebra S N] [Algebra R N] [IsScalarTower R S N]
+    [Algebra N (DVRRamificationKummerLocalization
+      R S pi hpi piS hpiS exponent hramification)]
+    [IsScalarTower S N (DVRRamificationKummerLocalization
+      R S pi hpi piS hpiS exponent hramification)]
+    [IsIntegralClosure N S (DVRRamificationKummerLocalization
+      R S pi hpi piS hpiS exponent hramification)]
+    (m : Ideal N) [m.IsMaximal] :
+    let unit := dvrRamificationUnit
+      R S pi hpi piS hpiS exponent hramification
+    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let C := Localization.Away (algebraMap S U piS)
+    let _ : IsIntegralClosure U S C :=
+      kummerUnit_isIntegralClosure_localizationAway_uniformizer
+        S piS hpiS unit exponent hexponent heUnit
+    let rootMap := dvrRootToKummerNormalization
+      R S N C pi piS unit exponent
+        (dvrRamificationUnit_spec
+          R S pi hpi piS hpiS exponent hramification)
+    let _ : Algebra (AdjoinRoot (dvrRootPoly pi exponent)) N :=
+      rootMap.toRingHom.toAlgebra
+    Algebra.IsUnramifiedAt
+      (AdjoinRoot (dvrRootPoly pi exponent))
+      (maximalIdeal (Localization.AtPrime m)) := by
+  exact
+    isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of_factorization
+      R S N pi exponent hexponent hpi piS hpiS
+      (dvrRamificationUnit R S pi hpi piS hpiS exponent hramification)
+      heUnit
+      (dvrRamificationUnit_spec
+        R S pi hpi piS hpiS exponent hramification)
+      m hramification
+
+/-- The local `0BRM` endpoint from an actual 0EYE normalization and its generic Kummer
+presentation.
+
+Here `N` is assumed to be the integral closure of `S` in the genuine generic algebra `D`.
+The equivalence `D ≃ U[1/piS]` is the base-change/Kummer square supplied upstream.
+Transport across that equivalence constructs the exact normalization realization required
+by `isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor`. -/
+theorem isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor_of_genericEquiv
+    (R : Type u) (S : Type v) (N : Type w) (D : Type x)
+    [CommRing R] [CommRing S] [CommRing N] [CommRing D]
+    [IsDomain R] [IsDomain S]
+    [IsDiscreteValuationRing R] [IsDiscreteValuationRing S]
+    [Algebra R S] [Module.Finite R S] [FaithfulSMul R S]
+    [IsLocalHom (algebraMap R S)]
+    [Algebra.HasSeparableResidueFieldsAt R S (maximalIdeal R)]
+    (pi : R) (exponent : ℕ) (hexponent : 1 ≤ exponent)
+    (hpi : Irreducible pi)
+    (piS : S) (hpiS : Irreducible piS)
+    (heUnit : IsUnit (exponent : S))
+    (hramification : (maximalIdeal S).ramificationIdx R = exponent)
+    [Algebra S N] [Algebra R N] [IsScalarTower R S N]
+    [Algebra S D] [Algebra N D] [IsScalarTower S N D]
+    [IsIntegralClosure N S D]
+    (genericEquiv : D ≃ₐ[S] (DVRRamificationKummerLocalization
+      R S pi hpi piS hpiS exponent hramification))
+    (m : Ideal N) [m.IsMaximal] :
+    let C := DVRRamificationKummerLocalization
+      R S pi hpi piS hpiS exponent hramification
+    let _ : Algebra N C :=
+      normalizationAlgebraOfGenericEquiv S N D C genericEquiv
+    let _ : IsScalarTower S N C :=
+      normalizationAlgebraOfGenericEquiv_isScalarTower S N D C genericEquiv
+    let _ : IsIntegralClosure N S C :=
+      isIntegralClosure_of_genericEquiv S N D C genericEquiv
+    let unit := dvrRamificationUnit
+      R S pi hpi piS hpiS exponent hramification
+    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let _ : IsIntegralClosure U S C :=
+      kummerUnit_isIntegralClosure_localizationAway_uniformizer
+        S piS hpiS unit exponent hexponent heUnit
+    let rootMap := dvrRootToKummerNormalization
+      R S N C pi piS unit exponent
+        (dvrRamificationUnit_spec
+          R S pi hpi piS hpiS exponent hramification)
+    let _ : Algebra (AdjoinRoot (dvrRootPoly pi exponent)) N :=
+      rootMap.toRingHom.toAlgebra
+    Algebra.IsUnramifiedAt
+      (AdjoinRoot (dvrRootPoly pi exponent))
+      (maximalIdeal (Localization.AtPrime m)) := by
+  let C := DVRRamificationKummerLocalization
+    R S pi hpi piS hpiS exponent hramification
+  letI : Algebra N C :=
+    normalizationAlgebraOfGenericEquiv S N D C genericEquiv
+  letI : IsScalarTower S N C :=
+    normalizationAlgebraOfGenericEquiv_isScalarTower S N D C genericEquiv
+  letI : IsIntegralClosure N S C :=
+    isIntegralClosure_of_genericEquiv S N D C genericEquiv
+  exact isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor
+    R S N pi exponent hexponent hpi piS hpiS heUnit hramification m
+
 /-- A finite algebra identified with a local factor of a root-of-a-unit Kummer algebra is
 etale over the base DVR.
 
@@ -894,17 +1120,23 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
 #print axioms kummerUnit_localizationAtPrime_isRegularLocalRing
 #print axioms kummerUnit_localizationAtPrime_isDomain
 #print axioms kummerUnit_localizationAtPrime_isDiscreteValuationRing
+#print axioms normalizationAlgebraOfGenericEquiv_isScalarTower
+#print axioms isIntegralClosure_of_genericEquiv
 #print axioms isLocalHom_of_maximalIdeal_under_eq
 #print axioms isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal
 #print axioms maximalIdeal_under_eq_of_isIntegralClosure
 #print axioms dvrRootToKummerNormalization
 #print axioms exists_unit_mul_pow_eq_of_ramificationIdx_eq
+#print axioms dvrRamificationUnit_spec
 #print axioms dvrRoot_faithfulSMul_of_faithful_base
 #print axioms hasSeparableResidueFieldsAt_comp_formallyUnramified
 #print axioms isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
 #print axioms isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
 #print axioms
   isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of_factorization
+#print axioms isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor
+#print axioms
+  isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor_of_genericEquiv
 #print axioms etale_of_equiv_localization_kummerUnit
 #print axioms isUnramifiedAt_of_kummerUnit_local_ramification_square
 #print axioms isUnramifiedAt_of_standardRoot_kummerUnit_local_square
