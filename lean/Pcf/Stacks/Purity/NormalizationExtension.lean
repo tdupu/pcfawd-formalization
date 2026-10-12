@@ -26,6 +26,28 @@ universe u
 
 namespace Pcf.Stacks
 
+/-- The relative normalization is affine because it is integral over the affine base. -/
+theorem puncturedCover_normalization_isAffine
+    (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    IsAffine (V.hom ≫ (puncturedSpectrum R).ι).normalization := by
+  letI : IsFinite V.hom := V.prop.1
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  letI : IsIntegralHom f.fromNormalization := inferInstance
+  exact isAffine_of_isAffineHom f.fromNormalization
+
+/-- The affine relative normalization's canonical morphism to `Spec R`. -/
+noncomputable def puncturedCover_normalizationSpecMap
+    (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    Spec Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) ⟶ Spec R := by
+  letI : IsAffine (V.hom ≫ (puncturedSpectrum R).ι).normalization :=
+    puncturedCover_normalization_isAffine R V
+  letI : (V.hom ≫ (puncturedSpectrum R).ι).normalization.Over (Spec R) :=
+    ⟨(V.hom ≫ (puncturedSpectrum R).ι).fromNormalization⟩
+  exact Spec.map (CommRingCat.ofHom (algebraMap R
+    Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤)))
+
 /-- Relative normalization of `Spec R` in a finite étale cover of its puncture restricts back to
 that cover. The assertion does not depend on connectedness or positive dimension. -/
 noncomputable def puncturedCover_normalizationRestrictIso
@@ -45,5 +67,20 @@ noncomputable def puncturedCover_normalizationRestrictIso
   exact ((asIso (pullback.snd f i).toNormalization) ≪≫
     (asIso (f.normalizationPullback i))).symm ≪≫
     asIso (pullback.fst f i)
+
+/-- A literal affine `Spec` model extending the cover over the puncture. Finiteness and
+Stacks-normality of its section algebra remain to be established for Tag `0BM9`. -/
+noncomputable def puncturedCover_normalizationSpecRestrictIso
+    (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    pullback (puncturedCover_normalizationSpecMap R V) (puncturedSpectrum R).ι ≅ V.left := by
+  let i := (puncturedSpectrum R).ι
+  let f := V.hom ≫ i
+  letI : IsAffine f.normalization := puncturedCover_normalization_isAffine R V
+  letI : f.normalization.Over (Spec R) := ⟨f.fromNormalization⟩
+  let j := f.normalization.isoSpec.asOver (Spec R)
+  let k := (Over.pullback i).mapIso j
+  let kScheme := (Over.forget _).mapIso k
+  convert kScheme.symm ≪≫ puncturedCover_normalizationRestrictIso R V using 1; rfl
 
 end Pcf.Stacks
