@@ -88,6 +88,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
 import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
+import Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent
 import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
@@ -361,6 +362,11 @@ hypotheses. -/
 #print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv
 #print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv_of_standardTameCover
 #print axioms Pcf.Stacks.EtaleDescent.exists_descendedAlgEquiv_of_standardTameCovers
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_units
+#print axioms
+  Pcf.Stacks.EtaleDescent.StageAlgebra.EquivalenceDescent.exists_stage_standardTameCover_of_limit_equiv
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtale_standardTameCover_of_strict
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.presentationModelEquiv
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_common_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_equalizing_refinement
@@ -510,6 +516,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCovers_free
 #print axioms Pcf.Stacks.standardCoverBaseChangeEquiv
 #print axioms Pcf.Stacks.standardCoversBaseChangeEquiv
+#print axioms Pcf.Stacks.standardCoversBaseChangeEquivOfUnitEq
+#print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.baseChange
 #print axioms Pcf.Stacks.standardCoversReducedDivisorQuotientEquiv
 #print axioms Pcf.Stacks.standardCoversReducedDivisor_isRegularRing
 #print axioms Pcf.Stacks.normalizationOfLocalizedPresentation_finite
