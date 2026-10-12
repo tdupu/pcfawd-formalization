@@ -5,7 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.Algebra.Module.SpanRank
 import Mathlib.RingTheory.RegularLocalRing.Defs
-import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 
 /-!
 # The final regularity step for strict henselization
@@ -59,6 +59,18 @@ theorem localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
     IsRegularLocalRing (LocalColimit R Ω) :=
   IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
     R (LocalColimit R Ω) hmax hdim
+
+/-- The strict local colimit of a regular local ring is regular once its Noetherianity is known. -/
+theorem localColimit_isRegularLocalRing_of_isNoetherianRing
+    [IsRegularLocalRing R]
+    [Algebra (IsLocalRing.ResidueField R) Ω]
+    [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
+    [IsSepClosure (IsLocalRing.ResidueField R) Ω]
+    [IsNoetherianRing (LocalColimit R Ω)] :
+    IsRegularLocalRing (LocalColimit R Ω) :=
+  localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
+    (map_maximalIdeal_localColimit (R := R) (Ω := Ω))
+    (ringKrullDim_localColimit (R := R) (Ω := Ω))
 
 end PointedEtaleNeighborhood
 
