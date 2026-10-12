@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+import Mathlib.RingTheory.LocalRing.Module
 import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
 
 /-!
@@ -15,9 +16,74 @@ of the strict local colimit is known to be Noetherian and flat over the colimit,
 descent proves that the colimit itself is Noetherian.
 -/
 
-universe u
+open Module
+open scoped TensorProduct
+
+universe u v
 
 namespace Pcf.Stacks
+
+/-- A flat module over a local ring with nilpotent maximal ideal is free.  This is the
+infinite-rank form of Stacks Tag `051F`; the chosen lifts of a residue-field basis span because
+iterating Nakayama's relation terminates at a power of the maximal ideal. -/
+theorem flatModule_free_of_isNilpotent_maximalIdeal
+    {A : Type u} {M : Type v} [CommRing A] [AddCommGroup M] [Module A M]
+    [IsLocalRing A] [Module.Flat A M]
+    (hnil : IsNilpotent (IsLocalRing.maximalIdeal A)) : Module.Free A M := by
+  let k := IsLocalRing.ResidueField A
+  let w := Module.Free.chooseBasis k (k ⊗[A] M)
+  obtain ⟨basisLift, hbasisLift⟩ :=
+    (TensorProduct.mk_surjective A M k Quotient.mk_surjective).comp_left w
+  let f := TensorProduct.mk A k M 1
+  have hli : LinearIndependent k (f ∘ basisLift) := by
+    rw [show f ∘ basisLift = w from hbasisLift]
+    exact w.linearIndependent
+  have hliA : LinearIndependent A basisLift := by
+    apply IsLocalRing.linearIndependent_of_flat
+    simpa [k, f] using hli
+  apply Module.Free.of_basis
+  apply Basis.mk hliA
+  let N := Submodule.span A (Set.range basisLift)
+  have hmap : N.map f = ⊤ := by
+    change (Submodule.span A (Set.range basisLift)).map f = ⊤
+    rw [Submodule.map_span, ← Submodule.restrictScalars_span A k
+      Ideal.Quotient.mk_surjective, Submodule.restrictScalars_eq_top_iff,
+      ← w.span_eq, ← Set.range_comp, show f ∘ basisLift = w from hbasisLift]
+  have hsup : N ⊔ IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) = ⊤ := by
+    have hcomap := congrArg (Submodule.comap f) hmap
+    rw [Submodule.comap_map_eq, Submodule.comap_top] at hcomap
+    have hker : f.ker = IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) := by
+      exact LinearMap.ker_tensorProductMk
+        (R := A) (Q := M) (I := IsLocalRing.maximalIdeal A)
+    rw [hker] at hcomap
+    exact hcomap
+  obtain ⟨n, hn⟩ := hnil
+  have hpow : ∀ q : ℕ, (⊤ : Submodule A M) ≤
+      N ⊔ (IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M) := by
+    intro q
+    induction q with
+    | zero => simp
+    | succ q ih =>
+      calc
+        (⊤ : Submodule A M) =
+            N ⊔ IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) := hsup.symm
+        _ ≤ N ⊔ (IsLocalRing.maximalIdeal A) ^ (q + 1) •
+            (⊤ : Submodule A M) := sup_le le_sup_left (by
+          calc
+            IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) ≤
+                IsLocalRing.maximalIdeal A •
+                  (N ⊔ (IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M)) :=
+              Submodule.smul_mono le_rfl ih
+            _ = IsLocalRing.maximalIdeal A • N ⊔
+                IsLocalRing.maximalIdeal A •
+                  ((IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M)) :=
+              Submodule.smul_sup _ _ _
+            _ ≤ N ⊔ (IsLocalRing.maximalIdeal A) ^ (q + 1) •
+                (⊤ : Submodule A M) := by
+              apply sup_le_sup
+              · exact (Submodule.smul_le).mpr fun a _ x hx ↦ N.smul_mem a hx
+              · rw [← Submodule.mul_smul, ← pow_succ'])
+  simpa [N, hn] using hpow n
 
 /-- A local ring with finitely generated maximal ideal is Noetherian if its maximal-adic
 completion is Noetherian and flat over the ring. -/
