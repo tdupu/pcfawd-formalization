@@ -139,4 +139,50 @@ theorem puncturedCover_normalizationIntegralClosure_finite
     exact hB
   exact Module.Finite.of_restrictScalars_finite R S (integralClosure S T)
 
+/-- The relative normalization is finite over `Spec R` on affine global sections. Mathlib's
+normalization-section comparison identifies this map with the algebra map into the integral
+closure, followed by a ring isomorphism. -/
+theorem puncturedCover_normalization_finite_appTop
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    ((V.hom ≫ (puncturedSpectrum R).ι).fromNormalization.appTop.hom).Finite := by
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  letI : IsFinite V.hom := V.prop.1
+  letI : Algebra Γ(Spec R, ⊤) Γ(V.left, ⊤) := f.appTop.hom.toAlgebra
+  have hB : Module.Finite Γ(Spec R, ⊤)
+      (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤)) :=
+    puncturedCover_normalizationIntegralClosure_finite R hdim V
+  have h₁ : (algebraMap Γ(Spec R, ⊤)
+      (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤))).Finite :=
+    RingHom.finite_algebraMap.mpr hB
+  let e := puncturedCover_normalizationSectionsIso R V
+  have h₂ : e.inv.hom.Finite := RingHom.Finite.of_surjective _
+    ((ConcreteCategory.isIso_iff_bijective e.inv).mp inferInstance).surjective
+  have hc := h₂.comp h₁
+  change (f.fromNormalization.app ⊤).hom.Finite
+  rw [f.fromNormalization_app (isAffineOpen_top (Spec R))]
+  exact hc
+
+/-- The section algebra of the relative normalization is module-finite over the original
+normal local domain `R`, with its canonical structure from `Spec R`. -/
+theorem puncturedCover_normalizationSections_finite
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra R Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) :=
+      (((Scheme.ΓSpecIso R).inv ≫
+        (V.hom ≫ (puncturedSpectrum R).ι).fromNormalization.appTop).hom).toAlgebra
+    Module.Finite R Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) := by
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  letI : Algebra R Γ(f.normalization, ⊤) :=
+    (((Scheme.ΓSpecIso R).inv ≫ f.fromNormalization.appTop).hom).toAlgebra
+  have h₁ : ((Scheme.ΓSpecIso R).inv.hom).Finite :=
+    RingHom.Finite.of_surjective _
+      ((ConcreteCategory.isIso_iff_bijective (Scheme.ΓSpecIso R).inv).mp
+        inferInstance).surjective
+  exact (puncturedCover_normalization_finite_appTop R hdim V).comp h₁
+
 end Pcf.Stacks
