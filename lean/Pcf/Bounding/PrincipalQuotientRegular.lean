@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.LocalRing.RingHom.Basic
+import Mathlib.RingTheory.KrullDimension.Regular
 
 /-!
 # Regularity from a one-dimensional principal quotient
@@ -46,6 +47,82 @@ theorem spanFinrank_maximalIdeal_le_two_of_principal_kernel
   exact (Submodule.spanFinrank_span_le_ncard_of_finite (Set.toFinite _)).trans
     (by simpa using Set.ncard_insert_le c ({a} : Set R))
 
+/-- A surjective local map with principal kernel increases the minimal number of
+generators of the maximal ideal by at most one.  This is the generator-lifting step in
+Stacks Tag `00NU`. -/
+theorem spanFinrank_maximalIdeal_le_add_one_of_principal_kernel
+    {R : Type u} {S : Type v} [CommRing R] [CommRing S]
+    [IsLocalRing R] [IsLocalRing S] [IsNoetherianRing S]
+    (f : R →+* S) (hf : Function.Surjective f)
+    (hker : (RingHom.ker f).IsPrincipal) :
+    (maximalIdeal R).spanFinrank ≤ (maximalIdeal S).spanFinrank + 1 := by
+  classical
+  let : IsLocalHom f := IsLocalHom.of_surjective f hf
+  obtain ⟨a, ha⟩ := hker
+  change RingHom.ker f = Ideal.span ({a} : Set R) at ha
+  have hfg : Submodule.FG (maximalIdeal S) := IsNoetherian.noetherian _
+  obtain ⟨s, hcard, hs⟩ :=
+    Submodule.FG.exists_span_finset_card_eq_spanFinrank hfg
+  let g : S → R := Function.surjInv hf
+  have hg : Function.RightInverse g f := Function.rightInverse_surjInv hf
+  let t : Finset R := s.image g
+  have hmap : (Ideal.span (↑t : Set R)).map f = maximalIdeal S := by
+    rw [Ideal.map_span, ← hs]
+    congr 1
+    ext y
+    simp only [Set.mem_image, Finset.mem_coe, Finset.mem_image, t]
+    constructor
+    · rintro ⟨x, ⟨z, hz, rfl⟩, rfl⟩
+      simpa only [hg z] using hz
+    · intro hy
+      exact ⟨g y, ⟨y, hy, rfl⟩, hg y⟩
+  have hspan : Ideal.span (Set.insert a (↑t : Set R)) = maximalIdeal R := by
+    rw [show Ideal.span (Set.insert a (↑t : Set R)) =
+        Ideal.span ({a} : Set R) ⊔ Ideal.span (↑t : Set R) from
+      Ideal.span_insert a (↑t : Set R),
+      ← ha, RingHom.ker_eq_comap_bot, sup_comm,
+      ← Ideal.comap_map_of_surjective f hf (Ideal.span (↑t : Set R)),
+      hmap, maximalIdeal_comap]
+  rw [← hspan]
+  calc
+    (Ideal.span (Set.insert a (↑t : Set R))).spanFinrank ≤
+        (Set.insert a (↑t : Set R)).ncard :=
+      Submodule.spanFinrank_span_le_ncard_of_finite
+        ((Finset.finite_toSet t).insert a)
+    _ ≤ (↑t : Set R).ncard + 1 := Set.ncard_insert_le _ _
+    _ = t.card + 1 := by simp
+    _ ≤ s.card + 1 := Nat.add_le_add_right (Finset.card_image_le) 1
+    _ = (maximalIdeal S).spanFinrank + 1 := by rw [hcard]
+
+/-- **Stacks Tag `00NU`, principal-element case.**
+
+If a nonzerodivisor in the maximal ideal of a Noetherian local ring has regular local
+quotient, then the original ring is regular local.  This is the form used in the proof
+of Abhyankar's lemma. -/
+@[stacks 00NU "the principal-element case"]
+theorem isRegularLocalRing_of_quotient_nonZeroDivisor
+    {R : Type u} [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
+    (x : R) (hx : x ∈ maximalIdeal R) (hreg : x ∈ nonZeroDivisors R)
+    [IsRegularLocalRing (R ⧸ Ideal.span ({x} : Set R))] :
+    IsRegularLocalRing R := by
+  let I : Ideal R := Ideal.span {x}
+  have hbound : (maximalIdeal R).spanFinrank ≤
+      (maximalIdeal (R ⧸ I)).spanFinrank + 1 := by
+    apply spanFinrank_maximalIdeal_le_add_one_of_principal_kernel
+      (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+    simpa only [Ideal.mk_ker] using (inferInstance : I.IsPrincipal)
+  apply IsRegularLocalRing.of_spanFinrank_maximalIdeal_le
+  calc
+    ((maximalIdeal R).spanFinrank : WithBot ℕ∞) ≤
+        ((maximalIdeal (R ⧸ I)).spanFinrank : WithBot ℕ∞) + 1 := by
+      exact_mod_cast hbound
+    _ = ringKrullDim (R ⧸ I) + 1 := by
+      rw [IsRegularLocalRing.spanFinrank_maximalIdeal]
+    _ = ringKrullDim R := by
+      dsimp only [I]
+      exact ringKrullDim_quotient_span_singleton_succ_eq_ringKrullDim
+        (Module.Flat.isSMulRegular_of_nonZeroDivisors hreg) hx
+
 /-- A Noetherian local ring of dimension at least two is regular if it has
 a principal kernel quotient which is regular of dimension one. -/
 theorem isRegularLocalRing_of_principal_kernel_of_dim_one
@@ -79,6 +156,8 @@ theorem isRegularLocalRing_of_principal_quotient_of_dim_one
   · exact hdimR
 
 #print axioms spanFinrank_maximalIdeal_le_two_of_principal_kernel
+#print axioms spanFinrank_maximalIdeal_le_add_one_of_principal_kernel
+#print axioms isRegularLocalRing_of_quotient_nonZeroDivisor
 #print axioms isRegularLocalRing_of_principal_kernel_of_dim_one
 #print axioms isRegularLocalRing_of_principal_quotient_of_dim_one
 

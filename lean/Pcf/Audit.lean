@@ -303,6 +303,11 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitBaseChangeRingHom_toLocalColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_mk
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ker_quotientLocalColimitBaseChangeRingHom
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_surjective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_injective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgHom_bijective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localQuotientBaseChangeAlgEquiv
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
 #print axioms Pcf.Stacks.baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
@@ -356,11 +361,15 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRootFraction_rootOfUnity_mem_rootAlgebra
 #print axioms Pcf.Stacks.dvrRoot_irreducible
 #print axioms Pcf.Stacks.dvrRoot_addVal_base
+#print axioms Pcf.Stacks.dvrRootAlgebra_rootOfUnity_mem_base
+#print axioms Pcf.Stacks.dvrRootFractionRing_rootOfUnity_mem_base
+#print axioms Pcf.Stacks.dvrRootFraction_rootOfUnity_mem_base
 #print axioms Pcf.Stacks.dvrRootFraction_power_minpoly
 #print axioms Pcf.Stacks.dvrRootFraction_power_adjoin_finrank
 #print axioms Pcf.Stacks.dvrRootFraction_power_relative_finrank
 #print axioms Pcf.Stacks.radical_pow_relative_finrank_mem
 #print axioms Pcf.Stacks.dvrRootFraction_intermediate_eq_power
+#print axioms Pcf.Stacks.dvrRootFractionRing_intermediate_eq_power
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
 #print axioms Pcf.Bounding.mem_minimalPrimes_span_of_mem_minimalPrimes_map
@@ -977,6 +986,8 @@ divisor. -/
 #print axioms Pcf.finrank_residueField_tensor_kaehlerDifferential_atPrime_of_charZero
 #print axioms Pcf.formallySmooth_iff_conormal_finrank_bound_of_perfectField
 #print axioms Pcf.spanFinrank_maximalIdeal_le_two_of_principal_kernel
+#print axioms Pcf.spanFinrank_maximalIdeal_le_add_one_of_principal_kernel
+#print axioms Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor
 #print axioms Pcf.isRegularLocalRing_of_principal_kernel_of_dim_one
 #print axioms Pcf.isRegularLocalRing_of_principal_quotient_of_dim_one
 #print axioms Pcf.two_le_height_of_height_one_lt
