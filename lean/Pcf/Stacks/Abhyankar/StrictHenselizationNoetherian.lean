@@ -87,6 +87,73 @@ theorem flatModule_free_of_isNilpotent_maximalIdeal
               · rw [← Submodule.mul_smul, ← pow_succ'])
   simpa [N, hn] using hpow n
 
+/-- Over a local ring with nilpotent maximal ideal, lifts of a basis modulo the maximal ideal
+form a basis of any flat module.  Unlike `flatModule_free_of_isNilpotent_maximalIdeal`, this
+records the chosen basis; that compatibility is needed across all quotient powers in Stacks Tag
+`07QM`. -/
+theorem exists_basis_of_flat_of_isNilpotent_maximalIdeal
+    {A : Type u} {M : Type v} [CommRing A] [AddCommGroup M] [Module A M]
+    [IsLocalRing A] [Module.Flat A M]
+    (hnil : IsNilpotent (IsLocalRing.maximalIdeal A))
+    {ι : Type w} (v : ι → M)
+    (b : Basis ι (IsLocalRing.ResidueField A)
+      ((IsLocalRing.ResidueField A) ⊗[A] M))
+    (hv : TensorProduct.mk A (IsLocalRing.ResidueField A) M 1 ∘ v = b) :
+    ∃ bA : Basis ι A M, ∀ i, bA i = v i := by
+  let k := IsLocalRing.ResidueField A
+  let f := TensorProduct.mk A k M 1
+  have hli : LinearIndependent k (f ∘ v) := by
+    rw [show f ∘ v = b from hv]
+    exact b.linearIndependent
+  have hliA : LinearIndependent A v := by
+    apply IsLocalRing.linearIndependent_of_flat
+    simpa [k, f] using hli
+  let N := Submodule.span A (Set.range v)
+  have hmap : N.map f = ⊤ := by
+    change (Submodule.span A (Set.range v)).map f = ⊤
+    rw [Submodule.map_span, ← Submodule.restrictScalars_span A k
+      Ideal.Quotient.mk_surjective, Submodule.restrictScalars_eq_top_iff,
+      ← b.span_eq, ← Set.range_comp, show f ∘ v = b from hv]
+  have hsup : N ⊔ IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) = ⊤ := by
+    have hcomap := congrArg (Submodule.comap f) hmap
+    rw [Submodule.comap_map_eq, Submodule.comap_top] at hcomap
+    have hker : f.ker = IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) := by
+      exact LinearMap.ker_tensorProductMk
+        (R := A) (Q := M) (I := IsLocalRing.maximalIdeal A)
+    rw [hker] at hcomap
+    exact hcomap
+  obtain ⟨n, hn⟩ := hnil
+  have hpow : ∀ q : ℕ, (⊤ : Submodule A M) ≤
+      N ⊔ (IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M) := by
+    intro q
+    induction q with
+    | zero => simp
+    | succ q ih =>
+      calc
+        (⊤ : Submodule A M) =
+            N ⊔ IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) := hsup.symm
+        _ ≤ N ⊔ (IsLocalRing.maximalIdeal A) ^ (q + 1) •
+            (⊤ : Submodule A M) := sup_le le_sup_left (by
+          calc
+            IsLocalRing.maximalIdeal A • (⊤ : Submodule A M) ≤
+                IsLocalRing.maximalIdeal A •
+                  (N ⊔ (IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M)) :=
+              Submodule.smul_mono le_rfl ih
+            _ = IsLocalRing.maximalIdeal A • N ⊔
+                IsLocalRing.maximalIdeal A •
+                  ((IsLocalRing.maximalIdeal A) ^ q • (⊤ : Submodule A M)) :=
+              Submodule.smul_sup _ _ _
+            _ ≤ N ⊔ (IsLocalRing.maximalIdeal A) ^ (q + 1) •
+                (⊤ : Submodule A M) := by
+              apply sup_le_sup
+              · exact (Submodule.smul_le).mpr fun a _ x hx ↦ N.smul_mem a hx
+              · rw [← Submodule.mul_smul, ← pow_succ'])
+  have hspan : Submodule.span A (Set.range v) = ⊤ := by
+    rw [eq_top_iff]
+    simpa [N, hn] using hpow n
+  let bA := Basis.mk hliA hspan.ge
+  exact ⟨bA, fun i ↦ by simp [bA]⟩
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -250,6 +317,7 @@ end PointedEtaleNeighborhood
 
 #print axioms flat_quotient_map
 #print axioms free_quotient_maximalIdeal_pow_of_flat
+#print axioms exists_basis_of_flat_of_isNilpotent_maximalIdeal
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
