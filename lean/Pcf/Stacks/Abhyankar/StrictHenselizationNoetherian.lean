@@ -6,7 +6,8 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
-import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+import Mathlib.RingTheory.TensorProduct.Quotient
+import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 
 /-!
 # Noetherianity of the strict local colimit
@@ -85,6 +86,45 @@ theorem flatModule_free_of_isNilpotent_maximalIdeal
               · rw [← Submodule.mul_smul, ← pow_succ'])
   simpa [N, hn] using hpow n
 
+/-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
+theorem flat_quotient_map
+    (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
+    [Module.Flat A B] (I : Ideal A) :
+    Module.Flat (A ⧸ I) (B ⧸ I.map (algebraMap A B)) := by
+  exact Module.Flat.of_linearEquiv
+    (Algebra.TensorProduct.quotIdealMapEquivQuotTensor B I).toLinearEquiv
+
+/-- If `B` is flat over a local ring `A`, its reduction modulo a positive power of the
+maximal ideal is free over the corresponding quotient of `A`.  This is the finite-level
+freeness input in Stacks Tag `06LJ`. -/
+theorem free_quotient_maximalIdeal_pow_of_flat
+    (A : Type u) (B : Type v) [CommRing A] [CommRing B]
+    [IsLocalRing A] [Algebra A B] [Module.Flat A B]
+    (n : ℕ) (hn : n ≠ 0) :
+    Module.Free (A ⧸ IsLocalRing.maximalIdeal A ^ n)
+      (B ⧸ (IsLocalRing.maximalIdeal A ^ n).map (algebraMap A B)) := by
+  let I := IsLocalRing.maximalIdeal A ^ n
+  have hIle : I ≤ IsLocalRing.maximalIdeal A := by
+    exact Ideal.pow_le_self hn
+  have hIne : I ≠ ⊤ := by
+    intro htop
+    apply (inferInstance : (IsLocalRing.maximalIdeal A).IsMaximal).ne_top
+    exact eq_top_iff.mpr (htop ▸ hIle)
+  let _ : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hIne
+  let _ : IsLocalRing (A ⧸ I) :=
+    IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
+  let _ : Module.Flat (A ⧸ I) (B ⧸ I.map (algebraMap A B)) :=
+    flat_quotient_map A B I
+  apply flatModule_free_of_isNilpotent_maximalIdeal
+  let q : A →+* A ⧸ I := Ideal.Quotient.mk I
+  have hmax : (IsLocalRing.maximalIdeal A).map q =
+      IsLocalRing.maximalIdeal (A ⧸ I) := by
+    exact IsLocalRing.map_maximalIdeal_of_surjective q Ideal.Quotient.mk_surjective
+  refine ⟨n, ?_⟩
+  rw [← hmax, ← Ideal.map_pow]
+  change Ideal.map q I = 0
+  exact Ideal.map_quotient_self I
+
 /-- A local ring with finitely generated maximal ideal is Noetherian if its maximal-adic
 completion is Noetherian and flat over the ring. -/
 theorem isNoetherianRing_of_maximalAdicCompletion
@@ -117,6 +157,39 @@ variable {R Ω : Type u} [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
   [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
   [IsSepClosure (IsLocalRing.ResidueField R) Ω]
 
+/-- The canonical quotient-algebra structure at matching maximal-ideal powers. -/
+noncomputable instance localColimitQuotientPowAlgebra (n : ℕ) :
+    Algebra (R ⧸ IsLocalRing.maximalIdeal R ^ n)
+      (LocalColimit R Ω ⧸ IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n) :=
+  Ideal.Quotient.algebraQuotientOfLEComap (by
+    rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow,
+      map_maximalIdeal_localColimit (R := R) (Ω := Ω)])
+
+omit [IsNoetherianRing R] in
+/-- Every positive maximal-ideal-power quotient of the strict local colimit is a free module
+over the corresponding quotient of the base.  This is the quotient-power comparison and
+freeness step used before the inverse-limit argument in Stacks Tag `06LJ`. -/
+theorem localColimit_quotient_maximalIdeal_pow_free
+    (n : ℕ) (hn : n ≠ 0) :
+    Module.Free (R ⧸ IsLocalRing.maximalIdeal R ^ n)
+      (LocalColimit R Ω ⧸ IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n) := by
+  let _ : Module.Flat R (LocalColimit R Ω) :=
+    localColimit_flat (R := R) (Ω := Ω)
+  have hfree := free_quotient_maximalIdeal_pow_of_flat R (LocalColimit R Ω) n hn
+  have hpow : (IsLocalRing.maximalIdeal R ^ n).map
+      (algebraMap R (LocalColimit R Ω)) =
+      IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n := by
+    rw [Ideal.map_pow, map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+  let e :
+      (LocalColimit R Ω ⧸ (IsLocalRing.maximalIdeal R ^ n).map
+        (algebraMap R (LocalColimit R Ω))) ≃ₗ[R ⧸ IsLocalRing.maximalIdeal R ^ n]
+      (LocalColimit R Ω ⧸ IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n) :=
+    { __ := (Ideal.quotEquivOfEq hpow).toAddEquiv
+      map_smul' := by
+        rintro ⟨r⟩ ⟨a⟩
+        rfl }
+  exact Module.Free.of_equiv' hfree e
+
 /-- Noetherianity of the strict local colimit reduces to the two completion facts in the proof
 of Stacks Tag `06LJ`: its completion is Noetherian and the completion map is flat. -/
 theorem localColimit_isNoetherianRing_of_completion
@@ -136,5 +209,9 @@ theorem localColimit_isNoetherianRing_of_completion
     (algebraMap R (LocalColimit R Ω))
 
 end PointedEtaleNeighborhood
+
+#print axioms flat_quotient_map
+#print axioms free_quotient_maximalIdeal_pow_of_flat
+#print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
 end Pcf.Stacks
