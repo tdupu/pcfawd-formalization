@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.TensorProduct.Pi
-import Pcf.Stacks.Abhyankar.StandardCover
+import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 
 /-!
 # Base change of standard tame covers
@@ -19,6 +19,8 @@ open TensorProduct
 universe u
 
 namespace Pcf.Stacks
+
+set_option linter.style.haveILetI false
 
 /-- A standard root cover commutes with arbitrary base change. -/
 noncomputable def standardCoverBaseChangeEquiv
@@ -49,7 +51,37 @@ noncomputable def standardCoversBaseChangeEquiv
       (fun j ↦ AdjoinRoot (Pcf.LocalModel.localPoly (unit j) a (e j)))).trans
     (AlgEquiv.piCongrRight (fun j ↦ standardCoverBaseChangeEquiv (unit j) a (e j)))
 
+/-- Base change of a finite standard cover, with the transported coefficients identified with
+a specified family of units in the target. -/
+noncomputable def standardCoversBaseChangeEquivOfUnitEq
+    {R T : Type u} [CommRing R] [CommRing T] [Algebra R T]
+    (i : Type) [Fintype i] (unit : i → Rˣ) (unitT : i → Tˣ)
+    (hunit : ∀ j, Units.map (algebraMap R T) (unit j) = unitT j)
+    (a : R) (e : i → ℕ) :
+    T ⊗[R] (∀ j, AdjoinRoot (Pcf.LocalModel.localPoly (unit j) a (e j))) ≃ₐ[T]
+      ∀ j, AdjoinRoot (Pcf.LocalModel.localPoly (unitT j) (algebraMap R T a) (e j)) := by
+  classical
+  exact (standardCoversBaseChangeEquiv i unit a e).trans
+    (AlgEquiv.piCongrRight (fun j ↦ AdjoinRoot.algEquivOfEq T _ _ (by rw [hunit j])))
+
+/-- Being a finite disjoint union of standard tame covers is preserved by arbitrary base
+change. -/
+theorem IsFiniteDisjointUnionOfStandardTameCovers.baseChange
+    {R C T : Type u} [CommRing R] [CommRing C] [CommRing T]
+    [Algebra R C] [Algebra R T] {a : R}
+    (h : IsFiniteDisjointUnionOfStandardTameCovers R C a) :
+    IsFiniteDisjointUnionOfStandardTameCovers T (T ⊗[R] C) (algebraMap R T a) := by
+  classical
+  rcases h with ⟨i, hi, e, unit, he, heUnit, ⟨hC⟩⟩
+  letI := hi
+  refine ⟨i, inferInstance, e, fun j ↦ Units.map (algebraMap R T) (unit j), he,
+    fun j ↦ by simpa using (heUnit j).map (algebraMap R T), ?_⟩
+  exact ⟨(Algebra.TensorProduct.congr (AlgEquiv.refl : T ≃ₐ[T] T) hC).trans
+    (standardCoversBaseChangeEquiv i unit a e)⟩
+
 #print axioms standardCoverBaseChangeEquiv
 #print axioms standardCoversBaseChangeEquiv
+#print axioms standardCoversBaseChangeEquivOfUnitEq
+#print axioms IsFiniteDisjointUnionOfStandardTameCovers.baseChange
 
 end Pcf.Stacks
