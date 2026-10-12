@@ -296,6 +296,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationRestrictIso
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
+#print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
+#print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_equiv
+#print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_finite
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericModel
