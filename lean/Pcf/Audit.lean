@@ -92,6 +92,7 @@ import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverGeometry
+import Pcf.Stacks.Abhyankar.NormalizationGeometry
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
@@ -294,11 +295,14 @@ hypotheses. -/
 #print axioms Pcf.Stacks.normalizationRestrictIsoOfOpenImmersion
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationDesc_isIso
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationRestrictIso
+#print axioms Pcf.Stacks.puncturedCover_baseGenericPullback_algebraEtale
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
+#print axioms Pcf.Stacks.IsStacksNormalRing.integralClosure_isStacksNormalRing_of_baseRingEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_equiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_isStacksNormalRing
+#print axioms Pcf.Stacks.finiteEtaleAlgebra_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_finite
@@ -465,6 +469,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv_val
 #print axioms Pcf.Stacks.smoothBaseChange_isIntegralClosure
+#print axioms Pcf.Stacks.smoothBaseChange_isIntegralClosure_localizationAway
 #print axioms Pcf.Stacks.radical_pi_of_finite
 #print axioms Pcf.Stacks.quotientPiRingEquiv
 #print axioms Pcf.Stacks.isRegularRing_pi_of_finite
@@ -474,6 +479,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCovers_free
 #print axioms Pcf.Stacks.standardCoversReducedDivisorQuotientEquiv
 #print axioms Pcf.Stacks.standardCoversReducedDivisor_isRegularRing
+#print axioms Pcf.Stacks.normalizationOfLocalizedPresentation_finite
+#print axioms Pcf.Stacks.normalizationOfLocalizedPresentation_free
+#print axioms Pcf.Stacks.normalizationReducedDivisorIdealOfLocalizedPresentation
+#print axioms Pcf.Stacks.normalization_radical_span_algebraMap_eq_reducedDivisorIdeal
+#print axioms Pcf.Stacks.normalizationReducedDivisorQuotientEquiv
+#print axioms Pcf.Stacks.normalizationReducedDivisor_isRegularRing
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
 #print axioms Pcf.Stacks.standardCover_isFiniteDisjointUnionOfStandardTameCovers

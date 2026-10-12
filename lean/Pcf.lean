@@ -43,6 +43,7 @@ import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 import Pcf.Stacks.Abhyankar.StandardCoverGeometry
+import Pcf.Stacks.Abhyankar.NormalizationGeometry
 import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.StandardCoverAddendum
