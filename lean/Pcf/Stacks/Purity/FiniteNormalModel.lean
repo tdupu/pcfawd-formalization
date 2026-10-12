@@ -109,4 +109,22 @@ noncomputable def finiteNormalModel_genericFiberEquiv :
   exact (Algebra.TensorProduct.piRight R K K (fun i => integralClosure R (L i))).trans
     (AlgEquiv.piCongrRight e)
 
+/-- The integral closure of a normal Noetherian domain inside an arbitrary finite product of
+finite separable field extensions is module-finite. It embeds into the product of the individual
+integral closures, which is finite over the base. -/
+theorem finiteSeparableProduct_integralClosure_finite
+    [∀ i, Algebra R (L i)] [∀ i, IsScalarTower R K (L i)] :
+    Module.Finite R (integralClosure R (∀ i, L i)) := by
+  letI (i : I) : Module.Finite R (integralClosure R (L i)) :=
+    IsIntegralClosure.moduleFinite_of_finiteSeparableExtension
+      (A := R) (K := K) (L := L i) (C := integralClosure R (L i))
+  let φ : integralClosure R (∀ i, L i) →ₐ[R] (∀ i, integralClosure R (L i)) :=
+    AlgHom.pi (fun i => (Pi.evalAlgHom R L i).mapIntegralClosure)
+  have hφ : Function.Injective φ := by
+    intro x y h
+    apply Subtype.ext
+    funext i
+    exact congrArg (fun z : ∀ i, integralClosure R (L i) => (z i : L i)) h
+  exact Module.Finite.of_injective φ.toLinearMap hφ
+
 end Pcf.Stacks
