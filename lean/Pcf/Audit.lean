@@ -447,6 +447,9 @@ hypotheses. -/
 #print axioms Pcf.Stacks.flat_pi_self_of_isNoetherianRing
 #print axioms Pcf.Stacks.Module.Flat.pi_of_isNoetherianRing
 #print axioms Pcf.Stacks.Module.Flat.of_forall_ideal_lTensor_injective
+#print axioms Pcf.Stacks.AdicCompletion.finsuppToPi
+#print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_apply
+#print axioms Pcf.Stacks.AdicCompletion.finsuppToPi_injective
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms Pcf.Stacks.AdicCompletion.map_bijective_of_reduceModIdeal
