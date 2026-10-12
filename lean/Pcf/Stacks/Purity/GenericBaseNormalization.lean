@@ -146,4 +146,52 @@ theorem puncturedCover_genericFiber_fromNormalization_isIso
   rw [← f.normalizationPullback_snd g]
   infer_instance
 
+/-- On every affine open of a finite étale punctured cover, its sections are integrally closed
+inside the sections of the corresponding open of the generic fibre. This is the affine-local
+normality assertion extracted from smooth base change of normalization. -/
+theorem puncturedCover_affineSections_isIntegrallyClosedInGeneric
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R]
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R))
+    (U : V.left.Opens) (hU : IsAffineOpen U) :
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let h := pullback.snd f g
+    letI : Algebra Γ(V.left, U) Γ(pullback f g, h ⁻¹ᵁ U) := (h.app U).hom.toAlgebra
+    IsIntegrallyClosedIn Γ(V.left, U) Γ(pullback f g, h ⁻¹ᵁ U) := by
+  dsimp
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let h := pullback.snd f g
+  let A := Γ(V.left, U)
+  let C := Γ(pullback f g, h ⁻¹ᵁ U)
+  letI : Algebra A C := (h.app U).hom.toAlgebra
+  letI : IsIso h.fromNormalization :=
+    puncturedCover_genericFiber_fromNormalization_isIso R V
+  letI : IsDominant f := genericPoint_fromSpecStalk_dominant R
+  letI : IsSchemeTheoreticallyDominant f :=
+    IsSchemeTheoreticallyDominant.of_isDominant f
+  letI : QuasiCompact f := inferInstance
+  letI : Etale V.hom := V.prop.2
+  letI : Flat g := by
+    dsimp [g]
+    infer_instance
+  letI : IsSchemeTheoreticallyDominant h := inferInstance
+  letI : QuasiCompact h := inferInstance
+  let B := integralClosure A C
+  have hAlgIso : IsIso (CommRingCat.ofHom (algebraMap A B)) := by
+    haveI : IsIso (h.fromNormalization.app U) := inferInstance
+    rw [h.fromNormalization_app hU] at this
+    exact (isIso_comp_right_iff (CommRingCat.ofHom (algebraMap A B))
+      (h.normalizationObjIso hU).inv).mp this
+  apply (isIntegrallyClosedIn_iff).mpr
+  constructor
+  · exact h.app_injective U
+  · intro x hx
+    have hsurj : Function.Surjective (algebraMap A B) :=
+      ((ConcreteCategory.isIso_iff_bijective _).mp hAlgIso).surjective
+    obtain ⟨a, ha⟩ := hsurj ⟨x, hx⟩
+    refine ⟨a, ?_⟩
+    exact congrArg (Subalgebra.val B) ha
+
 end Pcf.Stacks
