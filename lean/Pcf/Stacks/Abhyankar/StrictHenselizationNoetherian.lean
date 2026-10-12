@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.RingTheory.AdicCompletion.LocalRing
 import Mathlib.RingTheory.AdicCompletion.Functoriality
+import Mathlib.LinearAlgebra.DirectSum.Finsupp
 import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
 import Mathlib.RingTheory.LocalRing.Module
 import Mathlib.RingTheory.TensorProduct.Quotient
@@ -258,6 +259,29 @@ theorem residueTensorEquivOfMapMaximalIdeal_tmul
   rw [← Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk,
     AlgEquiv.symm_apply_apply, Ideal.quotEquivOfEq_mk]
 
+/-- Reduction of a free module modulo an ideal is the free module over the quotient ring. -/
+noncomputable def Finsupp.quotientSMulTopEquiv
+    {R : Type u} [CommRing R] (I : Ideal R) (ι : Type v) :
+    ((ι →₀ R) ⧸ (I • ⊤ : Submodule R (ι →₀ R))) ≃ₗ[R ⧸ I] ι →₀ (R ⧸ I) := by
+  classical
+  exact (TensorProduct.quotTensorEquivQuotSMul (ι →₀ R) I).symm.extendScalarsOfSurjective
+      Ideal.Quotient.mk_surjective ≪≫ₗ
+    TensorProduct.finsuppScalarRight R (R ⧸ I) (R ⧸ I) ι
+
+@[simp]
+theorem Finsupp.quotientSMulTopEquiv_mk
+    {R : Type u} [CommRing R] (I : Ideal R) {ι : Type v} (x : ι →₀ R) :
+    Finsupp.quotientSMulTopEquiv I ι (Submodule.Quotient.mk x) =
+      Finsupp.mapRange (Ideal.Quotient.mk I) (map_zero _) x := by
+  classical
+  ext i
+  change (TensorProduct.finsuppScalarRight R (R ⧸ I) (R ⧸ I) ι
+    ((TensorProduct.quotTensorEquivQuotSMul (ι →₀ R) I).symm
+      (Submodule.Quotient.mk x))) i = Ideal.Quotient.mk I (x i)
+  rw [TensorProduct.quotTensorEquivQuotSMul_symm_mk,
+    TensorProduct.finsuppScalarRight_apply_tmul_apply, Algebra.smul_def, mul_one,
+    Ideal.Quotient.algebraMap_eq]
+
 /-- Flatness survives simultaneous quotient by an ideal of the base and its extension. -/
 theorem flat_quotient_map
     (A : Type u) (B : Type v) [CommRing A] [CommRing B] [Algebra A B]
@@ -373,6 +397,51 @@ noncomputable instance localColimitQuotientPowAlgebra (n : ℕ) :
   Ideal.Quotient.algebraQuotientOfLEComap (by
     rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow,
       map_maximalIdeal_localColimit (R := R) (Ω := Ω)])
+
+/-- Quotienting the strict local colimit by a base maximal-ideal power as an `R`-module agrees
+with quotienting it by the corresponding power of its own maximal ideal as a ring. -/
+noncomputable def localColimitQuotientSMulTopEquiv (n : ℕ) :
+    (LocalColimit R Ω ⧸
+      (IsLocalRing.maximalIdeal R ^ n • ⊤ : Submodule R (LocalColimit R Ω))) ≃ₗ[
+        R ⧸ IsLocalRing.maximalIdeal R ^ n]
+      LocalColimit R Ω ⧸ IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n := by
+  let I := IsLocalRing.maximalIdeal R ^ n
+  let J := IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n
+  have h : I.map (algebraMap R (LocalColimit R Ω)) = J := by
+    dsimp [I, J]
+    rw [Ideal.map_pow, map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+  let eQuot :
+      (LocalColimit R Ω ⧸ I.map (algebraMap R (LocalColimit R Ω))) ≃ₗ[R ⧸ I]
+        LocalColimit R Ω ⧸ J :=
+    { __ := (Ideal.quotEquivOfEq h).toAddEquiv
+      map_smul' := by
+        rintro ⟨r⟩ ⟨s⟩
+        rfl }
+  exact (TensorProduct.quotTensorEquivQuotSMul
+      (LocalColimit R Ω) I).symm.extendScalarsOfSurjective
+      Ideal.Quotient.mk_surjective ≪≫ₗ
+    (Algebra.TensorProduct.quotIdealMapEquivQuotTensor
+      (LocalColimit R Ω) I).symm.toLinearEquiv ≪≫ₗ
+    eQuot
+
+omit [IsNoetherianRing R] in
+@[simp]
+theorem localColimitQuotientSMulTopEquiv_mk (n : ℕ) (s : LocalColimit R Ω) :
+    localColimitQuotientSMulTopEquiv (R := R) (Ω := Ω) n
+      (Submodule.Quotient.mk s) =
+      Ideal.Quotient.mk (IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n) s := by
+  let I := IsLocalRing.maximalIdeal R ^ n
+  let J := IsLocalRing.maximalIdeal (LocalColimit R Ω) ^ n
+  have h : I.map (algebraMap R (LocalColimit R Ω)) = J := by
+    dsimp [I, J]
+    rw [Ideal.map_pow, map_maximalIdeal_localColimit (R := R) (Ω := Ω)]
+  change Ideal.quotEquivOfEq h
+    ((Algebra.TensorProduct.quotIdealMapEquivQuotTensor (LocalColimit R Ω) I).symm
+      ((TensorProduct.quotTensorEquivQuotSMul (LocalColimit R Ω) I).symm
+        (Submodule.Quotient.mk s))) = Ideal.Quotient.mk J s
+  rw [TensorProduct.quotTensorEquivQuotSMul_symm_mk,
+    ← Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk,
+    AlgEquiv.symm_apply_apply, Ideal.quotEquivOfEq_mk]
 
 omit [IsNoetherianRing R] in
 /-- A single family of lifts of a residue-field basis is a basis modulo every positive power
@@ -553,8 +622,12 @@ end PointedEtaleNeighborhood
 #print axioms Module.Basis.mapSemilinear_apply
 #print axioms residueTensorEquivOfMapMaximalIdeal
 #print axioms residueTensorEquivOfMapMaximalIdeal_tmul
+#print axioms Finsupp.quotientSMulTopEquiv
+#print axioms Finsupp.quotientSMulTopEquiv_mk
 #print axioms AdicCompletion.map_injective_of_reduceModIdeal
 #print axioms AdicCompletion.map_bijective_of_reduceModIdeal
+#print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv
+#print axioms PointedEtaleNeighborhood.localColimitQuotientSMulTopEquiv_mk
 #print axioms PointedEtaleNeighborhood.exists_localColimit_basis_quotient_maximalIdeal_powers
 #print axioms PointedEtaleNeighborhood.localColimit_quotient_maximalIdeal_pow_free
 
