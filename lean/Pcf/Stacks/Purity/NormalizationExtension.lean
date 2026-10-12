@@ -99,6 +99,33 @@ noncomputable def puncturedCover_normalizationSectionsIso
   let e := f.normalizationObjIso (isAffineOpen_top (Spec R))
   convert e using 1 <;> rfl
 
+/-- The affine section ring of the relative normalization remains reduced: it is an integral
+closure inside the reduced ring of sections of the original cover. -/
+theorem puncturedCover_normalizationSections_isReduced
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    IsReduced Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) := by
+  let f := V.hom ≫ (puncturedSpectrum R).ι
+  letI : Algebra Γ(Spec R, ⊤) Γ(V.left, ⊤) := f.appTop.hom.toAlgebra
+  haveI : IsReduced Γ(V.left, ⊤) := puncturedCover_sections_isReduced R hdim V
+  haveI : IsReduced (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤)) :=
+    isReduced_of_injective (Subalgebra.val _) Subtype.val_injective
+  let e := puncturedCover_normalizationSectionsIso R V
+  exact isReduced_of_injective e.hom.hom e.commRingCatIsoToRingEquiv.injective
+
+/-- The relative normalization itself is a reduced affine scheme. -/
+theorem puncturedCover_normalization_isReduced
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    IsReduced (V.hom ≫ (puncturedSpectrum R).ι).normalization := by
+  letI : IsAffine (V.hom ≫ (puncturedSpectrum R).ι).normalization :=
+    puncturedCover_normalization_isAffine R V
+  letI : IsReduced Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) :=
+    puncturedCover_normalizationSections_isReduced R hdim V
+  exact isReduced_of_isAffine_isReduced _
+
 /-- The integral closure appearing in the normalization-section formula is finite over the
 global section ring of `Spec R`. This transports finiteness across the canonical affine
 section isomorphism, rather than silently identifying that ring with `R`. -/
