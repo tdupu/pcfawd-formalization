@@ -67,4 +67,34 @@ theorem puncturedCover_exists_finiteNormalGenericSchemeModel
   let j := (Scheme.Spec.mapIso i.op).symm
   exact ⟨j ≪≫ W.left.isoSpec.symm⟩
 
+/-- The integral closure of the base in the actual generic-fibre algebra of any finite étale
+punctured cover is finite. The cover need not be connected: its generic fibre may be a product
+of any finite number of separable fields. -/
+theorem puncturedCoverGenericFiber_integralClosure_finite
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let E := puncturedCoverGenericFiberAlgebra R hdim V
+    letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
+    Module.Finite R (integralClosure R E) := by
+  let K := (Spec R).functionField
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  obtain ⟨I, hI, L, hField, hAlg, e, hProps⟩ :=
+    puncturedCoverGenericFiber_exists_separableFields R hdim V
+  letI : Finite I := hI
+  letI (i : I) : Field (L i) := hField i
+  letI (i : I) : Algebra K (L i) := hAlg i
+  letI (i : I) : FiniteDimensional K (L i) := (hProps i).1
+  letI (i : I) : Algebra.IsSeparable K (L i) := (hProps i).2
+  letI (i : I) : Algebra R (L i) := Algebra.compHom (L i) (algebraMap R K)
+  letI (i : I) : IsScalarTower R K (L i) := .of_algebraMap_eq' rfl
+  have hpi : Module.Finite R (integralClosure R (∀ i, L i)) :=
+    finiteSeparableProduct_integralClosure_finite R K I L
+  letI : IsScalarTower R K E := .of_algebraMap_eq' rfl
+  let eR : E ≃ₐ[R] (∀ i, L i) := e.restrictScalars R
+  let eC := eR.mapIntegralClosure
+  exact Module.Finite.of_injective eC.toLinearMap eC.injective
+
 end Pcf.Stacks
