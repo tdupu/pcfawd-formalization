@@ -66,6 +66,7 @@ import Pcf.Stacks.Abhyankar.EtaleDescentObjects
 import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
 import Pcf.Stacks.Purity.LocalFlatness
 import Pcf.Stacks.Purity.FpqcEtaleDescent
+import Pcf.Stacks.Purity.GenericBaseNormalization
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
 import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
@@ -89,6 +90,7 @@ import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
 import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
 import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.DVRAbhyankar
@@ -277,6 +279,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_ringHom_etale
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_exists_separableFields
 #print axioms Pcf.Stacks.puncturedCover_sections_isReduced
+#print axioms Pcf.Stacks.genericPoint_sections_isIntegrallyClosedIn
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
@@ -391,6 +394,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
 #print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.exists_basis_of_flat_of_isNilpotent_maximalIdeal
+#print axioms Pcf.Stacks.IsLocalRing.ResidueField.map_bijective_of_surjective
+#print axioms Pcf.Stacks.IsLocalRing.ResidueField.mapEquivOfSurjective
 #print axioms Pcf.Stacks.flat_quotient_map
 #print axioms Pcf.Stacks.free_quotient_maximalIdeal_pow_of_flat
 #print axioms Pcf.Stacks.AdicCompletion.map_injective_of_reduceModIdeal
@@ -418,6 +423,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_isIntegralClosure_localizationAway_of_regular
 #print axioms Pcf.Stacks.isRegularLocalRing_quotient_localization
 #print axioms Pcf.Stacks.standardCover_isRegularLocalRing_atPrime_over_divisor
+#print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.selfBaseChange
+#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_standard
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.etale_of_isEtaleAt_maximalIdeal
