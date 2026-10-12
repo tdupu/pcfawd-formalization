@@ -23,6 +23,7 @@ not available at the pinned revision in the form needed by the proof of Tag `0BM
 -/
 
 noncomputable section
+set_option linter.style.haveILetI false
 
 namespace Pcf.Stacks
 
@@ -107,5 +108,24 @@ theorem pi {ι : Type*} {A : ι → Type*} [∀ i, CommRing (A i)] [Finite ι]
   exact ⟨e.toMulEquiv.isDomain _, IsIntegrallyClosed.of_equiv e.symm⟩
 
 end IsStacksNormalRing
+
+/-- Normality of an integral closure is unchanged when its base ring is reidentified by a ring
+isomorphism.  The two closure rings have the same underlying elements of the ambient algebra. -/
+theorem integralClosure_isStacksNormalRing_of_baseRingEquiv
+    (R S T : Type*) [CommRing R] [CommRing S] [CommRing T] [Algebra S T]
+    (φ : R ≃+* S) :
+    letI : Algebra R T := Algebra.compHom T φ.toRingHom
+    IsStacksNormalRing (integralClosure R T) →
+      IsStacksNormalRing (integralClosure S T) := by
+  letI : Algebra R T := Algebra.compHom T φ.toRingHom
+  intro h
+  let e : integralClosure S T ≃+* integralClosure R T := {
+    toFun := fun x => ⟨x.1, (φ.isIntegral_iff (by rfl) x.1).mpr x.2⟩
+    invFun := fun x => ⟨x.1, (φ.isIntegral_iff (by rfl) x.1).mp x.2⟩
+    left_inv := by intro x; apply Subtype.ext; rfl
+    right_inv := by intro x; apply Subtype.ext; rfl
+    map_mul' := by intro x y; apply Subtype.ext; rfl
+    map_add' := by intro x y; apply Subtype.ext; rfl }
+  exact IsStacksNormalRing.of_ringEquiv e h
 
 end Pcf.Stacks

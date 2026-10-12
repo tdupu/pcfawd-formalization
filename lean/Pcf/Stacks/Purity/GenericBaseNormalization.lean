@@ -147,6 +147,40 @@ theorem puncturedCover_genericFiber_fromNormalization_isIso
   rw [← f.normalizationPullback_snd g]
   infer_instance
 
+/-- The generic fibre formed as the base pullback over `Spec R` has a finite étale section
+algebra over the function field.  This is the orientation of the pullback used by the
+normalization comparison. -/
+theorem puncturedCover_baseGenericPullback_algebraEtale
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    let K := (Spec R).functionField
+    let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+    let g := V.hom ≫ (puncturedSpectrum R).ι
+    let q := pullback.fst f g
+    letI : Algebra K Γ(pullback f g, ⊤) :=
+      (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
+    Algebra.Etale K Γ(pullback f g, ⊤) := by
+  let K := (Spec R).functionField
+  let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
+  let g := V.hom ≫ (puncturedSpectrum R).ι
+  let W := pullback f g
+  let q := pullback.fst f g
+  letI : Algebra K Γ(W, ⊤) :=
+    (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
+  let e := puncturedCoverGenericFiber_iso_basePullback R hdim V
+  let s := pullbackSymmetry f g
+  let t := s ≪≫ e.symm
+  letI : IsAffine W :=
+    (IsAffine.iff_of_isIso t.hom).mpr (puncturedCoverGenericFiber_isAffine R hdim V)
+  letI : Etale V.hom := V.prop.2
+  letI : Etale g := by dsimp [g]; infer_instance
+  letI : Etale q := by dsimp [q]; infer_instance
+  have hq : q.appTop.hom.Etale := HasRingHomProperty.appTop (@Etale) q (by infer_instance)
+  have hiso : ((Scheme.ΓSpecIso K).inv.hom).Etale :=
+    RingHom.Etale.of_bijective ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance)
+  exact (RingHom.Etale.stableUnderComposition _ _ hiso hq).toAlgebra
+
 /-- On every affine open of a finite étale punctured cover, its sections are integrally closed
 inside the sections of the corresponding open of the generic fibre. This is the affine-local
 normality assertion extracted from smooth base change of normalization. -/

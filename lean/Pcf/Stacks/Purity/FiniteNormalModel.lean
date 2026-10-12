@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.Algebra.Category.CommAlgCat.Basic
 import Mathlib.RingTheory.Localization.BaseChange
+import Mathlib.RingTheory.Etale.Field
 import Mathlib.RingTheory.TensorProduct.Pi
 import Pcf.Stacks.Purity.IntegralClosure
 
@@ -168,5 +169,26 @@ theorem finiteSeparableProduct_integralClosure_isStacksNormalRing
       IsIntegralClosure.isStacksNormalRing_of_finiteExtension
         (A := R) (K := K) (L := L i) (C := integralClosure R (L i)))
   exact IsStacksNormalRing.of_ringEquiv e.toRingEquiv hprod
+
+/-- The integral closure of a normal domain in any finite étale algebra over its fraction field
+is Stacks-normal, without a connectedness assumption on that algebra. -/
+theorem finiteEtaleAlgebra_integralClosure_isStacksNormalRing
+    (E : Type u) [CommRing E] [Algebra K E] [Algebra.Etale K E] :
+    letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+    IsStacksNormalRing (integralClosure R E) := by
+  letI : Algebra R E := Algebra.compHom E (algebraMap R K)
+  obtain ⟨I, hI, L, hField, hAlg, e, hProps⟩ :=
+    (Algebra.Etale.iff_exists_algEquiv_prod K E).mp inferInstance
+  letI : Finite I := hI
+  letI (i : I) : Field (L i) := hField i
+  letI (i : I) : Algebra K (L i) := hAlg i
+  letI (i : I) : FiniteDimensional K (L i) := (hProps i).1
+  letI (i : I) : Algebra.IsSeparable K (L i) := (hProps i).2
+  letI (i : I) : Algebra R (L i) := Algebra.compHom (L i) (algebraMap R K)
+  letI (i : I) : IsScalarTower R K (L i) := .of_algebraMap_eq' rfl
+  letI : IsScalarTower R K E := .of_algebraMap_eq' rfl
+  let eR : E ≃ₐ[R] (∀ i, L i) := e.restrictScalars R
+  exact IsStacksNormalRing.of_ringEquiv eR.mapIntegralClosure.toRingEquiv
+    (finiteSeparableProduct_integralClosure_isStacksNormalRing R K I L)
 
 end Pcf.Stacks
