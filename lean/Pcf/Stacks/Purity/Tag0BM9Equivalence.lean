@@ -187,4 +187,124 @@ theorem puncturedSectionsSpecAdjunction_counit_isIso
   simp only [puncturedSectionsSpecAdjunction, Adjunction.comp_counit_app]
   infer_instance
 
+/-- Global sections of a finite etale cover of the puncture lie in the exact finite,
+torsion-free, Stacks-normal target category of Tag `0BM9`. -/
+theorem puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty
+    (hdim : 2 ≤ ringKrullDim R) :
+    ∀ V, finiteNormalPuncturedEtaleAlgebraProperty R
+      ((puncturedFiniteEtaleGlobalSections R).obj V) := by
+  intro V
+  have hdim1 : 1 ≤ ringKrullDim R := le_trans (by norm_num) hdim
+  obtain ⟨A, ⟨e⟩⟩ :=
+    puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra R hdim1 V
+  letI : IsIso ((puncturedSectionsSpecAdjunction R).counit.app A.obj) :=
+    puncturedSectionsSpecAdjunction_counit_isIso R hdim A
+  let eΓ := (puncturedFiniteEtaleGlobalSections R).mapIso e
+  let eA : A.obj ≅ (puncturedFiniteEtaleGlobalSections R).obj V :=
+    (asIso ((puncturedSectionsSpecAdjunction R).counit.app A.obj)).symm ≪≫ eΓ
+  exact (finiteNormalPuncturedEtaleAlgebraProperty R).prop_of_iso eA A.property
+
+/-- The relative `Gamma`-`Spec` adjunction restricted to finite etale covers of the puncture and
+finite torsion-free normal algebras which are etale there. -/
+noncomputable def tag0BM9Adjunction (hdim : 2 ≤ ringKrullDim R) :
+    puncturedGlobalSectionsToFiniteNormalAlgebra R
+        (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R hdim) ⊣
+      finiteNormalAlgebraToPuncturedCover R :=
+  (puncturedSectionsSpecAdjunction R).restrictFullyFaithful
+    (Functor.FullyFaithful.ofFullyFaithful (FiniteEtaleCover.forget _))
+    (finiteNormalPuncturedEtaleAlgebraProperty R).fullyFaithfulι
+    (Iso.refl _) (Iso.refl _)
+
+/-- The counit of the restricted Tag `0BM9` adjunction is an isomorphism.  This is the categorical
+form of recovering a finite normal algebra from the global functions on its punctured
+restriction. -/
+theorem tag0BM9Adjunction_counit_isIso (hdim : 2 ≤ ringKrullDim R)
+    (A : FiniteNormalPuncturedEtaleAlgebra R) :
+    IsIso ((tag0BM9Adjunction R hdim).counit.app A) := by
+  rw [← ObjectProperty.isIso_hom_iff]
+  have hmap := (puncturedSectionsSpecAdjunction R).map_restrictFullyFaithful_counit_app
+    (L := puncturedGlobalSectionsToFiniteNormalAlgebra R
+      (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R hdim))
+    (R := finiteNormalAlgebraToPuncturedCover R)
+    (Functor.FullyFaithful.ofFullyFaithful (FiniteEtaleCover.forget _))
+    (finiteNormalPuncturedEtaleAlgebraProperty R).fullyFaithfulι
+    (Iso.refl _) (Iso.refl _) A
+  dsimp only [tag0BM9Adjunction] at hmap
+  change IsIso ((finiteNormalPuncturedEtaleAlgebraProperty R).ι.map
+    ((tag0BM9Adjunction R hdim).counit.app A))
+  dsimp only [tag0BM9Adjunction]
+  rw [hmap]
+  dsimp
+  haveI : IsIso ((puncturedSectionsSpecAdjunction R).counit.app A.obj) :=
+    puncturedSectionsSpecAdjunction_counit_isIso R hdim A
+  simpa only [Category.id_comp]
+
+/-- Restriction from the finite-normal algebra category to finite etale covers of the puncture is
+fully faithful. -/
+noncomputable def finiteNormalAlgebraToPuncturedCover_fullyFaithful
+    (hdim : 2 ≤ ringKrullDim R) :
+    (finiteNormalAlgebraToPuncturedCover R).FullyFaithful := by
+  let adj := tag0BM9Adjunction R hdim
+  haveI : ∀ A, IsIso (adj.counit.app A) := fun A ↦
+    tag0BM9Adjunction_counit_isIso R hdim A
+  letI : IsIso adj.counit := NatIso.isIso_of_isIso_app adj.counit
+  exact adj.fullyFaithfulROfIsIsoCounit
+
+/-- Every finite etale cover of the puncture is in the essential image of restriction from a
+finite torsion-free normal algebra. -/
+theorem finiteNormalAlgebraToPuncturedCover_essSurj
+    (hdim : 2 ≤ ringKrullDim R) :
+    (finiteNormalAlgebraToPuncturedCover R).EssSurj := by
+  constructor
+  intro V
+  obtain ⟨A, e⟩ := puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra R
+    (le_trans (by norm_num) hdim) V
+  exact ⟨A, e⟩
+
+/-- The exact equivalence of categories in Stacks Tag `0BM9`: finite etale covers of the
+punctured spectrum are equivalent, by global sections, to finite torsion-free Stacks-normal
+`R`-algebras whose spectra are etale over the puncture. -/
+noncomputable def tag0BM9Equivalence (hdim : 2 ≤ ringKrullDim R) :
+    FiniteEtaleCover (puncturedSpectrumScheme R) ≌
+      FiniteNormalPuncturedEtaleAlgebra R := by
+  let F := puncturedGlobalSectionsToFiniteNormalAlgebra R
+    (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R hdim)
+  let G := finiteNormalAlgebraToPuncturedCover R
+  let adj : F ⊣ G := tag0BM9Adjunction R hdim
+  let hFullyFaithful : G.FullyFaithful :=
+    finiteNormalAlgebraToPuncturedCover_fullyFaithful R hdim
+  letI : G.Full := hFullyFaithful.full
+  letI : G.Faithful := hFullyFaithful.faithful
+  letI : G.EssSurj := finiteNormalAlgebraToPuncturedCover_essSurj R hdim
+  letI : G.IsEquivalence := {}
+  exact adj.toEquivalence
+
+/-- Canonical recovery of a punctured finite etale cover from the spectrum of its global
+sections. -/
+noncomputable def tag0BM9_puncturedCoverRecoveryIso
+    (hdim : 2 ≤ ringKrullDim R) :
+    𝟭 (FiniteEtaleCover (puncturedSpectrumScheme R)) ≅
+      puncturedGlobalSectionsToFiniteNormalAlgebra R
+          (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R hdim) ⋙
+        finiteNormalAlgebraToPuncturedCover R :=
+  (tag0BM9Equivalence R hdim).unitIso
+
+/-- Canonical recovery of a finite normal algebra from the global sections of its punctured
+restriction. -/
+noncomputable def tag0BM9_finiteNormalAlgebraRecoveryIso
+    (hdim : 2 ≤ ringKrullDim R) :
+    finiteNormalAlgebraToPuncturedCover R ⋙
+        puncturedGlobalSectionsToFiniteNormalAlgebra R
+          (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R hdim) ≅
+      𝟭 (FiniteNormalPuncturedEtaleAlgebra R) :=
+  (tag0BM9Equivalence R hdim).counitIso
+
+/-- Global sections on punctured finite etale covers are fully faithful. -/
+noncomputable def tag0BM9_puncturedGlobalSections_fullyFaithful
+    (hdim : 2 ≤ ringKrullDim R) :
+    (puncturedGlobalSectionsToFiniteNormalAlgebra R
+      (puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty R
+        hdim)).FullyFaithful :=
+  (tag0BM9Equivalence R hdim).fullyFaithfulFunctor
+
 end Pcf.Stacks
