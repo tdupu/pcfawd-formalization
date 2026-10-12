@@ -65,6 +65,14 @@ import Pcf.Stacks.Abhyankar.KummerTame
 import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
 import Pcf.Stacks.Abhyankar.KummerPowers
 import Pcf.Stacks.Abhyankar.KummerNormDescent
+import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
+import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
+import Pcf.Stacks.Abhyankar.StrictStandardConclusion
+import Pcf.Stacks.Abhyankar.StrictStandardAssembly
+import Pcf.Stacks.Abhyankar.Tag0EYE
+import Pcf.Stacks.Abhyankar.StrictNormalizationEmbedding
+import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
+import Pcf.Stacks.Abhyankar.DivisorRootLocalization
 import Pcf.Stacks.Common.RegularDimensionOne
 import Pcf.Bounding.RegularLocalDomain
 import Pcf.Bounding.Stacks

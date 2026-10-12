@@ -23,6 +23,11 @@ import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 import Pcf.Stacks.Purity.DiscriminantFiber
 import Pcf.Stacks.Purity.HeightOneEtaleBridge
 import Pcf.Stacks.Purity.OuterInduction
+import Pcf.Stacks.Purity.HypersurfaceLifting
+import Pcf.Stacks.Purity.HenselianIdempotents
+import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
+import Pcf.Stacks.Purity.HenselianGabberPolynomial
+import Pcf.Stacks.Purity.GabberPolynomialSplit
 import Pcf.Stacks.Purity.GenericFiberDecomposition
 import Pcf.Stacks.Purity.GenericCoverFiber
 import Pcf.Stacks.Purity.GenericBaseNormalization
@@ -33,6 +38,8 @@ import Pcf.Stacks.Purity.FiniteNormalModel
 import Pcf.Stacks.Purity.CoverNormalModel
 import Pcf.Stacks.Purity.NormalizationExtension
 import Pcf.Stacks.Purity.Tag0BM9Equivalence
+import Pcf.Stacks.Purity.Tag0BMBAssembly
+import Pcf.Stacks.Purity.Tag0BMAClauses
 
 /-!
 # Zariski--Nagata purity: assembly boundary

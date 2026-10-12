@@ -77,6 +77,13 @@ import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 import Pcf.Stacks.Purity.DiscriminantFiber
 import Pcf.Stacks.Purity.HeightOneEtaleBridge
 import Pcf.Stacks.Purity.OuterInduction
+import Pcf.Stacks.Purity.HypersurfaceLifting
+import Pcf.Stacks.Purity.HenselianIdempotents
+import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
+import Pcf.Stacks.Purity.HenselianGabberPolynomial
+import Pcf.Stacks.Purity.GabberPolynomialSplit
+import Pcf.Stacks.Purity.Tag0BMBAssembly
+import Pcf.Stacks.Purity.Tag0BMAClauses
 import Pcf.Stacks.Purity.Tag0BM9Equivalence
 import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
@@ -122,7 +129,13 @@ import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
 import Pcf.Stacks.Abhyankar.KummerPowers
 import Pcf.Stacks.Abhyankar.KummerNormDescent
 import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
+import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
 import Pcf.Stacks.Abhyankar.StrictStandardConclusion
+import Pcf.Stacks.Abhyankar.StrictStandardAssembly
+import Pcf.Stacks.Abhyankar.Tag0EYE
+import Pcf.Stacks.Abhyankar.StrictNormalizationEmbedding
+import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
+import Pcf.Stacks.Abhyankar.DivisorRootLocalization
 import Pcf.Bounding.AffineBridge
 import Pcf.Bounding.Wiring
 import Pcf.Examples.Squaring
@@ -296,6 +309,35 @@ hypotheses. -/
 #print axioms Pcf.Stacks.HypersurfaceFiniteEtaleLifting
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_hypersurface_lifting
 #print axioms Pcf.Stacks.regularLocal_puncturedSpectrumPurity_induction_step
+#print axioms Pcf.Stacks.hypersurfaceMap
+#print axioms Pcf.Stacks.restrictFiniteEtaleToHypersurface
+#print axioms Pcf.Stacks.puncturedHypersurfaceMap_comp_ι
+#print axioms Pcf.Stacks.restrictFiniteEtaleToHypersurfaceCompPunctureIso
+#print axioms Pcf.Stacks.hypersurfaceFiniteEtaleLifting_of_essSurj_of_fullyFaithful
+#print axioms Pcf.Stacks.isIdempotentElem_eq_zero_of_mem_jacobson
+#print axioms Pcf.Stacks.eq_of_isIdempotentElem_of_sub_mem_of_le_jacobson
+#print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_henselian
+#print axioms Pcf.Stacks.existsUnique_isIdempotentElem_lift_of_henselian
+#print axioms Pcf.Stacks.bijective_idempotentQuotientMap_of_henselian
+#print axioms Pcf.Stacks.map_le_jacobson_bot_of_le_jacobson_of_isIntegral
+#print axioms Pcf.Stacks.injective_idempotentQuotientMap_of_isIntegral
+#print axioms Pcf.Stacks.injective_idempotentQuotientMap_of_finite_henselian
+#print axioms Pcf.Stacks.exists_root_sub_one_mem_of_map_eq_X_pow_mul_X_sub_one
+#print axioms Pcf.Stacks.eq_of_isRoot_of_sub_one_mem_of_map_eq_X_pow_mul_X_sub_one
+#print axioms Pcf.Stacks.existsUnique_root_sub_one_mem_of_map_eq_X_pow_mul_X_sub_one
+#print axioms Pcf.Stacks.exists_coprime_factorization_of_map_eq_X_pow_mul_X_sub_one
+#print axioms Pcf.Stacks.FiniteNormalPuncturedEtalePurity
+#print axioms Pcf.Stacks.ZariskiNagataFiniteLocalModel
+#print axioms Pcf.Stacks.exists_tag0BMB_finiteComponent
+#print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_finiteLocalModel
+#print axioms Pcf.Stacks.zariskiNagataPurity_of_finiteLocalModels
+#print axioms Pcf.Stacks.finiteEtaleCover_sections_finite_etale
+#print axioms Pcf.Stacks.finiteEtaleCover_algGamma_unit_isIso
+#print axioms Pcf.Stacks.puncturedSectionsSpecAdjunction_counit_isIso_of_bijective
+#print axioms Pcf.Stacks.finiteEtaleAlgebra_openSections_bijective
+#print axioms Pcf.Stacks.finiteEtaleAlgebra_pullbackSections_bijective
+#print axioms Pcf.Stacks.finiteEtaleAlgebra_puncturedSectionsSpecAdjunction_counit_isIso
+#print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_puncturedSpectrumPurity
 #print axioms Pcf.Stacks.spec_algebraMap_res
 #print axioms Pcf.Stacks.openSections_algebraMap_surjective_of_module_regularPair
 #print axioms Pcf.Stacks.openSections_algebraMap_bijective_of_module_regularPair
@@ -624,6 +666,31 @@ hypotheses. -/
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfGenericEquiv
 #print axioms Pcf.Stacks.normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
+#print axioms Pcf.Stacks.dvrRootFractionPowerEquiv
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding
+#print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_localizedPresentation
+#print axioms Pcf.Stacks.strictStandardPresentation_of_localizedPresentation
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_localizedPresentation
+#print axioms Pcf.Stacks.Algebra.isEtaleAt_of_zariskiNagataPurity_finite_normal_domain
+#print axioms Pcf.Stacks.Algebra.etale_of_zariskiNagataPurity_finite_normal_domain
+#print axioms
+  Pcf.Stacks.Algebra.etale_across_nonZeroDivisor_of_zariskiNagataPurity_finite_normal_domain
+#print axioms Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient
+#print axioms Pcf.Stacks.Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain
+#print axioms Pcf.Stacks.Algebra.tag0EYE_standardRoot_of_zariskiNagataPurity
+#print axioms Pcf.Stacks.fractionRingAlgEquivOfFiniteEtaleLocal
+#print axioms Pcf.Stacks.fractionRingAlgEquivOfFiniteEtaleLocalOverFraction
+#print axioms Pcf.Stacks.normalIntegralAlgEquivOfFractionRingEquiv
+#print axioms Pcf.Stacks.exists_fractionFieldEmbedding_of_tag0EYE_strict_local_normalization
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_strict_local_normalization
+#print axioms Pcf.Stacks.formallyUnramified_of_isUnramifiedAt_maximalIdeal
+#print axioms Pcf.Stacks.isUnramifiedAt_of_etale_localizationAway
+#print axioms
+  Pcf.Stacks.isUnramifiedAt_of_standardRoot_dvrRootPuncturedNormalization_of_root_mem
+#print axioms Pcf.Stacks.standardRootTensorAtPrimeEquivDVRRoot
+#print axioms Pcf.Stacks.standardRootTensorAtPrimeEquivDVRRoot_root
+#print axioms Pcf.Stacks.standardRoot_dvrRoot_isLocalizationAtDivisorPrime
 #print axioms Pcf.Stacks.normalizationBaseChangeAlgebra
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv
 #print axioms Pcf.Stacks.smoothBaseChangeIntegralClosureEquiv_val
