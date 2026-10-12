@@ -142,4 +142,38 @@ theorem puncturedSpectrum_restriction_bijective (R : Type u)
   ⟨puncturedSpectrum_restriction_injective R (le_trans (by norm_num) hdim),
     puncturedSpectrum_restriction_surjective R hdim⟩
 
+/-- The canonical algebra map from a normal local domain to regular functions on its punctured
+spectrum is an isomorphism of commutative rings. -/
+theorem isIso_puncturedSpectrum_algebraMap (R : CommRingCat.{u})
+    [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R] (hdim : 2 ≤ ringKrullDim R) :
+    IsIso (CommRingCat.ofHom
+      (algebraMap R Γ(Spec R, puncturedSpectrum R))) := by
+  apply (ConcreteCategory.isIso_iff_bijective _).mpr
+  constructor
+  · intro a b h
+    apply IsFractionRing.injective R (Spec R).functionField
+    have hgen : Nonempty (puncturedSpectrum R) :=
+      puncturedSpectrum_nonempty_of_one_le_ringKrullDim R
+        (le_trans (by norm_num) hdim)
+    letI : Nonempty (puncturedSpectrum R) := hgen
+    have hpoint : genericPoint (Spec R) ∈ puncturedSpectrum R :=
+      ((genericPoint_spec (Spec R)).mem_open_set_iff
+        (puncturedSpectrum R).isOpen).mpr (by simpa using hgen)
+    have hg := congrArg (fun s : Γ(Spec R, puncturedSpectrum R) =>
+      (Spec R).germToFunctionField (puncturedSpectrum R) s) h
+    change (Spec R).germToFunctionField (puncturedSpectrum R)
+      (algebraMap R Γ(Spec R, puncturedSpectrum R) a) =
+      (Spec R).germToFunctionField (puncturedSpectrum R)
+        (algebraMap R Γ(Spec R, puncturedSpectrum R) b) at hg
+    have ht (r : R) :
+        (Spec R).germToFunctionField (puncturedSpectrum R)
+          (algebraMap R Γ(Spec R, puncturedSpectrum R) r) =
+            algebraMap R (Spec R).functionField r :=
+      StructureSheaf.algebraMap_germ_apply (puncturedSpectrum R)
+        (genericPoint (Spec R)) hpoint r
+    rw [ht a, ht b] at hg
+    exact hg
+  · exact puncturedSpectrum_algebraMap_surjective R hdim
+
 end Pcf.Stacks
