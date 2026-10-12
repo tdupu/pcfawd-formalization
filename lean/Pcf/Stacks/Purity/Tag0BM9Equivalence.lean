@@ -68,4 +68,123 @@ instance finiteNormalPuncturedEtaleAlgebraProperty_isClosedUnderIsomorphisms :
       exact hX.2.2.2
     exact ⟨hfin, htf, hnormal, hetale⟩
 
+/-- Hartogs recovery expressed on the actual pullback scheme over the puncture.  The previously
+proved open-image form is transported across the global-sections isomorphism of an open
+immersion. -/
+theorem finiteNormalAlgebra_pullbackSections_bijective
+    (hdim : 2 ≤ ringKrullDim R)
+    (A : FiniteNormalPuncturedEtaleAlgebra R) :
+    Function.Bijective
+      (((Scheme.ΓSpecIso (.of A.obj.unop)).inv ≫
+        (pullback.fst ((algSpec (.of R)).obj A.obj).hom
+          (puncturedSpectrum R).ι).appTop).hom) := by
+  let B : CommRingCat := .of A.obj.unop
+  let p : Spec B ⟶ Spec (.of R) := ((algSpec (.of R)).obj A.obj).hom
+  let i := (puncturedSpectrum R).ι
+  let P := pullback p i
+  let j : P ⟶ Spec B := pullback.fst p i
+  let W : (Spec B).Opens := j.opensRange
+  change Function.Bijective (((Scheme.ΓSpecIso B).inv ≫ j.appTop).hom)
+  let e := IsOpenImmersion.ΓIsoTop j
+  have hW := finiteNormalAlgebra_openSections_bijective R hdim A
+  letI : Algebra B Γ(Spec B, W) :=
+    (((Scheme.ΓSpecIso B).inv ≫
+      (Spec B).presheaf.map
+        (homOfLE (show W ≤ ⊤ from le_top)).op).hom).toAlgebra
+  have he (b : B) : e.inv (algebraMap B Γ(Spec B, W) b) =
+      j.appTop ((Scheme.ΓSpecIso B).inv b) := by
+    have etop : (⊤ : P.Opens) ≤ j ⁻¹ᵁ W := by
+      change (⊤ : P.Opens) ≤ j ⁻¹ᵁ j.opensRange
+      rw [← j.image_top_eq_opensRange, j.preimage_image_eq]
+    have hcomp : (Spec B).presheaf.map
+          (eqToHom j.image_top_eq_opensRange).op ≫
+          (j.appIso ⊤).hom =
+        j.appLE W ⊤ etop := by
+      rw [j.appIso_hom']
+      exact j.map_appLE' etop j.image_top_eq_opensRange
+    simp only [e, IsOpenImmersion.ΓIsoTop, Iso.trans_inv,
+      Functor.mapIso_inv, Iso.op_inv, eqToIso.inv, eqToHom_op,
+      Iso.symm_inv]
+    change ((Spec B).presheaf.map
+          (eqToHom j.image_top_eq_opensRange).op ≫
+        (j.appIso ⊤).hom).hom
+        (((Scheme.ΓSpecIso B).inv ≫
+          (Spec B).presheaf.map
+            (homOfLE (show W ≤ ⊤ from le_top)).op).hom b) = _
+    rw [← CommRingCat.comp_apply, hcomp]
+    change ((Spec B).presheaf.map
+        (homOfLE (show W ≤ ⊤ from le_top)).op ≫
+      j.appLE W ⊤ etop).hom ((Scheme.ΓSpecIso B).inv b) = _
+    rw [j.map_appLE]
+    have happ : j.appLE ⊤ ⊤ (by simp) = j.appTop := by
+      simpa only [Scheme.Hom.preimage_top] using
+        (j.appLE_eq_app (U := (⊤ : (Spec B).Opens)))
+    change (j.appLE ⊤ ⊤ _).hom _ = j.appTop.hom _
+    rw [happ]
+  have heBij : Function.Bijective e.inv.hom :=
+    (ConcreteCategory.isIso_iff_bijective e.inv).mp inferInstance
+  have hcomp := heBij.comp hW
+  change Function.Bijective
+    (e.inv.hom ∘ (((Scheme.ΓSpecIso B).inv ≫
+      (Spec B).presheaf.map
+        (homOfLE (show W ≤ ⊤ from le_top)).op).hom)) at hcomp
+  have hefun : ((Scheme.ΓSpecIso B).inv ≫ j.appTop).hom =
+      e.inv.hom ∘ (((Scheme.ΓSpecIso B).inv ≫
+        (Spec B).presheaf.map
+          (homOfLE (show W ≤ ⊤ from le_top)).op).hom) := by
+    funext b
+    exact (he b).symm
+  rw [hefun]
+  exact hcomp
+
+/-- The counit of the punctured `Gamma`-`Spec` adjunction is an isomorphism on every finite
+torsion-free normal algebra in the target of Tag `0BM9`. -/
+theorem puncturedSectionsSpecAdjunction_counit_isIso
+    (hdim : 2 ≤ ringKrullDim R)
+    (A : FiniteNormalPuncturedEtaleAlgebra R) :
+    IsIso ((puncturedSectionsSpecAdjunction R).counit.app A.obj) := by
+  let p := ((algSpec (.of R)).obj A.obj).hom
+  let i := (puncturedSpectrum R).ι
+  let j := pullback.fst p i
+  have hcomp := finiteNormalAlgebra_pullbackSections_bijective R hdim A
+  haveI : IsIso
+      ((Scheme.ΓSpecIso (.of A.obj.unop)).inv ≫
+        (pullback.fst ((algSpec (.of R)).obj A.obj).hom
+          (puncturedSpectrum R).ι).appTop) :=
+    (ConcreteCategory.isIso_iff_bijective _).mpr hcomp
+  haveI : IsIso
+      (pullback.fst ((algSpec (.of R)).obj A.obj).hom
+        (puncturedSpectrum R).ι).appTop :=
+    IsIso.of_isIso_comp_left (Scheme.ΓSpecIso (.of A.obj.unop)).inv _
+  haveI : IsIso j.appTop := by
+    change IsIso
+      (pullback.fst ((algSpec (.of R)).obj A.obj).hom
+        (puncturedSpectrum R).ι).appTop
+    infer_instance
+  let c := (Over.mapPullbackAdj i).counit.app ((algSpec (.of R)).obj A.obj)
+  haveI : IsIso c.left.appTop := by
+    change IsIso j.appTop
+    infer_instance
+  haveI : IsIso ((Scheme.Γ.rightOp).map c.left) := by
+    change IsIso c.left.appTop.op
+    infer_instance
+  haveI : IsIso ((Over.post Scheme.Γ.rightOp).map c) := by
+    let m := (Over.post Scheme.Γ.rightOp).map c
+    haveI : IsIso m.left := by
+      change IsIso ((Scheme.Γ.rightOp).map c.left)
+      infer_instance
+    let e := Over.isoMk (asIso m.left) m.w
+    have he : e.hom = m := by
+      ext
+      rfl
+    change IsIso m
+    rw [← he]
+    infer_instance
+  haveI : IsIso ((algΓ (.of R)).map c) := by
+    unfold algΓ
+    dsimp only [Functor.comp_map]
+    infer_instance
+  simp only [puncturedSectionsSpecAdjunction, Adjunction.comp_counit_app]
+  infer_instance
+
 end Pcf.Stacks
