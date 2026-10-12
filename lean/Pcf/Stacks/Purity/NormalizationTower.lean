@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Normalization
+import Mathlib.AlgebraicGeometry.Morphisms.Etale
+import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
 
 /-!
 # Relative normalization and integral towers
@@ -16,7 +18,7 @@ fibre over the puncture.
 
 noncomputable section
 
-open AlgebraicGeometry CategoryTheory
+open AlgebraicGeometry CategoryTheory Limits
 set_option linter.style.haveILetI false
 
 universe u
@@ -110,5 +112,32 @@ noncomputable def normalizationIsoOfSourceIso
     · simp [Category.assoc, ha, hb]
     · simp
   exact ⟨a, b, hab, hba⟩
+
+/-- Restricting the relative normalization of a morphism that already factors through an open
+immersion recovers the relative normalization over that open. This combines smooth base change
+with invariance under the canonical source isomorphism of the pullback. -/
+noncomputable def normalizationRestrictIsoOfOpenImmersion
+    {W U S : Scheme.{u}} (p : W ⟶ U) (i : U ⟶ S)
+    [IsOpenImmersion i] [QuasiCompact p] [QuasiSeparated p]
+    [QuasiCompact (p ≫ i)] [QuasiSeparated (p ≫ i)] :
+    pullback (p ≫ i).fromNormalization i ≅ p.normalization := by
+  let j := p ≫ i
+  let k := pullback.fst j i
+  haveI : Mono i := inferInstance
+  haveI : IsIso k := by
+    dsimp [k, j]
+    infer_instance
+  have hkp : k ≫ p = pullback.snd j i := by
+    apply (cancel_mono i).mp
+    simp [k, j, Category.assoc, pullback.condition]
+  letI : Smooth i := inferInstance
+  let e₁ : (pullback.snd j i).normalization ≅ pullback j.fromNormalization i :=
+    asIso (j.normalizationPullback i)
+  letI : QuasiCompact (k ≫ p) := by rw [hkp]; infer_instance
+  letI : QuasiSeparated (k ≫ p) := by rw [hkp]; infer_instance
+  let e₂ : (pullback.snd j i).normalization ≅ p.normalization := by
+    convert normalizationIsoOfSourceIso p k using 1
+    simp only [hkp]
+  exact e₁.symm ≪≫ e₂
 
 end Pcf.Stacks
