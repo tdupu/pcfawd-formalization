@@ -79,6 +79,7 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
 import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
 import Pcf.Stacks.Abhyankar.TameRamification
 import Pcf.Stacks.Abhyankar.StandardCover
+import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 import Pcf.Stacks.Abhyankar.DVR
 import Pcf.Stacks.Abhyankar.KummerIntermediate
 import Pcf.Stacks.Abhyankar.KummerDVR
@@ -311,6 +312,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.standardCover_free
 #print axioms Pcf.Stacks.standardCover_finrank
 #print axioms Pcf.Stacks.standardCover_tameInCodimensionOne_charZero
+#print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.finitePresentation
 #print axioms Pcf.Stacks.ramificationIdx_over_intermediate_eq_one_of_total_eq
 #print axioms Pcf.Stacks.isUnramifiedAt_of_ramificationIdx_total_eq_intermediate
 #print axioms Pcf.Stacks.dvrRootPoly_monic
