@@ -48,4 +48,23 @@ theorem puncturedCover_exists_finiteNormalGenericModel
     finiteNormalModel_isStacksNormalRing R K I L, ?_⟩
   exact ⟨(finiteNormalModel_genericFiberEquiv R K I L).trans e.symm⟩
 
+/-- The comparison of the model with the cover at the generic point, expressed geometrically.
+The next step in Tag `0BM9` is to extend this isomorphism over the whole punctured spectrum. -/
+theorem puncturedCover_exists_finiteNormalGenericSchemeModel
+    (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R]
+    [IsNoetherianRing R] [IsIntegrallyClosed R]
+    (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    ∃ (B : CommAlgCat.{u,u} R), Module.Finite R B ∧ IsStacksNormalRing B ∧
+      Nonempty (Spec (.of ((Spec R).functionField ⊗[R] B)) ≅
+        ((puncturedCoverGenericFiber R hdim).obj V).left) := by
+  obtain ⟨B, hFin, hNorm, ⟨e⟩⟩ :=
+    puncturedCover_exists_finiteNormalGenericModel R hdim V
+  let W := (puncturedCoverGenericFiber R hdim).obj V
+  letI : IsAffine W.left := puncturedCoverGenericFiber_isAffine R hdim V
+  refine ⟨B, hFin, hNorm, ?_⟩
+  let i := e.toRingEquiv.toCommRingCatIso
+  let j := (Scheme.Spec.mapIso i.op).symm
+  exact ⟨j ≪≫ W.left.isoSpec.symm⟩
+
 end Pcf.Stacks
