@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 import Mathlib.AlgebraicGeometry.Stalk
+import Mathlib.RingTheory.Etale.Field
 import Pcf.Stacks.Purity.Hartogs
 
 /-!
@@ -82,5 +83,63 @@ theorem puncturedCoverGenericFiber_etale_appTop (hdim : 1 ≤ ringKrullDim R)
     change IsAffine (Spec (Spec R).functionField)
     infer_instance
   exact HasRingHomProperty.appTop (@Etale) W.hom W.prop.2
+
+/-- The finite étale algebra map of the generic fibre, with its source identified with the
+function field rather than the global sections of its affine spectrum. -/
+noncomputable def puncturedCoverGenericFiber_ringHom (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    (Spec R).functionField →+*
+      Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) :=
+  ((Scheme.ΓSpecIso (Spec R).functionField).inv ≫
+    ((puncturedCoverGenericFiber R hdim).obj V).hom.appTop).hom
+
+omit [IsNoetherianRing R] in
+/-- The generic-fibre algebra of any finite étale punctured cover is module-finite over the
+function field. -/
+theorem puncturedCoverGenericFiber_ringHom_finite (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    (puncturedCoverGenericFiber_ringHom R hdim V).Finite := by
+  have h₁ := puncturedCoverGenericFiber_finite_appTop R hdim V
+  have h₂ : ((Scheme.ΓSpecIso (Spec R).functionField).inv.hom).Finite :=
+    RingHom.Finite.of_surjective _
+      ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance).surjective
+  exact h₁.comp h₂
+
+omit [IsNoetherianRing R] in
+/-- The same generic-fibre algebra map is étale over the function field. -/
+theorem puncturedCoverGenericFiber_ringHom_etale (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    (puncturedCoverGenericFiber_ringHom R hdim V).Etale := by
+  have h₁ := puncturedCoverGenericFiber_etale_appTop R hdim V
+  have h₂ : ((Scheme.ΓSpecIso (Spec R).functionField).inv.hom).Etale :=
+    RingHom.Etale.of_bijective
+      ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance)
+  exact RingHom.Etale.stableUnderComposition _ _ h₂ h₁
+
+/-- The commutative algebra over the function field carried by the generic fibre. -/
+noncomputable def puncturedCoverGenericFiberAlgebra (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    CommAlgCat (Spec R).functionField := by
+  let W := (puncturedCoverGenericFiber R hdim).obj V
+  letI : Algebra (Spec R).functionField Γ(W.left, ⊤) :=
+    (puncturedCoverGenericFiber_ringHom R hdim V).toAlgebra
+  exact .of (Spec R).functionField Γ(W.left, ⊤)
+
+omit [IsNoetherianRing R] in
+/-- The generic fibre of any finite étale cover of the punctured spectrum is a finite product of
+finite separable field extensions of the base function field, including the empty product. -/
+theorem puncturedCoverGenericFiber_exists_separableFields (hdim : 1 ≤ ringKrullDim R)
+    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    ∃ (I : Type u) (_ : Finite I) (L : I → Type u) (_ : ∀ i, Field (L i))
+      (_ : ∀ i, Algebra (Spec R).functionField (L i))
+      (_ : (puncturedCoverGenericFiberAlgebra R hdim V) ≃ₐ[(Spec R).functionField]
+        (∀ i, L i)),
+      ∀ i, Module.Finite (Spec R).functionField (L i) ∧
+        Algebra.IsSeparable (Spec R).functionField (L i) := by
+  let W := (puncturedCoverGenericFiber R hdim).obj V
+  let E := puncturedCoverGenericFiberAlgebra R hdim V
+  have hEtale : Algebra.Etale (Spec R).functionField E := by
+    exact (puncturedCoverGenericFiber_ringHom_etale R hdim V).toAlgebra
+  exact (Algebra.Etale.iff_exists_algEquiv_prod (Spec R).functionField E).mp hEtale
 
 end Pcf.Stacks
