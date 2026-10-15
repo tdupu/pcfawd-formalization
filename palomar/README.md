@@ -36,6 +36,8 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 - [x] Public repository `tdupu/pcf-public` created by Taylor 2026-10-15 (empty; not populated yet).
 - [ ] Decide what moves into `tdupu/pcf-public`, and when.
+      Leave out `lean/tauceti/`: its `Suggested.lean` is not a Lean module, which Palomar
+      rejects anywhere in a submitted repository.
       Palomar accepts only public GitHub repositories, and `tdupu/pcf` stays private. The
       minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and whatever
       `formalization.yaml` cites: the manuscript and `ai/ai-usage.md`.
