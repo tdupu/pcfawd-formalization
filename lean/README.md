@@ -4,8 +4,8 @@ A Lean 4 + Mathlib formalization of parts of `../latex/paper.tex`.
 
 | Field | Value |
 | --- | --- |
-| Lean | `4.34.0` |
-| Mathlib | `v4.34.0` (rev `5ed296525643`) |
+| Lean | `4.35.0` |
+| Mathlib | `v4.35.0` (rev `56a005855ea1`) |
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
 | Manuscript | `../latex/paper.tex`, cited below **by `\label`**, never by number (see [HANDOFF.md](HANDOFF.md) §1 for why) |

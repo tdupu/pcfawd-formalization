@@ -158,7 +158,7 @@ theorem exists_formallyEtale_stalk_iterate_of_exists
     [IsDominant f] [LocallyOfFinitePresentation f]
     (h : ∃ x : X, (f.stalkMap x).hom.FormallyEtale) :
     ∀ m, ∃ x : X,
-      ((CategoryTheory.End.of f ^ m).stalkMap x).hom.FormallyEtale := by
+      ((CategoryTheory.End.of f ^ m).asHom.stalkMap x).hom.FormallyEtale := by
   have hfg := formallyEtale_stalkMap_genericPoint_of_exists f h
   have hgp : f (genericPoint X) = genericPoint X :=
     map_genericPoint_eq_of_isDominant f
@@ -173,14 +173,14 @@ theorem exists_formallyEtale_stalk_iterate_of_exists
       rw [RingHom.FormallyEtale]
       infer_instance
   | succ m ih =>
-      rw [pow_succ, CategoryTheory.End.mul_def]
-      change ((f ≫ (CategoryTheory.End.of f ^ m)).stalkMap
+      rw [pow_succ, CategoryTheory.End.mul_asHom]
+      change ((f ≫ (CategoryTheory.End.of f ^ m).asHom).stalkMap
         (genericPoint X)).hom.FormallyEtale
       rw [Scheme.Hom.stalkMap_comp]
       change ((f.stalkMap (genericPoint X)).hom.comp
-        (((CategoryTheory.End.of f ^ m).stalkMap
+        (((CategoryTheory.End.of f ^ m).asHom.stalkMap
           (f (genericPoint X))).hom)).FormallyEtale
-      have hi : (((CategoryTheory.End.of f ^ m).stalkMap
+      have hi : (((CategoryTheory.End.of f ^ m).asHom.stalkMap
           (f (genericPoint X))).hom).FormallyEtale := by
         rw [hgp]
         exact ih

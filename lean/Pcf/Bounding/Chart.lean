@@ -422,8 +422,8 @@ theorem isEtaleAt_quot_of_pieces (hEt : Algebra.Etale R R')
     obtain ⟨𝔮', h𝔮', h𝔮'le⟩ := Ideal.exists_minimalPrimes_le hI𝔫
     have h𝔮'I : I ≤ 𝔮' := h𝔮'.1.2
     -- Step 3's dimension count: `𝔮'` is minimal over `(a)`, hence over `(z)`.
-    have h𝔮'z : 𝔮' ∈ (Ideal.span {AdjoinRoot.root
-        (LocalModel.localPoly (u i) (algebraMap R R' a) (e i))}).minimalPrimes := by
+    have h𝔮'z : 𝔮' ∈ (Ideal.span {(AdjoinRoot.root
+        (LocalModel.localPoly (u i) (algebraMap R R' a) (e i)))}).minimalPrimes := by
       rw [← LocalModel.radical_span_algebraMap_eq_span_root (u i) (algebraMap R R' a) he1,
         Ideal.radical_minimalPrimes, ← ha'C]
       rw [hIeq] at h𝔮'
@@ -436,8 +436,8 @@ theorem isEtaleAt_quot_of_pieces (hEt : Algebra.Etale R R')
     have hf_surj : Function.Surjective f :=
       (LocalModel.quotientRootEquiv (u i) (algebraMap R R' a) he1).surjective.comp
         Ideal.Quotient.mk_surjective
-    have hf_ker : RingHom.ker f = Ideal.span {AdjoinRoot.root
-        (LocalModel.localPoly (u i) (algebraMap R R' a) (e i))} := by
+    have hf_ker : RingHom.ker f = Ideal.span {(AdjoinRoot.root
+        (LocalModel.localPoly (u i) (algebraMap R R' a) (e i)))} := by
       ext c
       rw [RingHom.mem_ker]
       change (LocalModel.quotientRootEquiv (u i) (algebraMap R R' a) he1)

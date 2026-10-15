@@ -345,9 +345,9 @@ noncomputable def puncturedCoverGenericFiber_sectionAlgHom
     letI : Algebra R Γ(V.left, ⊤) :=
       (((Scheme.ΓSpecIso R).inv ≫
         (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
-    let E := puncturedCoverGenericFiberAlgebra R hdim V
-    letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
-    Γ(V.left, ⊤) →ₐ[R] E := by
+    letI : Algebra R (puncturedCoverGenericFiberAlgebra R hdim V) :=
+      Algebra.compHom _ (algebraMap R (Spec R).functionField)
+    Γ(V.left, ⊤) →ₐ[R] puncturedCoverGenericFiberAlgebra R hdim V := by
   letI : Algebra R Γ(V.left, ⊤) :=
     (((Scheme.ΓSpecIso R).inv ≫
       (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
@@ -363,6 +363,11 @@ omit [IsNoetherianRing R] in
 theorem puncturedCoverGenericFiber_sectionAlgHom_injective
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
+    letI : Algebra R Γ(V.left, ⊤) :=
+      (((Scheme.ΓSpecIso R).inv ≫
+        (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
+    letI : Algebra R (puncturedCoverGenericFiberAlgebra R hdim V) :=
+      Algebra.compHom _ (algebraMap R (Spec R).functionField)
     Function.Injective (puncturedCoverGenericFiber_sectionAlgHom R hdim V) :=
   puncturedCoverGenericFiber_sectionMap_injective R hdim V
 

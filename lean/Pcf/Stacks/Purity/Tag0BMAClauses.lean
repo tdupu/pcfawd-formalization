@@ -310,10 +310,10 @@ theorem finiteEtaleAlgebra_openSections_bijective
           haveI : Module.IsTorsionFree R K := inferInstance
           haveI : Module.IsTorsionFree R E :=
             Module.IsTorsionFree.trans (M := E) K
-          let f := puncturedCoverGenericFiber_sectionAlgHom R hdim1 V
+          let f : Γ(P, ⊤) →ₐ[R] E := puncturedCoverGenericFiber_sectionAlgHom R hdim1 V
           letI : Module.IsTorsionFree R Γ(P, ⊤) :=
             Function.Injective.moduleIsTorsionFree f
-              (puncturedCoverGenericFiber_sectionAlgHom_injective R hdim1 V)
+              (puncturedCoverGenericFiber_sectionMap_injective R hdim1 V)
               (fun a b ↦ by simp)
           have hxP : IsSMulRegular Γ(P, ⊤) x := by
             exact hxR.isSMulRegular

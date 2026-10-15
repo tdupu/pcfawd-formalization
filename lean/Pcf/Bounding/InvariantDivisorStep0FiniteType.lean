@@ -35,7 +35,7 @@ def invariantDivisorSetupOfFiniteType
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
     InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
@@ -52,7 +52,7 @@ theorem invariantDivisorNormalization_norm_pcf_of_finiteType
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
       (divDynOfFiniteDominantNormalCharZero f).PCF) :

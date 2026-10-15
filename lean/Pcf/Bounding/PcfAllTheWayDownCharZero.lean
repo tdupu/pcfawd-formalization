@@ -72,7 +72,7 @@ theorem schemePcfCoveringAtDepthOfLocalTheorems
         let hB := schemeDivisorIterateOfFiniteType_periodic k s f r p A hA
         exact ih
           ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-          (B.invariantClosureMap (End.of f ^ p) hB)
+          (B.invariantClosureMap (End.of f ^ p).asHom hB)
 
 /-- **PCF all the way down in characteristic zero** (`cor:pcfawd`).
 

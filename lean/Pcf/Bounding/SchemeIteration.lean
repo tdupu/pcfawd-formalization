@@ -35,17 +35,17 @@ theorem divDynOfFiniteDominantNormal_pow_eq_iter
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ)
-    (hcritm : (schemeDivisorCrit1 (CategoryTheory.End.of f ^ m)).Finite) :
-    divDynOfFiniteDominantNormal (CategoryTheory.End.of f ^ m) hcritm =
+    (hcritm : (schemeDivisorCrit1 (CategoryTheory.End.of f ^ m).asHom).Finite) :
+    divDynOfFiniteDominantNormal (CategoryTheory.End.of f ^ m).asHom hcritm =
       (divDynOfFiniteDominantNormal f hcrit).iter m := by
   apply DivDyn.ext_of_step_ram
   · funext x
     apply Subtype.ext
-    change (CategoryTheory.End.of f ^ m).base x.1 =
+    change (CategoryTheory.End.of f ^ m).asHom.base x.1 =
       (((divDynOfFiniteDominantNormal f hcrit).step)^[m] x).1
     exact (divDynOfFiniteDominantNormal_iterate_step_val f hcrit m x).symm
   · funext x
-    change schemeDivisorRam (CategoryTheory.End.of f ^ m) x =
+    change schemeDivisorRam (CategoryTheory.End.of f ^ m).asHom x =
       (divDynOfFiniteDominantNormal f hcrit).iterRam m x
     exact (divDynOfFiniteDominantNormal_iterRam f hcrit m x).symm
 
@@ -56,7 +56,7 @@ theorem divDynOfFiniteDominantNormalCharZero_pow_eq_iter
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     [NoetherianSpace X] [CharZero (X.presheaf.stalk (genericPoint X))]
     (m : ℕ) :
-    divDynOfFiniteDominantNormalCharZero (CategoryTheory.End.of f ^ m) =
+    divDynOfFiniteDominantNormalCharZero (CategoryTheory.End.of f ^ m).asHom =
       (divDynOfFiniteDominantNormalCharZero f).iter m :=
   divDynOfFiniteDominantNormal_pow_eq_iter f
     (schemeDivisorCrit1_finite_of_exists_formallyEtale f
@@ -64,7 +64,7 @@ theorem divDynOfFiniteDominantNormalCharZero_pow_eq_iter
         formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩)
     m
     (schemeDivisorCrit1_finite_of_exists_formallyEtale
-      (CategoryTheory.End.of f ^ m)
+      (CategoryTheory.End.of f ^ m).asHom
       (exists_formallyEtale_stalk_iterate_of_exists f
         ⟨genericPoint X,
           formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩ m))

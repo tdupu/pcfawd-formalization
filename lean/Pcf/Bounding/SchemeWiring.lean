@@ -88,14 +88,14 @@ theorem schemeDivisorMap_iterate_val {X : AlgebraicGeometry.Scheme.{u}}
     (hcodim : ∀ x : SchemeDivisorPoint X, Order.coheight (g x.1) = 1)
     (m : ℕ) (x : SchemeDivisorPoint X) :
     ((schemeDivisorMap g hcodim)^[m] x).1 =
-      (CategoryTheory.End.of g ^ m).base x.1 := by
+      (CategoryTheory.End.of g ^ m).asHom.base x.1 := by
   induction m generalizing x with
   | zero => simp
   | succ m ih =>
       rw [Function.iterate_succ_apply, pow_succ]
       rw [ih (schemeDivisorMap g hcodim x)]
       exact (AlgebraicGeometry.Scheme.Hom.comp_apply g
-        (CategoryTheory.End.of g ^ m) x.1).symm
+        (CategoryTheory.End.of g ^ m).asHom x.1).symm
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Failure of formal unramifiedness in the first morphism persists in a composite. -/
@@ -110,11 +110,11 @@ theorem schemeCrit0At_comp {X Y Z : AlgebraicGeometry.Scheme.{u}}
 /-- The actual stalk-defined non-unramified divisor locus persists along iterates (U4). -/
 theorem schemeDivisorCrit0_tower {A : AlgebraicGeometry.Scheme.{u}} (g : A ⟶ A)
     (n : ℕ) :
-    schemeDivisorCrit0 (CategoryTheory.End.of g ^ 1) ⊆
-      schemeDivisorCrit0 (CategoryTheory.End.of g ^ (n + 1)) := by
+    schemeDivisorCrit0 (CategoryTheory.End.of g ^ 1).asHom ⊆
+      schemeDivisorCrit0 (CategoryTheory.End.of g ^ (n + 1)).asHom := by
   rw [pow_one, pow_succ]
   intro Q hQ
-  exact schemeCrit0At_comp g (CategoryTheory.End.of g ^ n) Q.1 hQ
+  exact schemeCrit0At_comp g (CategoryTheory.End.of g ^ n).asHom Q.1 hQ
 
 set_option backward.isDefEq.respectTransparency false in
 /-- If the first morphism is not formally étale at a point, either the composite fails
@@ -140,14 +140,14 @@ U5. Only preservation of the divisor carrier is needed. -/
 theorem schemeDivisorCrit1_tower {A : AlgebraicGeometry.Scheme.{u}} (g : A ⟶ A)
     (hcodim : ∀ Q : SchemeDivisorPoint A, Order.coheight (g Q.1) = 1)
     (n : ℕ) (Q : SchemeDivisorPoint A)
-    (hQ : Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ 1)) :
-    Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ (n + 1)) ∨
-      schemeDivisorMap g hcodim Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ n) := by
+    (hQ : Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ 1).asHom) :
+    Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ (n + 1)).asHom ∨
+      schemeDivisorMap g hcodim Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of g ^ n).asHom := by
   have hx : schemeCrit1At g Q.1 := by simpa [schemeDivisorCrit1] using hQ
   rw [pow_succ]
-  change schemeCrit1At (g ≫ (CategoryTheory.End.of g ^ n)) Q.1 ∨
-    schemeCrit1At (CategoryTheory.End.of g ^ n) (g Q.1)
-  exact schemeCrit1At_comp g (CategoryTheory.End.of g ^ n) Q.1 hx
+  change schemeCrit1At (g ≫ (CategoryTheory.End.of g ^ n).asHom) Q.1 ∨
+    schemeCrit1At (CategoryTheory.End.of g ^ n).asHom (g Q.1)
+  exact schemeCrit1At_comp g (CategoryTheory.End.of g ^ n).asHom Q.1 hx
 
 /-- Normalized divisor dynamics together with the actual unnormalized scheme map.
 
@@ -181,7 +181,7 @@ structure SchemeNormalizationUnnormDyn (A : AlgebraicGeometry.Scheme.{u}) (PN : 
   normalization_finite_fiber : ∀ Q, (normalization ⁻¹' {Q}).Finite
   /-- Normalized ramification maps into the unnormalized non-unramified locus. -/
   crit_subset_crit0 : ∀ m Q, 1 < norm.iterRam m Q →
-    normalization Q ∈ schemeDivisorCrit0 (CategoryTheory.End.of g ^ m)
+    normalization Q ∈ schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom
   /-- The invariant divisor is integral. -/
   integral : AlgebraicGeometry.IsIntegral A
   /-- The invariant divisor has Noetherian underlying space. -/
@@ -197,12 +197,12 @@ variable {A : AlgebraicGeometry.Scheme.{u}} {PN : Type v}
 
 /-- The codimension-one non-unramified locus of each actual iterate. -/
 def crit0 (m : ℕ) : Set (SchemeDivisorPoint A) :=
-  schemeDivisorCrit0 (CategoryTheory.End.of D.g ^ m)
+  schemeDivisorCrit0 (CategoryTheory.End.of D.g ^ m).asHom
 
 /-- Formal étaleness implies formal unramifiedness on the actual stalk maps. -/
 theorem crit0_subset_crit1 (m : ℕ) :
-    D.crit0 m ⊆ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m) :=
-  schemeDivisorCrit0_subset_crit1 (CategoryTheory.End.of D.g ^ m)
+    D.crit0 m ⊆ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom :=
+  schemeDivisorCrit0_subset_crit1 (CategoryTheory.End.of D.g ^ m).asHom
 
 /-- Non-unramifiedness persists in the tower of actual stalk maps. -/
 theorem crit0_tower (n : ℕ) : D.crit0 1 ⊆ D.crit0 (n + 1) :=
@@ -212,28 +212,28 @@ theorem crit0_tower (n : ℕ) : D.crit0 1 ⊆ D.crit0 (n + 1) :=
 theorem about the actual stalk maps, rather than a field of the geometric data. -/
 theorem crit1_tower (n : ℕ)
     (Q : SchemeDivisorPoint A)
-    (hQ : Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ 1)) :
-    Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ (n + 1)) ∨
+    (hQ : Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ 1).asHom) :
+    Q ∈ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ (n + 1)).asHom ∨
       schemeDivisorMap D.g D.g_preserves_divisors Q ∈
-        schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ n) :=
+        schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ n).asHom :=
   schemeDivisorCrit1_tower D.g D.g_preserves_divisors n Q hQ
 
 /-- Every categorical iterate of the actual self-map is finite. -/
 theorem finite_iterate (m : ℕ) :
-    AlgebraicGeometry.IsFinite (CategoryTheory.End.of D.g ^ m) := by
+    AlgebraicGeometry.IsFinite (CategoryTheory.End.of D.g ^ m).asHom := by
   letI : AlgebraicGeometry.IsFinite D.g := D.finite
   induction m with
   | zero => simpa using
       (inferInstance : AlgebraicGeometry.IsFinite (𝟙 A))
   | succ m ih =>
       rw [pow_succ]
-      letI : AlgebraicGeometry.IsFinite (CategoryTheory.End.of D.g ^ m) := ih
-      change AlgebraicGeometry.IsFinite (D.g ≫ (CategoryTheory.End.of D.g ^ m))
+      letI : AlgebraicGeometry.IsFinite (CategoryTheory.End.of D.g ^ m).asHom := ih
+      change AlgebraicGeometry.IsFinite (D.g ≫ (CategoryTheory.End.of D.g ^ m).asHom)
       infer_instance
 
 /-- Every categorical iterate of the actual self-map is locally of finite presentation. -/
 theorem finitePresentation_iterate (m : ℕ) :
-    AlgebraicGeometry.LocallyOfFinitePresentation (CategoryTheory.End.of D.g ^ m) := by
+    AlgebraicGeometry.LocallyOfFinitePresentation (CategoryTheory.End.of D.g ^ m).asHom := by
   letI : AlgebraicGeometry.LocallyOfFinitePresentation D.g := D.finitePresentation
   induction m with
   | zero => simpa using
@@ -241,30 +241,30 @@ theorem finitePresentation_iterate (m : ℕ) :
   | succ m ih =>
       rw [pow_succ]
       letI : AlgebraicGeometry.LocallyOfFinitePresentation
-          (CategoryTheory.End.of D.g ^ m) := ih
+          (CategoryTheory.End.of D.g ^ m).asHom := ih
       change AlgebraicGeometry.LocallyOfFinitePresentation
-        (D.g ≫ (CategoryTheory.End.of D.g ^ m))
+        (D.g ≫ (CategoryTheory.End.of D.g ^ m).asHom)
       infer_instance
 
 /-- The actual codimension-one non-étale locus of every iterate is finite (U3).
 Closedness follows from local finite presentation; a formally étale stalk makes
 that closed locus proper. -/
 theorem crit1_finite (m : ℕ) :
-    (schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m)).Finite := by
+    (schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom).Finite := by
   letI : AlgebraicGeometry.IsIntegral A := D.integral
   letI : TopologicalSpace.NoetherianSpace A := D.noetherian
   letI : AlgebraicGeometry.IsFinite D.g := D.finite
   letI : AlgebraicGeometry.IsDominant D.g := D.dominant
   letI : LocallyOfFinitePresentation D.g := D.finitePresentation
   letI : CharZero (A.presheaf.stalk (genericPoint A)) := D.charZero
-  letI : LocallyOfFinitePresentation (CategoryTheory.End.of D.g ^ m) :=
+  letI : LocallyOfFinitePresentation (CategoryTheory.End.of D.g ^ m).asHom :=
     D.finitePresentation_iterate m
   have hgeneric : (D.g.stalkMap (genericPoint A)).hom.FormallyEtale :=
     formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero D.g
   have hetale := exists_formallyEtale_stalk_iterate_of_exists
     D.g ⟨genericPoint A, hgeneric⟩ m
   exact schemeDivisorCrit1_finite_of_exists_formallyEtale
-    (CategoryTheory.End.of D.g ^ m) hetale
+    (CategoryTheory.End.of D.g ^ m).asHom hetale
 
 /-- The ordinary two-carrier dynamics obtained by forgetting that its critical loci came
 from actual scheme stalk maps. -/
@@ -276,7 +276,7 @@ def toNormalizationUnnormDyn :
   normalization_step := D.normalization_step
   normalization_finite_fiber := D.normalization_finite_fiber
   crit0 := D.crit0
-  crit1 := fun m ↦ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m)
+  crit1 := fun m ↦ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom
   crit_subset_crit0 := D.crit_subset_crit0
   crit0_subset_crit1 := D.crit0_subset_crit1
   crit1_finite := D.crit1_finite
@@ -291,7 +291,7 @@ theorem toNormalizationUnnormDyn_step :
 @[simp]
 theorem toNormalizationUnnormDyn_crit1 (m : ℕ) :
     D.toNormalizationUnnormDyn.crit1 m =
-      schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m) :=
+      schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom :=
   rfl
 
 end SchemeNormalizationUnnormDyn
@@ -327,14 +327,14 @@ structure SchemeNormalizationPcfSetupChart (A : AlgebraicGeometry.Scheme.{u})
     (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
     ∀ (Q' : SchemeDivisorPoint A), res.toNormalizationUnnormDyn.step^[m] Q' = Q →
       SchemeStalkBoundingLocalizationPresentation
-        (CategoryTheory.End.of res.g ^ m) Q'.1
+        (CategoryTheory.End.of res.g ^ m).asHom Q'.1
 
 local instance invariantStep0FinitePreimageAlgebra
     {X : AlgebraicGeometry.Scheme.{u}} (f : X ⟶ X) [AlgebraicGeometry.IsFinite f]
     (m : ℕ) (U : X.affineOpens) :
     Algebra Γ(X, U)
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
-  ((CategoryTheory.End.of f ^ m).app U).hom.toAlgebra
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
+  ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
 
 /-- Literal geometric Step-0 data at one divisor flag of an invariant reduced divisor.
 
@@ -358,7 +358,7 @@ structure InvariantDivisorStep0LocalData
   target_mem : (pointClosureIdealSheaf A.1).subschemeι Q.1 ∈ (U : X.Opens)
   /-- The specified source divisor point belongs to the finite affine preimage. -/
   source_mem : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-    (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)
+    (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)
   /-- A divisor of the invariant divisor has ambient codimension two. -/
   ambient_coheight : Order.coheight
     ((pointClosureIdealSheaf A.1).subschemeι Q.1) = 2
@@ -374,38 +374,38 @@ structure InvariantDivisorStep0LocalData
     letI : Nonempty (U : X.Opens) :=
       ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, target_mem⟩⟩
     letI : Nonempty
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens) :=
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens) :=
       ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q'.1, source_mem⟩⟩
     (⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, target_mem⟩ : (U : X.Opens)) ∉
       finiteAffineOtherBranchLocus
-        (f := CategoryTheory.End.of f ^ m) U
+        (f := (CategoryTheory.End.of f ^ m).asHom) U
         (affinePrimeOfSchemeDivisorPoint A U
           (A.mem_affine_of_pointClosurePoint_mem U Q.1 target_mem))
   /-- Zariski--Nagata purity on the actual ambient iterate chart. -/
   purity : Stacks.ZariskiNagataPurity
     (Localization.AtPrime
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 source_mem).under
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 source_mem).under
           Γ(X, U)))
     (Localization (Algebra.algebraMapSubmonoid
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 source_mem).under
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 source_mem).under
           Γ(X, U)).primeCompl))
   /-- Abhyankar's lemma for the equation constructed by the regular-local argument. -/
   abhyankar : ∀ a : Localization.AtPrime
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 source_mem).under
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 source_mem).under
           Γ(X, U)),
     Stacks.AbhyankarLemma
       (Localization.AtPrime
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 source_mem).under
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 source_mem).under
             Γ(X, U)))
       (Localization (Algebra.algebraMapSubmonoid
-        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 source_mem).under
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 source_mem).under
             Γ(X, U)).primeCompl)) a
 
 /-- Global dynamical data for an actual finite dominant endomorphism and an invariant
@@ -469,14 +469,14 @@ noncomputable def toSchemeNormalizationPcfSetupChart :
     letI : Nonempty (d.U : X.Opens) :=
       ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, d.target_mem⟩⟩
     letI : Nonempty
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) d.U : X.Opens) :=
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom d.U : X.Opens) :=
       ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q'.1, d.source_mem⟩⟩
     have hval := congrArg Subtype.val hQ'Q
     change ((schemeDivisorMap S.res.g S.res.g_preserves_divisors)^[m] Q').1 = Q.1
       at hval
     rw [schemeDivisorMap_iterate_val] at hval
     have hxz :
-        (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base Q'.1 = Q.1 := by
+        (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1 = Q.1 := by
       simpa only [← S.res_g] using hval
     have hresult :=
       A.invariantClosureStalkBoundingLocalizationOfStep0At
@@ -499,7 +499,7 @@ theorem key1 (m : ℕ) (hm : 1 ≤ m) (Q : SchemeDivisorPoint A) (hs : Q ∉ S.s
     Q ∉ S.res.toNormalizationUnnormDyn.branch1 m := by
   rintro ⟨Q', hcrit, hQ'Q⟩
   have hchart := S.chart m hm Q hs hmeets Q' hQ'Q
-  have hnot : Q' ∉ schemeDivisorCrit1 (CategoryTheory.End.of S.res.g ^ m) :=
+  have hnot : Q' ∉ schemeDivisorCrit1 (CategoryTheory.End.of S.res.g ^ m).asHom :=
     hchart.not_mem_schemeDivisorCrit1
   exact hnot hcrit
 

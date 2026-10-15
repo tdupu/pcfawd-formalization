@@ -202,32 +202,32 @@ theorem pointClosureSubschemeMap_id {X : Scheme.{u}} (x : X)
 /-- A fixed point of an endomorphism is fixed by every categorical iterate. -/
 theorem end_pow_apply_eq_of_apply_eq {X : Scheme.{u}} (f : X ⟶ X)
     (x : X) (hfx : f x = x) (m : ℕ) :
-    (CategoryTheory.End.of f ^ m).base x = x := by
+    (CategoryTheory.End.of f ^ m).asHom.base x = x := by
   induction m with
   | zero => simp
   | succ m ih =>
       rw [pow_succ]
-      change (f ≫ (CategoryTheory.End.of f ^ m)) x = x
+      change (f ≫ (CategoryTheory.End.of f ^ m).asHom) x = x
       rw [Scheme.Hom.comp_apply, hfx, ih]
 
 /-- The `m`-th iterate of the restricted invariant-divisor morphism still commutes
 with the ambient `m`-th iterate. -/
 theorem pointClosureSubschemeMap_iterate_subschemeι {X : Scheme.{u}}
     (f : X ⟶ X) (x : X) (hfx : f x = x) (m : ℕ) :
-    (CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m) ≫
+    (CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m).asHom ≫
         (pointClosureIdealSheaf x).subschemeι =
       (pointClosureIdealSheaf x).subschemeι ≫
-        (CategoryTheory.End.of f ^ m) := by
+        (CategoryTheory.End.of f ^ m).asHom := by
   induction m with
   | zero => simp
   | succ m ih =>
       rw [pow_succ, pow_succ]
       change
         (pointClosureSubschemeMap f x x hfx ≫
-            (CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m)) ≫
+            (CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m).asHom) ≫
             (pointClosureIdealSheaf x).subschemeι =
           (pointClosureIdealSheaf x).subschemeι ≫
-            (f ≫ (CategoryTheory.End.of f ^ m))
+            (f ≫ (CategoryTheory.End.of f ^ m).asHom)
       rw [Category.assoc, ih, ← Category.assoc,
         pointClosureSubschemeMap_subschemeι, Category.assoc]
 
@@ -236,8 +236,8 @@ restriction of the ambient iterate.  This is the global identification needed be
 applying the specified-source-point Step-0 chart constructor. -/
 theorem pointClosureSubschemeMap_iterate {X : Scheme.{u}}
     (f : X ⟶ X) (x : X) (hfx : f x = x) (m : ℕ) :
-    CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m =
-      pointClosureSubschemeMap (CategoryTheory.End.of f ^ m) x x
+    (CategoryTheory.End.of (pointClosureSubschemeMap f x x hfx) ^ m).asHom =
+      pointClosureSubschemeMap (CategoryTheory.End.of f ^ m).asHom x x
         (end_pow_apply_eq_of_apply_eq f x hfx m) := by
   apply (cancel_mono (pointClosureIdealSheaf x).subschemeι).mp
   rw [pointClosureSubschemeMap_iterate_subschemeι,
@@ -245,34 +245,34 @@ theorem pointClosureSubschemeMap_iterate {X : Scheme.{u}}
 
 /-- Every categorical iterate of a finite scheme endomorphism is finite. -/
 theorem isFinite_end_pow {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f]
-    (m : ℕ) : IsFinite (CategoryTheory.End.of f ^ m) := by
+    (m : ℕ) : IsFinite (CategoryTheory.End.of f ^ m).asHom := by
   induction m with
   | zero => simpa using (inferInstance : IsFinite (𝟙 X))
   | succ m ih =>
       rw [pow_succ]
-      letI : IsFinite (CategoryTheory.End.of f ^ m) := ih
-      change IsFinite (f ≫ (CategoryTheory.End.of f ^ m))
+      letI : IsFinite (CategoryTheory.End.of f ^ m).asHom := ih
+      change IsFinite (f ≫ (CategoryTheory.End.of f ^ m).asHom)
       infer_instance
 
 /-- Every categorical iterate of a dominant scheme endomorphism is dominant. -/
 theorem isDominant_end_pow {X : Scheme.{u}} (f : X ⟶ X) [IsDominant f]
-    (m : ℕ) : IsDominant (CategoryTheory.End.of f ^ m) := by
+    (m : ℕ) : IsDominant (CategoryTheory.End.of f ^ m).asHom := by
   induction m with
   | zero => simpa using (inferInstance : IsDominant (𝟙 X))
   | succ m ih =>
       rw [pow_succ]
-      letI : IsDominant (CategoryTheory.End.of f ^ m) := ih
-      change IsDominant (f ≫ (CategoryTheory.End.of f ^ m))
+      letI : IsDominant (CategoryTheory.End.of f ^ m).asHom := ih
+      change IsDominant (f ≫ (CategoryTheory.End.of f ^ m).asHom)
       infer_instance
 
 instance (priority := low) finite_end_pow_instance {X : Scheme.{u}}
     (f : X ⟶ X) [IsFinite f] (m : ℕ) :
-    IsFinite (CategoryTheory.End.of f ^ m) :=
+    IsFinite (CategoryTheory.End.of f ^ m).asHom :=
   isFinite_end_pow f m
 
 instance (priority := low) dominant_end_pow_instance {X : Scheme.{u}}
     (f : X ⟶ X) [IsDominant f] (m : ℕ) :
-    IsDominant (CategoryTheory.End.of f ^ m) :=
+    IsDominant (CategoryTheory.End.of f ^ m).asHom :=
   isDominant_end_pow f m
 
 /-- The height-one prime on an affine neighborhood canonically represented by a
@@ -2902,16 +2902,16 @@ omit [IsFinite f] [IsDominant f] [IsIntegral X] [IsLocallyNoetherian X]
 ambient iterate. -/
 theorem SchemeDivisorPoint.invariantClosureMap_iterate
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) (m : ℕ) :
-    CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m =
-      pointClosureSubschemeMap (CategoryTheory.End.of f ^ m) A.1 A.1
+    (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom =
+      pointClosureSubschemeMap (CategoryTheory.End.of f ^ m).asHom A.1 A.1
         (end_pow_apply_eq_of_apply_eq f A.1 hA m) := by
   exact pointClosureSubschemeMap_iterate f A.1 hA m
 
 local instance invariantIterateFinitePreimageAlgebra
     (m : ℕ) (U : X.affineOpens) :
     Algebra Γ(X, U)
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
-  ((CategoryTheory.End.of f ^ m).app U).hom.toAlgebra
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
+  ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
 
 local instance invariantIterateTargetNoetherian (U : X.affineOpens) :
     IsNoetherianRing Γ(X, U) :=
@@ -2919,19 +2919,19 @@ local instance invariantIterateTargetNoetherian (U : X.affineOpens) :
 
 local instance invariantIterateModuleFinite (m : ℕ) (U : X.affineOpens) :
     Module.Finite Γ(X, U)
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
-  finitePreimageModuleFinite (CategoryTheory.End.of f ^ m) U
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
+  finitePreimageModuleFinite (CategoryTheory.End.of f ^ m).asHom U
 
 local instance invariantIterateSourceNoetherian (m : ℕ) (U : X.affineOpens) :
     IsNoetherianRing
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
   IsNoetherianRing.of_finite Γ(X, U)
-    Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+    Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
 
 local instance invariantIterateFaithfulSMul (m : ℕ) (U : X.affineOpens) :
     FaithfulSMul Γ(X, U)
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
-  finitePreimageFaithfulSMul (CategoryTheory.End.of f ^ m) U
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
+  finitePreimageFaithfulSMul (CategoryTheory.End.of f ^ m).asHom U
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Build the stalk chart for an iterate of the actual restriction to an invariant
@@ -2950,13 +2950,13 @@ noncomputable def
     [Algebra ℚ Γ(X, U)]
     [Nonempty (U : X.Opens)]
     [Nonempty
-      (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)]
+      (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)]
     (x : (pointClosureIdealSheaf A.1).subscheme)
     (hx : x ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-      (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens))
+      (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens))
     (z : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hzU : (pointClosureIdealSheaf A.1).subschemeι z.1 ∈ (U : X.Opens))
-    (hxz : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base x = z.1)
+    (hxz : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base x = z.1)
     (hambientCoheight : Order.coheight
       ((pointClosureIdealSheaf A.1).subschemeι z.1) = 2)
     (hambient : (pointClosureIdealSheaf A.1).subschemeι z.1 ∉
@@ -2966,7 +2966,7 @@ noncomputable def
     (hbranch :
       (⟨(pointClosureIdealSheaf A.1).subschemeι z.1, hzU⟩ : (U : X.Opens)) ∉
         finiteAffineOtherBranchLocus
-          (f := CategoryTheory.End.of f ^ m) U
+          (f := (CategoryTheory.End.of f ^ m).asHom) U
           (affinePrimeOfSchemeDivisorPoint A U
             (by
               apply specializes_iff_forall_open.mp
@@ -2977,34 +2977,34 @@ noncomputable def
     (purity : Stacks.ZariskiNagataPurity
       (Localization.AtPrime
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) x hx).under Γ(X, U)))
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) x hx).under Γ(X, U)))
       (Localization (Algebra.algebraMapSubmonoid
-        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) x hx).under
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) x hx).under
             Γ(X, U)).primeCompl)))
     (abhyankar : ∀ a : Localization.AtPrime
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) x hx).under Γ(X, U)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) x hx).under Γ(X, U)),
       Stacks.AbhyankarLemma
         (Localization.AtPrime
           ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-            (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) x hx).under Γ(X, U)))
+            (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) x hx).under Γ(X, U)))
         (Localization (Algebra.algebraMapSubmonoid
-          Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+          Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
           ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-            (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) x hx).under
+            (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) x hx).under
               Γ(X, U)).primeCompl)) a) :
     SchemeStalkBoundingLocalizationPresentation
-      (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m) x := by
-  let fM : X ⟶ X := CategoryTheory.End.of f ^ m
+      (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom x := by
+  let fM : X ⟶ X := (CategoryTheory.End.of f ^ m).asHom
   let hAM : fM A.1 = A.1 := end_pow_apply_eq_of_apply_eq f A.1 hA m
   let gM : (pointClosureIdealSheaf A.1).subscheme ⟶
       (pointClosureIdealSheaf A.1).subscheme :=
     pointClosureSubschemeMap fM A.1 A.1 hAM
   letI : IsFinite fM := isFinite_end_pow f m
   letI : IsDominant fM := isDominant_end_pow f m
-  have hiter : CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m = gM := by
+  have hiter : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom = gM := by
     simpa only [fM, gM, hAM] using A.invariantClosureMap_iterate f hA m
   have hxz' : gM x = z.1 := by
     rw [← hiter]

@@ -1005,7 +1005,7 @@ noncomputable def heightOneRam (Q : HeightOnePrime S) : ℕ :=
 theorem heightOneRam_pos (Q : HeightOnePrime S) :
     0 < heightOneRam (R := R) Q := by
   have := Q.1.isPrime
-  exact Ideal.ramificationIdx_pos Q.1.asIdeal R
+  exact Ideal.ramificationIdx_pos (R := R) Q.1.asIdeal
 
 omit [Module.Finite R S] in
 /-- Ramification indices at codimension-one primes multiply in a tower when the

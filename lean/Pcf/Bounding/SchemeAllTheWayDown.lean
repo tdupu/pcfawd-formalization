@@ -44,11 +44,11 @@ def SchemePCFAllTheWayDownAtDepth
   | d + 1 =>
       SchemeNormalizedPCFOfFiniteType k s f ∧
         ∀ (A : SchemeDivisorPoint X) (r p : ℕ) (_hp : 1 ≤ p)
-          (hA : (End.of f ^ (r + p)).base A.1 = (End.of f ^ r).base A.1),
+          (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1),
           let B := schemeDivisorIterateOfFiniteType k s f r A
           SchemePCFAllTheWayDownAtDepth k d
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-            (B.invariantClosureMap (End.of f ^ p)
+            (B.invariantClosureMap (End.of f ^ p).asHom
               (schemeDivisorIterateOfFiniteType_periodic k s f r p A hA))
 
 /-- The tree of local covering inputs needed to apply the one-divisor theorem
@@ -65,13 +65,13 @@ def SchemePcfCoveringAtDepth
       (letI := schemeGlobalNormalizationMap_isFinite X k s
        ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
          InvariantDivisorCoveringInputs
-           (End.of (schemeGlobalNormalizationLift f) ^ n) B) ∧
+           (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B) ∧
         ∀ (A : SchemeDivisorPoint X) (r p : ℕ) (_hp : 1 ≤ p)
-          (hA : (End.of f ^ (r + p)).base A.1 = (End.of f ^ r).base A.1),
+          (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1),
           let B := schemeDivisorIterateOfFiniteType k s f r A
           SchemePcfCoveringAtDepth k d
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-            (B.invariantClosureMap (End.of f ^ p)
+            (B.invariantClosureMap (End.of f ^ p).asHom
               (schemeDivisorIterateOfFiniteType_periodic k s f r p A hA))
 
 /-- Recursive scheme-level assembly of `cor:pcfawd` to a prescribed depth.
@@ -99,15 +99,15 @@ theorem schemePCFAllTheWayDownAtDepth_of_cover
             letI := schemeGlobalNormalizationMap_isFinite X k s
             ∀ (n : ℕ) (C : SchemeDivisorPoint (schemeGlobalNormalization X)),
               InvariantDivisorCoveringInputs
-                (End.of (schemeGlobalNormalizationLift f) ^ n) C := by
+                (End.of (schemeGlobalNormalizationLift f) ^ n).asHom C := by
           exact cover.1
         have hpcfB : SchemeNormalizedPCFOfFiniteType k
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-            (B.invariantClosureMap (End.of f ^ p) hB) := by
+            (B.invariantClosureMap (End.of f ^ p).asHom hB) := by
           exact pcfAllTheWayDown_scheme k s f A r p hp hA hcover hpcf
         exact ih
           ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-          (B.invariantClosureMap (End.of f ^ p) hB)
+          (B.invariantClosureMap (End.of f ^ p).asHom hB)
           (cover.2 A r p hp hA) hpcfB
 
 /-- If the local covering tree is available at every finite depth, normalized

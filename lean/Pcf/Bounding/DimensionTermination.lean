@@ -128,8 +128,8 @@ structure SchemePcfDescentStep
   period : ℕ
   period_pos : 1 ≤ period
   eventually_periodic :
-    (End.of f ^ (preperiod + period)).base divisor.1 =
-      (End.of f ^ preperiod).base divisor.1
+    (End.of f ^ (preperiod + period)).asHom.base divisor.1 =
+      (End.of f ^ preperiod).asHom.base divisor.1
 
 /-- The actual periodic image divisor selected by a recursive PCF descent step. -/
 def SchemePcfDescentStep.periodicDivisor
@@ -157,7 +157,7 @@ def SchemePcfDescentBranch
       let B := schemeDivisorIterateOfFiniteType k s f a.preperiod a.divisor
       SchemePcfDescentBranch k d
         ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-        (B.invariantClosureMap (End.of f ^ a.period)
+        (B.invariantClosureMap (End.of f ^ a.period).asHom
           (schemeDivisorIterateOfFiniteType_periodic k s f a.preperiod a.period
             a.divisor a.eventually_periodic))
 
@@ -179,10 +179,10 @@ noncomputable def SchemePcfDescentBranch.toDivisorFlag
         a.divisor a.eventually_periodic
       change SchemePcfDescentBranch k d
         ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-        (B.invariantClosureMap (End.of f ^ a.period) hB) at tail
+        (B.invariantClosureMap (End.of f ^ a.period).asHom hB) at tail
       exact .cons B (SchemePcfDescentBranch.toDivisorFlag k
         (s := (pointClosureIdealSheaf B.1).subschemeι ≫ s)
-        (f := B.invariantClosureMap (End.of f ^ a.period) hB) tail)
+        (f := B.invariantClosureMap (End.of f ^ a.period).asHom hB) tail)
 termination_by d
 
 /-- Every branch of the implemented recursive PCF descent has at most `n` restriction
@@ -231,7 +231,7 @@ theorem schemePCFAllTheWayDownAtDepth_of_succ
         let hB := schemeDivisorIterateOfFiniteType_periodic k s f r p A hA
         exact ih
           ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-          (B.invariantClosureMap (End.of f ^ p) hB)
+          (B.invariantClosureMap (End.of f ^ p).asHom hB)
           (h.2 A r p hp hA)
 
 /-- The depth-indexed scheme-level PCF predicate is contravariantly monotone in its
@@ -278,13 +278,13 @@ theorem schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch
         let a : SchemePcfDescentStep k s f := ⟨A, r, p, hp, hA⟩
         have hnoChild : IsEmpty (SchemePcfDescentBranch k (d + 1)
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-            (B.invariantClosureMap (End.of f ^ p) hB)) := by
+            (B.invariantClosureMap (End.of f ^ p).asHom hB)) := by
           constructor
           intro tail
           exact hno.false ⟨a, tail⟩
         exact ih
           ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-          (B.invariantClosureMap (End.of f ^ p) hB)
+          (B.invariantClosureMap (End.of f ^ p).asHom hB)
           hnoChild (h.2 A r p hp hA)
 
 /-- Once the depth has reached a natural upper bound for the initial scheme's

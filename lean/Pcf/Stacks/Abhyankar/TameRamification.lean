@@ -82,7 +82,7 @@ theorem isTamelyRamifiedAt_of_all_nat_isUnit
   haveI : Module.Finite p.ResidueField q.asIdeal.ResidueField := by infer_instance
   constructor
   · have hpos : 0 < q.asIdeal.ramificationIdx R :=
-      Ideal.ramificationIdx_pos q.asIdeal R
+      Ideal.ramificationIdx_pos (R := R) q.asIdeal
     simpa only [map_natCast] using
       (hunit (q.asIdeal.ramificationIdx R) hpos.ne').map
         (algebraMap R p.ResidueField)

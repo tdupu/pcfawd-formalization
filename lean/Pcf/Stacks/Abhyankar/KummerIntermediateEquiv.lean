@@ -34,8 +34,8 @@ noncomputable def dvrRootFractionPowerEquiv
     letI : Field L := (dvrRootFractionAlgebra_isField π hn hπ).toField
     AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) d) ≃ₐ[FractionRing A]
       IntermediateField.adjoin (FractionRing A)
-        {AdjoinRoot.root
-          (dvrRootPoly (algebraMap A (FractionRing A) π) n) ^ (n / d)} := by
+        {(AdjoinRoot.root
+          (dvrRootPoly (algebraMap A (FractionRing A) π) n) ^ (n / d))} := by
   let K := FractionRing A
   let L := AdjoinRoot (dvrRootPoly (algebraMap A K π) n)
   letI : Field L := (dvrRootFractionAlgebra_isField π hn hπ).toField
@@ -79,8 +79,8 @@ theorem exists_dvrRootFractionPowerEquiv_of_embedding
     AlgEquiv.ofInjective f f.injective
   let identifyRange : f.fieldRange ≃ₐ[FractionRing A]
       IntermediateField.adjoin (FractionRing A)
-        {AdjoinRoot.root
-          (dvrRootPoly (algebraMap A (FractionRing A) π) n) ^ (n / d)} :=
+        {(AdjoinRoot.root
+          (dvrRootPoly (algebraMap A (FractionRing A) π) n) ^ (n / d))} :=
     IntermediateField.equivOfEq hfield
   exact ⟨(toRange.trans identifyRange).trans
     (dvrRootFractionPowerEquiv π hn1 hd hdvd hπ).symm⟩

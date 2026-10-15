@@ -59,19 +59,19 @@ theorem schemeGlobalNormalizationLift_comp_lift (f g : X ⟶ X)
 canonical normalization morphism. No finite-type assumption is needed. -/
 theorem schemeGlobalNormalizationMorphism_pow (f : X ⟶ X)
     [IsFinite f] [IsDominant f] (m : ℕ) :
-    schemeGlobalNormalizationMorphism (End.of f ^ m) =
-      End.of (schemeGlobalNormalizationMorphism f) ^ m := by
+    schemeGlobalNormalizationMorphism (End.of f ^ m).asHom =
+      (End.of (schemeGlobalNormalizationMorphism f) ^ m).asHom := by
   induction m with
-  | zero => simpa only [pow_zero, End.one_def] using schemeGlobalNormalizationMorphism_id
+  | zero => simpa only [pow_zero, End.one_asHom] using schemeGlobalNormalizationMorphism_id
   | succ m ih =>
-      simp only [pow_succ, End.mul_def,
+      simp only [pow_succ, End.mul_asHom,
         ← schemeGlobalNormalizationMorphism_comp_morphism, ih]
 
 /-- The canonical lift commutes with all nonnegative iterates. -/
 theorem schemeGlobalNormalizationLift_pow (f : X ⟶ X)
     [IsFinite f] [IsDominant f] (m : ℕ) :
-    schemeGlobalNormalizationLift (End.of f ^ m) =
-      End.of (schemeGlobalNormalizationLift f) ^ m :=
+    schemeGlobalNormalizationLift (End.of f ^ m).asHom =
+      (End.of (schemeGlobalNormalizationLift f) ^ m).asHom :=
   schemeGlobalNormalizationMorphism_pow f m
 
 section FiniteType
@@ -93,7 +93,7 @@ theorem schemeGlobalNormalizationUnnormDyn_norm_eq
 /-- The normalized divisor dynamics of an actual scheme power is exactly the
 abstract iterate, with its actual stalk ramification indices. -/
 theorem schemeGlobalNormalizationUnnormDyn_norm_pow (m : ℕ) :
-    (schemeGlobalNormalizationUnnormDyn k (End.of f ^ m)).norm =
+    (schemeGlobalNormalizationUnnormDyn k (End.of f ^ m).asHom).norm =
       ((schemeGlobalNormalizationUnnormDyn k f).norm).iter m := by
   let := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType X k
   rw [schemeGlobalNormalizationUnnormDyn_norm_eq,
@@ -104,7 +104,7 @@ theorem schemeGlobalNormalizationUnnormDyn_norm_pow (m : ℕ) :
 /-- The postcritical set defined using the canonical normalized branch locus is
 unchanged by every positive iterate of the actual scheme morphism. -/
 theorem schemeNormalizedPcSet_pow (m : ℕ) (hm : 1 ≤ m) :
-    schemeNormalizedPcSet k (End.of f ^ m) = schemeNormalizedPcSet k f := by
+    schemeNormalizedPcSet k (End.of f ^ m).asHom = schemeNormalizedPcSet k f := by
   rw [schemeNormalizedPcSet_eq_normalization_image,
     schemeNormalizedPcSet_eq_normalization_image,
     schemeGlobalNormalizationUnnormDyn_norm_pow, DivDyn.pcSet_iter _ hm]
@@ -115,7 +115,7 @@ theorem schemeNormalizedPcSet_pow (m : ℕ) (hm : 1 ≤ m) :
 /-- Normalized postcritical finiteness is equivalent to that of any positive
 iterate, without assuming normality of the original scheme. -/
 theorem schemeNormalizedPCF_pow_iff (m : ℕ) (hm : 1 ≤ m) :
-    SchemeNormalizedPCF k (End.of f ^ m) ↔ SchemeNormalizedPCF k f := by
+    SchemeNormalizedPCF k (End.of f ^ m).asHom ↔ SchemeNormalizedPCF k f := by
   unfold SchemeNormalizedPCF
   rw [schemeNormalizedPcSet_pow k f m hm]
 

@@ -36,7 +36,7 @@ theorem ramificationIdx_over_intermediate_eq_one_of_total_eq
     (h : r.ramificationIdx R = (r.under S).ramificationIdx R) :
     r.ramificationIdx S = 1 := by
   have hpos : 0 < (r.under S).ramificationIdx R :=
-    Ideal.ramificationIdx_pos (r.under S) R
+    Ideal.ramificationIdx_pos (R := R) (r.under S)
   have htower := Ideal.ramificationIdx_tower (R := R) (S := S) (T := T) (r.under S) r
   apply Nat.eq_of_mul_eq_mul_left hpos
   rw [← htower, h, mul_one]

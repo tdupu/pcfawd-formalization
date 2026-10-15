@@ -58,7 +58,7 @@ theorem schemeNormalizedPCFOfFiniteType_pow_iff
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (m : ℕ) (hm : 1 ≤ m) :
-    SchemeNormalizedPCFOfFiniteType k s (End.of f ^ m) ↔
+    SchemeNormalizedPCFOfFiniteType k s (End.of f ^ m).asHom ↔
       SchemeNormalizedPCFOfFiniteType k s f := by
   letI := schemeGlobalNormalizationMap_isFinite X k s
   letI := schemeStalkCharZeroOfField k s (genericPoint X)
@@ -108,11 +108,11 @@ theorem pointClosureSubschemeMap_comm
 theorem schemeEnd_pow_comm
     {X Y : Scheme.{u}} (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     (hcomm : g ≫ π = π ≫ f) (m : ℕ) :
-    (End.of g ^ m) ≫ π = π ≫ (End.of f ^ m) := by
+    (End.of g ^ m).asHom ≫ π = π ≫ (End.of f ^ m).asHom := by
   induction m with
   | zero => simp
   | succ m ih =>
-      simp only [pow_succ, End.mul_def, Category.assoc]
+      simp only [pow_succ, End.mul_asHom, Category.assoc]
       rw [ih, ← Category.assoc, hcomm, Category.assoc]
 
 /-- The two local covering packages needed for one invariant divisor, on every
@@ -122,7 +122,7 @@ def InvariantDivisorCoveringInputs
   ∀ (m : ℕ) (U : X.affineOpens)
     (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-      (finitePreimageAffine (End.of f ^ m) U : X.Opens)),
+      (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
     InvariantDivisorLocalCoveringInputs f A m U Q' hx
 
 /-- Affine field-algebra structures supplied by an actual structure morphism. -/
@@ -181,13 +181,13 @@ theorem periodicDivisor_schemeNormalizedPCFOfFiniteType
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (p : ℕ) (hp : 1 ≤ p)
-    (hA : (End.of f ^ p).base A.1 = A.1)
+    (hA : (End.of f ^ p).asHom.base A.1 = A.1)
     (cover : letI := schemeGlobalNormalizationMap_isFinite X k s
       ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
-        InvariantDivisorCoveringInputs (End.of (schemeGlobalNormalizationLift f) ^ n) B)
+        InvariantDivisorCoveringInputs (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B)
     (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
     SchemeNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
-      (A.invariantClosureMap (End.of f ^ p) hA) := by
+      (A.invariantClosureMap (End.of f ^ p).asHom hA) := by
   letI := schemeGlobalNormalizationMap_isFinite X k s
   letI := schemeStalkCharZeroOfField k s (genericPoint X)
   letI (U : X.affineOpens) := schemeAffineAlgebraOfField k s U
@@ -202,36 +202,37 @@ theorem periodicDivisor_schemeNormalizedPCFOfFiniteType
   obtain ⟨B, hB, c, hc, hperiodB⟩ := exists_periodic_normalization_divisor k
     f F ν (schemeGlobalNormalizationLift_comp f) A p hperiod
   have hν : ν B.1 = A.1 := congrArg Subtype.val hB
-  have hF : (End.of F ^ (p * c)).base B.1 = B.1 :=
+  have hF : (End.of F ^ (p * c)).asHom.base B.1 = B.1 :=
     (schemeDivisorMap_iterate_val F _ (p * c) B).symm.trans
       (congrArg Subtype.val hperiodB)
   have hpcfF : (divDynOfFiniteDominantNormalCharZero F).PCF := hpcf
-  have hpcfPower : (divDynOfFiniteDominantNormalCharZero (End.of F ^ (p * c))).PCF := by
+  have hpcfPower : (divDynOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).PCF := by
     rw [divDynOfFiniteDominantNormalCharZero_pow_eq_iter]
     exact (DivDyn.pcf_iter_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
   have hpcfB := invariantDivisor_schemeNormalizedPCFOfFiniteType k sN
-    (End.of F ^ (p * c)) B hF (cover (p * c) B) hpcfPower
-  let g := A.invariantClosureMap (End.of f ^ p) hA
-  let gB := B.invariantClosureMap (End.of F ^ (p * c)) hF
+    (End.of F ^ (p * c)).asHom B hF (cover (p * c) B) hpcfPower
+  let g := A.invariantClosureMap (End.of f ^ p).asHom hA
+  let gB := B.invariantClosureMap (End.of F ^ (p * c)).asHom hF
   let π := pointClosureSubschemeMap ν B.1 A.1 hν
   letI : IsFinite π := pointClosureSubschemeMap_isFinite ν B.1 A.1 hν
   letI : IsDominant π := pointClosureSubschemeMap_isDominant ν B.1 A.1 hν
-  have hpower : End.of g ^ c =
-      pointClosureSubschemeMap (End.of f ^ (p * c)) A.1 A.1
+  have hpower : (End.of g ^ c).asHom =
+      pointClosureSubschemeMap (End.of f ^ (p * c)).asHom A.1 A.1
         (by simpa only [pow_mul] using (end_pow_apply_eq_of_apply_eq
-          (End.of f ^ p) A.1 hA c)) := by
+          (End.of f ^ p).asHom A.1 hA c)) := by
     rw [A.invariantClosureMap_iterate]
-    simp only [← pow_mul]
-  have hcomm : gB ≫ π = π ≫ (End.of g ^ c) := by
+    congr 1
+    rw [pow_mul]
+  have hcomm : gB ≫ π = π ≫ (End.of g ^ c).asHom := by
     rw [hpower]
-    exact pointClosureSubschemeMap_comm (End.of f ^ (p * c))
-      (End.of F ^ (p * c)) ν
+    exact pointClosureSubschemeMap_comm (End.of f ^ (p * c)).asHom
+      (End.of F ^ (p * c)).asHom ν
       (schemeEnd_pow_comm f F ν (schemeGlobalNormalizationLift_comp f) (p * c))
       A.1 B.1 _ hF hν
   have hdesc := schemeNormalizedPCFOfFiniteType_of_cover k
     ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
     ((pointClosureIdealSheaf B.1).subschemeι ≫ sN)
-    (End.of g ^ c) gB π hcomm hpcfB
+    (End.of g ^ c).asHom gB π hcomm hpcfB
   exact (schemeNormalizedPCFOfFiniteType_pow_iff k _ g c (by omega)).mp hdesc
 
 /-- The actual codimension-one point of the image divisor `f^r(A)`. -/
@@ -243,8 +244,8 @@ def schemeDivisorIterateOfFiniteType
     (r : ℕ) (A : SchemeDivisorPoint X) : SchemeDivisorPoint X := by
   letI (U : X.affineOpens) := schemeAffineAlgebraOfField k s U
   letI (U : X.affineOpens) := schemeAffineAlgebraOfField_finiteType k s U
-  exact schemeDivisorMap (End.of f ^ r)
-    (coheight_apply_eq_one_of_finiteType (End.of f ^ r) k) A
+  exact schemeDivisorMap (End.of f ^ r).asHom
+    (coheight_apply_eq_one_of_finiteType (End.of f ^ r).asHom k) A
 
 @[simp]
 theorem schemeDivisorIterateOfFiniteType_val
@@ -253,7 +254,7 @@ theorem schemeDivisorIterateOfFiniteType_val
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X]
     (r : ℕ) (A : SchemeDivisorPoint X) :
-    (schemeDivisorIterateOfFiniteType k s f r A).1 = (End.of f ^ r).base A.1 := rfl
+    (schemeDivisorIterateOfFiniteType k s f r A).1 = (End.of f ^ r).asHom.base A.1 := rfl
 
 /-- The preperiodicity relation makes the actual image divisor periodic. -/
 theorem schemeDivisorIterateOfFiniteType_periodic
@@ -262,8 +263,8 @@ theorem schemeDivisorIterateOfFiniteType_periodic
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X]
     (r p : ℕ) (A : SchemeDivisorPoint X)
-    (hA : (End.of f ^ (r + p)).base A.1 = (End.of f ^ r).base A.1) :
-    (End.of f ^ p).base (schemeDivisorIterateOfFiniteType k s f r A).1 =
+    (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1) :
+    (End.of f ^ p).asHom.base (schemeDivisorIterateOfFiniteType k s f r A).1 =
       (schemeDivisorIterateOfFiniteType k s f r A).1 := by
   rw [Nat.add_comm r p, pow_add] at hA
   exact hA
@@ -278,14 +279,14 @@ theorem pcfAllTheWayDown_scheme
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (r p : ℕ) (hp : 1 ≤ p)
-    (hA : (End.of f ^ (r + p)).base A.1 = (End.of f ^ r).base A.1)
+    (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1)
     (cover : letI := schemeGlobalNormalizationMap_isFinite X k s
       ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
-        InvariantDivisorCoveringInputs (End.of (schemeGlobalNormalizationLift f) ^ n) B)
+        InvariantDivisorCoveringInputs (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B)
     (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
     let B := schemeDivisorIterateOfFiniteType k s f r A
     SchemeNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
-      (B.invariantClosureMap (End.of f ^ p)
+      (B.invariantClosureMap (End.of f ^ p).asHom
         (schemeDivisorIterateOfFiniteType_periodic k s f r p A hA)) :=
   periodicDivisor_schemeNormalizedPCFOfFiniteType k s f
     (schemeDivisorIterateOfFiniteType k s f r A) p hp

@@ -305,7 +305,7 @@ theorem divDynOfFiniteDominantNormal_iterate_step_val
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
     (((divDynOfFiniteDominantNormal f hcrit).step)^[m] x).1 =
-      (CategoryTheory.End.of f ^ m).base x.1 :=
+      (CategoryTheory.End.of f ^ m).asHom.base x.1 :=
   schemeDivisorMap_iterate_val f (coheight_apply_eq_one f) m x
 
 /-- The stalk ramification index of the identity is one. -/
@@ -324,14 +324,14 @@ theorem divDynOfFiniteDominantNormal_iterRam
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
     (divDynOfFiniteDominantNormal f hcrit).iterRam m x =
-      schemeDivisorRam (CategoryTheory.End.of f ^ m) x := by
+      schemeDivisorRam (CategoryTheory.End.of f ^ m).asHom x := by
   induction m generalizing x with
   | zero => simp
   | succ m ih =>
       rw [show m + 1 = 1 + m by omega, DivDyn.iterRam_add,
         DivDyn.iterRam_one, Function.iterate_one, ih, add_comm, pow_succ]
       exact (Nat.mul_comm _ _).trans
-        (schemeDivisorRam_comp f (CategoryTheory.End.of f ^ m) x).symm
+        (schemeDivisorRam_comp f (CategoryTheory.End.of f ^ m).asHom x).symm
 
 /-- A finite dominant map from an integral normal scheme to a Noetherian
 characteristic-zero integral scheme transfers the Noetherian and
@@ -371,7 +371,7 @@ theorem divDynOfFiniteNormalization_iterRam
     [CharZero (A.presheaf.stalk (genericPoint A))]
     (m : ℕ) (Q : SchemeDivisorPoint N) :
     (divDynOfFiniteNormalization gN nu).iterRam m Q =
-      schemeDivisorRam (CategoryTheory.End.of gN ^ m) Q := by
+      schemeDivisorRam (CategoryTheory.End.of gN ^ m).asHom Q := by
   unfold divDynOfFiniteNormalization divDynOfFiniteDominantNormalCharZero
     divDynOfFiniteDominantNormalNoetherian
     divDynOfFiniteDominantNormalOfExistsFormallyEtale
@@ -403,7 +403,7 @@ noncomputable def schemeNormalizationUnnormDynOfFiniteType
     (hU1 : ∀ m Q,
       1 < (divDynOfFiniteNormalization gN nu).iterRam m Q →
         schemeDivisorMap nu (coheight_apply_eq_one_of_finiteType nu k) Q ∈
-          schemeDivisorCrit0 (CategoryTheory.End.of g ^ m)) :
+          schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom) :
     SchemeNormalizationUnnormDyn A (SchemeDivisorPoint N) := {
     g := g
     finite := inferInstance

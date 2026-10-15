@@ -208,7 +208,10 @@ noncomputable def stageToLimit (i : J) (A : Type u) [CommRing A]
 theorem stageToLimit_stageGenerator (i : J) (A : Type u) [CommRing A]
     [Algebra (F.obj i) A] (X : Under i) (a : A) :
     stageToLimit F c i A X (stageGenerator F i A X a) = limitGenerator F c i A a := by
-  simp [stageToLimit, stageGenerator, limitGenerator]
+  simp only [stageToLimit, stageGenerator, limitGenerator, Algebra.TensorProduct.includeLeft_apply,
+    Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
+  congr 1
+  exact (CommRingCat.toAlgHom ((ringCoconeAbove F c i).ι.app X)).map_one
 
 @[simp]
 theorem stageToLimit_stageBase (i : J) (A : Type u) [CommRing A]

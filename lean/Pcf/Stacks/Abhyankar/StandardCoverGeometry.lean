@@ -109,8 +109,8 @@ theorem standardCovers_radical_span_algebraMap_eq_reducedDivisorIdeal
     {R : Type u} [CommRing R] {ι : Type} [Finite ι]
     (u : ι → Rˣ) (a : R) (e : ι → ℕ) (he : ∀ i, 1 ≤ e i)
     [IsReduced (R ⧸ Ideal.span ({a} : Set R))] :
-    (Ideal.span ({algebraMap R
-      (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) a} :
+    (Ideal.span ({(algebraMap R
+      (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i)))) a} :
         Set (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))))).radical =
       standardCoversReducedDivisorIdeal u a e := by
   let A := fun i => AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))

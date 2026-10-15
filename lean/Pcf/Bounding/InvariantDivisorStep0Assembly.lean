@@ -106,8 +106,8 @@ section CoveringInputs
 variable {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f]
 
 local instance coveringStep0Algebra (m : ℕ) (U : X.affineOpens) :
-    Algebra Γ(X, U) Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U) :=
-  ((CategoryTheory.End.of f ^ m).app U).hom.toAlgebra
+    Algebra Γ(X, U) Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
+  ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
 
 /-- The two classical local covering inputs, on precisely the rings extracted
 from an ambient iterate and a source point of the reduced divisor. No divisor
@@ -116,27 +116,27 @@ structure InvariantDivisorLocalCoveringInputs
     (A : SchemeDivisorPoint X) (m : ℕ) (U : X.affineOpens)
     (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-      (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)) : Prop where
+      (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)) : Prop where
   purity : Stacks.ZariskiNagataPurity
     (Localization.AtPrime
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 hx).under Γ(X, U)))
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 hx).under Γ(X, U)))
     (Localization (Algebra.algebraMapSubmonoid
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 hx).under
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 hx).under
           Γ(X, U)).primeCompl))
   abhyankar : ∀ a : Localization.AtPrime
       ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-        (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 hx).under Γ(X, U)),
+        (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 hx).under Γ(X, U)),
     Stacks.AbhyankarLemma
       (Localization.AtPrime
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 hx).under Γ(X, U)))
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 hx).under Γ(X, U)))
       (Localization (Algebra.algebraMapSubmonoid
-        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m) U)
+        Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U)
         ((ambientPrimeOfQuotientPoint (pointClosureIdealSheaf A.1)
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U) Q'.1 hx).under
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) Q'.1 hx).under
             Γ(X, U)).primeCompl)) a
 
 end CoveringInputs
@@ -159,10 +159,10 @@ def invariantDivisorStep0LocalDataOfRegular
     (hmeets : letI := schemeStalkCharZeroOfField k s (genericPoint X)
       ∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).iter m |>.branch,
         E ≠ A → Q ∉ invariantDivisorMeets A E)
-    (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base Q'.1 = Q.1)
+    (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1 = Q.1)
     (cover : ∀ (U : X.affineOpens) (hx : Q'.1 ∈
         (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
     InvariantDivisorStep0LocalData X f A m Q Q' := by
   letI := schemeStalkCharZeroOfField k s (genericPoint X)
@@ -185,10 +185,10 @@ def invariantDivisorStep0LocalDataOfRegular
       abhyankar := (cover U hx).abhyankar }
   let : Nonempty (U : X.Opens) :=
     ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, hQU⟩⟩
-  let : Nonempty (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens) :=
+  let : Nonempty (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens) :=
     ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q'.1, hx⟩⟩
   apply not_mem_finiteAffineOtherBranchLocus_of_meets
-    (CategoryTheory.End.of f ^ m) A Q U hQU
+    (CategoryTheory.End.of f ^ m).asHom A Q U hQU
   intro E hE hEA
   rw [divDynOfFiniteDominantNormalCharZero_pow_eq_iter] at hE
   exact hmeets E hE hEA
@@ -206,7 +206,7 @@ def invariantDivisorSetupOfFiniteRegularityCorrection
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
     InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
@@ -233,7 +233,7 @@ def invariantDivisorSetupOfClosedSingularLoci
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
     InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
@@ -253,7 +253,7 @@ theorem invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
       (divDynOfFiniteDominantNormalCharZero f).PCF) :
@@ -270,7 +270,7 @@ theorem invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-          (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens)),
+          (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
       (divDynOfFiniteDominantNormalCharZero f).PCF) :

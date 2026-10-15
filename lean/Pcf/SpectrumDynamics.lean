@@ -65,7 +65,7 @@ noncomputable def specRam (R : Type*) [CommRing R] [Algebra R S]
 theorem specRam_pos [Module.Finite R S]
     (Q : {s : Set (PrimeSpectrum S) // IsPrime s}) : 0 < specRam R Q := by
   have := (Q.2.irreducible.genericPoint (α := PrimeSpectrum S)).isPrime
-  exact Ideal.ramificationIdx_pos _ R
+  exact Ideal.ramificationIdx_pos (R := R) _
 
 /-- **`hbranch`, discharged.** A prime of `Spec S` over which the system ramifies is
 contained in the non-étale locus.

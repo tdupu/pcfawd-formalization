@@ -314,7 +314,7 @@ theorem invariantDivisorNormalization_iterate_step_val
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) (m : ℕ)
     (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme) :
     (((invariantDivisorNormalization k s f A hA).toNormalizationUnnormDyn.step)^[m] Q).1 =
-      (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base Q.1 := by
+      (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q.1 := by
   exact schemeDivisorMap_iterate_val _
     (invariantDivisorNormalization k s f A hA).g_preserves_divisors m Q
 
@@ -326,16 +326,16 @@ theorem SchemeDivisorPoint.invariantClosureIterate_source_mem
     (U : X.affineOpens)
     (Q Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hQ : (pointClosureIdealSheaf A.1).subschemeι Q.1 ∈ (U : X.Opens))
-    (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base Q'.1 = Q.1) :
+    (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1 = Q.1) :
     Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
-      (finitePreimageAffine (CategoryTheory.End.of f ^ m) U : X.Opens) := by
+      (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens) := by
   have hsquare := congrArg (fun g : (pointClosureIdealSheaf A.1).subscheme ⟶ X ↦ g Q'.1)
     (pointClosureSubschemeMap_iterate_subschemeι f A.1 hA m)
   change (pointClosureIdealSheaf A.1).subschemeι
-      ((CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).base Q'.1) =
-    (CategoryTheory.End.of f ^ m).base ((pointClosureIdealSheaf A.1).subschemeι Q'.1)
+      ((CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1) =
+    (CategoryTheory.End.of f ^ m).asHom.base ((pointClosureIdealSheaf A.1).subschemeι Q'.1)
     at hsquare
-  change (CategoryTheory.End.of f ^ m).base
+  change (CategoryTheory.End.of f ^ m).asHom.base
     ((pointClosureIdealSheaf A.1).subschemeι Q'.1) ∈ (U : X.Opens)
   rw [← hsquare, hQQ]
   exact hQ

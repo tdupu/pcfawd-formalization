@@ -200,13 +200,13 @@ theorem not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
 theorem normalization_square_pow
     {A N : Scheme.{u}} (g : A ⟶ A) (gN : N ⟶ N) (nu : N ⟶ A)
     (hsquare : gN ≫ nu = nu ≫ g) (m : ℕ) :
-    (CategoryTheory.End.of gN ^ m) ≫ nu = nu ≫ (CategoryTheory.End.of g ^ m) := by
+    (CategoryTheory.End.of gN ^ m).asHom ≫ nu = nu ≫ (CategoryTheory.End.of g ^ m).asHom := by
   induction m with
   | zero => simp
   | succ m ih =>
       rw [pow_succ, pow_succ]
-      change (gN ≫ (CategoryTheory.End.of gN ^ m)) ≫ nu =
-        nu ≫ (g ≫ (CategoryTheory.End.of g ^ m))
+      change (gN ≫ (CategoryTheory.End.of gN ^ m).asHom) ≫ nu =
+        nu ≫ (g ≫ (CategoryTheory.End.of g ^ m).asHom)
       rw [Category.assoc, ih, ← Category.assoc, hsquare, Category.assoc]
 
 /-- U1 for actual finite scheme maps and an actual birational normalization
@@ -220,11 +220,11 @@ theorem schemeDivisorRam_gt_one_mem_crit0_of_finite_birational
     (hsquare : gN ≫ nu = nu ≫ g)
     (hcodim : ∀ Q : SchemeDivisorPoint N, Order.coheight (nu Q.1) = 1)
     (m : ℕ) (Q : SchemeDivisorPoint N)
-    (hQ : 1 < schemeDivisorRam (CategoryTheory.End.of gN ^ m) Q) :
+    (hQ : 1 < schemeDivisorRam (CategoryTheory.End.of gN ^ m).asHom Q) :
     schemeDivisorMap nu hcodim Q ∈
-      schemeDivisorCrit0 (CategoryTheory.End.of g ^ m) := by
+      schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom := by
   exact not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
-    (CategoryTheory.End.of g ^ m) (CategoryTheory.End.of gN ^ m) nu
+    (CategoryTheory.End.of g ^ m).asHom (CategoryTheory.End.of gN ^ m).asHom nu
     (normalization_square_pow g gN nu hsquare m) Q
     (schemeStalkBirationalAt_of_isIso_generic_stalkMap nu Q.1) hQ
 
