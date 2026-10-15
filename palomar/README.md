@@ -39,8 +39,12 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
       minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and whatever
       `formalization.yaml` cites: the manuscript and `ai/ai-usage.md`.
 - [x] Authors of the formalization: all four (Taylor, 2026-10-15).
-- [ ] Resolve the remaining `TODO(Taylor)` items in `formalization.yaml`: the automation
-      account, `review.status`, and the manuscript's arXiv identifier.
+- [x] Automation account, review status, arXiv (Taylor, 2026-10-15): the code was built with
+      `using-leanpowers` (`tdupu/agent-skills-public`), which builds on `CBirkbeck/mathlib-quality`;
+      agents reviewed the statements; there is no arXiv identifier yet, so `latex/paper.tex`
+      must ship in `pcf_public`.
+- [ ] **One more statement-fidelity review** of the final `PcfChallenge.lean` against the
+      manuscript (Taylor asked for this). Record the result in `review.notes`.
 - [ ] Decide the submission relationship answer. Palomar records it permanently as a claim
       about the submitter: "I am a responsible author or maintainer", or "I have approval
       from one".

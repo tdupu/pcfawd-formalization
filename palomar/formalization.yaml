@@ -56,9 +56,9 @@ sources:
   - title: "PCF all the way down"
     type: paper
     authors: [Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang]
-    # TODO(Taylor): add the arXiv identifier once posted. Until then the
-    # manuscript is latex/paper.tex at the submitted commit.
-    identifier: "latex/paper.tex in this repository (preprint)"
+    # No arXiv identifier yet (Taylor, 2026-10-15). Replace this when posted.
+    # Until then the manuscript must be present in the public repository.
+    identifier: "Unpublished manuscript, latex/paper.tex in this repository; not yet on arXiv"
     relationship: adapts
     author_endorsement: participated
     note: >
@@ -84,20 +84,23 @@ sources:
 
 automation:
   methods:
-    # TODO(Taylor): confirm the model list and the human role. Repository
-    # records (ai/ai-usage.md, lean/HANDOFF.md) name Claude Opus 5 / 5.5 in
-    # Claude Code.
+    # Confirmed by Taylor 2026-10-15.
     - method: agent
-      tool_setup: "Claude Code CLI with Anthropic Claude Opus models (Opus 5, Opus 5.5)"
+      tool_setup: >
+        Claude Code CLI with Anthropic Claude Opus models (Opus 5, Opus 5.5),
+        driven by the `using-leanpowers` skill suite
+        (https://github.com/tdupu/agent-skills-public, skills/using-leanpowers),
+        which builds on Chris Birkbeck's mathlib-quality Claude Code plugin
+        (https://github.com/CBirkbeck/mathlib-quality).
       notes: >
         The Lean development was written by AI agents under the direction of
         the authors. The per-task record is ai/ai-usage.md at the submitted
         commit.
 
 review:
-  # TODO(Taylor): `agent-reviewed` is accurate only if no human has checked
-  # the Lean statements. If an author has checked the Challenge statement
-  # against the manuscript, say so here instead.
+  # Confirmed by Taylor 2026-10-15: agents reviewed the statements. One more
+  # statement-fidelity pass on the final PcfChallenge.lean is required before
+  # submission; update these notes with its result.
   status: agent-reviewed
   notes: >
     Statement fidelity was audited by agents against the manuscript; see
