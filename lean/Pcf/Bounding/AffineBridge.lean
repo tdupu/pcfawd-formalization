@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.Chart
-import Pcf.Bounding.Divisors
-import Pcf.Bounding.FibreProduct
+module
+
+public import Pcf.Bounding.Chart
+public import Pcf.Bounding.Divisors
+public import Pcf.Bounding.FibreProduct
 
 /-!
 # The bounding chart on the concrete affine divisor carrier
@@ -19,6 +21,8 @@ This is the affine form of the identification requested in item 5 of `HANDOFF.md
 It deliberately does not construct the global Step 0 chart, nor the normalized dynamics of
 a possibly nonnormal divisor; those are the remaining scheme-level parts of A6.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
-import Mathlib.RingTheory.Localization.AtPrime.Extension
+module
+
+public import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
+public import Mathlib.RingTheory.Localization.AtPrime.Extension
 
 /-!
 # The divisor-local normalization in the canonical punctured root square
@@ -19,6 +21,8 @@ The generic equivalence below is the base-change square, not an equivalence of t
 integral models.  The latter is constructed here, together with its compatibility with the
 embeddings in the generic algebra.
 -/
+
+@[expose] public section
 
 universe u
 

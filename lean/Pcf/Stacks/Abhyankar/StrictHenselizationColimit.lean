@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 
 /-!
 # The strict local colimit is still the pointed-etale colimit
@@ -16,6 +18,8 @@ and the local model itself is a colimit of the original pointed-etale diagram.
 This is the categorical bridge needed to apply Stacks Tag `05N9` directly to a finite
 presentation over the strict henselization in the descent paragraph of Tag `0EYG`.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

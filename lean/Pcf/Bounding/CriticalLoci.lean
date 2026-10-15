@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeBridge
-import Mathlib.Topology.KrullDimension
+module
+
+public import Pcf.Bounding.SchemeBridge
+public import Mathlib.Topology.KrullDimension
 
 /-!
 # Finiteness of the actual codimension-one critical locus
@@ -17,6 +19,8 @@ topological finiteness step without assuming finiteness of the divisor locus its
 For locally finitely presented morphisms, affine stalk coordinates identify this
 predicate with the complement of the affine étale locus, proving closedness.
 -/
+
+@[expose] public section
 
 universe u
 

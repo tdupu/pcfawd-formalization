@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RamificationInertia.Ramification
+module
+
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # An isomorphism has ramification index one
@@ -49,6 +51,8 @@ Surjective ring maps are epimorphisms, hence formally unramified
 localization `Localization.AtPrime q`, which is exactly
 `Algebra.IsUnramifiedAt R q`, and then `Ideal.ramificationIdx_eq_one` applies.
 -/
+
+@[expose] public section
 
 namespace Pcf.Ramification
 

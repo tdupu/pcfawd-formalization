@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalizationDynamics
-import Pcf.Bounding.ReducedFiberBranch
+module
+
+public import Pcf.Bounding.GlobalNormalizationDynamics
+public import Pcf.Bounding.ReducedFiberBranch
 
 /-!
 # PCF in both directions across normalization
@@ -30,6 +32,8 @@ The unnormalized loci `branch0` and `branch1` remain distinct: their PCF
 conditions imply this normalized PCF condition, but the converse is not
 asserted and is false in general (`ex:pinched`).
 -/
+
+@[expose] public section
 
 universe u v
 

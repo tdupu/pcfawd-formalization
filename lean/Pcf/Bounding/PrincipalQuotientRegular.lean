@@ -3,9 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.LocalRing.RingHom.Basic
-import Mathlib.RingTheory.KrullDimension.Regular
+module
+
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.LocalRing.RingHom.Basic
+public import Mathlib.RingTheory.KrullDimension.Regular
+public import Mathlib.RingTheory.Flat.TorsionFree
 
 /-!
 # Regularity from a one-dimensional principal quotient
@@ -15,6 +18,8 @@ the kernel is principal, then its maximal ideal has at most two generators.
 In dimension at least two, a Noetherian local ring with such a quotient is
 therefore regular.
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Coprime.Basic
-import Pcf.Stacks.Purity.HenselianGabberPolynomial
+module
+
+public import Mathlib.RingTheory.Coprime.Basic
+public import Pcf.Stacks.Purity.HenselianGabberPolynomial
 
 /-!
 # The coprime factorization produced by Gabber's polynomial
@@ -18,6 +20,8 @@ This file formalizes that exact algebraic step.  The Chinese-remainder decomposi
 the coprime factorization, and its transport to the integral closure used in `09XI`, remain
 separate downstream steps.
 -/
+
+@[expose] public section
 
 noncomputable section
 

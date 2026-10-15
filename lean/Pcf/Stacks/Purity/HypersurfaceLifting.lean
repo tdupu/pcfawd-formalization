@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.CategoryTheory.MorphismProperty.OverAdjunction
-import Pcf.Stacks.Purity.OuterInduction
+module
+
+public import Mathlib.CategoryTheory.MorphismProperty.OverAdjunction
+public import Pcf.Stacks.Purity.OuterInduction
 
 /-!
 # The categorical assembly in Stacks Tag `0BLM`
@@ -22,6 +24,8 @@ result has the literal target `HypersurfaceFiniteEtaleLifting`; it does not repl
 by a newly named surrogate.  The two remaining hypotheses are the preceding Stacks results,
 not the conclusion of `0BLM` in disguise.
 -/
+
+@[expose] public section
 
 noncomputable section
 

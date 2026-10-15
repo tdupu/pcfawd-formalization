@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Abhyankar
-import Pcf.LocalModel
-import Pcf.Stacks.Abhyankar.TameRamification
+module
+
+public import Pcf.Abhyankar
+public import Pcf.LocalModel
+public import Pcf.Stacks.Abhyankar.TameRamification
 
 /-!
 # The standard root cover
@@ -20,6 +22,8 @@ that `e` is invertible, and proving that sharper statement requires the exact co
 of every codimension-one ramification index as `e`.  Consequently no declaration in this
 file is marked as the complete Stacks tag.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.LocalRing.Etale
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.LocalRing.Etale
+public import Mathlib.RingTheory.Smooth.Flat
+public import Mathlib.RingTheory.Etale.Weakly
 
 /-!
 # Finite etale local algebras over the localized pointed-etale colimit
@@ -15,6 +19,8 @@ etale *local* algebra over it to have rank one.  Thus its algebra map is an isom
 one of the two finite-etale consequences needed for strict henselianity; the remaining issue is
 the existence of local-factor decompositions for arbitrary finite etale algebras.
 -/
+
+@[expose] public section
 
 universe u
 

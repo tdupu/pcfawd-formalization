@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Finiteness
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
-import Mathlib.RingTheory.Regular.RegularSequence
-import Pcf.Stacks.Purity.Hartogs
+module
+
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Finiteness
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
+public import Mathlib.RingTheory.Regular.RegularSequence
+public import Pcf.Stacks.Purity.Hartogs
 
 /-!
 # The depth-two reduction in Tag 0BM9
@@ -19,6 +21,8 @@ shows that an associated closed point of a nonzero principal quotient would make
 principal.  Krull's principal ideal theorem excludes this in dimension at least two.  Finite prime
 avoidance then supplies a second regular element in the maximal ideal.
 -/
+
+@[expose] public section
 
 noncomputable section
 

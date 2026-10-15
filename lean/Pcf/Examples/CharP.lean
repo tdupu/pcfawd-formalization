@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Polynomial.Degree.Operations
-import Mathlib.Algebra.Polynomial.Degree.Domain
-import Mathlib.Algebra.Polynomial.Monic
-import Mathlib.Algebra.Polynomial.Derivative
-import Mathlib.Data.Set.Finite.Basic
-import Mathlib.RingTheory.MvPolynomial.Basic
+module
+
+public import Mathlib.Algebra.Polynomial.Degree.Operations
+public import Mathlib.Algebra.Polynomial.Degree.Domain
+public import Mathlib.Algebra.Polynomial.Monic
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.Data.Set.Finite.Basic
+public import Mathlib.RingTheory.MvPolynomial.Basic
 
 /-!
 # Positive characteristic: the wild counterexample
@@ -51,6 +53,8 @@ For `f(u, v) = (u^p + uv, v)` the coordinate `u` satisfies `u^p + y u - x = 0` o
 * `Pcf.Examples.CharP.derivative_charPoly` — its derivative is `C y` in characteristic `p`.
 * `Pcf.Examples.CharP.derivative_charPoly_ne_zero` — hence nonzero for `y ≠ 0`.
 -/
+
+@[expose] public section
 
 namespace Pcf.Examples.CharP
 
@@ -135,7 +139,6 @@ of `h(y) = y^{d+1} + c` has infinite forward orbit; hence `h` is not PCF. This i
 negative answer to the wild characteristic-`p` version of the conjecture. -/
 theorem orbit_infinite (hd : 1 ≤ d) : (Set.range (orbit K d)).Infinite :=
   Set.infinite_range_of_injective (orbit_injective hd)
-
 
 /-! ### Example `ex:frobenius-line`: `f(u, v) = (u^p + uv, v)` restricts to Frobenius on `V(v)` -/
 

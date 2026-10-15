@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerTame
-import Mathlib.RingTheory.RootsOfUnity.Basic
+module
+
+public import Pcf.Stacks.Abhyankar.KummerTame
+public import Mathlib.RingTheory.RootsOfUnity.Basic
 
 /-!
 # Reduction of prime-to-characteristic roots of unity
@@ -16,6 +18,8 @@ would have valuation nonzero modulo `n`, a contradiction. Integral closure then
 places roots of unity from the fraction field in this algebra, and the canonical
 fraction-field equivalence gives the assertion for the displayed root field.
 -/
+
+@[expose] public section
 
 open Finset IsLocalRing Polynomial
 

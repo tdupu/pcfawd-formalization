@@ -3,15 +3,17 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Regular.Category
-import Mathlib.RingTheory.Regular.RegularSequence
-import Mathlib.LinearAlgebra.TensorProduct.Prod
-import Mathlib.RingTheory.LocalRing.Module
-import Mathlib.RingTheory.LocalRing.RingHom.Basic
-import Mathlib.RingTheory.Ideal.GoingUp
-import Pcf.Stacks.Purity.DepthTwo
-import Pcf.Stacks.Purity.FiniteModuleHartogs
-import Pcf.Stacks.Purity.RegularHypersurface
+module
+
+public import Mathlib.RingTheory.Regular.Category
+public import Mathlib.RingTheory.Regular.RegularSequence
+public import Mathlib.LinearAlgebra.TensorProduct.Prod
+public import Mathlib.RingTheory.LocalRing.Module
+public import Mathlib.RingTheory.LocalRing.RingHom.Basic
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Pcf.Stacks.Purity.DepthTwo
+public import Pcf.Stacks.Purity.FiniteModuleHartogs
+public import Pcf.Stacks.Purity.RegularHypersurface
 
 /-!
 # The two-dimensional miracle-flatness relation
@@ -24,6 +26,8 @@ file starts the elementary replacement: for an `M`-regular pair `x, y`, every re
 This is a genuine algebraic consequence of module regularity.  It does not assume flatness or
 the conclusion of the purity theorem.
 -/
+
+@[expose] public section
 
 open RingTheory.Sequence TensorProduct
 open scoped Pointwise

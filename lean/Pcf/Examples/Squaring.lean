@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Restriction
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.Tactic.FinCases
+module
+
+public import Pcf.Restriction
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Tactic.FinCases
 
 /-!
 # Examples: the squaring map, and a witness that `PcfSetup` is inhabited
@@ -68,6 +70,8 @@ Two further caveats, stated plainly.
   is a choice of coordinate on `H₀`. The manuscript's `H₀ ∩ H₁` and `H₀ ∩ H₂` are
   distinct points, which is all that is used.
 -/
+
+@[expose] public section
 
 universe u
 

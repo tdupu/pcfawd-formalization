@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.RingTheory.Ideal.Maps
-import Mathlib.RingTheory.Ideal.BigOperators
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
-import Mathlib.Algebra.BigOperators.Pi
+module
+
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.Ideal.BigOperators
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+public import Mathlib.Algebra.BigOperators.Pi
 
 /-!
 # Finite products of rings: the piece through a point
@@ -25,6 +27,8 @@ three facts about finite products that the chart assembly needs:
 * `Pcf.Bounding.exists_lift_of_isUnit_single` — such a map factors through the projection
   to that piece.
 -/
+
+@[expose] public section
 
 namespace Pcf.Bounding
 

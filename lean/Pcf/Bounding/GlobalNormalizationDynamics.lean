@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalizationComparison
-import Pcf.Bounding.GlobalNormalizationNormal
-import Pcf.Bounding.GlobalNormalizationFinite
-import Pcf.Bounding.NormalizationSchemeBridge
+module
+
+public import Pcf.Bounding.GlobalNormalizationComparison
+public import Pcf.Bounding.GlobalNormalizationNormal
+public import Pcf.Bounding.GlobalNormalizationFinite
+public import Pcf.Bounding.NormalizationSchemeBridge
 
 /-!
 # Actual normalized dynamics on the canonical global normalization
@@ -26,6 +28,8 @@ endomorphism `g`, the result constructs:
 No normality, finiteness, functoriality, ramification comparison, or PCF conclusion is
 assumed for the normalization package.
 -/
+
+@[expose] public section
 
 universe u
 

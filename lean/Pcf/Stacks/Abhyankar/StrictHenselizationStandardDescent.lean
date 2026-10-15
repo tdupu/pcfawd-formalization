@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
-import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
-import Mathlib.CategoryTheory.Limits.ConcreteCategory.Filtered
+module
+
+public import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
+public import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
+public import Mathlib.CategoryTheory.Limits.ConcreteCategory.Filtered
 
 /-!
 # Descending strict-local standard covers
@@ -15,6 +17,8 @@ This file implements the `05N9` descent paragraph of Stacks Tag `0EYG` for the c
 pointed-etale colimit used in this repository.  The first step moves a finite family of units
 from the strict local colimit to one pointed etale stage, including the inverse identities.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 open TensorProduct

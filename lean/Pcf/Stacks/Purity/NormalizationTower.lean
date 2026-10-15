@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Normalization
-import Mathlib.AlgebraicGeometry.Morphisms.Etale
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
+module
+
+public import Mathlib.AlgebraicGeometry.Normalization
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
 
 /-!
 # Relative normalization and integral towers
@@ -15,6 +17,8 @@ is also the relative normalization of `X → Z`. This categorical transitivity i
 between normality of a finite étale cover over the puncture and normalization of its generic
 fibre over the puncture.
 -/
+
+@[expose] public section
 
 noncomputable section
 

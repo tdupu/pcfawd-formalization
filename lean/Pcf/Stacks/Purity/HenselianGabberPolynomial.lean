@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Polynomial.Div
-import Pcf.Stacks.Purity.HenselianIdempotents
+module
+
+public import Mathlib.Algebra.Polynomial.Div
+public import Pcf.Stacks.Purity.HenselianIdempotents
 
 /-!
 # Gabber's polynomial condition for a henselian pair
@@ -18,6 +20,8 @@ This is the direct input to the difficult implication `(5) ⇒ (2)` in Tag `09XI
 assert the resulting lifting theorem for arbitrary etale algebras or the finite-etale equivalence
 of Tag `09ZL`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

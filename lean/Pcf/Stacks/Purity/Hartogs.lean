@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Properties
-import Mathlib.RingTheory.Spectrum.Prime.Noetherian
-import Pcf.Stacks.Purity.PuncturedSpectrum
+module
+
+public import Mathlib.AlgebraicGeometry.Properties
+public import Mathlib.RingTheory.Spectrum.Prime.Noetherian
+public import Pcf.Stacks.Purity.PuncturedSpectrum
 
 /-!
 # Unconditional punctured-spectrum predecessors for Tag 0BM9
@@ -19,6 +21,8 @@ The corresponding surjectivity statement for a normal Noetherian local domain of
 least two is not asserted: it is precisely the depth-two/reflexive Hartogs theorem absent from the
 pinned Mathlib revision.
 -/
+
+@[expose] public section
 
 noncomputable section
 

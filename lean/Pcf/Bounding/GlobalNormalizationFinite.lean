@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalization
-import Mathlib.RingTheory.NoetherNormalization
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Mathlib.RingTheory.Localization.Finiteness
-import Mathlib.RingTheory.Algebraic.Integral
+module
+
+public import Pcf.Bounding.GlobalNormalization
+public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Mathlib.RingTheory.Localization.Finiteness
+public import Mathlib.RingTheory.Algebraic.Integral
 
 /-!
 # Finiteness of normalization in characteristic zero
@@ -19,6 +21,8 @@ Mathlib's relative-normalization construction proves that
 `schemeGlobalNormalizationMap A` is finite whenever `A` is integral and locally
 of finite type over a characteristic-zero field.
 -/
+
+@[expose] public section
 
 universe u v w
 

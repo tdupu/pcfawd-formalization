@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Basic
-import Mathlib.RingTheory.Unramified.Field
-import Mathlib.RingTheory.Smooth.Flat
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.RingTheory.Flat.Basic
-import Pcf.Bounding.Stacks
+module
+
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Unramified.Field
+public import Mathlib.RingTheory.Smooth.Flat
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Flat.Basic
+public import Pcf.Bounding.Stacks
 
 /-!
 # An étale algebra over a domain is reduced (Stacks Tag 033B, the case used), proved
@@ -20,6 +22,8 @@ base is a **domain** — from Mathlib: an étale algebra is flat, so it injects 
 change to the fraction field, which is étale over a field and hence reduced
 (`Algebra.FormallyUnramified.isReduced_of_field`).
 -/
+
+@[expose] public section
 
 namespace Pcf.Stacks
 

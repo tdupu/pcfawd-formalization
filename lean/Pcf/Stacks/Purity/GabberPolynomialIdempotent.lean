@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Pcf.Stacks.Purity.GabberPolynomialSplit
+module
+
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Pcf.Stacks.Purity.GabberPolynomialSplit
 
 /-!
 # Extracting an idempotent from Gabber's coprime factorization
@@ -19,6 +21,8 @@ This file formalizes that extraction step.  The remaining upstream input is exac
 finite-subalgebra/integral-closure construction that supplies the special polynomial in `0EM0`;
 no idempotent lift is assumed here.
 -/
+
+@[expose] public section
 
 noncomputable section
 

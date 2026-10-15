@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Group.Affine
-import Mathlib.AlgebraicGeometry.Morphisms.Etale
-import Mathlib.AlgebraicGeometry.Morphisms.Finite
-import Mathlib.AlgebraicGeometry.Restrict
-import Mathlib.RingTheory.Etale.Finite
-import Mathlib.RingTheory.Spectrum.Prime.Topology
+module
+
+public import Mathlib.AlgebraicGeometry.Group.Affine
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.AlgebraicGeometry.Restrict
+public import Mathlib.RingTheory.Etale.Finite
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
 
 /-!
 # The punctured-spectrum functors in Stacks Tag `0BM9`
@@ -28,6 +30,8 @@ normal of dimension at least two, and that its global-sections algebra is finite
 the Stacks notion of a possibly disconnected normal ring nor the depth/reflexive-module Hartogs
 theorems used in the proof.  No equivalence is asserted below.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.QuasiFinite
+module
+
+public import Mathlib.RingTheory.Etale.QuasiFinite
 
 /-!
 # The étale-local finite component of a quasi-finite algebra
@@ -17,6 +19,8 @@ The theorem below exposes that existing result under the purity namespace. It de
 no `02LK` tag: its conclusion is the pointed affine finite-component result `00UJ`, not every
 clause of the scheme-level tag `02LK`.
 -/
+
+@[expose] public section
 
 open TensorProduct
 

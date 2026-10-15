@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Restriction
+module
+
+public import Pcf.Restriction
 
 /-!
 # The unnormalized branch loci: `branch₀`, `branch₁` and `i`-PCF
@@ -61,6 +63,8 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
   the bounding theorem itself is not formalized (purity and Abhyankar are assumed, as
   before).
 -/
+
+@[expose] public section
 
 universe u v
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.LocalRing.MaximalIdeal.Square
-import Pcf.Bounding.RegularLocalDomain
+module
+
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Square
+public import Pcf.Bounding.RegularLocalDomain
 
 /-!
 # Regular hypersurface sections in the purity induction
@@ -13,6 +15,8 @@ This file packages the elementary regular-local input used in the higher-dimensi
 Stacks Tag `0BMA`: in positive dimension one may choose an element of `m \ m²`, and quotienting
 by such a minimal generator preserves regularity.
 -/
+
+@[expose] public section
 
 universe u
 

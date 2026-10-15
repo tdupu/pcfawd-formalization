@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
 
 /-!
 # Quotient comparison for the pointed-etale colimit
@@ -14,6 +16,8 @@ refinement indexed by an original pointed etale neighbourhood.  Combined with th
 quotient/base-change equivalence, this proves that the canonical quotient comparison on the
 unlocalized colimits is bijective.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 open scoped TensorProduct

@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.DimensionOne
-import Pcf.Stacks.Purity.EtaleLocalization
-import Pcf.Stacks.Purity.FiniteNormalAlgebra
+module
+
+public import Pcf.Stacks.Purity.DimensionOne
+public import Pcf.Stacks.Purity.EtaleLocalization
+public import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
 /-!
 # The terminal affine assembly in Stacks Tag `0BMB`
@@ -27,6 +29,8 @@ clause (2) of `0BMA` to the localized finite model.  Its only remaining input is
 induction on the nonclosed points must produce.  In particular, this file does not replace that
 geometric reduction by an assumption of the desired `0BMB` conclusion.
 -/
+
+@[expose] public section
 
 noncomputable section
 

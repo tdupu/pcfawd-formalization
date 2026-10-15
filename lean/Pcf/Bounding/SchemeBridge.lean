@@ -3,15 +3,17 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.LocalChart
-import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
-import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
-import Mathlib.AlgebraicGeometry.Morphisms.Affine
-import Mathlib.AlgebraicGeometry.Morphisms.Etale
-import Mathlib.AlgebraicGeometry.Morphisms.SurjectiveOnStalks
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.RingHom.Unramified
-import Mathlib.RingTheory.RingHomProperties
+module
+
+public import Pcf.Bounding.LocalChart
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
+public import Mathlib.AlgebraicGeometry.Morphisms.Affine
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import Mathlib.AlgebraicGeometry.Morphisms.SurjectiveOnStalks
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.RingHom.Unramified
+public import Mathlib.RingTheory.RingHomProperties
 
 /-!
 # Identifying the bounding chart with an actual scheme stalk map
@@ -37,6 +39,8 @@ closed-subscheme morphism is induced by an actual ambient morphism,
 `closedSubschemeStalkBoundingLocalizationPresentationOfAmbientMap` derives the quotient
 map and its square functorially, leaving only the two equalities of defining ideals.
 -/
+
+@[expose] public section
 
 universe u
 

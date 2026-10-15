@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeExtraction
-import Mathlib.RingTheory.Finiteness.Quotient
+module
+
+public import Pcf.Bounding.SchemeExtraction
+public import Mathlib.RingTheory.Finiteness.Quotient
 
 /-!
 # Codimension of a divisor on an integral divisor
@@ -14,6 +16,8 @@ ring. Height preservation for finite extensions applies both before and after
 quotienting by the first prime. Its contraction to the polynomial ring has height
 one and is therefore principal, so Krull's height theorem supplies the upper bound.
 -/
+
+@[expose] public section
 
 universe u v
 

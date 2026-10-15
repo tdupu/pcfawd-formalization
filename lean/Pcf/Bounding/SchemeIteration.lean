@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeDynamics
+module
+
+public import Pcf.Bounding.SchemeDynamics
 
 /-!
 # Actual divisor dynamics and scheme iterates
@@ -14,6 +16,8 @@ identified on the underlying scheme points, and the ramification function is ide
 by the stalk ramification tower theorem.  The remaining structure fields are propositions,
 so proof irrelevance completes the equality.
 -/
+
+@[expose] public section
 
 universe u
 

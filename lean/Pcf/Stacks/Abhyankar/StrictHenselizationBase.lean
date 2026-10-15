@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
 
 /-!
 # The local base map of the strict local-colimit construction
@@ -14,6 +16,8 @@ Consequently, an ideal contained in the original maximal ideal extends to an ide
 the maximal ideal of the strict local colimit.  Applying the quotient theorem proves the
 intrinsic strictly-henselian conclusion in Stacks Tag `05WS` for this construction.
 -/
+
+@[expose] public section
 
 universe u
 

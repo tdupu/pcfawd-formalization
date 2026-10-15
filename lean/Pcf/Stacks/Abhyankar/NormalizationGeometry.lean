@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StandardCoverGeometry
+module
+
+public import Pcf.Stacks.Abhyankar.StandardCoverGeometry
 
 /-!
 # Geometry of the normalization in the standard-cover presentation
@@ -13,6 +15,8 @@ standard models across the normalization equivalence proved from the generic pre
 It is the affine geometric conclusion of Stacks Project Tag `0EYH` after Tag `0EYG` has
 supplied the product of localized standard root algebras.
 -/
+
+@[expose] public section
 
 universe u
 

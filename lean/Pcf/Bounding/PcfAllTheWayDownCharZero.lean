@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.DimensionTermination
+module
+
+public import Pcf.Bounding.DimensionTermination
 
 /-!
 # PCF all the way down in characteristic zero
@@ -17,6 +19,8 @@ Unlike `SchemePcfCoveringAtDepth`, the public input below is not a recursively p
 tree.  It states the two local theorems once, for all rings in the working universe.  The
 tree needed by the recursive scheme proof is constructed here.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 

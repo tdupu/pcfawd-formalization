@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.FieldTheory.Separable
-import Mathlib.RingTheory.Etale.StandardEtale
-import Mathlib.RingTheory.RamificationInertia.Ramification
+module
+
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # Abhyankar's lemma: the standard tamely ramified local model
@@ -86,6 +88,8 @@ unit constant term (`u` invertible) are exactly the two hypotheses that make `c`
 * `Abhyankar.subst`, `Abhyankar.substEquiv` — the substitution `x ↦ t * y`. This is the
   base change internal to Tag 0EYG's proof, **not** Tag 0EYF; nothing downstream uses it.
 -/
+
+@[expose] public section
 
 namespace Abhyankar
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
-import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
+module
+
+public import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
+public import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
 
 /-!
 # The divisor localization of a standard root cover
@@ -18,6 +20,8 @@ The latter is itself the localization of the global root algebra at the unique p
 All maps below are the canonical base-change maps.  In particular, the theorem does not
 assume an abstract equivalence with the DVR root algebra or any pointwise unramifiedness.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 

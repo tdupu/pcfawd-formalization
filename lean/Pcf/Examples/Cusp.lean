@@ -3,15 +3,17 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Polynomial.Basic
-import Mathlib.Algebra.MvPolynomial.PDeriv
-import Mathlib.Algebra.Polynomial.Degree.Support
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Adjoin.Polynomial.Basic
-import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-import Mathlib.RingTheory.Polynomial.RationalRoot
-import Mathlib.RingTheory.Localization.FractionRing
-import Mathlib.FieldTheory.IsAlgClosed.Basic
+module
+
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Mathlib.Algebra.Polynomial.Degree.Support
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Adjoin.Polynomial.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.Polynomial.RationalRoot
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 /-!
 # Examples: the cuspidal cubic and the quadric cone
@@ -32,6 +34,8 @@ proper subset of `B ∩ Z`.
 For `f : 𝔸² → Y = Spec k[x,y,z]/(xz - y²)`, `f(u,v) = (u², uv, v²)`, the restriction
 to `A = V(v)` is `g(u) = u²`, which ramifies at the origin even though `Z = ∅`.
 -/
+
+@[expose] public section
 
 namespace Pcf.Examples.Cusp
 
@@ -122,7 +126,6 @@ theorem cusp_inter_branch : {p : k × k | p.2 ^ 2 = p.1 ^ 3 ∧ p.1 = 0} = {(0, 
 
 end Intersection
 
-
 /-! ### Example `ex:cusp`: `k[t]` is the normalization of the cuspidal cubic -/
 
 section Normalization
@@ -192,7 +195,6 @@ theorem X_not_mem_cuspAlg : (X : Polynomial k) ∉ cuspAlg k := by
   intro h
   simpa using coeff_one_eq_zero_of_mem k h
 
-
 /-- Example `ex:cusp` of `paper.tex`: `t` is integral over `k[t², t³]`; it is a root of the monic
 polynomial `T² - t²`.  This is the first step in showing that `k[t]` is the normalization
 of the cusp. -/
@@ -229,7 +231,6 @@ instance moduleFinite_cuspAlg : Module.Finite (cuspAlg k) (Polynomial k) := by
 the cusp. -/
 instance isIntegral_cuspAlg : Algebra.IsIntegral (cuspAlg k) (Polynomial k) :=
   Algebra.IsIntegral.of_finite _ _
-
 
 /-- Example `ex:cusp` of `paper.tex`: `k[t]` is the integral closure of the coordinate ring
 `k[t², t³]` of the cusp inside the field `k(t)`. -/
@@ -283,7 +284,6 @@ instance isFractionRing_cuspAlg :
     simp only [map_mul]
     ring
 
-
 /-- Example `ex:cusp` of `paper.tex`: the integral closure of the coordinate ring `k[t², t³]` of
 the cusp inside `k[t]` is all of `k[t]`.  Combined with `isFractionRing_cuspAlg` and
 `isIntegralClosure_cuspAlg` this says that the parametrisation `g(u) = (u², u³)` *is* the
@@ -299,7 +299,6 @@ the manuscript that the induced map `g̃ : Ã → B̃` on normalizations is the 
 theorem isIntegrallyClosed_polynomial : IsIntegrallyClosed (Polynomial k) := inferInstance
 
 end Normalization
-
 
 /-! ### Example `ex:branch-singular`: the quadric cone -/
 

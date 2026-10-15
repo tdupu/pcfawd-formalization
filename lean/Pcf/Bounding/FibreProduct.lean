@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Pullbacks
-import Mathlib.AlgebraicGeometry.PullbackCarrier
-import Pcf.Bounding.Stacks
+module
+
+public import Mathlib.AlgebraicGeometry.Pullbacks
+public import Mathlib.AlgebraicGeometry.PullbackCarrier
+public import Pcf.Bounding.Stacks
 
 /-!
 # Points of a fibre product of affine schemes (Stacks Tag 01JT), proved
@@ -17,6 +19,8 @@ and identifies the fibre product of `Spec`s with `Spec` of the tensor product,
 `AlgebraicGeometry.pullbackSpecIso`. This file transports the former through the latter, so
 that the fact is a **theorem** of this development rather than one of its hypotheses.
 -/
+
+@[expose] public section
 
 universe u
 

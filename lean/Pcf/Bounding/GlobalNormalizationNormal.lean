@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalization
-import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
+module
+
+public import Pcf.Bounding.GlobalNormalization
+public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 
 /-!
 # Normality of the canonical global normalization
@@ -13,6 +15,8 @@ We identify the inverse image of each nonempty affine open with the spectrum
 of its integral closure in the function field, then pass through stalks to all
 affine opens of the normalization.
 -/
+
+@[expose] public section
 
 universe u
 

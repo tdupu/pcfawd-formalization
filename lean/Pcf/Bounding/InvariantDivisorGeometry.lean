@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalizationDynamics
-import Pcf.Bounding.DivisorFlagCodimension
-import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+module
+
+public import Pcf.Bounding.GlobalNormalizationDynamics
+public import Pcf.Bounding.DivisorFlagCodimension
+public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 /-!
 # Exceptional sets on an actual invariant divisor
@@ -22,6 +24,8 @@ from generic smoothness and local principal generation, without assuming that th
 entire regular locus is open.  No branch-avoidance, PCF, or étaleness conclusion is
 assumed in either construction.
 -/
+
+@[expose] public section
 
 universe u
 

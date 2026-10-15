@@ -3,14 +3,16 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Unnormalized
-import Mathlib.Algebra.MvPolynomial.Basic
-import Mathlib.Algebra.Polynomial.AlgebraMap
-import Mathlib.RingTheory.Adjoin.Basic
-import Mathlib.RingTheory.Ideal.Span
-import Mathlib.FieldTheory.IsAlgClosed.Basic
-import Mathlib.Tactic.FinCases
-import Mathlib.Tactic.LinearCombination
+module
+
+public import Pcf.Unnormalized
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.Adjoin.Basic
+public import Mathlib.RingTheory.Ideal.Span
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.LinearCombination
 
 /-!
 # Example `ex:pinched`: the pinched plane
@@ -74,6 +76,8 @@ glued to a node `o`), and the restriction `g = f|_B` is `p(z) ↦ p(z²)`.
 * `PC(f) = PC₀(f) = PC₁(f) = {ν(V(z)), ν(V(w))}` for the ambient map `f`, and the
   flatness failure of `f` at `o`.
 -/
+
+@[expose] public section
 
 universe u
 

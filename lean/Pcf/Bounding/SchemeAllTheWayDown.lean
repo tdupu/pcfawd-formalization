@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.PcfAllTheWayDownScheme
+module
+
+public import Pcf.Bounding.PcfAllTheWayDownScheme
 
 /-!
 # Recursive PCF descent on actual schemes
@@ -22,6 +24,8 @@ the theorem proves descent to every finite depth for which the local inputs
 are supplied.  `Pcf.Bounding.DimensionTermination` proves separately that an
 actual branch has at most the topological Krull dimension of the initial scheme.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 
@@ -130,6 +134,5 @@ theorem schemePCFAllTheWayDown_of_cover
 #print axioms schemePCFAllTheWayDown_of_cover
 
 end
-
 
 end Pcf

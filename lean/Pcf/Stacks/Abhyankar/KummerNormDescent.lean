@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerPowers
-import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
-import Mathlib.RingTheory.Norm.Basic
+module
+
+public import Pcf.Stacks.Abhyankar.KummerPowers
+public import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
+public import Mathlib.RingTheory.Norm.Basic
 
 /-!
 # The norm step in Stacks Tag 0EXP
@@ -19,6 +21,8 @@ The general norm step uses the root-of-unity hypothesis of Tag `0EXP`.
 For the `09EV` DVR root extension, the residue-prime-to-`n` hypothesis proves
 this descent, yielding an unconditional intermediate-field classification.
 -/
+
+@[expose] public section
 
 universe u v
 

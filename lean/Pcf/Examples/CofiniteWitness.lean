@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Geometry
-import Pcf.Wiring
-import Mathlib.Topology.Constructions
-import Mathlib.Topology.NoetherianSpace
-import Mathlib.Topology.Irreducible
+module
+
+public import Pcf.Geometry
+public import Pcf.Wiring
+public import Mathlib.Topology.Constructions
+public import Mathlib.Topology.NoetherianSpace
+public import Mathlib.Topology.Irreducible
 
 /-!
 # A concrete, genuinely ramified witness for `Pcf.PcfGeometry`
@@ -61,6 +63,8 @@ What the file does show is precisely this: `Pcf.PcfGeometry` is consistent, its 
 be satisfied simultaneously, and they can be satisfied with `res.branch ≠ ∅`. That is the
 non-vacuity claim, and no more.
 -/
+
+@[expose] public section
 
 namespace Pcf.Examples
 
@@ -285,7 +289,6 @@ theorem resDyn_pcf : resDyn.PCF :=
 #print axioms resDyn_branch
 #print axioms resDyn_branch_nonempty
 #print axioms resDyn_pcf
-
 
 /-! ### The same witness, with `branch_finite'` derived from purity
 

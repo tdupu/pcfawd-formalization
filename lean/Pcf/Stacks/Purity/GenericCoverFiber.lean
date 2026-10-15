@@ -3,14 +3,16 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Noetherian
-import Mathlib.AlgebraicGeometry.Stalk
-import Mathlib.AlgebraicGeometry.Morphisms.Flat
-import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
-import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.Flat.Localization
-import Pcf.Stacks.Purity.Hartogs
+module
+
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.AlgebraicGeometry.Stalk
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Mono
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.Flat.Localization
+public import Pcf.Stacks.Purity.Hartogs
 
 /-!
 # Generic fibre of a finite étale punctured cover
@@ -20,6 +22,8 @@ spectrum back to the generic point.  This fibre is an affine finite étale schem
 function field.  Its connected components are the field extensions used in the integral-closure
 construction.
 -/
+
+@[expose] public section
 
 noncomputable section
 

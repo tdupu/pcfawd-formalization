@@ -3,8 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Wiring
-import Mathlib.Topology.Sober
+module
+
+public import Pcf.Wiring
+public import Mathlib.Topology.Sober
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import Mathlib.RingTheory.Localization.Submodule
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Artinian.Ring
 
 /-!
 # A divisorial system on `Spec S`, with `branch_finite'` and `hbranch` both discharged
@@ -46,6 +52,8 @@ removes one hypothesis — the definitional compatibility between ramification a
 non-étaleness — from the list a caller must supply on this route, and nothing else. See
 `lean/AXIOMS.md` §B.7.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

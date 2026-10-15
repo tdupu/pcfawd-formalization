@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.RegularLocus
-import Mathlib.RingTheory.RegularLocalRing.Polynomial
-import Mathlib.RingTheory.FinitePresentation
-import Mathlib.RingTheory.Spectrum.Prime.Noetherian
+module
+
+public import Pcf.Bounding.RegularLocus
+public import Mathlib.RingTheory.RegularLocalRing.Polynomial
+public import Mathlib.RingTheory.FinitePresentation
+public import Mathlib.RingTheory.Spectrum.Prime.Noetherian
 
 /-!
 # Algebraic prerequisites for a finite-type regular-locus theorem
@@ -22,6 +24,8 @@ recorded precisely in `isOpen_primeRegularLocus_iff`: a regular localization of
 a finite-type algebra must have a principal neighborhood of regular points.
 The informal general theorem is Stacks Project, Tags `07PJ` and `07R5`.
 -/
+
+@[expose] public section
 
 universe u v
 

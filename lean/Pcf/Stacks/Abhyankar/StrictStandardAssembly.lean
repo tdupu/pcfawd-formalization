@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StandardCoverNormalization
-import Pcf.Stacks.Abhyankar.StrictStandardConclusion
+module
+
+public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+public import Pcf.Stacks.Abhyankar.StrictStandardConclusion
 
 /-!
 # Assembling the strict-local standard presentation
@@ -21,6 +23,8 @@ source is the actual localization of the normalization, while its target is the 
 root algebra over `R[1/a]`.  Passing from this generic statement to an equivalence of the
 unlocalized algebras is the normalization argument omitted in the last paragraph of `0EYG`.
 -/
+
+@[expose] public section
 
 universe u
 

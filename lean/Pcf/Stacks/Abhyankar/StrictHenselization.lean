@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Finite
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.LocalRing.Etale
-import Mathlib.RingTheory.RegularLocalRing.Defs
+module
+
+public import Mathlib.RingTheory.Etale.Finite
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.LocalRing.Etale
+public import Mathlib.RingTheory.RegularLocalRing.Defs
 
 /-!
 # Strictly henselian local rings: reusable finite-etale consequences
@@ -26,6 +28,8 @@ finite etale morphism splits after passing to an etale neighbourhood of a specif
 also does not claim Tags `05WS` or `06LN`, whose statements require an actual strict
 henselization object.
 -/
+
+@[expose] public section
 
 universe u
 

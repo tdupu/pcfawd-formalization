@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerFraction
-import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
+module
+
+public import Pcf.Stacks.Abhyankar.KummerFraction
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Basic
 
 /-!
 # Degrees of the power-generated subfields in Stacks Tag 0EXP
@@ -13,6 +15,8 @@ This file computes the degree of the candidate intermediate fields in Tag `0EXP`
 specialized to the Eisenstein root extension of Tag `09EV`.  It does not assert that
 these are all of the intermediate fields.
 -/
+
+@[expose] public section
 
 open Polynomial
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeExtraction
-import Mathlib.AlgebraicGeometry.FunctionField
-import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+module
+
+public import Pcf.Bounding.SchemeExtraction
+public import Mathlib.AlgebraicGeometry.FunctionField
+public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 /-!
 # Generic regularity and normal codimension-one stalks
@@ -19,6 +21,8 @@ These statements concern `IsRegularLocalRing` on actual scheme stalks. They do
 not assert openness of the regular locus: that additional theorem for schemes
 locally of finite type over a field is not supplied by the pinned Mathlib.
 -/
+
+@[expose] public section
 
 universe u
 

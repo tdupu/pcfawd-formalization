@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.RamificationInertia.Ramification
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.LinearAlgebra.TensorProduct.Basic
+module
+
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 /-!
 # Tame ramification at codimension-one primes
@@ -23,6 +25,8 @@ The scheme-level base-change theorem of Tag `0EYD` is not claimed here: that the
 requires the four geometric/DVR hypotheses in its statement and the valuation-theoretic
 base-change theorem of Tag `0EYC`/More on Algebra Tag `0BRR`.
 -/
+
+@[expose] public section
 
 universe u v
 

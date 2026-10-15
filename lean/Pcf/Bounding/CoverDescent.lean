@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeDynamics
+module
+
+public import Pcf.Bounding.SchemeDynamics
 
 /-!
 # PCF descent through ramified finite covers
@@ -23,6 +25,8 @@ The scheme statements below concern normal integral schemes.  Applying them
 to nonnormal varieties additionally requires passage to the normalizations
 and comparison with the manuscript's normalized branch locus.
 -/
+
+@[expose] public section
 
 universe u v
 

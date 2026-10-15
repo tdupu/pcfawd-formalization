@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.RingTheory.LocalRing.Quotient
-import Pcf.Stacks.Abhyankar.StrictHenselization
+module
+
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.RingTheory.LocalRing.Quotient
+public import Pcf.Stacks.Abhyankar.StrictHenselization
 
 /-!
 # Quotients of strictly henselian local rings
@@ -16,6 +18,8 @@ The full tag additionally identifies that quotient with a strict henselization o
 the original base ring; that comparison requires a universal-property interface for strict
 henselizations, which is not present in the pinned Mathlib.
 -/
+
+@[expose] public section
 
 open Polynomial
 

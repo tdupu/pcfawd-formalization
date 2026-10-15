@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Ideal.GoingUp
-import Pcf.Stacks.Purity.HenselianIdempotents
+module
+
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Pcf.Stacks.Purity.HenselianIdempotents
 
 /-!
 # Uniqueness of idempotent lifts in finite algebras
@@ -19,6 +21,8 @@ The surjectivity halfâ€”existence of an idempotent lift in every finite algebraâ
 That is the genuinely henselian part of `09XI`, and is the next prerequisite for the finite-etale
 equivalence of Stacks Tag `09ZL`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

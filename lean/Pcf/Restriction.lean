@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Dynamics
+module
+
+public import Pcf.Dynamics
 
 /-!
 # PCF descends to fixed primes
@@ -34,6 +36,8 @@ formalized without further assumptions.
 * `Pcf.pcf_descent` — Corollary `cor:pcfawd`, the descent along a chain of periodic primes.
 * `Pcf.PcfSetup.normalization_pcf` — Corollary `cor:pcfawd` in its normalized form.
 -/
+
+@[expose] public section
 
 universe u v w
 

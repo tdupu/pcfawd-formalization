@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Henselian
-import Pcf.Stacks.Abhyankar.StrictHenselization
-import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
-import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+module
+
+public import Mathlib.RingTheory.Henselian
+public import Pcf.Stacks.Abhyankar.StrictHenselization
+public import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 
 /-!
 # Henselianity of the pointed-etale local colimit
@@ -17,6 +19,8 @@ A simple root in the residue field gives a point on the standard etale root alge
 pointed etale neighbourhood to the filtered diagram produces the required root back in the local
 colimit.
 -/
+
+@[expose] public section
 
 open CategoryTheory Polynomial
 
@@ -29,7 +33,7 @@ variable {R Ω : Type u} [CommRing R] [IsLocalRing R] [Field Ω]
   [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
   [IsSepClosure (IsLocalRing.ResidueField R) Ω]
 
-private abbrev A := LocalColimit R Ω
+abbrev A := LocalColimit R Ω
 
 /-- The residue-field equivalence sends the residue of an element from a pointed etale stage to
 the value of that element at the chosen geometric point. -/

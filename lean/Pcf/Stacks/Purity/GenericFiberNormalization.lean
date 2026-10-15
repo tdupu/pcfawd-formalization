@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.GenericBaseNormalization
-import Pcf.Stacks.Purity.FiniteNormalModel
+module
+
+public import Pcf.Stacks.Purity.GenericBaseNormalization
+public import Pcf.Stacks.Purity.FiniteNormalModel
 
 /-!
 # The normal ring of the generic-fibre normalization
@@ -14,6 +16,8 @@ affine base.  The generic-fibre algebra is finite étale over the fraction field
 closure is Stacks-normal, even when disconnected.  The affine normalization-section formula
 then identifies that closure with the sections of the geometric relative normalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

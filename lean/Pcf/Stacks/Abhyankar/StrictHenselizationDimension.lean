@@ -3,12 +3,15 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.CategoryTheory.Limits.ConcreteCategory.Filtered
-import Mathlib.RingTheory.Etale.Weakly
-import Mathlib.RingTheory.Flat.EquationalCriterion
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Pcf.Stacks.Abhyankar.StrictHenselizationBase
-import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+module
+
+public import Mathlib.CategoryTheory.Limits.ConcreteCategory.Filtered
+public import Mathlib.RingTheory.Etale.Weakly
+public import Mathlib.RingTheory.Flat.EquationalCriterion
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+public import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 
 /-!
 # Dimension of the strict local colimit
@@ -17,6 +20,8 @@ This file develops the flatness and dimension comparison needed for Stacks Tag `
 Finite relations in the localized filtered colimit already vanish at a pointed etale stage;
 the equational criterion therefore makes the strict local colimit flat over its base.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Pcf.Bounding.Divisors
-import Pcf.Stacks.Abhyankar.StandardCoverAddendum
-import Pcf.Stacks.Abhyankar.StandardCoverNormalization
-import Pcf.Stacks.Purity.Defs
+module
+
+public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+public import Pcf.Bounding.Divisors
+public import Pcf.Stacks.Abhyankar.StandardCoverAddendum
+public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+public import Pcf.Stacks.Purity.Defs
 
 /-!
 # Extending a punctured finite etale cover across a regular divisor
@@ -25,6 +27,8 @@ theorem as flatness, local freeness, or the desired etaleness.  Once `0BMB` is a
 last theorem is the domain-component form of the exact `0EYE` extension step used after the
 Kummer/root base change in `0EYG`.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
+module
+
+public import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
 
 /-!
 # The 0EYE normalization in the generic Kummer square
@@ -24,6 +26,8 @@ Thus the only hypotheses below are the literal DVR, tame-ramification, and resid
 hypotheses of the local `0BRM` square.  In particular no algebra structure on the desired
 standard-root leg, and no unramifiedness or etaleness conclusion, is assumed.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 

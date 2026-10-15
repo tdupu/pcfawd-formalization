@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.DedekindDomain.IntegralClosure
-import Pcf.Stacks.Purity.NormalRing
+module
+
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
+public import Pcf.Stacks.Purity.NormalRing
 
 /-!
 # The finite-separable integral-closure leaf of Tag 0BM9
@@ -19,6 +21,8 @@ possibly-disconnected Stacks sense used by the target category in `FiniteNormalA
 It does not assert the depth-two/reflexive Hartogs recovery needed to identify its restriction
 with the original punctured cover.
 -/
+
+@[expose] public section
 
 noncomputable section
 

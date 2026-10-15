@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Ideal.GoingUp
-import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
-import Mathlib.RingTheory.Localization.LocalizationLocalization
-import Pcf.Stacks.Purity.DiscriminantFiber
+module
+
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Mathlib.RingTheory.Finiteness.ModuleFinitePresentation
+public import Mathlib.RingTheory.Localization.LocalizationLocalization
+public import Pcf.Stacks.Purity.DiscriminantFiber
 
 /-!
 # Height-one base change from codimension-one unramifiedness
@@ -21,6 +23,8 @@ No connectedness or domain hypothesis is imposed on the finite algebra.  This is
 the finite torsion-free Stacks-normal algebras occurring in Tag `0BM9`, which are allowed to be
 disconnected.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

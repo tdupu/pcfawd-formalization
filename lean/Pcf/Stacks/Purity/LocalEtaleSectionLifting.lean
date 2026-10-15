@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.LocalRing.Quotient
-import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-import Mathlib.RingTheory.Unramified.LocalStructure
-import Pcf.Stacks.Purity.StandardEtaleSectionLifting
+module
+
+public import Mathlib.RingTheory.LocalRing.Quotient
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Pcf.Stacks.Purity.StandardEtaleSectionLifting
 
 /-!
 # Lifting etale sections over a local henselian pair
@@ -21,6 +23,8 @@ This is the local-base specialization of condition (2) in Stacks Project Tag `09
 the fully general pair theorem: without a local base, one must globalize the local standard-etale
 neighbourhoods, as in the integral-closure and clopen assembly in the proof of `09XI`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

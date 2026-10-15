@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
+module
+
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 
 /-!
 # Base change of pointed etale neighbourhoods
@@ -17,6 +19,8 @@ canonically the quotient of the original etale algebra by the extended ideal.
 The comparison of the localized colimits is a further cofinality and localization argument; no
 claim of the full tag is made here.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open scoped TensorProduct

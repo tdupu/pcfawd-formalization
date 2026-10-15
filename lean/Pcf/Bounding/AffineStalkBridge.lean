@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeBridge
+module
+
+public import Pcf.Bounding.SchemeBridge
 
 /-!
 # Comparing divisor charts with actual affine stalk maps
@@ -24,6 +26,8 @@ quotients of localizations, and the universal property of localization.  In part
 it does not assume formal étaleness or any bounding conclusion.
 -/
 
+@[expose] public section
+
 universe u
 
 open CategoryTheory
@@ -33,12 +37,12 @@ namespace Pcf
 
 set_option linter.style.haveILetI false
 
-private abbrev simultaneousLocalization
+abbrev simultaneousLocalization
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     (q : Ideal R) [q.IsPrime] :=
   Localization (Algebra.algebraMapSubmonoid S q.primeCompl)
 
-private theorem disjoint_simultaneousLocalization_prime
+theorem disjoint_simultaneousLocalization_prime
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     (q : Ideal R) (Q : Ideal S) [q.IsPrime]
     (hQq : Q.under R = q) :
@@ -49,7 +53,7 @@ private theorem disjoint_simultaneousLocalization_prime
 
 /-- If `D ⊆ q` and `P ⊆ Q` are compatible with a ring map, then the prime `Q/P`
 contracts to `q/D` under the induced quotient-ring map. -/
-private theorem quotientPrime_comap_quotientMap
+theorem quotientPrime_comap_quotientMap
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     (q D : Ideal R) (P Q : Ideal S)
     (hDq : D ≤ q) (hPQ : P ≤ Q) (hQq : Q.under R = q)
@@ -90,7 +94,7 @@ private theorem localizedPrime_under
       (disjoint_simultaneousLocalization_prime q Q hQq)
 
 /-- The point `(Q S_q)/(P S_q)` on the localized quotient contracts to `Q/P`. -/
-private theorem localizedQuotientPrime_comap
+theorem localizedQuotientPrime_comap
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     (q : Ideal R) (P Q : Ideal S)
     [q.IsPrime] [P.IsPrime] [Q.IsPrime]
@@ -128,7 +132,7 @@ private theorem localizedQuotientPrime_comap
 
 /-- The point of the local target quotient below `(Q S_q)/(P S_q)` contracts to `q/D`
 on the global target quotient. -/
-private theorem restrictionPoint_comap_globalQuotientMap
+theorem restrictionPoint_comap_globalQuotientMap
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     (q D : Ideal R) (P Q : Ideal S)
     [q.IsPrime] [D.IsPrime] [P.IsPrime] [Q.IsPrime]
@@ -232,7 +236,7 @@ private theorem restrictionPoint_comap_globalQuotientMap
 
 /-- Quotienting `R_q` by the extension of `D` (presented by its local equation `a`)
 is a localization of `R/D`. -/
-private theorem targetQuotient_isLocalization
+theorem targetQuotient_isLocalization
     {R : Type u} [CommRing R] (q D : Ideal R) [q.IsPrime]
     (a : Localization.AtPrime q)
     (ha : D.map (algebraMap R (Localization.AtPrime q)) = Ideal.span {a}) :

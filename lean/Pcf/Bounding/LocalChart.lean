@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.Chart
-import Pcf.Bounding.Divisors
-import Pcf.Bounding.FibreProduct
-import Mathlib.FieldTheory.Perfect
-import Mathlib.RingTheory.Etale.Field
+module
+
+public import Pcf.Bounding.Chart
+public import Pcf.Bounding.Divisors
+public import Pcf.Bounding.FibreProduct
+public import Mathlib.FieldTheory.Perfect
+public import Mathlib.RingTheory.Etale.Field
 
 /-!
 # The bounding theorem on the two-dimensional local chart
@@ -36,6 +38,8 @@ What remains outside this file is the scheme/stalk construction of the rings and
 below and the identification with the divisor dynamics; no field here asserts the
 étaleness conclusion of the bounding theorem.
 -/
+
+@[expose] public section
 
 universe u
 

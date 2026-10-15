@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.IntegralClosure.Algebra.Ideal
+module
+
+public import Mathlib.RingTheory.IntegralClosure.Algebra.Ideal
 
 /-!
 # An annihilating polynomial for a residue idempotent
@@ -16,6 +18,8 @@ The proof follows the source: apply Tag `00H5` to `b ^ 2 - b`, then substitute
 `X ^ 2 - X`.  We multiply the polynomial supplied by `00H5` by `X`; this harmlessly makes
 the exponent positive even for the zero-ring edge cases admitted by Lean's `CommRing`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
 
 /-!
 # Refining quotient-etale neighbourhoods by lifted neighbourhoods
@@ -18,6 +20,8 @@ base change from the original ring.
 The map-lifting/equalization half of finality is separate; this file does not claim that quotient
 base change is final or that the full comparison in Tag `05WS` is an equivalence.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open scoped TensorProduct

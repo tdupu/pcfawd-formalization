@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Pcf.Stacks.Abhyankar.StandardCover
+module
+
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Pcf.Stacks.Abhyankar.StandardCover
 
 /-!
 # The regular reduced divisor in the standard Abhyankar cover
@@ -17,6 +19,8 @@ consequence and packages it with the already proved finite-free and Cartier-divi
 This is the local-model verification in `0EYH`; it does not assert that an arbitrary
 normalization is locally of this form, which is the remaining descent/normalization assembly.
 -/
+
+@[expose] public section
 
 universe u
 

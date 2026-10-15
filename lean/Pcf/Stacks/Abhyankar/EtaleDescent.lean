@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.Ring.FinitePresentation
+module
+
+public import Mathlib.Algebra.Category.Ring.FinitePresentation
 
 /-!
 # Finite-presentation descent along filtered colimits
@@ -22,6 +24,8 @@ This module does **not** carry `@[stacks 05N9]`: Tag `05N9` also asserts effecti
 (every finitely presented algebra over the colimit descends to a finite stage), which is not yet
 proved in the pinned library.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

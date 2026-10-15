@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar
-import Pcf.Stacks.Abhyankar.StandardCover
+module
+
+public import Pcf.Stacks.Abhyankar
+public import Pcf.Stacks.Abhyankar.StandardCover
 
 /-!
 # Finite presentation of the standard tame cover
@@ -14,6 +16,8 @@ disjoint union of monogenic root covers.  This file records that, over the Noeth
 base occurring in those tags, its affine algebra is finitely presented.  This is the
 finiteness input needed before applying the object-effectivity clause of Tag `05N9`.
 -/
+
+@[expose] public section
 
 universe u
 

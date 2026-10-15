@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.GenericCoverFiber
-import Pcf.Stacks.Purity.FiniteNormalAlgebra
-import Pcf.Stacks.Purity.FiniteNormalHartogs
+module
+
+public import Pcf.Stacks.Purity.GenericCoverFiber
+public import Pcf.Stacks.Purity.FiniteNormalAlgebra
+public import Pcf.Stacks.Purity.FiniteNormalHartogs
 
 /-!
 # Hartogs recovery for the algebras in Stacks Tag `0BM9`
@@ -14,6 +16,8 @@ For a finite torsion-free Stacks-normal algebra over a normal Noetherian local d
 dimension at least two, restriction to the punctured spectrum does not create new global
 functions.  This is the algebra-recovery half of the categorical equivalence in Tag `0BM9`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

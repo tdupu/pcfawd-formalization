@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.NormalRing
-import Pcf.Stacks.Purity.PuncturedSpectrum
+module
+
+public import Pcf.Stacks.Purity.NormalRing
+public import Pcf.Stacks.Purity.PuncturedSpectrum
 
 /-!
 # The finite-normal-algebra category in Stacks Tag `0BM9`
@@ -19,6 +21,8 @@ send `B` to `Spec B ×_(Spec R) U`.  The final equivalence is packaged only unde
 isomorphisms.  Establishing those isomorphisms is the depth-two/reflexive Hartogs content still
 missing at the pinned Mathlib revision.
 -/
+
+@[expose] public section
 
 noncomputable section
 

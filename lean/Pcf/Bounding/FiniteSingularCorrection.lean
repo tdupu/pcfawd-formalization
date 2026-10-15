@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.InvariantDivisorGeometry
-import Pcf.Bounding.SmoothRegularLocal
-import Pcf.Bounding.PrincipalQuotientRegular
+module
+
+public import Pcf.Bounding.InvariantDivisorGeometry
+public import Pcf.Bounding.SmoothRegularLocal
+public import Pcf.Bounding.PrincipalQuotientRegular
 
 /-!
 # Finite regularity corrections on a divisor
@@ -14,6 +16,8 @@ Principal generation at a prime spreads to a principal open neighborhood. Togeth
 with generic smoothness of the reduced divisor, this gives a smaller route to the
 regularity correction needed by the invariant-divisor argument.
 -/
+
+@[expose] public section
 
 universe u v
 

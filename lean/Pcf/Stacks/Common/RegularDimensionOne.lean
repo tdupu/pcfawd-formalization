@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Pcf.Bounding.RegularLocalDomain
+module
+
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Pcf.Bounding.RegularLocalDomain
 
 /-!
 # One-dimensional regular local rings
@@ -17,6 +19,8 @@ The full tag is an equivalence of five conditions.  The declaration below is
 therefore tagged only as the `(3) => (1)` direction, rather than as the whole
 tag.  Its domain input is supplied by the already formalized Tag `00NP`.
 -/
+
+@[expose] public section
 
 namespace Pcf.Stacks
 

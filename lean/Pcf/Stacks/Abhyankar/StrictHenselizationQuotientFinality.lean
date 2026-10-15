@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.CategoryTheory.Filtered.Final
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
+module
+
+public import Mathlib.CategoryTheory.Filtered.Final
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
 
 /-!
 # Finality of quotient base change on pointed etale neighbourhoods
@@ -14,6 +16,8 @@ pointed maps into a quotient-base-changed stage, the diagonal idempotent of thei
 their equalizer.  The complement of that idempotent is lifted to the original stage and inverted;
 after quotient base change the idempotent vanishes, so the two maps agree.
 -/
+
+@[expose] public section
 
 open CategoryTheory
 open scoped TensorProduct

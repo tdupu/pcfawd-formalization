@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Module.SpanRank
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
+module
+
+public import Mathlib.Algebra.Module.SpanRank
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
 
 /-!
 # The final regularity step for strict henselization
@@ -25,6 +27,8 @@ three-way equivalence in Tag `06LN`: doing so for this concrete construction add
 the faithfully-flat cotangent-space dimension comparison.  This is a scope boundary, not an
 extra hypothesis of the forward endpoint below.
 -/
+
+@[expose] public section
 
 universe u
 

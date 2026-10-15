@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.DivisorLift
-import Pcf.Bounding.SchemeDynamics
-import Mathlib.Dynamics.PeriodicPts.Lemmas
+module
+
+public import Pcf.Bounding.DivisorLift
+public import Pcf.Bounding.SchemeDynamics
+public import Mathlib.Dynamics.PeriodicPts.Lemmas
 
 /-!
 # Periodic divisors in finite normalization fibres
@@ -20,6 +22,8 @@ normalization map, the relevant fibre is finite and nonempty, and the divisor do
 is periodic.  Existence and finiteness of the actual scheme-theoretic divisor fibre are
 proved separately in `Pcf/Bounding/DivisorLift.lean`.
 -/
+
+@[expose] public section
 
 open Function
 open CategoryTheory

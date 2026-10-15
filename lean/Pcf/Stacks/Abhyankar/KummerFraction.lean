@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerDVR
-import Mathlib.RingTheory.Polynomial.GaussLemma
-import Mathlib.RingTheory.RamificationInertia.Ramification
+module
+
+public import Pcf.Stacks.Abhyankar.KummerDVR
+public import Mathlib.RingTheory.Polynomial.GaussLemma
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # Fraction fields and ramification for the root algebra in Stacks Tag 09EV
@@ -19,6 +21,8 @@ This is not the full tag.  In particular, no equivalence between the fraction fi
 integral root algebra and the displayed `AdjoinRoot` over `FractionRing A` is claimed here,
 and intermediate extensions are not classified.
 -/
+
+@[expose] public section
 
 open Polynomial IsLocalRing
 

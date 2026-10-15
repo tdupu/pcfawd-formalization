@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Normalization
-import Mathlib.AlgebraicGeometry.Morphisms.IsIso
-import Pcf.Stacks.Purity.GenericCoverFiber
-import Pcf.Stacks.Purity.NormalizationTower
+module
+
+public import Mathlib.AlgebraicGeometry.Normalization
+public import Mathlib.AlgebraicGeometry.Morphisms.IsIso
+public import Pcf.Stacks.Purity.GenericCoverFiber
+public import Pcf.Stacks.Purity.NormalizationTower
 
 /-!
 # Normality of the generic-point map
@@ -15,6 +17,8 @@ For a normal domain `R`, the global sections of `Spec R` are integrally closed i
 sections of its generic point `Spec K`.  The explicit transport through both `ΓSpecIso`s is
 needed when applying Mathlib's smooth base-change theorem for relative normalization.
 -/
+
+@[expose] public section
 
 noncomputable section
 

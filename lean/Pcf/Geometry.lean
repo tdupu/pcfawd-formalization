@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Noetherian
-import Pcf.Purity
-import Pcf.Ramification
-import Pcf.LocalModel
-import Pcf.Abhyankar
-import Pcf.Restriction
+module
+
+public import Pcf.Noetherian
+public import Pcf.Purity
+public import Pcf.Ramification
+public import Pcf.LocalModel
+public import Pcf.Abhyankar
+public import Pcf.Restriction
 
 /-!
 # Theorem `thm:bounding`: Step 0, and the join to Theorem `thm:normal-invariant`
@@ -44,6 +46,7 @@ and `Pcf.PcfGeometry.res_pcf`: the join no longer pretends to supply it.
 | Theorem `thm:bounding`, Steps 1–4 | `Pcf.BoundingChart.isEtaleAt_restriction` (`Pcf/Bounding/`) |
 -/
 
+@[expose] public section
 
 namespace Pcf
 
@@ -124,7 +127,6 @@ This lemma is stated so that no reader of the census or of the manuscript's disc
 miss that point. -/
 theorem nonempty_unramifiedWitness_iff (n : ℕ) : Nonempty (UnramifiedWitness n) ↔ n = 1 :=
   ⟨fun ⟨w⟩ => w.eq_one, fun h => h ▸ ⟨UnramifiedWitness.trivial⟩⟩
-
 
 /-- An honest standard tame local model `R[z]/(z^e − ua)` produces an unramified witness,
 for **any** `e ≥ 1`: the cover ramifies with index `e` along the divisor, but its

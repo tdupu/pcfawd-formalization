@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Unnormalized
+module
+
+public import Pcf.Unnormalized
 
 /-!
 # Normalized and unnormalized divisors on separate carriers
@@ -26,6 +28,8 @@ codimension-one point is codimension one on the nonnormal finite-type target.  O
 theorem is available, `Pcf.finite_heightOne_comap_fiber` and
 `Pcf.Scheme.Hom.finite_divisorPoint_fiber` provide the finite-fiber field below.
 -/
+
+@[expose] public section
 
 universe u v w
 

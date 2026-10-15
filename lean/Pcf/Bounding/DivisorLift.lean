@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeExtraction
+module
+
+public import Pcf.Bounding.SchemeExtraction
 
 /-!
 # Lifting divisors through finite dominant morphisms
@@ -17,6 +19,8 @@ The codimension argument uses only lying over and incomparability for the finite
 extension over an affine neighbourhood of the target point.  No normality hypothesis is
 needed on either scheme.
 -/
+
+@[expose] public section
 
 open TopologicalSpace
 open AlgebraicGeometry

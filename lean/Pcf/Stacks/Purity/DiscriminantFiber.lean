@@ -3,14 +3,16 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Algebra.Pi
-import Mathlib.RingTheory.Discriminant
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.LocalRing.ResidueField.Fiber
-import Mathlib.RingTheory.Smooth.Fiber
-import Mathlib.RingTheory.TensorProduct.Free
-import Mathlib.RingTheory.Unramified.LocalRing
+module
+
+public import Mathlib.Algebra.Algebra.Pi
+public import Mathlib.RingTheory.Discriminant
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.LocalRing.ResidueField.Fiber
+public import Mathlib.RingTheory.Smooth.Fiber
+public import Mathlib.RingTheory.TensorProduct.Free
+public import Mathlib.RingTheory.Unramified.LocalRing
 
 /-!
 # The discriminant after base change
@@ -19,6 +21,8 @@ This file starts the discriminant branch of the dimension-two argument in Stacks
 Its first input is the basis-level base-change identity used to pass the discriminant to residue
 fields and height-one localizations.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

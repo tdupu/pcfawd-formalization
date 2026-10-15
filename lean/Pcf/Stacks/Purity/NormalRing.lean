@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
-import Mathlib.RingTheory.LocalProperties.Reduced
-import Mathlib.RingTheory.Localization.AtPrime.Basic
-import Mathlib.RingTheory.Spectrum.Prime.RingHom
+module
+
+public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
+public import Mathlib.RingTheory.LocalProperties.Reduced
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
 /-!
 # The Stacks notion of a normal ring
@@ -21,6 +23,8 @@ Stacks-normal ring is reduced.  No converse decomposition into a finite product 
 is asserted here; that requires the Noetherian minimal-prime/idempotent decomposition API which is
 not available at the pinned revision in the form needed by the proof of Tag `0BM9`.
 -/
+
+@[expose] public section
 
 noncomputable section
 set_option linter.style.haveILetI false

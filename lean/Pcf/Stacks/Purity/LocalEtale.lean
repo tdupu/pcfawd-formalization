@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.Smooth.Fiber
+module
+
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.Smooth.Fiber
 
 /-!
 # A local flatness criterion for formal étaleness
@@ -14,6 +16,8 @@ dimension-one case of purity.  Unlike `Algebra.IsEtaleAt.of_isUnramifiedAt_of_fl
 flatness only after passing to the two local rings.  The finite-presentation datum is supplied by
 an algebra of finite presentation whose localization is the target local ring.
 -/
+
+@[expose] public section
 
 namespace Pcf.Stacks
 

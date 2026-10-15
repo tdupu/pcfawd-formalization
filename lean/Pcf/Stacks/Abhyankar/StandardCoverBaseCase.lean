@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StandardCoverPresentation
+module
+
+public import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 
 /-!
 # The standard-cover base case of the Abhyankar conclusion
@@ -13,6 +15,8 @@ already is a finite disjoint union of standard tame covers.  It is a base case f
 assembly in Stacks Tags `0EYG` and `0EYH`; it does not assert that an arbitrary normalization has
 such a presentation.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalizationIteration
-import Pcf.Bounding.InvariantDivisorStep0FiniteType
-import Pcf.Bounding.PeriodicLift
+module
+
+public import Pcf.Bounding.GlobalNormalizationIteration
+public import Pcf.Bounding.InvariantDivisorStep0FiniteType
+public import Pcf.Bounding.PeriodicLift
 
 /-!
 # PCF restriction to periodic divisors of actual schemes
@@ -16,6 +18,8 @@ of regularity is supplied by the proved Stacks Tag 00NP.  The finite regularity 
 periodic lift, induced finite cover between reduced divisor closures, and PCF
 descent are constructed from the actual scheme morphisms.
 -/
+
+@[expose] public section
 
 universe u
 

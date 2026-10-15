@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.NormalizationPcfEquiv
-import Pcf.Bounding.CoverDescent
+module
+
+public import Pcf.Bounding.NormalizationPcfEquiv
+public import Pcf.Bounding.CoverDescent
 
 /-!
 # Functoriality of global normalization for finite dominant morphisms
@@ -20,6 +22,8 @@ normalization PCF equivalence proves `lem:covers` for the normalized branch
 locus of possibly nonnormal integral varieties. No branch comparison, normality
 of the original schemes, or downstairs PCF conclusion is an input.
 -/
+
+@[expose] public section
 
 universe u
 

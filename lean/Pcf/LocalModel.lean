@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.AdjoinRoot
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
-import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
+module
+
+public import Mathlib.RingTheory.AdjoinRoot
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.Algebra.GroupWithZero.NonZeroDivisors
+public import Mathlib.LinearAlgebra.FreeModule.StrongRankCondition
 
 /-!
 # The standard tame local model
@@ -104,6 +106,8 @@ degree `0` rather than of degree `e`.  The `PowerBasis` (indexed by the degree o
 defining polynomial), freeness, finiteness, the main isomorphism and the nonzerodivisor
 statement all hold over an arbitrary commutative ring.
 -/
+
+@[expose] public section
 
 namespace Pcf.LocalModel
 

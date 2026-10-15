@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Morphisms.LocalFlatDescent
+module
+
+public import Mathlib.AlgebraicGeometry.Morphisms.LocalFlatDescent
 
 /-!
 # Étaleness is fpqc local on the base
@@ -12,6 +14,8 @@ This file exposes Stacks Tag `02VN` in the pullback form used by the purity indu
 flat-descent infrastructure proves that the morphism property `Etale` descends along surjective,
 flat, quasi-compact morphisms; the theorem below records the resulting geometric statement.
 -/
+
+@[expose] public section
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.MorphismProperty
 open AlgebraicGeometry

@@ -3,9 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RamificationInertia.Ramification
-import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-import Mathlib.RingTheory.Valuation.LocalSubring
+module
+
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.PrincipalIdealDomain
 
 /-!
 # Ramification after normalizing a local branch
@@ -41,6 +46,8 @@ This file does not identify these rings with scheme stalks or identify an
 abstract divisor dynamics with the actual normalized map. Those are separate
 geometric inputs; a map between sets of divisors alone does not supply them.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStages
 
 /-!
 # Base change on the localized pointed-etale colimit
@@ -17,6 +19,8 @@ quotient by the extended ideal.
 This constructs the canonical comparison map required by Stacks Tag `05WS`.  Its bijectivity is
 the remaining cofinality/effective-lifting step and is not asserted here.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

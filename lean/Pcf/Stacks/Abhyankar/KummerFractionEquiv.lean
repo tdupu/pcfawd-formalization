@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerFraction
-import Mathlib.LinearAlgebra.Dimension.Localization
+module
+
+public import Pcf.Stacks.Abhyankar.KummerFraction
+public import Mathlib.LinearAlgebra.Dimension.Localization
 
 /-!
 # The fraction-field base-change equivalence for Stacks Tag 09EV
@@ -21,6 +23,8 @@ The extension is bijective because both sides have degree `n` over `FractionRing
 This supplies the fraction-field identification needed in clauses (1)--(4) of `09EV`.  It
 does not classify intermediate fields and therefore is not labelled as the full tag.
 -/
+
+@[expose] public section
 
 open Polynomial IsLocalRing
 

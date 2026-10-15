@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.LocalModel
+module
+
+public import Pcf.LocalModel
 
 /-!
 # The root algebra occurring in Stacks Tag 09EV
@@ -18,6 +20,8 @@ This is not the full tag.  In particular it does not claim that the root algebra
 or the integral closure, nor does it classify intermediate fields.  Those are clauses
 (2)--(6) of `09EV`, and no declaration here carries that Stacks tag.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeExtraction
-import Pcf.Bounding.CriticalLoci
-import Pcf.NormalizationDynamics
-import Mathlib.CategoryTheory.Endomorphism
-import Mathlib.AlgebraicGeometry.Morphisms.Finite
-import Mathlib.RingTheory.RingHom.Unramified
+module
+
+public import Pcf.Bounding.SchemeExtraction
+public import Pcf.Bounding.CriticalLoci
+public import Pcf.NormalizationDynamics
+public import Mathlib.CategoryTheory.Endomorphism
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.RingTheory.RingHom.Unramified
 
 /-!
 # Wiring actual scheme stalks into divisor dynamics
@@ -29,6 +31,8 @@ local chart and the quotient-ring localization presentation from the original fi
 No field below asserts that a critical point is non-étale on a chart, or that a point
 outside the bound is étale.
 -/
+
+@[expose] public section
 
 universe u v w
 

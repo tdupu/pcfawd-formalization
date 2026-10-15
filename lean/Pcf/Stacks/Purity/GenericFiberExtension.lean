@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Morphisms.Finite
-import Pcf.Stacks.Purity.GenericFiberNormalization
+module
+
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Pcf.Stacks.Purity.GenericFiberNormalization
 
 /-!
 # The finite normal extension of a punctured cover
@@ -13,6 +15,8 @@ Normalize the generic fibre of an arbitrary finite étale punctured cover over t
 Its affine section ring is finite and Stacks-normal, and its spectrum restricts to the original
 cover over the puncture.
 -/
+
+@[expose] public section
 
 noncomputable section
 

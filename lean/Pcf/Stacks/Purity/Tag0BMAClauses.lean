@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.OuterInduction
-import Pcf.Stacks.Purity.Tag0BM9Equivalence
-import Pcf.Stacks.Purity.Tag0BMBAssembly
-import Mathlib.RingTheory.Regular.Flat
+module
+
+public import Pcf.Stacks.Purity.OuterInduction
+public import Pcf.Stacks.Purity.Tag0BM9Equivalence
+public import Pcf.Stacks.Purity.Tag0BMBAssembly
+public import Mathlib.RingTheory.Regular.Flat
 
 /-!
 # The two clauses of Stacks Tag `0BMA`
@@ -18,6 +20,8 @@ The section algebra of the finite etale extension need not first be shown normal
 transports a length-two regular sequence from the base, and the same Hartogs calculation used in
 Tag `0BM9` recovers it directly from the puncture.
 -/
+
+@[expose] public section
 
 noncomputable section
 

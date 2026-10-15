@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.PuncturedSpectrum
-import Pcf.Stacks.Purity.RegularHypersurface
+module
+
+public import Pcf.Stacks.Purity.PuncturedSpectrum
+public import Pcf.Stacks.Purity.RegularHypersurface
 
 /-!
 # The hypersurface induction step in Stacks Tag `0BMA`
@@ -24,6 +26,8 @@ Tag `0BMA`.
 No proof of Tag `0BLM` is claimed here, and neither Tag `0BMA` nor Tag `0BMB` is repackaged as
 an assumption.
 -/
+
+@[expose] public section
 
 noncomputable section
 

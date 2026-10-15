@@ -3,13 +3,15 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.PrincipalQuotientRegular
-import Pcf.Bounding.RegularLocalDomain
-import Pcf.Bounding.StandardPiece
-import Pcf.Stacks.Abhyankar.StandardCover
-import Mathlib.RingTheory.Localization.Ideal
-import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
-import Mathlib.RingTheory.LocalProperties.Reduced
+module
+
+public import Pcf.Bounding.PrincipalQuotientRegular
+public import Pcf.Bounding.RegularLocalDomain
+public import Pcf.Bounding.StandardPiece
+public import Pcf.Stacks.Abhyankar.StandardCover
+public import Mathlib.RingTheory.Localization.Ideal
+public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
+public import Mathlib.RingTheory.LocalProperties.Reduced
 
 /-!
 # The integral-closure calculation for the standard root cover
@@ -32,6 +34,8 @@ affine standard model in `0EYH`.  The stronger preceding declaration records tha
 is used only through reducedness of `R/(a)`.  These are the integral-closure calculation,
 not the full geometric statement of Tag `0EYH`.
 -/
+
+@[expose] public section
 
 universe u
 

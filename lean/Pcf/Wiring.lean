@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Geometry
-import Pcf.NonEtaleLocus
-import Pcf.ZariskiNagata
+module
+
+public import Pcf.Geometry
+public import Pcf.NonEtaleLocus
+public import Pcf.ZariskiNagata
 
 /-!
 # Wiring the purity layer into Theorem `thm:normal-invariant`
@@ -72,6 +74,8 @@ explicit argument `key`; it is derived from charts in `Pcf/Bounding/Wiring.lean`
   argument because Mathlib supplies it.
 * `Pcf.exists_nonEtale_of_branch_finite` — the converse; the honesty check.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

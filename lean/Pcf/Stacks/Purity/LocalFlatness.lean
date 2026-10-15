@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RingHom.Flat
+module
+
+public import Mathlib.RingTheory.RingHom.Flat
 
 /-!
 # Local detection of flatness in Stacks Tag 00HT
@@ -14,6 +16,8 @@ all its maps on local rings at primes of the target. Mathlib contains both direc
 locality theorem for `RingHom.Flat`; the result below fixes the exact localization maps used by
 the Stacks proof.
 -/
+
+@[expose] public section
 
 universe u
 

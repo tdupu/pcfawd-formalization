@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeBridge
-import Pcf.Stacks.Purity.DiscriminantGlobal
-import Pcf.Stacks.Purity.HeightOneEtaleBridge
-import Pcf.Stacks.Purity.MiracleFlatnessTwo
-import Pcf.Stacks.Purity.Tag0BMBAssembly
+module
+
+public import Pcf.Bounding.SchemeBridge
+public import Pcf.Stacks.Purity.DiscriminantGlobal
+public import Pcf.Stacks.Purity.HeightOneEtaleBridge
+public import Pcf.Stacks.Purity.MiracleFlatnessTwo
+public import Pcf.Stacks.Purity.Tag0BMBAssembly
 
 /-!
 # The dimension-two case of Stacks Tag `0BMA`
@@ -23,6 +25,8 @@ pointwise etaleness at every nonclosed source prime.  In codimension one this ma
 discriminant a unit.  The principal ideal theorem makes the discriminant a unit on the base, and
 the disconnected discriminant criterion finishes the proof.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeWiring
-import Mathlib.RingTheory.Flat.TorsionFree
+module
+
+public import Pcf.Bounding.SchemeWiring
+public import Mathlib.RingTheory.Flat.TorsionFree
 
 /-!
 # Ambient divisor dynamics of an actual scheme endomorphism
@@ -27,6 +29,8 @@ Consequently `DivDyn.iterRam` agrees with the ramification index of the actual
 scheme iterate. The comparison with affine-coordinate `heightOneRam` remains
 separate.
 -/
+
+@[expose] public section
 
 universe u
 

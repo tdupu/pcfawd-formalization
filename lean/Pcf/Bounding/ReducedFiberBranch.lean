@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.AffineSchemeRamification
-import Mathlib.RingTheory.LocalProperties.Reduced
+module
+
+public import Pcf.Bounding.AffineSchemeRamification
+public import Mathlib.RingTheory.LocalProperties.Reduced
 
 /-!
 # Reduced divisor fibers and ramification indices
@@ -15,6 +17,8 @@ divisor dynamics.  The comparison is first proved for finite extensions of
 normal Noetherian domains, then transported through affine charts to the
 intrinsic scheme fiber `f.fiber E`.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits AlgebraicGeometry TopologicalSpace
 

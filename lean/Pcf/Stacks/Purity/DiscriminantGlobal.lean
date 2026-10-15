@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.LocalProperties.Reduced
-import Pcf.Stacks.Purity.DiscriminantFiber
+module
+
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.LocalProperties.Reduced
+public import Pcf.Stacks.Purity.DiscriminantFiber
 
 /-!
 # The disconnected finite-free discriminant criterion
@@ -21,6 +23,8 @@ nondegeneracy of the product trace pairing forces each field factor to be separa
 the closed fibre of a finite-free algebra over a local ring, this proves formal unramifiedness at
 every maximal point, with no connectedness or locality hypothesis on the target.
 -/
+
+@[expose] public section
 
 open scoped TensorProduct
 

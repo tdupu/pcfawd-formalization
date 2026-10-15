@@ -3,17 +3,19 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
-import Mathlib.RingTheory.AdicCompletion.LocalRing
-import Mathlib.RingTheory.AdicCompletion.Functoriality
-import Mathlib.LinearAlgebra.DirectSum.Finsupp
-import Mathlib.LinearAlgebra.Finsupp.Pi
-import Mathlib.RingTheory.Flat.EquationalCriterion
-import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
-import Mathlib.RingTheory.LocalRing.Module
-import Mathlib.RingTheory.ReesAlgebra
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+module
+
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Mathlib.RingTheory.AdicCompletion.LocalRing
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+public import Mathlib.LinearAlgebra.DirectSum.Finsupp
+public import Mathlib.LinearAlgebra.Finsupp.Pi
+public import Mathlib.RingTheory.Flat.EquationalCriterion
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.LocalRing.Module
+public import Mathlib.RingTheory.ReesAlgebra
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 
 /-!
 # Noetherianity of the strict local colimit
@@ -22,6 +24,8 @@ This file isolates the completion step in Stacks Tag `06LJ`.  Once the maximal-a
 of the strict local colimit is known to be Noetherian and flat over the colimit, faithful-flat
 descent proves that the colimit itself is Noetherian.
 -/
+
+@[expose] public section
 
 open Module
 open scoped TensorProduct
@@ -562,7 +566,7 @@ theorem map_injective_of_pow_inf_eq_pow_smul
 /-- The correction step in adic exactness only uses the displayed Artin–Rees equality,
 not finite generation itself.  Keeping that equality explicit lets us apply the argument to a
 coordinatewise finite relation module. -/
-private noncomputable def mapExactAuxDeltaOfPowInf
+noncomputable def mapExactAuxDeltaOfPowInf
     {k n : ℕ}
     (hf : Function.Injective f)
     (hkn : ∀ n ≥ k,
@@ -602,7 +606,7 @@ private noncomputable def mapExactAuxDeltaOfPowInf
 
 /-- A compatible preimage sequence in the proof of adic exactness with an explicit
 Artin–Rees constant. -/
-private noncomputable def mapExactAuxOfPowInf
+noncomputable def mapExactAuxOfPowInf
     (hf : Function.Injective f) (hfg : Function.Exact f g)
     (hg : Function.Surjective g) {k : ℕ}
     (hkn : ∀ n ≥ k,

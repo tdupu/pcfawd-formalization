@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.AffineSchemeRamification
-import Pcf.Bounding.SchemeIteration
-import Pcf.Bounding.NormalizationPcfEquiv
+module
+
+public import Pcf.Bounding.AffineSchemeRamification
+public import Pcf.Bounding.SchemeIteration
+public import Pcf.Bounding.NormalizationPcfEquiv
 
 /-!
 # Actual geometric assembly for an invariant divisor
@@ -21,6 +23,8 @@ The general constructor permits any finite exceptional set whose complement
 has regular ambient and divisor stalks. Its singular-locus specialization takes
 closedness of the two actual singular loci, in addition to the covering inputs.
 -/
+
+@[expose] public section
 
 universe u
 

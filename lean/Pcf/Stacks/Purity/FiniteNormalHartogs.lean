@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
-import Pcf.Stacks.Purity.FiniteModuleHartogs
+module
+
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
+public import Pcf.Stacks.Purity.FiniteModuleHartogs
 
 /-!
 # Hartogs recovery for finite normal algebras
@@ -14,6 +16,8 @@ scheme.  The only geometric input is injectivity of restriction to one of the tw
 For the punctured restriction of a finite normal algebra this injectivity comes from its generic
 fibre.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.FunctionField
-import Pcf.Stacks.Purity.HartogsAlgebra
+module
+
+public import Mathlib.AlgebraicGeometry.FunctionField
+public import Pcf.Stacks.Purity.HartogsAlgebra
 
 /-!
 # Sheaf-theoretic Hartogs recovery for a normal local domain
@@ -13,6 +15,8 @@ The fraction-intersection calculation of `HartogsAlgebra` is transferred here to
 structure sheaf on the punctured spectrum.  We first express a section on a principal open as a
 fraction in the function field.
 -/
+
+@[expose] public section
 
 noncomputable section
 

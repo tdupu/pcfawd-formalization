@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Ideal.GoingDown
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
-import Mathlib.RingTheory.Localization.AtPrime.Basic
-import Mathlib.RingTheory.Etale.Basic
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+module
+
+public import Mathlib.RingTheory.Ideal.GoingDown
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Ideal.MinimalPrime.Basic
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Steps 3–4 of Theorem `thm:bounding`: the local structure of the restriction
@@ -44,6 +46,8 @@ lemmas that make up that argument, for arbitrary rings:
 None of these lemmas mentions purity, Abhyankar's lemma, or any specific ring; they are the
 glue between Step 2's output and Step 4's conclusion.
 -/
+
+@[expose] public section
 
 namespace Pcf.Bounding
 

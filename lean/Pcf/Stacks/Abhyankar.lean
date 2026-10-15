@@ -3,13 +3,15 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.Spectrum.Prime.Topology
-import Mathlib.RingTheory.TensorProduct.Basic
-import Pcf.LocalModel
+module
+
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Pcf.LocalModel
 
 /-!
 # Abhyankar's lemma for a regular divisor: TauCeti-facing statement
@@ -40,6 +42,8 @@ conclusion-shaped witness.
 strict henselization, tame ramification for extensions of DVRs, descent from the filtered
 étale neighbourhood, and the normalization/finite-étale assembly.
 -/
+
+@[expose] public section
 
 universe u
 

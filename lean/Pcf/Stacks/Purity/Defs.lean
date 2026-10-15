@@ -3,12 +3,14 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.Spectrum.Prime.Topology
+module
+
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
 
 /-!
 # Zariski--Nagata purity: affine pointwise definitions
@@ -16,6 +18,8 @@ import Mathlib.RingTheory.Spectrum.Prime.Topology
 This file contains the stable statement layer for the affine specialization of Stacks Tag `0BMB`.
 The proof components and their assembly live under `Pcf.Stacks.Purity`.
 -/
+
+@[expose] public section
 
 universe u
 

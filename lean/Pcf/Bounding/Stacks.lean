@@ -3,22 +3,24 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.Etale.Descent
-import Mathlib.RingTheory.Etale.Kaehler
-import Mathlib.RingTheory.Unramified.Locus
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-import Mathlib.RingTheory.Localization.Away.Basic
-import Mathlib.RingTheory.TensorProduct.Basic
-import Mathlib.RingTheory.Spectrum.Prime.Topology
-import Mathlib.RingTheory.Spectrum.Prime.Chevalley
-import Pcf.Bounding.RegularLocalDomain
-import Pcf.Stacks.Abhyankar
-import Pcf.Stacks.Purity
+module
+
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.Etale.Descent
+public import Mathlib.RingTheory.Etale.Kaehler
+public import Mathlib.RingTheory.Unramified.Locus
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Mathlib.RingTheory.Spectrum.Prime.Chevalley
+public import Pcf.Bounding.RegularLocalDomain
+public import Pcf.Stacks.Abhyankar
+public import Pcf.Stacks.Purity
 
 /-!
 # The classical inputs of Theorem `thm:bounding`, stated as the Stacks Project states them
@@ -53,6 +55,8 @@ smaller conclusion, or a special case), and where a consequence has been adjoine
 Mathlib lacks the lemma that would derive it. The side-by-side comparison is repeated in
 `lean/AXIOMS.md` §G.
 -/
+
+@[expose] public section
 
 universe u
 

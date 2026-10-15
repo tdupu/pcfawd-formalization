@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.AlgebraicGeometry.Normalization
-import Mathlib.Algebra.Algebra.Subalgebra.Tower
-import Mathlib.AlgebraicGeometry.Morphisms.Finite
-import Pcf.Stacks.Purity.CoverNormalModel
+module
+
+public import Mathlib.AlgebraicGeometry.Normalization
+public import Mathlib.Algebra.Algebra.Subalgebra.Tower
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Pcf.Stacks.Purity.CoverNormalModel
 
 /-!
 # Extension of a punctured cover by relative normalization
@@ -18,6 +20,8 @@ this relative normalization back to `U` recovers `V` unconditionally. The furthe
 Stacks Tag `0BM9` is to identify this normalization with the affine finite normal model and its
 global sections.
 -/
+
+@[expose] public section
 
 noncomputable section
 

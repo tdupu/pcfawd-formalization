@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.FieldTheory.IsSepClosed
-import Mathlib.RingTheory.Etale.StandardEtale
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Etale.StandardEtale
 
 /-!
 # The residue field of the pointed-etale filtered colimit
@@ -20,6 +22,8 @@ Localizing its monogenic algebra away from the derivative gives a standard etale
 a point sending its distinguished element to `z`.  The resulting element of the filtered
 colimit provides the required residue-field preimage.
 -/
+
+@[expose] public section
 
 open CategoryTheory Polynomial
 

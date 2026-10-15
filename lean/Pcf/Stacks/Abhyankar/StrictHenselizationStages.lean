@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.Ring.FilteredColimits
-import Mathlib.CategoryTheory.Limits.Preserves.Over
-import Pcf.Stacks.Abhyankar.EtaleDescentObjects
-import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
+module
+
+public import Mathlib.Algebra.Category.Ring.FilteredColimits
+public import Mathlib.CategoryTheory.Limits.Preserves.Over
+public import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+public import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
 
 /-!
 # Moving finite data to a pointed etale stage
@@ -19,6 +21,8 @@ denominator.  A final filtered common refinement puts finitely many such element
 These lemmas are the concrete bridge from finite-presentation descent to the local candidate for
 the strict henselization.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

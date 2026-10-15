@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerClauses
-import Pcf.Stacks.Abhyankar.TameRamification
-import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
+module
+
+public import Pcf.Stacks.Abhyankar.KummerClauses
+public import Pcf.Stacks.Abhyankar.TameRamification
+public import Mathlib.LinearAlgebra.Dimension.FreeAndStrongRankCondition
 
 /-!
 # The tame half of clause (6) of Stacks Tag 09EV
@@ -18,6 +20,8 @@ The intermediate-field classification in the second assertion of clause (6) is n
 here.  Its remaining Stacks input is Tag `0EXP`, together with the root-of-unity descent
 specific to the Eisenstein root extension.
 -/
+
+@[expose] public section
 
 open Polynomial IsLocalRing
 

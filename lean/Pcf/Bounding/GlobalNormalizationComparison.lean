@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalization
+module
+
+public import Pcf.Bounding.GlobalNormalization
 
 /-!
 # Invariance of normalization under finite postcomposition
@@ -15,6 +17,8 @@ original normalization morphism, is integral. Both inverse identities follow
 from uniqueness in the same universal property. No normality, excellence, or
 finiteness assumption on the normalization morphism is needed.
 -/
+
+@[expose] public section
 
 universe u
 

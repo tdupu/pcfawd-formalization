@@ -3,13 +3,15 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.Flat.Localization
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.RegularLocalRing.Defs
-import Mathlib.RingTheory.Smooth.Flat
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Mathlib.RingTheory.Unramified.LocalRing
+module
+
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.Flat.Localization
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.Smooth.Flat
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Mathlib.RingTheory.Unramified.LocalRing
 
 /-!
 # Regularity under etale base change
@@ -18,6 +20,8 @@ This file records the affine regularity ascent used when a regular Cartier divis
 back to a pointed etale neighbourhood.  It is the regularity input in the descent paragraph of
 Stacks Tag `0EYG`.
 -/
+
+@[expose] public section
 
 universe u v
 

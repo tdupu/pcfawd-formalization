@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.GlobalNormalizationMorphism
-import Pcf.Bounding.SchemeIteration
+module
+
+public import Pcf.Bounding.GlobalNormalizationMorphism
+public import Pcf.Bounding.SchemeIteration
 
 /-!
 # Iteration on the canonical global normalization
@@ -15,6 +17,8 @@ abstract iterate of its normalized dynamics. In characteristic zero, the
 normalized postcritical set and postcritical finiteness are unchanged by every
 positive iterate, including for possibly nonnormal integral schemes.
 -/
+
+@[expose] public section
 
 universe u
 

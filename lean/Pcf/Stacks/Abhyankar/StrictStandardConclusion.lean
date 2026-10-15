@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent
-import Pcf.Stacks.Common.EtaleRegular
-import Mathlib.RingTheory.Flat.TorsionFree
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent
+public import Pcf.Stacks.Common.EtaleRegular
+public import Mathlib.RingTheory.Flat.TorsionFree
 
 /-!
 # From a strict-local presentation to the Abhyankar conclusion
@@ -15,6 +17,8 @@ normalization after strict henselization has been identified with a finite disjo
 standard tame covers, coherent `05N9` descent supplies one pointed etale stage.  The theorem
 below packages that stage as the exact manuscript-facing conclusion.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SmoothRegularLocal
-import Mathlib.RingTheory.Smooth.Field
-import Mathlib.RingTheory.Smooth.Local
+module
+
+public import Pcf.Bounding.SmoothRegularLocal
+public import Mathlib.RingTheory.Smooth.Field
+public import Mathlib.RingTheory.Smooth.Local
 
 /-!
 # Cotangent prerequisite for finite-type singular-locus closedness
@@ -36,6 +38,8 @@ bound on the number of generators of a regular quotient's defining ideal
 opposite inequality, so it cannot discharge this step. No such bound or
 regular-to-smooth implication is added as an assumption or axiom here.
 -/
+
+@[expose] public section
 
 universe u v w
 

@@ -3,14 +3,16 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Etale.QuasiFinite
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.FinitePresentation
-import Mathlib.RingTheory.KrullDimension.LocalRing
-import Pcf.Stacks.Common.RegularDimensionOne
-import Pcf.Stacks.Purity.Defs
-import Pcf.Stacks.Purity.LocalEtale
+module
+
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Etale.QuasiFinite
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.FinitePresentation
+public import Mathlib.RingTheory.KrullDimension.LocalRing
+public import Pcf.Stacks.Common.RegularDimensionOne
+public import Pcf.Stacks.Purity.Defs
+public import Pcf.Stacks.Purity.LocalEtale
 
 /-!
 # The dimension-one case of Zariski--Nagata purity
@@ -19,6 +21,8 @@ This module proves the base case in the dimension induction of Stacks Tag `0BMB`
 paragraph of the proof).  Both local rings are DVRs.  Quasi-finiteness forces the local ring map
 to be injective, hence torsion-free and flat; formal unramifiedness then gives formal étaleness.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.CommAlgCat.Basic
-import Mathlib.RingTheory.Localization.BaseChange
-import Mathlib.RingTheory.Etale.Field
-import Mathlib.RingTheory.TensorProduct.Pi
-import Pcf.Stacks.Purity.IntegralClosure
+module
+
+public import Mathlib.Algebra.Category.CommAlgCat.Basic
+public import Mathlib.RingTheory.Localization.BaseChange
+public import Mathlib.RingTheory.Etale.Field
+public import Mathlib.RingTheory.TensorProduct.Pi
+public import Pcf.Stacks.Purity.IntegralClosure
 
 /-!
 # Finite normal model of a separable generic fibre
@@ -17,6 +19,8 @@ spectrum is a finite product of finite separable field extensions.  Taking the i
 in each field and their finite product gives the candidate finite normal algebra over the base.
 This file establishes finiteness and Stacks-normality, including the disconnected case.
 -/
+
+@[expose] public section
 
 noncomputable section
 

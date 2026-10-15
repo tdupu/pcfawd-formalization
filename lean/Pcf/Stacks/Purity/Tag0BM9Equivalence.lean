@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.CategoryTheory.Adjunction.Restrict
-import Mathlib.CategoryTheory.Adjunction.FullyFaithful
-import Pcf.Stacks.Purity.Tag0BM9
-import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
+module
+
+public import Mathlib.CategoryTheory.Adjunction.Restrict
+public import Mathlib.CategoryTheory.Adjunction.FullyFaithful
+public import Pcf.Stacks.Purity.Tag0BM9
+public import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 
 /-!
 # The categorical equivalence in Stacks Tag `0BM9`
@@ -16,6 +18,8 @@ it to finite etale covers and finite torsion-free normal algebras.  The Hartogs 
 identifies the counit on the algebra side; normalization supplies essential surjectivity on the
 cover side.
 -/
+
+@[expose] public section
 
 noncomputable section
 

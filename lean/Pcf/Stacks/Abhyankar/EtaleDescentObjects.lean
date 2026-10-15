@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.Ring.FinitePresentation
-import Mathlib.RingTheory.Extension.Presentation.Core
-import Pcf.Stacks.Abhyankar.EtaleDescent
+module
+
+public import Mathlib.Algebra.Category.Ring.FinitePresentation
+public import Mathlib.RingTheory.Extension.Presentation.Core
+public import Pcf.Stacks.Abhyankar.EtaleDescent
 
 /-!
 # Object effectivity for finitely presented algebras over filtered colimits
@@ -21,6 +23,8 @@ stage.  This is the categorical bookkeeping needed for the two maps and two inve
 a descended isomorphism.  Constructing the varying-base-change diagrams to which these lemmas are
 applied is deliberately kept separate from the object-effectivity statement.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

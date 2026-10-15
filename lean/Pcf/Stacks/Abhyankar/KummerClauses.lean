@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerFractionEquiv
-import Mathlib.RingTheory.RamificationInertia.Basic
+module
+
+public import Pcf.Stacks.Abhyankar.KummerFractionEquiv
+public import Mathlib.RingTheory.RamificationInertia.Basic
 
 /-!
 # The first five clauses of Stacks Tag 09EV
@@ -19,6 +21,8 @@ The predicate `IsTotallyRamifiedAt` is the ring-theoretic content of Stacks Defi
 `09E9` for an integral closure: there is a unique maximal ideal above the chosen maximal
 ideal and its residue extension has degree one.
 -/
+
+@[expose] public section
 
 open Polynomial IsLocalRing
 

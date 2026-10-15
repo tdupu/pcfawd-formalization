@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Topology.Separation.Basic
-import Pcf.Noetherian
+module
+
+public import Mathlib.Topology.Separation.Basic
+public import Pcf.Noetherian
 
 /-!
 # Zariski–Nagata purity: from the local form to the global form
@@ -45,6 +47,8 @@ as separate data; the manuscript verifies them in a single sentence.
   finiteness of `Pcf.finite_isPrime_subset`, the branch divisor has finitely
   many components (§`sec:defs`, after Definition `def:crit-branch`).
 -/
+
+@[expose] public section
 
 namespace Pcf
 

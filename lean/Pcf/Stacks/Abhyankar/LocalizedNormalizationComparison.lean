@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.DivisorRootLocalization
-import Pcf.Stacks.Abhyankar.NormalizationBaseChange
+module
+
+public import Pcf.Stacks.Abhyankar.DivisorRootLocalization
+public import Pcf.Stacks.Abhyankar.NormalizationBaseChange
 
 /-!
 # Localizing an actual normalization
@@ -19,6 +21,8 @@ with the literal canonical normalization.
 The construction uses the localization base-change theorem for integral closure; no
 normalization equivalence is assumed.
 -/
+
+@[expose] public section
 
 universe u
 

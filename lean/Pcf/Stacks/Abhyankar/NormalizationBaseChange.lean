@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Smooth.IntegralClosure
-import Mathlib.RingTheory.Localization.BaseChange
+module
+
+public import Mathlib.RingTheory.Smooth.IntegralClosure
+public import Mathlib.RingTheory.Localization.BaseChange
 
 /-!
 # Integral closure after smooth base change
@@ -16,6 +18,8 @@ If `N` is the integral closure of `R` in `B` and `R → R'` is smooth, then
 `R' ⊗[R] N` is the integral closure of `R'` in `R' ⊗[R] B`.  The algebra structure on the
 two tensor products is the canonical base change of `N → B`.
 -/
+
+@[expose] public section
 
 universe u
 

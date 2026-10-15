@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Topology.NoetherianSpace
+module
+
+public import Mathlib.Topology.NoetherianSpace
 
 /-!
 # Primes of a Noetherian space, and the finiteness statements of §`sec:bounding`
@@ -48,6 +50,8 @@ it removes the three finiteness assumptions from the axiom census.
 * `Pcf.finite_image_isPrime_subset` — the form used for the branch divisor:
   the image of that finite set under any map is finite.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

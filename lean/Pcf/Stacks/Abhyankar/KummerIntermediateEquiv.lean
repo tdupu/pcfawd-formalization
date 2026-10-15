@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerNormDescent
+module
+
+public import Pcf.Stacks.Abhyankar.KummerNormDescent
 
 /-!
 # Equivalence form of the Kummer intermediate-field classification
@@ -14,6 +16,8 @@ This file supplies that exact interface.  It first identifies the field generate
 of the distinguished radical with the corresponding smaller root algebra, then applies the
 proved intermediate-field classification to any field embedded in the full radical field.
 -/
+
+@[expose] public section
 
 open Polynomial
 

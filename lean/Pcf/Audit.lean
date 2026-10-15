@@ -3,146 +3,148 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Dynamics
-import Pcf.Restriction
-import Pcf.Unnormalized
-import Pcf.NormalizationDynamics
-import Pcf.LocalModel
-import Pcf.Noetherian
-import Pcf.Purity
-import Pcf.NonEtaleLocus
-import Pcf.ZariskiNagata
-import Pcf.Ramification
-import Pcf.Abhyankar
-import Pcf.Geometry
-import Pcf.Wiring
-import Pcf.AllTheWayDown
-import Pcf.SpectrumDynamics
-import Pcf.Bounding.Stacks
-import Pcf.Bounding.StandardPiece
-import Pcf.Bounding.LocalStructure
-import Pcf.Bounding.Pieces
-import Pcf.Bounding.Reduced
-import Pcf.Bounding.Chart
-import Pcf.Bounding.FibreProduct
-import Pcf.Bounding.Divisors
-import Pcf.Bounding.LocalChart
-import Pcf.Bounding.SchemeBridge
-import Pcf.Bounding.AffineStalkBridge
-import Pcf.Bounding.SchemeExtraction
-import Pcf.Bounding.RegularLocus
-import Pcf.Bounding.FiniteTypeRegularLocus
-import Pcf.Bounding.SmoothRegularLocal
-import Pcf.Bounding.FiniteTypeSingularLocusClosed
-import Pcf.Bounding.PrincipalQuotientRegular
-import Pcf.Bounding.DivisorFlagCodimension
-import Pcf.Bounding.DivisorLift
-import Pcf.Bounding.PeriodicLift
-import Pcf.Bounding.SchemeWiring
-import Pcf.Bounding.SchemeDynamics
-import Pcf.Bounding.SchemeIteration
-import Pcf.Bounding.NormalizationRamification
-import Pcf.Bounding.NormalizationSchemeBridge
-import Pcf.Bounding.GlobalNormalization
-import Pcf.Bounding.GlobalNormalizationComparison
-import Pcf.Bounding.GlobalNormalizationNormal
-import Pcf.Bounding.GlobalNormalizationFinite
-import Pcf.Bounding.GlobalNormalizationDynamics
-import Pcf.Bounding.NormalizationPcfEquiv
-import Pcf.Bounding.CoverDescent
-import Pcf.Bounding.GlobalNormalizationMorphism
-import Pcf.Bounding.GlobalNormalizationIteration
-import Pcf.Bounding.InvariantDivisorGeometry
-import Pcf.Bounding.AffineSchemeRamification
-import Pcf.Bounding.ReducedFiberBranch
-import Pcf.Bounding.FiniteSingularCorrection
-import Pcf.Bounding.InvariantDivisorStep0Assembly
-import Pcf.Bounding.InvariantDivisorStep0FiniteType
-import Pcf.Bounding.PcfAllTheWayDownScheme
-import Pcf.Bounding.SchemeAllTheWayDown
-import Pcf.Bounding.DimensionTermination
-import Pcf.Bounding.PcfAllTheWayDownCharZero
-import Pcf.Stacks.Abhyankar.EtaleDescentObjects
-import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
-import Pcf.Stacks.Purity.LocalFlatness
-import Pcf.Stacks.Purity.FpqcEtaleDescent
-import Pcf.Stacks.Purity.GenericBaseNormalization
-import Pcf.Stacks.Purity.GenericFiberNormalization
-import Pcf.Stacks.Purity.GenericFiberExtension
-import Pcf.Stacks.Purity.Tag0BM9
-import Pcf.Stacks.Purity.FiniteModuleHartogs
-import Pcf.Stacks.Purity.MiracleFlatnessTwo
-import Pcf.Stacks.Purity.FiniteNormalHartogs
-import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
-import Pcf.Stacks.Purity.DiscriminantFiber
-import Pcf.Stacks.Purity.HeightOneEtaleBridge
-import Pcf.Stacks.Purity.OuterInduction
-import Pcf.Stacks.Purity.HypersurfaceLifting
-import Pcf.Stacks.Purity.HenselianIdempotents
-import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
-import Pcf.Stacks.Purity.HenselianGabberPolynomial
-import Pcf.Stacks.Purity.GabberPolynomialSplit
-import Pcf.Stacks.Purity.Tag0BMBAssembly
-import Pcf.Stacks.Purity.Tag0BMAClauses
-import Pcf.Stacks.Purity.Tag0BM9Equivalence
-import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
-import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
-import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
-import Pcf.Stacks.Abhyankar.StrictHenselizationStages
-import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
-import Pcf.Stacks.Abhyankar.StrictHenselizationBase
-import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
-import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
-import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
-import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
-import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
-import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
-import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
-import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
-import Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent
-import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
-import Pcf.Stacks.Abhyankar.StandardCoverAddendum
-import Pcf.Stacks.Abhyankar.TameRamification
-import Pcf.Stacks.Abhyankar.StandardCover
-import Pcf.Stacks.Abhyankar.StandardCoverNormalization
-import Pcf.Stacks.Abhyankar.NormalizationBaseChange
-import Pcf.Stacks.Abhyankar.StandardCoverGeometry
-import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
-import Pcf.Stacks.Abhyankar.NormalizationGeometry
-import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
-import Pcf.Stacks.Abhyankar.StandardCoverPresentation
-import Pcf.Stacks.Abhyankar.DVR
-import Pcf.Stacks.Abhyankar.DVRAbhyankar
-import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
-import Pcf.Stacks.Abhyankar.KummerIntermediate
-import Pcf.Stacks.Abhyankar.KummerDVR
-import Pcf.Stacks.Abhyankar.KummerFraction
-import Pcf.Stacks.Abhyankar.KummerFractionEquiv
-import Pcf.Stacks.Abhyankar.KummerClauses
-import Pcf.Stacks.Abhyankar.KummerTame
-import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
-import Pcf.Stacks.Abhyankar.KummerPowers
-import Pcf.Stacks.Abhyankar.KummerNormDescent
-import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
-import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
-import Pcf.Stacks.Abhyankar.StrictStandardConclusion
-import Pcf.Stacks.Abhyankar.StrictStandardAssembly
-import Pcf.Stacks.Abhyankar.Tag0EYE
-import Pcf.Stacks.Abhyankar.StrictNormalizationEmbedding
-import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
-import Pcf.Stacks.Abhyankar.DivisorRootLocalization
-import Pcf.Bounding.AffineBridge
-import Pcf.Bounding.Wiring
-import Pcf.Examples.Squaring
-import Pcf.Examples.CharP
-import Pcf.Examples.Cusp
-import Pcf.Examples.CofiniteWitness
-import Pcf.Examples.Pinched
+module
+
+public import Pcf.Dynamics
+public import Pcf.Restriction
+public import Pcf.Unnormalized
+public import Pcf.NormalizationDynamics
+public import Pcf.LocalModel
+public import Pcf.Noetherian
+public import Pcf.Purity
+public import Pcf.NonEtaleLocus
+public import Pcf.ZariskiNagata
+public import Pcf.Ramification
+public import Pcf.Abhyankar
+public import Pcf.Geometry
+public import Pcf.Wiring
+public import Pcf.AllTheWayDown
+public import Pcf.SpectrumDynamics
+public import Pcf.Bounding.Stacks
+public import Pcf.Bounding.StandardPiece
+public import Pcf.Bounding.LocalStructure
+public import Pcf.Bounding.Pieces
+public import Pcf.Bounding.Reduced
+public import Pcf.Bounding.Chart
+public import Pcf.Bounding.FibreProduct
+public import Pcf.Bounding.Divisors
+public import Pcf.Bounding.LocalChart
+public import Pcf.Bounding.SchemeBridge
+public import Pcf.Bounding.AffineStalkBridge
+public import Pcf.Bounding.SchemeExtraction
+public import Pcf.Bounding.RegularLocus
+public import Pcf.Bounding.FiniteTypeRegularLocus
+public import Pcf.Bounding.SmoothRegularLocal
+public import Pcf.Bounding.FiniteTypeSingularLocusClosed
+public import Pcf.Bounding.PrincipalQuotientRegular
+public import Pcf.Bounding.DivisorFlagCodimension
+public import Pcf.Bounding.DivisorLift
+public import Pcf.Bounding.PeriodicLift
+public import Pcf.Bounding.SchemeWiring
+public import Pcf.Bounding.SchemeDynamics
+public import Pcf.Bounding.SchemeIteration
+public import Pcf.Bounding.NormalizationRamification
+public import Pcf.Bounding.NormalizationSchemeBridge
+public import Pcf.Bounding.GlobalNormalization
+public import Pcf.Bounding.GlobalNormalizationComparison
+public import Pcf.Bounding.GlobalNormalizationNormal
+public import Pcf.Bounding.GlobalNormalizationFinite
+public import Pcf.Bounding.GlobalNormalizationDynamics
+public import Pcf.Bounding.NormalizationPcfEquiv
+public import Pcf.Bounding.CoverDescent
+public import Pcf.Bounding.GlobalNormalizationMorphism
+public import Pcf.Bounding.GlobalNormalizationIteration
+public import Pcf.Bounding.InvariantDivisorGeometry
+public import Pcf.Bounding.AffineSchemeRamification
+public import Pcf.Bounding.ReducedFiberBranch
+public import Pcf.Bounding.FiniteSingularCorrection
+public import Pcf.Bounding.InvariantDivisorStep0Assembly
+public import Pcf.Bounding.InvariantDivisorStep0FiniteType
+public import Pcf.Bounding.PcfAllTheWayDownScheme
+public import Pcf.Bounding.SchemeAllTheWayDown
+public import Pcf.Bounding.DimensionTermination
+public import Pcf.Bounding.PcfAllTheWayDownCharZero
+public import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+public import Pcf.Stacks.Abhyankar.EtaleDescentIsomorphism
+public import Pcf.Stacks.Purity.LocalFlatness
+public import Pcf.Stacks.Purity.FpqcEtaleDescent
+public import Pcf.Stacks.Purity.GenericBaseNormalization
+public import Pcf.Stacks.Purity.GenericFiberNormalization
+public import Pcf.Stacks.Purity.GenericFiberExtension
+public import Pcf.Stacks.Purity.Tag0BM9
+public import Pcf.Stacks.Purity.FiniteModuleHartogs
+public import Pcf.Stacks.Purity.MiracleFlatnessTwo
+public import Pcf.Stacks.Purity.FiniteNormalHartogs
+public import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
+public import Pcf.Stacks.Purity.DiscriminantFiber
+public import Pcf.Stacks.Purity.HeightOneEtaleBridge
+public import Pcf.Stacks.Purity.OuterInduction
+public import Pcf.Stacks.Purity.HypersurfaceLifting
+public import Pcf.Stacks.Purity.HenselianIdempotents
+public import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
+public import Pcf.Stacks.Purity.HenselianGabberPolynomial
+public import Pcf.Stacks.Purity.GabberPolynomialSplit
+public import Pcf.Stacks.Purity.Tag0BMBAssembly
+public import Pcf.Stacks.Purity.Tag0BMAClauses
+public import Pcf.Stacks.Purity.Tag0BM9Equivalence
+public import Pcf.Stacks.Abhyankar.StrictHenselizationConstruction
+public import Pcf.Stacks.Abhyankar.StrictHenselizationResidue
+public import Pcf.Stacks.Abhyankar.StrictHenselizationFiniteEtale
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStages
+public import Pcf.Stacks.Abhyankar.StrictHenselizationHenselian
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotient
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientStandard
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientRefinement
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientFinality
+public import Pcf.Stacks.Abhyankar.StrictHenselizationQuotientComparison
+public import Pcf.Stacks.Abhyankar.StrictHenselizationColimitBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationLocalBaseChange
+public import Pcf.Stacks.Abhyankar.StrictHenselizationMaximalIdeal
+public import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+public import Pcf.Stacks.Abhyankar.StrictHenselizationDomain
+public import Pcf.Stacks.Abhyankar.StrictHenselizationNoetherian
+public import Pcf.Stacks.Abhyankar.StrictHenselizationColimit
+public import Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent
+public import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
+public import Pcf.Stacks.Abhyankar.StandardCoverAddendum
+public import Pcf.Stacks.Abhyankar.TameRamification
+public import Pcf.Stacks.Abhyankar.StandardCover
+public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+public import Pcf.Stacks.Abhyankar.NormalizationBaseChange
+public import Pcf.Stacks.Abhyankar.StandardCoverGeometry
+public import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
+public import Pcf.Stacks.Abhyankar.NormalizationGeometry
+public import Pcf.Stacks.Abhyankar.StandardCoverBaseCase
+public import Pcf.Stacks.Abhyankar.StandardCoverPresentation
+public import Pcf.Stacks.Abhyankar.DVR
+public import Pcf.Stacks.Abhyankar.DVRAbhyankar
+public import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
+public import Pcf.Stacks.Abhyankar.KummerIntermediate
+public import Pcf.Stacks.Abhyankar.KummerDVR
+public import Pcf.Stacks.Abhyankar.KummerFraction
+public import Pcf.Stacks.Abhyankar.KummerFractionEquiv
+public import Pcf.Stacks.Abhyankar.KummerClauses
+public import Pcf.Stacks.Abhyankar.KummerTame
+public import Pcf.Stacks.Abhyankar.KummerRootsOfUnity
+public import Pcf.Stacks.Abhyankar.KummerPowers
+public import Pcf.Stacks.Abhyankar.KummerNormDescent
+public import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
+public import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
+public import Pcf.Stacks.Abhyankar.StrictStandardConclusion
+public import Pcf.Stacks.Abhyankar.StrictStandardAssembly
+public import Pcf.Stacks.Abhyankar.Tag0EYE
+public import Pcf.Stacks.Abhyankar.StrictNormalizationEmbedding
+public import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
+public import Pcf.Stacks.Abhyankar.DivisorRootLocalization
+public import Pcf.Bounding.AffineBridge
+public import Pcf.Bounding.Wiring
+public import Pcf.Examples.Squaring
+public import Pcf.Examples.CharP
+public import Pcf.Examples.Cusp
+public import Pcf.Examples.CofiniteWitness
+public import Pcf.Examples.Pinched
 
 /-!
 # Trust audit
@@ -163,6 +165,8 @@ hypotheses are invisible to `#print axioms` by construction.
 not vacuous. On the chart route (`Pcf/Bounding/`), `key1` is a theorem derived from
 Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
 -/
+
+@[expose] public section
 
 /-! ## The conjecture the project is named after
 

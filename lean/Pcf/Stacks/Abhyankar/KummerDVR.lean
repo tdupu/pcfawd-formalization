@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerIntermediate
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Ideal.GoingUp
-import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
+module
+
+public import Pcf.Stacks.Abhyankar.KummerIntermediate
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Ideal.GoingUp
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Basic
 
 /-!
 # The DVR root algebra used in Stacks Tag 09EV
@@ -19,6 +21,8 @@ root ideal is the unique maximal ideal, and the root algebra is again a DVR.
 These are clause-level ingredients for `09EV`, not the full tag: this file does not identify
 the fraction field with a prescribed root extension and does not classify intermediate fields.
 -/
+
+@[expose] public section
 
 open Polynomial IsLocalRing
 

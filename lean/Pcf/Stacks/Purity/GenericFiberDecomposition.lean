@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Localization.BaseChange
-import Mathlib.RingTheory.TensorProduct.Finite
-import Mathlib.RingTheory.Artinian.Module
-import Mathlib.RingTheory.Artinian.Ring
-import Pcf.Stacks.Purity.NormalRing
+module
+
+public import Mathlib.RingTheory.Localization.BaseChange
+public import Mathlib.RingTheory.TensorProduct.Finite
+public import Mathlib.RingTheory.Artinian.Module
+public import Mathlib.RingTheory.Artinian.Ring
+public import Pcf.Stacks.Purity.NormalRing
 
 /-!
 # Generic fibre of a finite normal algebra
@@ -16,6 +18,8 @@ The target algebra in Stacks Tag `0BM9` need not be a domain.  Its generic fibre
 local domain is nevertheless a finite product of fields.  This decomposition makes the
 disconnected case explicit before applying integral-closure arguments componentwise.
 -/
+
+@[expose] public section
 
 noncomputable section
 

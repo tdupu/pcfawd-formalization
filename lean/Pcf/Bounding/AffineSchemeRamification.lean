@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.InvariantDivisorGeometry
+module
+
+public import Pcf.Bounding.InvariantDivisorGeometry
 
 /-!
 # Ramification on affine charts and actual scheme stalks
@@ -13,6 +15,8 @@ uses the tower law twice: localizing the source or the target has ramification
 index one. Flatness of the stalk extension follows from dominance and the DVR
 property of the normal target at a codimension-one point.
 -/
+
+@[expose] public section
 
 universe u
 

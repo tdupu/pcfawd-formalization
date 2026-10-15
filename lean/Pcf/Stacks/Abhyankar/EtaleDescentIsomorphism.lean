@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.Ring.Under.Basic
-import Mathlib.CategoryTheory.Adjunction.Limits
-import Mathlib.CategoryTheory.Filtered.Final
-import Pcf.Stacks.Abhyankar.EtaleDescentObjects
-import Pcf.Stacks.Abhyankar.StandardCoverPresentation
+module
+
+public import Mathlib.Algebra.Category.Ring.Under.Basic
+public import Mathlib.CategoryTheory.Adjunction.Limits
+public import Mathlib.CategoryTheory.Filtered.Final
+public import Pcf.Stacks.Abhyankar.EtaleDescentObjects
+public import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 
 /-!
 # Coherent finite-stage descent of algebra isomorphisms
@@ -24,6 +26,8 @@ to one common finite stage.
 The final theorem specializes the finite-presentation hypothesis to the finite disjoint union
 of standard tame covers occurring in Stacks Tags `0EYG` and `0EYH`.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.SchemeAllTheWayDown
+module
+
+public import Pcf.Bounding.SchemeAllTheWayDown
 
 /-!
 # Numerical termination of recursive divisor descent
@@ -18,6 +20,8 @@ The proof does not assume a dimension-drop field.  The strictness at each step f
 from the defining codimension-one equation for `SchemeDivisorPoint`, and the embeddings
 are the actual closed immersions of the reduced point closures.
 -/
+
+@[expose] public section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Topology
 

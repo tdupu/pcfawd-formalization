@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.FiniteNormalModel
-import Pcf.Stacks.Purity.GenericCoverFiber
+module
+
+public import Pcf.Stacks.Purity.FiniteNormalModel
+public import Pcf.Stacks.Purity.GenericCoverFiber
 
 /-!
 # A finite normal model for the generic fibre of a punctured cover
@@ -14,6 +16,8 @@ separable field factors. Their integral closures form a finite Stacks-normal alg
 generic fibre is isomorphic to the original one. The remaining geometric step of Tag `0BM9`
 is to identify the restriction of this model over the punctured spectrum with the given cover.
 -/
+
+@[expose] public section
 
 noncomputable section
 

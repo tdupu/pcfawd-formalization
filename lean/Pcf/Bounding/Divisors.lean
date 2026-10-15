@@ -3,21 +3,23 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.SpectrumDynamics
-import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
-import Mathlib.AlgebraicGeometry.Properties
-import Mathlib.LinearAlgebra.Basis.VectorSpace
-import Mathlib.RingTheory.DiscreteValuationRing.TFAE
-import Mathlib.RingTheory.Filtration
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.Ideal.UFD
-import Mathlib.RingTheory.IntegralClosure.GoingDown
-import Mathlib.RingTheory.KrullDimension.Regular
-import Mathlib.RingTheory.Localization.Saturation
-import Mathlib.RingTheory.NoetherNormalization
-import Mathlib.RingTheory.Polynomial.UniqueFactorization
-import Mathlib.RingTheory.QuasiFinite.Basic
-import Mathlib.RingTheory.RegularLocalRing.Defs
+module
+
+public import Pcf.SpectrumDynamics
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
+public import Mathlib.AlgebraicGeometry.Properties
+public import Mathlib.LinearAlgebra.Basis.VectorSpace
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Mathlib.RingTheory.Filtration
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.Ideal.UFD
+public import Mathlib.RingTheory.IntegralClosure.GoingDown
+public import Mathlib.RingTheory.KrullDimension.Regular
+public import Mathlib.RingTheory.Localization.Saturation
+public import Mathlib.RingTheory.NoetherNormalization
+public import Mathlib.RingTheory.Polynomial.UniqueFactorization
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
 
 /-!
 # Codimension-one points under a finite normal map
@@ -38,6 +40,8 @@ This supplies the affine divisor contraction, its surjectivity and its finite fi
 over a possibly nonnormal target.  The scheme-global construction and the identification
 of the abstract `crit₁` predicate with the non-étale locus are separate bridges.
 -/
+
+@[expose] public section
 
 open TopologicalSpace
 open scoped BigOperators

@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.LocalModel
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.RingTheory.Nilpotent.Lemmas
+module
+
+public import Pcf.LocalModel
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.Nilpotent.Lemmas
 
 /-!
 # Step 3 of Theorem `thm:bounding`, completed on the standard piece
@@ -18,6 +20,8 @@ that sentence — `√(aC) = (z)` whenever `R/(a)` is reduced — and identifies
 map with the canonical quotient map `Ideal.quotientMap`, which is the form in which
 `Pcf/Bounding/LocalStructure.lean` consumes it.
 -/
+
+@[expose] public section
 
 namespace Pcf.LocalModel
 

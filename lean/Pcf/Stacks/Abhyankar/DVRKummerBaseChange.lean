@@ -3,13 +3,15 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Abhyankar
-import Pcf.Stacks.Abhyankar.DVRAbhyankar
-import Pcf.Stacks.Abhyankar.KummerClauses
-import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
-import Pcf.Stacks.Abhyankar.StandardCoverNormalization
-import Pcf.Bounding.SmoothRegularLocal
-import Mathlib.RingTheory.Localization.BaseChange
+module
+
+public import Pcf.Abhyankar
+public import Pcf.Stacks.Abhyankar.DVRAbhyankar
+public import Pcf.Stacks.Abhyankar.KummerClauses
+public import Pcf.Stacks.Abhyankar.StandardCoverBaseChange
+public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+public import Pcf.Bounding.SmoothRegularLocal
+public import Mathlib.RingTheory.Localization.BaseChange
 
 /-!
 # The root-of-a-unit leg in the DVR Abhyankar square
@@ -22,6 +24,8 @@ ramification-square theorem applies.
 This file makes that implication explicit.  Its localization equivalence is the actual output
 of choosing a prime of the Kummer algebra; it does not assume etaleness of the desired leg.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 open scoped TensorProduct
@@ -441,7 +445,7 @@ abbrev DVRRamificationKummerLocalization
 
 /-- Universe-polymorphic form of `standardCoverBaseChangeEquiv` used for the two DVRs,
 which need not live in the same universe. -/
-private noncomputable def standardCoverBaseChangeEquiv'
+noncomputable def standardCoverBaseChangeEquiv'
     {R : Type u} {T : Type v} [CommRing R] [CommRing T] [Algebra R T]
     (unit : Rˣ) (a : R) (exponent : ℕ) :
     T ⊗[R] AdjoinRoot (Pcf.LocalModel.localPoly unit a exponent) ≃ₐ[T]

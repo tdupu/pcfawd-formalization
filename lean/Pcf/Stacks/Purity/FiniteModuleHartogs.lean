@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Module.LocalizedModule.Submodule
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
-import Mathlib.RingTheory.IntegralClosure.GoingDown
-import Pcf.Stacks.Purity.DepthTwo
-import Pcf.Stacks.Purity.NormalRing
+module
+
+public import Mathlib.Algebra.Module.LocalizedModule.Submodule
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Localization
+public import Mathlib.RingTheory.IntegralClosure.GoingDown
+public import Pcf.Stacks.Purity.DepthTwo
+public import Pcf.Stacks.Purity.NormalRing
 
 /-!
 # The module-theoretic Hartogs intersection
@@ -19,6 +21,8 @@ powers of `x` and `y` already arise from one element of `M`.
 This formulation will be applied to a finite normal algebra viewed as a module over its local
 base.  It deliberately contains no normality or scheme-theoretic hypotheses.
 -/
+
+@[expose] public section
 
 noncomputable section
 set_option linter.style.haveILetI false

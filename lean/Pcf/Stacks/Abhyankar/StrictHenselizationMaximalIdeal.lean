@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Unramified.LocalRing
-import Pcf.Stacks.Abhyankar.StrictHenselizationBase
+module
+
+public import Mathlib.RingTheory.Unramified.LocalRing
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBase
 
 /-!
 # The maximal ideal of the strict local colimit
@@ -16,6 +18,8 @@ claim is Mathlib's form of Stacks Tag `00UW`.  Ideal membership uses only one de
 descends again to an etale localization away from one element and hence to an object of the
 pointed-etale diagram.
 -/
+
+@[expose] public section
 
 universe u
 

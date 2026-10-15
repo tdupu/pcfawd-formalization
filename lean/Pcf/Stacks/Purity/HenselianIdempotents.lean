@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Henselian
-import Mathlib.RingTheory.Idempotents
+module
+
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Idempotents
 
 /-!
 # Idempotents over a henselian pair
@@ -20,6 +22,8 @@ then uses that stronger statement, together with presentations and integral clos
 equivalence of categories of finite etale algebras.  The transfer from `(A, I)` to those finite
 algebras, and the finite-etale reconstruction, are the remaining boundary after this file.
 -/
+
+@[expose] public section
 
 noncomputable section
 

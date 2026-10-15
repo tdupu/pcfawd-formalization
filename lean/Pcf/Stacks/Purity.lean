@@ -3,43 +3,45 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.Defs
-import Pcf.Stacks.Purity.LocalEtale
-import Pcf.Stacks.Purity.LocalFlatness
-import Pcf.Stacks.Purity.RegularHypersurface
-import Pcf.Stacks.Purity.FpqcEtaleDescent
-import Pcf.Stacks.Purity.DimensionOne
-import Pcf.Stacks.Purity.EtaleLocalization
-import Pcf.Stacks.Purity.NormalRing
-import Pcf.Stacks.Purity.IntegralClosure
-import Pcf.Stacks.Purity.PuncturedSpectrum
-import Pcf.Stacks.Purity.Hartogs
-import Pcf.Stacks.Purity.DepthTwo
-import Pcf.Stacks.Purity.HartogsAlgebra
-import Pcf.Stacks.Purity.HartogsRecovery
-import Pcf.Stacks.Purity.FiniteNormalAlgebra
-import Pcf.Stacks.Purity.FiniteNormalHartogs
-import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
-import Pcf.Stacks.Purity.DiscriminantFiber
-import Pcf.Stacks.Purity.HeightOneEtaleBridge
-import Pcf.Stacks.Purity.OuterInduction
-import Pcf.Stacks.Purity.HypersurfaceLifting
-import Pcf.Stacks.Purity.HenselianIdempotents
-import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
-import Pcf.Stacks.Purity.HenselianGabberPolynomial
-import Pcf.Stacks.Purity.GabberPolynomialSplit
-import Pcf.Stacks.Purity.GenericFiberDecomposition
-import Pcf.Stacks.Purity.GenericCoverFiber
-import Pcf.Stacks.Purity.GenericBaseNormalization
-import Pcf.Stacks.Purity.GenericFiberNormalization
-import Pcf.Stacks.Purity.GenericFiberExtension
-import Pcf.Stacks.Purity.NormalizationTower
-import Pcf.Stacks.Purity.FiniteNormalModel
-import Pcf.Stacks.Purity.CoverNormalModel
-import Pcf.Stacks.Purity.NormalizationExtension
-import Pcf.Stacks.Purity.Tag0BM9Equivalence
-import Pcf.Stacks.Purity.Tag0BMBAssembly
-import Pcf.Stacks.Purity.Tag0BMAClauses
+module
+
+public import Pcf.Stacks.Purity.Defs
+public import Pcf.Stacks.Purity.LocalEtale
+public import Pcf.Stacks.Purity.LocalFlatness
+public import Pcf.Stacks.Purity.RegularHypersurface
+public import Pcf.Stacks.Purity.FpqcEtaleDescent
+public import Pcf.Stacks.Purity.DimensionOne
+public import Pcf.Stacks.Purity.EtaleLocalization
+public import Pcf.Stacks.Purity.NormalRing
+public import Pcf.Stacks.Purity.IntegralClosure
+public import Pcf.Stacks.Purity.PuncturedSpectrum
+public import Pcf.Stacks.Purity.Hartogs
+public import Pcf.Stacks.Purity.DepthTwo
+public import Pcf.Stacks.Purity.HartogsAlgebra
+public import Pcf.Stacks.Purity.HartogsRecovery
+public import Pcf.Stacks.Purity.FiniteNormalAlgebra
+public import Pcf.Stacks.Purity.FiniteNormalHartogs
+public import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
+public import Pcf.Stacks.Purity.DiscriminantFiber
+public import Pcf.Stacks.Purity.HeightOneEtaleBridge
+public import Pcf.Stacks.Purity.OuterInduction
+public import Pcf.Stacks.Purity.HypersurfaceLifting
+public import Pcf.Stacks.Purity.HenselianIdempotents
+public import Pcf.Stacks.Purity.FiniteAlgebraIdempotents
+public import Pcf.Stacks.Purity.HenselianGabberPolynomial
+public import Pcf.Stacks.Purity.GabberPolynomialSplit
+public import Pcf.Stacks.Purity.GenericFiberDecomposition
+public import Pcf.Stacks.Purity.GenericCoverFiber
+public import Pcf.Stacks.Purity.GenericBaseNormalization
+public import Pcf.Stacks.Purity.GenericFiberNormalization
+public import Pcf.Stacks.Purity.GenericFiberExtension
+public import Pcf.Stacks.Purity.NormalizationTower
+public import Pcf.Stacks.Purity.FiniteNormalModel
+public import Pcf.Stacks.Purity.CoverNormalModel
+public import Pcf.Stacks.Purity.NormalizationExtension
+public import Pcf.Stacks.Purity.Tag0BM9Equivalence
+public import Pcf.Stacks.Purity.Tag0BMBAssembly
+public import Pcf.Stacks.Purity.Tag0BMAClauses
 
 /-!
 # Zariski--Nagata purity: assembly boundary
@@ -85,3 +87,6 @@ the pointwise `0BMB` quasi-finite localization assembly.
 
 No declaration in this assembly file asserts the unproved terminal theorem.
 -/
+
+@[expose] public section
+

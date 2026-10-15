@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
+module
+
+public import Pcf.Stacks.Abhyankar.StrictHenselizationBaseChange
 
 /-!
 # The canonical map to a base-changed pointed-etale colimit
@@ -17,6 +19,8 @@ Proving that this factor map is an equivalence requires cofinality of quotient b
 pointed etale neighbourhoods (equivalently, effective lifting of pointed etale neighbourhoods
 across the quotient).  That separate step is not asserted here.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 open scoped TensorProduct

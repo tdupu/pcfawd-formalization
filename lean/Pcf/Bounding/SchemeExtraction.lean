@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.AffineStalkBridge
-import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
-import Mathlib.AlgebraicGeometry.Noetherian
+module
+
+public import Pcf.Bounding.AffineStalkBridge
+public import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
+public import Mathlib.AlgebraicGeometry.Noetherian
 
 /-!
 # Extracting affine divisor charts from actual scheme morphisms
@@ -18,6 +20,8 @@ It also identifies the ambient localization and localized divisor quotient with 
 actual ambient and divisor stalks, allowing the strongest constructor to transport
 regularity and codimension and to choose the local equation itself.
 -/
+
+@[expose] public section
 
 universe u
 

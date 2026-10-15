@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Restriction
+module
+
+public import Pcf.Restriction
 
 /-!
 # PCF all the way down
@@ -93,6 +95,8 @@ recursive assembly is machine-checked in `Pcf/Bounding/SchemeAllTheWayDown.lean`
 its numerical termination bound is machine-checked in
 `Pcf/Bounding/DimensionTermination.lean`.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

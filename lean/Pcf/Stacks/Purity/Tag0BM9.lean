@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Purity.FiniteNormalAlgebra
-import Pcf.Stacks.Purity.GenericFiberExtension
-import Pcf.Stacks.Purity.HartogsRecovery
+module
+
+public import Pcf.Stacks.Purity.FiniteNormalAlgebra
+public import Pcf.Stacks.Purity.GenericFiberExtension
+public import Pcf.Stacks.Purity.HartogsRecovery
 
 /-!
 # Stacks Tag `0BM9`
@@ -15,6 +17,8 @@ of a finite étale cover restricts to the original cover as an isomorphism *over
 spectrum*.  Stating the result in the over category is important; an isomorphism of the underlying
 schemes alone would not be an isomorphism of finite étale covers.
 -/
+
+@[expose] public section
 
 noncomputable section
 

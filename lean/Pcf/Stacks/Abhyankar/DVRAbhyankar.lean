@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.Flat.TorsionFree
-import Mathlib.RingTheory.Smooth.Fiber
-import Mathlib.RingTheory.Smooth.Flat
-import Pcf.Stacks.Abhyankar.DVR
+module
+
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Smooth.Fiber
+public import Mathlib.RingTheory.Smooth.Flat
+public import Pcf.Stacks.Abhyankar.DVR
 
 /-!
 # The local DVR conclusion in Abhyankar's lemma
@@ -30,6 +32,8 @@ actual top prime, not through a global unramifiedness assumption:
 This formalizes the last implication of `0BRM`.  The preceding reductions adjoining an
 `e`th root of the unit and passing through the standard root DVR remain separate steps.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 

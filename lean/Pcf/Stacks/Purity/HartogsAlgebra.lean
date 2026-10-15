@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Localization.FractionRing
-import Pcf.Stacks.Purity.DepthTwo
+module
+
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Pcf.Stacks.Purity.DepthTwo
 
 /-!
 # Divisibility behind the depth-two Hartogs argument
@@ -15,6 +17,8 @@ the assertion that the two localization subrings `R[1/x]` and `R[1/y]` intersect
 fraction field.  It is independent of the still-missing theorem that normality supplies the
 regular sequence, and independent of the sheaf-theoretic recovery step.
 -/
+
+@[expose] public section
 
 noncomputable section
 

@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.Chart
-import Pcf.Bounding.FibreProduct
-import Pcf.NormalizationDynamics
-import Pcf.Unnormalized
+module
+
+public import Pcf.Bounding.Chart
+public import Pcf.Bounding.FibreProduct
+public import Pcf.NormalizationDynamics
+public import Pcf.Unnormalized
 
 /-!
 # Wiring the derived bounding theorem into Theorem `thm:normal-invariant`
@@ -58,6 +60,8 @@ and 01JT are theorems (`Pcf.Stacks.etaleLocalOnSource`,
   Theorem `thm:normal-invariant` and Corollaries `cor:normal-invariant-pcf`,
   `cor:normal-preperiodic` on this route.
 -/
+
+@[expose] public section
 
 universe u v w x
 

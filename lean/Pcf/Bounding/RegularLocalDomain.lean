@@ -3,12 +3,15 @@ Copyright (c) 2025 Brian Nugent. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Brian Nugent, Jarod Alper, Taylor Dupuy
 -/
-import Mathlib.Algebra.Module.SpanRankOperations
-import Mathlib.RingTheory.Ideal.AssociatedPrime.Finiteness
-import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
-import Mathlib.RingTheory.KrullDimension.Field
-import Mathlib.RingTheory.LocalRing.Quotient
-import Mathlib.RingTheory.RegularLocalRing.Defs
+module
+
+public import Mathlib.Algebra.Module.SpanRankOperations
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Finiteness
+public import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
+public import Mathlib.RingTheory.KrullDimension.Field
+public import Mathlib.RingTheory.LocalRing.Quotient
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
 
 /-!
 # Regular local rings are domains
@@ -20,6 +23,8 @@ and Jarod Alper in `JarodAlper/RegularLocalRings`, adapted here to Mathlib's
 `IsRegularLocalRing` and its Krull-height theorem.
 -/
 
+@[expose] public section
+
 open IsLocalRing
 open Cardinal
 
@@ -27,7 +32,7 @@ namespace Pcf.Stacks
 
 local notation3:max "maxl" A => (IsLocalRing.maximalIdeal A)
 
-private instance localRing_quotient {A : Type*} [CommRing A] [IsLocalRing A]
+instance localRing_quotient {A : Type*} [CommRing A] [IsLocalRing A]
     (I : Ideal A) [Nontrivial (A ⧸ I)] : IsLocalRing (A ⧸ I) :=
   IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
 

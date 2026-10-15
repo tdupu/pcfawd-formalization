@@ -3,14 +3,16 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Category.Ring.Colimits
-import Mathlib.Algebra.Category.Ring.Under.Basic
-import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
-import Mathlib.RingTheory.Etale.Basic
-import Mathlib.RingTheory.Extension.Presentation.Basic
-import Mathlib.RingTheory.Ideal.IdempotentFG
-import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
-import Mathlib.RingTheory.TensorProduct.Maps
+module
+
+public import Mathlib.Algebra.Category.Ring.Colimits
+public import Mathlib.Algebra.Category.Ring.Under.Basic
+public import Mathlib.CategoryTheory.Limits.Constructions.Over.Basic
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Extension.Presentation.Basic
+public import Mathlib.RingTheory.Ideal.IdempotentFG
+public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
+public import Mathlib.RingTheory.TensorProduct.Maps
 
 /-!
 # A small category of pointed etale neighbourhoods
@@ -24,6 +26,8 @@ Tensor products give a common refinement of any two objects.  Two parallel point
 equalized by the etale localization selected by the idempotent diagonal ideal of their source.
 This proves that the presentation-coded category is filtered.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 open scoped TensorProduct

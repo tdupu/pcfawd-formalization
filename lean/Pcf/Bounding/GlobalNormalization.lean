@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.NormalizationSchemeBridge
-import Mathlib.AlgebraicGeometry.Normalization
+module
+
+public import Pcf.Bounding.NormalizationSchemeBridge
+public import Mathlib.AlgebraicGeometry.Normalization
 
 /-!
 # Normalization from the generic point
@@ -17,6 +19,8 @@ invariance under integral postcomposition are not proved here. Finiteness of
 the normalization morphism is kept as a separate hypothesis; it does not
 follow from integrality of the original scheme alone.
 -/
+
+@[expose] public section
 
 universe u
 

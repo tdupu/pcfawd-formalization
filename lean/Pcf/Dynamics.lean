@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Order.BigOperators.Ring.Finset
-import Mathlib.Data.Set.Finite.Lattice
-import Mathlib.Order.Interval.Finset.Nat
+module
+
+public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
+public import Mathlib.Data.Set.Finite.Lattice
+public import Mathlib.Order.Interval.Finset.Nat
 
 /-!
 # Divisorial dynamics: ramification of iterates
@@ -49,6 +51,8 @@ fails in the wild case.
 * `Pcf.DivDyn.pcf_iff_forall_orbit_finite` — the orbit characterization of PCF.
 * `Pcf.DivDyn.pcf_of_finite_cover` — Lemma `lem:normalization` (passing to normalizations).
 -/
+
+@[expose] public section
 
 universe u v
 

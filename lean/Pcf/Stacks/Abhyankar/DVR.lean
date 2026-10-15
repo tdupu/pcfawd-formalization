@@ -3,7 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.RamificationInertia.Ramification
+module
+
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import Mathlib.RingTheory.Localization.Submodule
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Mathlib.RingTheory.Artinian.Ring
 
 /-!
 # The numerical DVR cancellation in Abhyankar's lemma
@@ -18,6 +24,8 @@ This is not the full tag: pinned Mathlib has algebraic `Algebra.FormallySmooth` 
 topologies, but no predicate expressing formal smoothness *in the adic topology*.  The
 declarations here therefore carry no `0BRM` tag.
 -/
+
+@[expose] public section
 
 universe u v w
 

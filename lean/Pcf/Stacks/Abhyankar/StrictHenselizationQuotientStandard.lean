@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.Algebra.Polynomial.Lifts
-import Mathlib.RingTheory.Unramified.LocalStructure
+module
+
+public import Mathlib.Algebra.Polynomial.Lifts
+public import Mathlib.RingTheory.Unramified.LocalStructure
 
 /-!
 # Lifting standard etale algebras across a quotient
@@ -18,6 +20,8 @@ same standard etale algebra after base change.
 
 No finality or strict-henselization comparison is asserted in this file.
 -/
+
+@[expose] public section
 
 open Polynomial
 
@@ -55,15 +59,15 @@ theorem liftMonic_monic (I : Ideal R) (P : StandardEtalePair (R ⧸ I)) :
     (Polynomial.mem_lifts_of_surjective Ideal.Quotient.mk_surjective P.f)
       P.monic_f).choose_spec.2.2
 
-private noncomputable def bezoutP₁ {I : Ideal R}
+noncomputable def bezoutP₁ {I : Ideal R}
     (P : StandardEtalePair (R ⧸ I)) : (R ⧸ I)[X] :=
   P.cond.choose
 
-private noncomputable def bezoutP₂ {I : Ideal R}
+noncomputable def bezoutP₂ {I : Ideal R}
     (P : StandardEtalePair (R ⧸ I)) : (R ⧸ I)[X] :=
   P.cond.choose_spec.choose
 
-private noncomputable def bezoutExponent {I : Ideal R}
+noncomputable def bezoutExponent {I : Ideal R}
     (P : StandardEtalePair (R ⧸ I)) : ℕ :=
   P.cond.choose_spec.choose_spec.choose
 

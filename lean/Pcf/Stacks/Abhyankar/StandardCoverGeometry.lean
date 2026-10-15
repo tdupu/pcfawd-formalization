@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.StandardCoverNormalization
-import Mathlib.RingTheory.Ideal.Quotient.Operations
+module
+
+public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
 
 /-!
 # Geometric properties of finite unions of standard root covers
@@ -18,6 +20,8 @@ The finite-product lemmas at the start fill small API gaps in Mathlib: radicals 
 with finite products, quotients by product ideals are products of quotients, and a finite
 product of regular rings is regular.
 -/
+
+@[expose] public section
 
 universe u
 

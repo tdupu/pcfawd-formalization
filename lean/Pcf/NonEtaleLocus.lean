@@ -3,11 +3,13 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Purity
-import Mathlib.RingTheory.Etale.Locus
-import Mathlib.RingTheory.Ideal.Height
-import Mathlib.RingTheory.Spectrum.Prime.Noetherian
-import Mathlib.RingTheory.RamificationInertia.Ramification
+module
+
+public import Pcf.Purity
+public import Mathlib.RingTheory.Etale.Locus
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Spectrum.Prime.Noetherian
+public import Mathlib.RingTheory.RamificationInertia.Ramification
 
 /-!
 # The non-étale locus of an actual algebra, and two fields of `PurityData` discharged
@@ -43,6 +45,8 @@ The remaining two stay assumptions, and they are the mathematically substantial 
 * `Pcf.codim_eq_one_of_algebra` — global purity on `Spec S`, i.e. `E` is pure of
   codimension one, from Tag 0BMB and generic étaleness and nothing else.
 -/
+
+@[expose] public section
 
 namespace Pcf
 

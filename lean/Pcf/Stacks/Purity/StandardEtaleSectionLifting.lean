@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Etale.StandardEtale
-import Mathlib.RingTheory.Henselian
+module
+
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Mathlib.RingTheory.Henselian
 
 /-!
 # Lifting sections of standard etale algebras over a henselian pair
@@ -19,6 +21,8 @@ full condition: an arbitrary etale algebra is only locally standard etale, and p
 local presentations to a global lifted section still requires the integral-closure and clopen
 assembly in the proof of Tag `09XI`, implication `(5) ⇒ (2)`.
 -/
+
+@[expose] public section
 
 noncomputable section
 

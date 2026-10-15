@@ -3,10 +3,12 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.Flat.TorsionFree
-import Pcf.Bounding.RegularLocalDomain
-import Pcf.Bounding.SmoothRegularLocal
-import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
+module
+
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Pcf.Bounding.RegularLocalDomain
+public import Pcf.Bounding.SmoothRegularLocal
+public import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 
 /-!
 # Domain lemmas for the strict local colimit
@@ -14,6 +16,8 @@ import Pcf.Stacks.Abhyankar.StrictHenselizationDimension
 These are bypass lemmas for the terminal application.  They are separate from Stacks Tag `06LN`:
 in particular, they do not assert that the strict local colimit is Noetherian.
 -/
+
+@[expose] public section
 
 open CategoryTheory Limits
 

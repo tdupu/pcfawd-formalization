@@ -3,17 +3,19 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.Stacks
-import Pcf.Bounding.StandardPiece
-import Pcf.Bounding.LocalStructure
-import Pcf.Bounding.Pieces
-import Pcf.Bounding.Reduced
-import Mathlib.RingTheory.Etale.Basic
-import Mathlib.RingTheory.Unramified.LocalStructure
-import Mathlib.RingTheory.Smooth.Flat
-import Mathlib.RingTheory.TensorProduct.Quotient
-import Mathlib.RingTheory.LocalProperties.Reduced
-import Mathlib.RingTheory.Localization.AtPrime.Basic
+module
+
+public import Pcf.Bounding.Stacks
+public import Pcf.Bounding.StandardPiece
+public import Pcf.Bounding.LocalStructure
+public import Pcf.Bounding.Pieces
+public import Pcf.Bounding.Reduced
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Mathlib.RingTheory.Smooth.Flat
+public import Mathlib.RingTheory.TensorProduct.Quotient
+public import Mathlib.RingTheory.LocalProperties.Reduced
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
 
 /-!
 # Theorem `thm:bounding`, derived on an affine chart
@@ -81,6 +83,8 @@ algebra to which Abhyankar's lemma is applied. The local extension is `R → S` 
 standard pieces are produced by the `abhyankar` field *for that extension*, and Step 3 is
 applied to those pieces.
 -/
+
+@[expose] public section
 
 universe u
 

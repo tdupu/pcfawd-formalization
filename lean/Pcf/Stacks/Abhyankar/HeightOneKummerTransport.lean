@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
+module
+
+public import Pcf.Stacks.Abhyankar.KummerNormalizationAssembly
 
 /-!
 # Transporting the DVR 0BRM endpoint back to the selected normalization prime
@@ -23,6 +25,8 @@ This is the divisor-local part of the height-one argument in Tag `0EYG`.  Passin
 height-one prime of the original high-dimensional normalization to this DVR normalization
 still requires the localization/base-change comparison of Tags `0EYC`/`0EYD`.
 -/
+
+@[expose] public section
 
 open IsLocalRing
 

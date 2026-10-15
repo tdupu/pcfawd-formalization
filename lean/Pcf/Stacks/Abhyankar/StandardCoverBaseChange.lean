@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Mathlib.RingTheory.TensorProduct.Pi
-import Pcf.Stacks.Abhyankar.StandardCoverPresentation
+module
+
+public import Mathlib.RingTheory.TensorProduct.Pi
+public import Pcf.Stacks.Abhyankar.StandardCoverPresentation
 
 /-!
 # Base change of standard tame covers
@@ -13,6 +15,8 @@ The standard root algebra and a finite product of standard root algebras commute
 base change.  These explicit equivalences are the polynomial bookkeeping required when the
 strict-local presentation in Stacks Tag `0EYG` is descended to a pointed etale stage.
 -/
+
+@[expose] public section
 
 open TensorProduct
 

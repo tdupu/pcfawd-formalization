@@ -3,9 +3,11 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
-import Pcf.Stacks.Abhyankar.StrictHenselization
-import Pcf.Stacks.Abhyankar.Tag0EYE
+module
+
+public import Pcf.Stacks.Abhyankar.KummerIntermediateEquiv
+public import Pcf.Stacks.Abhyankar.StrictHenselization
+public import Pcf.Stacks.Abhyankar.Tag0EYE
 
 /-!
 # The strict-local field embedding after 0EYE
@@ -21,6 +23,8 @@ it is produced by Tag `0BRM`; the remaining global assembly must still transport
 DVR-local `0BRM` theorem to every height-one localization of the normalization.  Nothing in
 this file assumes the resulting radical-field equivalence or a standard-cover presentation.
 -/
+
+@[expose] public section
 
 universe u
 

@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.NormalizationRamification
-import Pcf.Bounding.SchemeDynamics
+module
+
+public import Pcf.Bounding.NormalizationRamification
+public import Pcf.Bounding.SchemeDynamics
 
 /-!
 # The local normalization square
@@ -14,6 +16,8 @@ file. Its localization has the same fraction field as the upper source ring
 when the source vertical map is birational. Thus no choice of a quotient or
 of a normalized base-change component is part of the ramification comparison.
 -/
+
+@[expose] public section
 
 universe u
 

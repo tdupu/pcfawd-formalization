@@ -3,8 +3,10 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Bounding.FiniteSingularCorrection
-import Pcf.Bounding.InvariantDivisorStep0Assembly
+module
+
+public import Pcf.Bounding.FiniteSingularCorrection
+public import Pcf.Bounding.InvariantDivisorStep0Assembly
 
 /-!
 # The invariant-divisor theorem over a characteristic-zero field
@@ -14,6 +16,8 @@ and generic smoothness. Thus the only remaining mathematical inputs to the
 invariant-divisor theorem are the local purity and Abhyankar packages.  The
 local-domain consequence of regularity is derived from the proved Stacks Tag 00NP.
 -/
+
+@[expose] public section
 
 universe u
 

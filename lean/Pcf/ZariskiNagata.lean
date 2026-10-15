@@ -3,7 +3,9 @@ Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
-import Pcf.Purity
+module
+
+public import Pcf.Purity
 
 /-!
 # Zariski–Nagata purity, stated faithfully
@@ -64,6 +66,8 @@ codimension at least two. This was found by the same adversarial review.
   construction exists and the roundtrip is the identity.
 * `Pcf.localPurity_of_codim_le_one` — purity is free below codimension two.
 -/
+
+@[expose] public section
 
 namespace Pcf
 
