@@ -20,7 +20,7 @@ explicit go-ahead, given at the time and separately from any instruction to prep
 
 Submission parameters, for when the time comes:
 
-- repository: **a new public repository `tdupu/pcf_public`**, not this private one (decided by
+- repository: **a new public repository `tdupu/pcf-public`**, not this private one (decided by
   Taylor 2026-10-15), at one full commit SHA. It needs `LICENSE` at its root, `lean/`,
   `palomar/`, and the preflight workflow. The paths below assume the same layout;
 - project path `palomar`;
@@ -34,7 +34,8 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 ### Needs Taylor
 
-- [ ] **Create the public repository `tdupu/pcf_public`** and decide what moves into it.
+- [x] Public repository `tdupu/pcf-public` created by Taylor 2026-10-15 (empty; not populated yet).
+- [ ] Decide what moves into `tdupu/pcf-public`, and when.
       Palomar accepts only public GitHub repositories, and `tdupu/pcf` stays private. The
       minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and whatever
       `formalization.yaml` cites: the manuscript and `ai/ai-usage.md`.
@@ -42,7 +43,7 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 - [x] Automation account, review status, arXiv (Taylor, 2026-10-15): the code was built with
       `using-leanpowers` (`tdupu/agent-skills-public`), which builds on `CBirkbeck/mathlib-quality`;
       agents reviewed the statements; there is no arXiv identifier yet, so `latex/paper.tex`
-      must ship in `pcf_public`.
+      must ship in `pcf-public`.
 - [ ] **One more statement-fidelity review** of the final `PcfChallenge.lean` against the
       manuscript (Taylor asked for this). Record the result in `review.notes`.
 - [ ] Decide the submission relationship answer. Palomar records it permanently as a claim
