@@ -14,30 +14,51 @@ development produced three claims that overstated what the corresponding formal
 statements delivered; all three were retracted, and the retractions are themselves
 registered here as entries 9–11.
 
+The entry actually prepared for Palomar comparison is **Entry 0**, the characteristic-zero
+theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its two non-vacuity companions. Its
+Palomar project is `palomar/` at the repository root (`PcfChallenge.lean`,
+`PcfSolution.lean`, `comparator.json`, `formalization.yaml`; see `palomar/README.md`).
+Entries 1–11 are older claims about the same development. They are kept as a claim
+manifest and are not part of the Comparator configuration.
+
 ## Pin
+
+All values re-derived 2026-10-15 at `tdupu/pcf` commit `7f3f5b1`.
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcf` |
-| Commit | *the commit introducing this file* — supply at submission time |
-| `lean/` subtree | `f7bf72d05a6839ba1290ec08561736d603512fe1` at the time of writing; recompute with `git rev-parse HEAD:lean` (stable across manuscript-only commits, but this file now lives inside `lean/`, so it moves when this file changes) |
-| Toolchain | `leanprover/lean4:v4.34.0` |
-| Mathlib | `leanprover-community/mathlib4`, rev `5ed2965256430c3649e86755f9576b54eca72435` (`inputRev` `v4.34.0`) |
-| Build | `lake build` — 2584 jobs, 0 errors, 0 warnings |
-| Audit | `lean/Pcf/Audit.lean`, 160 declarations, all on `propext`, `Classical.choice`, `Quot.sound` |
-| Forbidden tokens | no `sorry`, `axiom`, `admit`, `native_decide` in `lean/Pcf/` |
+| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcf-public`, which exists but is still empty. |
+| Commit | supply at submission time: one full SHA of `tdupu/pcf-public` |
+| `lean/` subtree | `f8684d02390386e9d01e5fa8a9b849995b0945cc` at `7f3f5b1`, before this file was edited. This file lives inside `lean/`, so the hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
+| Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
+| Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
+| Module system | all 178 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
+| Build | `lake build` in `lean/`: `Build completed successfully (3504 jobs)`, 0 errors. The replayed log has 172 linter and deprecation warnings, none of them errors |
+| Audit | `lean/Pcf/Audit.lean`: 1234 `#print axioms` commands covering 1233 distinct declarations (`Pcf.pointClosureSubscheme_genericPoint` is listed twice). In the build log, 1217 report `[propext, Classical.choice, Quot.sound]`, 16 report `[propext, Quot.sound]`, 1 reports `[propext]`, and none report `sorryAx` |
+| Forbidden tokens | no `sorry`, `axiom`, `admit` or `native_decide` in tracked `lean/Pcf/**/*.lean` (one prose hit, the word "admit" in a docstring of `Pcf/Stacks/Abhyankar/StrictHenselizationQuotientStandard.lean`, is not a tactic) |
 
-The Mathlib revision was confirmed two ways — the `rev` field of `lake-manifest.json`
-and `git rev-parse HEAD` in `.lake/packages/mathlib` — because a first attempt to read
-it by `grep` returned the repository's own HEAD instead, which would have frozen a
-wrong pin into a permanent record.
+The Mathlib revision was confirmed two ways: the `rev` field of the `mathlib` package in
+`lean/lake-manifest.json` (read with a JSON parser, keyed on `name`), and
+`git -C lean/.lake/packages/mathlib rev-parse HEAD`. Both give
+`56a005855ea17e0b0958f73ec801ae140b0a1679`. The double check exists because a first
+attempt, on the earlier pin, read it with `grep` and got the repository's own HEAD, which
+would have frozen a wrong pin into a permanent record.
+
+The audit counts come from the build log and `grep` over `Audit.lean`. They are not
+copied from earlier records. The three `Pcf.Palomar` declarations of Entry 0 are not in
+`Audit.lean`; their axioms were printed separately (below). `Pcf.pcfAllTheWayDown_charZero`,
+which they are derived from, is in it.
 
 Accompanying manuscript: `latex/paper.tex`. Assumption census: `AXIOMS.md`, beside this
 file. Statement-to-declaration map: `README.md`, likewise.
 
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
-separate, explicitly authorized act.
+separate, explicitly authorized act. Still open before any submission (from
+`palomar/README.md`): populating `tdupu/pcf-public`, getting a passing Palomar preflight
+run there, the relationship answer, and reconciling `latex/paper.tex`. Its "Formalization"
+subsubsection still says `thm:general`, `lem:covers` and the passage to the normalization
+are not formalized, which contradicts Entry 0.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -64,6 +85,172 @@ separate, explicitly authorized act.
 > and `Classical.choice`, which the entries here do satisfy. What follows is a claim
 > manifest, useful as the informal-vs-formal half of a submission and not a substitute
 > for it.
+>
+> *(2026-10-15: the challenge/solution split, Comparator configuration and
+> `formalization.yaml` now exist in `palomar/`, for Entry 0 only. The paragraph above
+> describes this file as it stood on 2026-09-23.)*
+
+---
+
+# Entry 0 — PCF all the way down in characteristic zero (CONDITIONAL; the Palomar entry)
+
+This is the entry the Comparator configuration `palomar/comparator.json` compares. Its
+`theorem_names` are the three declarations below, and its `permitted_axioms` are
+`propext`, `Quot.sound` and `Classical.choice`. The definitions it uses
+(`Pcf.Palomar.ZariskiNagataPurity`, `AbhyankarLemma`, `IsNormalizedPCF`,
+`PCFAllTheWayDown`, …) are in `lean/Pcf/Palomar/Statement.lean`. The definitions in
+`palomar/PcfChallenge.lean` (300 lines, Mathlib imports only) are identical to it; only
+the module docstring differs, and the Challenge adds the three theorems with `sorry`.
+`lean/Pcf/Palomar/Bridge.lean` proves each Challenge notion equivalent to the
+development's (`isNormalizedPCF_iff_scheme`, `pcfAllTheWayDown_iff_scheme`,
+`zariskiNagataPurity_iff`, `abhyankarLemma_iff`) and derives the theorem from
+`Pcf.pcfAllTheWayDown_charZero`.
+
+Extracted 2026-10-15 with `lake env lean` on a scratch file importing
+`Pcf.Palomar.Bridge`. The output below is verbatim. For the first declaration Lean prints
+the `#check @…` result without the leading `@`.
+
+**Declaration** `Pcf.Palomar.pcfAllTheWayDown_charZero`
+
+```
+Pcf.Palomar.pcfAllTheWayDown_charZero : (∀ (R S : Type u_1) [inst : CommRing R] [inst_1 : CommRing S]
+    [inst_2 : Algebra R S], Pcf.Palomar.ZariskiNagataPurity R S) →
+  (∀ (R S : Type u_1) [inst : CommRing R] [inst_1 : CommRing S] [inst_2 : Algebra R S] (a : R),
+      Pcf.Palomar.AbhyankarLemma R S a) →
+    ∀ (k : Type u_1) [inst : Field k] [CharZero k] {X : AlgebraicGeometry.Scheme} (s : X ⟶ AlgebraicGeometry.Spec ↧k)
+      [AlgebraicGeometry.LocallyOfFiniteType s] (f : X ⟶ X) [AlgebraicGeometry.IsFinite f]
+      [AlgebraicGeometry.IsDominant f] [inst : AlgebraicGeometry.IsIntegral X] [AlgebraicGeometry.IsLocallyNoetherian X]
+      [TopologicalSpace.NoetherianSpace ↥X], Pcf.Palomar.IsNormalizedPCF f → Pcf.Palomar.PCFAllTheWayDown f
+'Pcf.Palomar.pcfAllTheWayDown_charZero' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+**Declaration** `Pcf.Palomar.existsUnique_isNormalizationLift`
+
+```
+@Pcf.Palomar.existsUnique_isNormalizationLift : ∀ {X : AlgebraicGeometry.Scheme} [inst : AlgebraicGeometry.IsIntegral X]
+  (f : X ⟶ X) [AlgebraicGeometry.IsFinite f] [AlgebraicGeometry.IsDominant f], ∃! g, Pcf.Palomar.IsNormalizationLift f g
+'Pcf.Palomar.existsUnique_isNormalizationLift' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+**Declaration** `Pcf.Palomar.exists_pointClosure_restriction`
+
+```
+@Pcf.Palomar.exists_pointClosure_restriction : ∀ {X : AlgebraicGeometry.Scheme} (F : X ⟶ X) (y : ↥X),
+  F y = y →
+    ∃ h,
+      CategoryTheory.CategoryStruct.comp h (Pcf.Palomar.pointClosureι y) =
+        CategoryTheory.CategoryStruct.comp (Pcf.Palomar.pointClosureι y) F
+'Pcf.Palomar.exists_pointClosure_restriction' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+For comparison, the development's theorem it is derived from, extracted the same way:
+
+```
+Pcf.pcfAllTheWayDown_charZero : Pcf.PcfAllTheWayDownLocalTheorems →
+  ∀ (k : Type u_1) [inst : Field k] [inst_1 : CharZero k] {X : AlgebraicGeometry.Scheme}
+    (s : X ⟶ AlgebraicGeometry.Spec ↧k) [inst_2 : AlgebraicGeometry.LocallyOfFiniteType s] (f : X ⟶ X)
+    [inst_3 : AlgebraicGeometry.IsFinite f] [inst_4 : AlgebraicGeometry.IsDominant f]
+    [inst_5 : AlgebraicGeometry.IsIntegral X] [inst_6 : AlgebraicGeometry.IsLocallyNoetherian X]
+    [inst_7 : TopologicalSpace.NoetherianSpace ↥X],
+    Pcf.SchemeNormalizedPCFOfFiniteType k s f → Pcf.SchemePCFAllTheWayDown k s f
+'Pcf.pcfAllTheWayDown_charZero' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+**Informal claim.** Assume two statements, each for all commutative rings `R`, `S` in the
+working universe and every `R`-algebra structure on `S`:
+
+1. *(purity)* `Pcf.Palomar.ZariskiNagataPurity R S`, an affine form of Zariski–Nagata
+   purity of the branch locus (Stacks Tag 0BMB). If `R` and `S` are Noetherian and `S` is
+   of finite type over `R`, then `R → S` is étale at every prime `w` of `S` such that:
+   `S_w` is an integrally closed domain, `R_{w ∩ R}` is a regular local ring, `S` is
+   quasi-finite over `R` at `w`, `ht w = ht (w ∩ R) ≥ 1`, and `R → S` is unramified at
+   every height-one prime specializing to `w`;
+2. *(Abhyankar)* `Pcf.Palomar.AbhyankarLemma R S a` for every `a ∈ R`, an affine form of
+   Abhyankar's lemma for a regular divisor (Stacks Tags 0EYG/0EYH). Suppose `R` is
+   Noetherian, `a` is a nonzerodivisor, `R/(a)` is regular, `S` is finite over `R`, `R → S`
+   is étale at every prime of `S` not containing `a`, `S` is the integral closure of `R`
+   in `S[1/a]`, and **every positive integer is invertible in `R`**. Then every prime
+   `y ∋ a` of `R` lies under a prime of some étale `R`-algebra `R'`, where `R'` is
+   Noetherian, `a` is a nonzerodivisor in `R'`, `R'/(a)` is regular, and `R' ⊗_R S` is
+   `R'`-isomorphic to a finite product `∏ᵢ R'[z]/(z^{eᵢ} − uᵢ a)` with each `eᵢ ≥ 1`
+   invertible and each `uᵢ` a unit.
+
+Let `k` be a field of characteristic zero. Let `X` be an integral, locally Noetherian
+scheme whose underlying space is Noetherian, with a morphism `s : X → Spec k` locally of
+finite type. Let `f : X → X` be a finite, dominant morphism of schemes. Suppose `f` is
+**normalized PCF**: every lift `g` of `f` to the normalization `X̃` of `X` (Mathlib's
+normalization of `X` in its function field) is PCF. A lift satisfies `ν ∘ g = f ∘ ν` and
+maps the generic point through an endomorphism of `Spec K(X)`. `g` is PCF when the set
+`{g^{n+1}(x) : n ≥ 0, x of codimension one with ramification index of the stalk map > 1}`
+is finite. Then `f` is **PCF all the way down**: for every depth `d`, `f` is normalized PCF,
+and for every `d ≥ 1` the following also holds. Let `y = f^r(x)` with `x` of codimension
+one, and suppose `f^p(y) = y` for some `p ≥ 1`. Then every endomorphism `h` of the reduced
+closed subscheme `\overline{\{y\}}` with `h ∘ ι = ι ∘ f^p` is PCF all the way down to
+depth `d − 1`.
+
+The two companions show that the quantifiers in these definitions range over real maps. A
+finite dominant endomorphism of an integral scheme has **exactly one** lift to the
+normalization (`existsUnique_isNormalizationLift`). Every endomorphism `F` of a scheme
+fixing a point `y` restricts to some endomorphism of the reduced closure of `y`
+(`exists_pointClosure_restriction`).
+
+This is the characteristic-zero form of Corollary `cor:pcfawd` of `latex/paper.tex`,
+whose first step is Theorem `thm:general`. The conjecture it settles in that case, under
+the two hypotheses, is the one quoted on page 2 of Bridy–Ingram–Jones–Juul–Levy–Manes–
+Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arXiv:1511.00194`.
+
+**Does not claim.**
+
+* **Purity and Abhyankar's lemma are hypotheses, not theorems of this repository.** They
+  are the first two explicit arguments and are quantified over all commutative rings of
+  the universe. `#print axioms` cannot see hypotheses, so the three standard axioms above
+  do **not** mean nothing is assumed. If either stated form were false, the theorem would
+  be vacuous. The final agent fidelity review (`palomar/formalization.yaml`,
+  `review.notes`) judged both to be true statements. That is an agent's judgement against
+  the Stacks Project, not a proof. Partial progress toward proving them is in
+  `lean/Pcf/Stacks/Purity/` and `lean/Pcf/Stacks/Abhyankar/` and is not used to discharge
+  either hypothesis.
+* **Only affine forms are assumed.** Neither hypothesis is the scheme-level statement of
+  its tag. Purity is stated at one prime of a finite-type algebra over a Noetherian ring.
+  Abhyankar is stated only at primes `y` containing `a`, after one étale base change.
+* **Abhyankar is assumed only for ℚ-algebras.** "Every positive integer is invertible in
+  `R`" replaces the tags' tameness hypothesis and is stronger. The conclusion allows units
+  `uᵢ` (0EYH has `uᵢ = 1`). Nothing here addresses tame ramification in positive
+  characteristic.
+* **Characteristic zero only.** `[CharZero k]` is a hypothesis. Nothing is claimed in
+  characteristic `p`.
+* **Depth `0` restates the hypothesis.** `PCFAllTheWayDownAtDepth 0 f` is by definition
+  `IsNormalizedPCF f`. Only depths `d ≥ 1` carry content.
+* **No termination bound.** `PCFAllTheWayDown f` asserts every finite depth. The
+  manuscript's "at most `dim X` steps" is not stated, so the recursion is not shown to
+  bottom out.
+* **Varieties are encoded, not named.** "Variety over `k`" becomes integral + locally
+  Noetherian + Noetherian space + `s` locally of finite type. **Separatedness is not
+  assumed**, and `f` is **not required to be a `k`-morphism**: no compatibility between
+  `f` and `s` is assumed. In both respects the statement is slightly more general than
+  `cor:pcfawd`, not identical to it. "Finite surjective" is rendered as finite and
+  dominant.
+* **Notions are Mathlib's, identified with the manuscript's only by review.** Codimension
+  one is `Order.coheight x = 1`. The ramification index is `Ideal.ramificationIdx` of the
+  stalk's maximal ideal along the stalk map (`Pcf.Palomar.ramificationIndexAt`). The
+  normalization is Mathlib's relative normalization in the function field. That these match
+  the paper's prime divisors, DVR ramification indices and normalization is the
+  fidelity reviewers' reading, not a checked equivalence. The Bridge equivalences are with the
+  development's own definitions, not with the paper.
+* **Uniqueness of the restriction is not a compared theorem.** The Challenge docstring
+  notes that the restriction `h` is unique because `ι` is a monomorphism. Palomar
+  compares only the existence statement.
+* **Bridge.lean is not compared by Palomar.** Comparator checks that the Solution proves
+  the Challenge's three theorems with the permitted axioms. The equivalence of the
+  Challenge notions with the development's (`Bridge.lean`) is evidence for this file's
+  reader, and the Challenge does not depend on it.
+* **Verification so far is local.** `lake comparator --paranoid` accepted the Solution
+  on macOS with no sandbox, under the default kernel, lean4lean, nanoda, con-leche and
+  con-ron (per `palomar/README.md`; not re-run for this file). It is not Palomar's Linux
+  run, and the Palomar preflight has not run, since `tdupu/pcf-public` is not populated.
+* **No human author has reviewed the statement.** `review.status` is `agent-reviewed`.
+
+**Axioms.** All three: `[propext, Classical.choice, Quot.sound]`
 
 ---
 
@@ -72,12 +259,16 @@ separate, explicitly authorized act.
 **Declaration** `Pcf.pcf_all_the_way_down`
 
 ```
-∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivDyn (P i))
+@Pcf.pcf_all_the_way_down : ∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivDyn (P i))
   (S : (i : ℕ) → Pcf.PcfSetup (P i) (P (i + 1))),
   (∀ (i : ℕ), (S i).res = D (i + 1)) →
-    (∀ (i : ℕ), ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n) →
-      (D 0).PCF → ∀ (i : ℕ), (D i).PCF
+    (∀ (i : ℕ), ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n) → (D 0).PCF → ∀ (i : ℕ), (D i).PCF
 ```
+
+*(Entries 1–11 were re-extracted on 2026-10-15 under `v4.35.0`. The types are unchanged
+from the `v4.34.0` record except for line breaking and, in `Abhyankar.not_etale_wild`, two
+numeral type ascriptions that the earlier record had added by hand. They are now quoted as
+printed.)*
 
 **Informal claim.** In the abstract model of divisorial dynamics defined in this
 repository, consider a tower in which each stage `i` supplies a system `D i` together
@@ -129,9 +320,12 @@ asserting it:
 **Declaration** `Abhyankar.not_etale_wild`
 
 ```
-∀ {k : Type u_1} [inst : Field k],
-  (2 : k) = 0 → ¬Algebra.Etale k (AdjoinRoot (Abhyankar.kummerPoly (1 : kˣ) 2))
+@Abhyankar.not_etale_wild : ∀ {k : Type u_1} [inst : Field k],
+  2 = 0 → ¬Algebra.Etale k (AdjoinRoot (Abhyankar.kummerPoly 1 2))
 ```
+
+(Here `2 = 0` is the equation in `k`, and `1` is the unit `1 : kˣ`; the printer omits
+the ascriptions.)
 
 **Informal claim.** Over any field of characteristic `2`, the algebra `k[y]/(y² − 1)`
 is **not** étale — so the conclusion above genuinely fails without tameness, not
@@ -153,11 +347,17 @@ constant term `0` — is not étale over `k`.
   `C = A[x]/(xᵉ − f)`. Clause 1 (finite locally free) is proved separately as
   `Abhyankar.finrank`, with freeness and finiteness supplied by Mathlib's
   `Polynomial.Monic.free_adjoinRoot` and `Monic.finite_adjoinRoot`. Clause 2 is the
-  entry above. **Clause 3 — tame ramification in codimension one — is not proved and
-  is not stated anywhere in this repository.** It is the clause the name "standard
-  *tamely ramified* morphism" refers to, and the clause the proof of Tag 0EYG
-  consumes.
-* **This is not Abhyankar's lemma.** Tag 0EYG, the structure theorem, is not proved.
+  entry above. **Clause 3, tame ramification in codimension one, is not part of these
+  entries.** It is the clause the name "standard *tamely ramified* morphism" refers to,
+  and the clause the proof of Tag 0EYG consumes. *(Updated 2026-10-15: this said "not
+  stated anywhere in this repository", which is now stale. The predicate
+  `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong` now exists
+  (`lean/Pcf/Stacks/Abhyankar/TameRamification.lean`), and
+  `Pcf.Stacks.standardCover_tameInCodimensionOne_charZero` proves clause 3 for the
+  standard cover only when every positive integer is invertible in the base. The general
+  tame case is still not proved.)*
+* **This is not Abhyankar's lemma.** Tag 0EYG, the structure theorem, is not proved; an
+  affine form of it is a hypothesis of Entry 0.
 * **The separability input is Mathlib's**, not this repository's:
   `Polynomial.separable_X_pow_sub_C_unit`.
 
@@ -346,5 +546,14 @@ more faithful.
   "Mathlib bans AI".
 
 * No author has reviewed the formalization. Compilation certifies the formal
-  statements; it does not certify that they render the statements of `latex/paper.tex`,
-  and that comparison has not been completed.
+  statements; it does not certify that they render the statements of `latex/paper.tex`.
+  For Entry 0 only, an agent fidelity review (2026-10-15, recorded in
+  `palomar/formalization.yaml` `review.notes`) compared the Challenge definition by
+  definition with `latex/paper.tex` and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: faithful
+  to `cor:pcfawd`, slightly more general (no separatedness; `f` need not be a
+  `k`-morphism). No human comparison has been completed for any entry.
+* `latex/paper.tex` currently **contradicts Entry 0** in its "Formalization"
+  subsubsection, which still lists `thm:general`, `lem:covers` and the passage to the
+  normalization as not formalized, and `prop:loci-compare` and `lem:tower-unnormalized` as
+  assumed. `paper.tex` is hand-managed and must be reconciled by the authors before
+  submission (`palomar/README.md`).
