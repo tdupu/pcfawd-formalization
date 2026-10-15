@@ -34,22 +34,26 @@ forward images of its branch divisors), then `f` is *PCF all the way down*
 of `f^p` to the reduced closure of every point `y = f^r(x)` with `x` of codimension one and
 `f^p(y) = y`, `p ≥ 1`, and recursively for those restrictions, through `d` steps.
 Ramification indices are those of stalk maps (`ramificationIndexAt`); on a normal scheme at a
-codimension-one point this is the ramification index of the extension of DVRs.
+codimension-one point of a normal, locally Noetherian scheme this is the ramification index
+of the extension of DVRs.
 
 **Assumed, not proved.** Two classical results are explicit hypotheses, over all commutative
 rings in the working universe: `ZariskiNagataPurity` (Stacks Tag 0BMB, affine form) and
 `AbhyankarLemma` (Stacks Tags 0EYG/0EYH, affine form). The latter requires every positive
-integer to be invertible, stronger than the tags' tameness hypothesis, so the assumed
-statement is weaker than the tags. Nothing else is assumed; the axioms used are `propext`,
-`Classical.choice`, `Quot.sound`.
+integer to be invertible, stronger than the tags' tameness hypothesis; its conclusion, with
+the local equation the image of `a`, is a consequence of 0EYG/0EYH in this ℚ-algebra case,
+as in the proof of 0EYG. Nothing else is assumed; the Solution uses only the axioms
+`propext`, `Classical.choice`, `Quot.sound`.
 
 **Non-vacuity.** `IsNormalizedPCF` and `PCFAllTheWayDownAtDepth` quantify over every lift of
 `f` to the normalization and every restriction of `f^p` to a point closure. The compared
 theorems `existsUnique_isNormalizationLift` and `exists_pointClosure_restriction` show each
 quantifier ranges over exactly one map (the restriction is unique because the closed
-immersion is a monomorphism).
+immersion is a monomorphism; at deeper levels the restriction is again finite and surjective,
+so the lift exists there too).
 
-**Limitations.** Separatedness is not assumed (slightly more general than "variety"). At depth
+**Limitations.** Separatedness is not assumed, and `f` is not required to be a morphism over
+`k` (both slightly more general than the manuscript). At depth
 `0` the conclusion restates the hypothesis. The depth is not bounded by `dim X` here.
 Normalization is Mathlib's relative normalization of `X` in its function field.
 -/

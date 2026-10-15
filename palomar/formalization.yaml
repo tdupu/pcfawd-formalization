@@ -2,42 +2,44 @@
 # Format: mathlib-initiative formalization.yaml v0.4, with Palomar's mandatory
 # additions (see PalomarRegistry/PalomarPolicy CONTRIBUTING.md, section 3).
 #
-# DRAFT. Every value marked TODO(Taylor) is a fact about people or process that
-# an agent cannot establish and that Palomar records permanently. Resolve each
-# one, then delete the TODO comment. Nothing here has been submitted.
+# Prepared, not submitted. Facts about people and process were confirmed by
+# Taylor on 2026-10-15.
 
 version: v0.4
 
 project:
   name: "PCF all the way down in characteristic zero, conditional on Zariski–Nagata purity and Abhyankar's lemma"
-  # TODO(agent): this abstract was drafted from lean/README.md and
-  # lean/HANDOFF.md §9.42, not from the elaborated type. Re-derive every clause
-  # from `#check @Pcf.pcfAllTheWayDown_charZero` and the definitions restated
-  # in PcfChallenge.lean before submission.
   description: |
     A Lean 4 / Mathlib formalization of the characteristic-zero case of the
-    "PCF all the way down" theorem for finite self-maps of varieties.
+    "PCF all the way down" theorem (Corollary cor:pcfawd of the manuscript,
+    which contains Theorem thm:general as its first step).
 
-    Let k be a field of characteristic zero, X an integral, locally Noetherian,
-    Noetherian-space scheme locally of finite type over k, and f : X → X a
-    finite dominant k-morphism that is post-critically finite in the normalized
-    sense. The compared theorem `Pcf.pcfAllTheWayDown_charZero` concludes that
-    f is PCF all the way down: at every finite recursion depth, the return maps
-    induced on preperiodic integral effective divisors, and recursively on the
-    divisors of those, are again post-critically finite in the normalized sense.
+    Let k be a field of characteristic zero, X an integral, locally Noetherian
+    scheme with Noetherian underlying space, locally of finite type over k, and
+    f : X → X a finite dominant morphism of schemes (f is not required to be a
+    k-morphism, and X is not required to be separated). Ramification is
+    measured on the normalization X̃ of X (Mathlib's normalization of X in its
+    function field): the unique lift g of f has post-critical set
+    {g^(n+1)(x) : n ≥ 0, x a codimension-one point whose stalk map has
+    ramification index > 1}, and f is "normalized PCF" if this set is finite.
+    The compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` concludes
+    that a normalized-PCF f is PCF all the way down: for every depth d, f is
+    normalized PCF and, for every point y = f^r(x) with x of codimension one
+    and f^p(y) = y for some p ≥ 1, the restriction of f^p to the reduced
+    closure of y is PCF all the way down to depth d − 1. Two further compared
+    theorems, `Pcf.Palomar.existsUnique_isNormalizationLift` and
+    `Pcf.Palomar.exists_pointClosure_restriction`, show that the lift to the
+    normalization and the restrictions quantified over in these definitions
+    exist (and are unique), so the definitions are not vacuous.
 
-    The theorem is conditional. It takes as a hypothesis a structure
-    `PcfAllTheWayDownLocalTheorems` whose two fields are universe-wide
-    statements of Zariski–Nagata purity of the branch locus (Stacks Project Tag
-    0BMB) and of Abhyankar's lemma (Stacks Project Tags 0EYG/0EYH). Neither is
-    proved in this formalization. No other mathematical input is assumed: the
-    normalization, the divisor lifts, the bounding theorem and the recursive
-    assembly are all proved. The proof uses only the axioms propext,
-    Classical.choice and Quot.sound.
-
-    Separatedness, which the manuscript includes in "variety", is not used, so
-    the formal statement is slightly more general there. At depth zero it
-    restates the ambient PCF hypothesis.
+    The theorem is conditional. It takes two hypotheses, each quantified over
+    all commutative rings in the working universe: an affine form of
+    Zariski–Nagata purity of the branch locus (Stacks Project Tag 0BMB), and an
+    affine form of Abhyankar's lemma for a regular divisor (Tags 0EYG/0EYH) for
+    algebras in which every positive integer is invertible. Neither is proved
+    here. No other mathematical input is assumed; the proof uses only the
+    axioms propext, Classical.choice and Quot.sound. At depth zero the
+    conclusion restates the hypothesis.
   authors:
     # Confirmed by Taylor 2026-10-15: all four are authors of the formalization.
     - Taylor Dupuy
@@ -67,7 +69,7 @@ sources:
       Abhyankar's lemma, which the manuscript cites, enter as explicit
       hypotheses; and varieties are encoded as integral, locally Noetherian,
       Noetherian-space schemes locally of finite type over k, without
-      separatedness.
+      separatedness, and f is not required to be a k-morphism.
   - title: "Finite ramification for preimage fields of post-critically finite morphisms"
     type: paper
     authors: [Andrew Bridy, Patrick Ingram, Rafe Jones, Jamie Juul, Alon Levy, Michelle Manes, Simon Rubinstein-Salzedo, Joseph H. Silverman]
@@ -79,8 +81,9 @@ sources:
     identifier: "https://stacks.math.columbia.edu/tag/0BMB"
     relationship: background
     note: >
-      The two results assumed as hypotheses of the compared theorem. Their
-      formal statements are fields of `PcfAllTheWayDownLocalTheorems`.
+      The two results assumed as hypotheses of the compared theorem; their
+      affine statements are the hypotheses `purity` and `abhyankar` of
+      `Pcf.Palomar.pcfAllTheWayDown_charZero`.
 
 automation:
   methods:
@@ -98,11 +101,14 @@ automation:
         commit.
 
 review:
-  # Confirmed by Taylor 2026-10-15: agents reviewed the statements. One more
-  # statement-fidelity pass on the final PcfChallenge.lean is required before
-  # submission; update these notes with its result.
+  # Confirmed by Taylor 2026-10-15: agents reviewed the statements.
   status: agent-reviewed
   notes: >
-    Statement fidelity was audited by agents against the manuscript; see
-    lean/PALOMAR.md (claim manifest with does-not-claim blocks) and
+    Statement fidelity was audited by agents against the manuscript. The final
+    pass (2026-10-15, lean-fidelity skill, Claude Opus 5.5) reviewed
+    palomar/PcfChallenge.lean definition by definition against
+    latex/paper.tex and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the
+    statement faithfully formalizes cor:pcfawd, is slightly more general (no
+    separatedness; f need not be a k-morphism), and both assumed hypotheses
+    are true statements, so it is not vacuous. See also lean/PALOMAR.md and
     lean/AXIOMS.md.

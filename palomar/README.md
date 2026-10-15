@@ -11,9 +11,9 @@ explicit go-ahead, given at the time and separately from any instruction to prep
 | Path | Role |
 | --- | --- |
 | `lean-toolchain`, `lakefile.toml`, `lake-manifest.json` | Lake project. The proof development is the contained path dependency `../lean`; packages are shared from `../lean/.lake/packages`. |
-| `PcfChallenge.lean` | The statement: Mathlib imports only. It restates every `Pcf` definition the compared theorem depends on, and leaves the theorem as `sorry`. |
+| `PcfChallenge.lean` | The statement (300 lines, Mathlib imports only): the `Pcf.Palomar` definitions, byte-identical to `../lean/Pcf/Palomar/Statement.lean`, with the three compared theorems as `sorry`. |
 | `PcfSolution.lean` | The proof: imports the `Pcf` development, which supplies `Pcf.pcfAllTheWayDown_charZero`. |
-| `comparator.json` | Compares `Pcf.pcfAllTheWayDown_charZero`; permitted axioms are `propext`, `Quot.sound`, `Classical.choice`. |
+| `comparator.json` | Compares `Pcf.Palomar.pcfAllTheWayDown_charZero`, `Pcf.Palomar.existsUnique_isNormalizationLift` and `Pcf.Palomar.exists_pointClosure_restriction`; permitted axioms are `propext`, `Quot.sound`, `Classical.choice`. |
 | `formalization.yaml` | Palomar metadata (v0.4). Contains `TODO(Taylor)` items. |
 | `../LICENSE` | Apache-2.0, at repository root as Palomar requires (matching the Lean file headers). |
 | `../.github/workflows/palomar-preflight.yml` | Manually triggered Palomar preflight, pinned to PalomarSubmission `d4e41c1`. |
@@ -46,8 +46,13 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
       `using-leanpowers` (`tdupu/agent-skills-public`), which builds on `CBirkbeck/mathlib-quality`;
       agents reviewed the statements; there is no arXiv identifier yet, so `latex/paper.tex`
       must ship in `pcf-public`.
-- [ ] **One more statement-fidelity review** of the final `PcfChallenge.lean` against the
-      manuscript (Taylor asked for this). Record the result in `review.notes`.
+- [x] **One more statement-fidelity review** of the final `PcfChallenge.lean` against the
+      manuscript (2026-10-15): approved, recorded in `review.notes`.
+- [ ] **Reconcile `latex/paper.tex` with the formalization.** Its "Formalization"
+      subsubsection still says `thm:general`, `lem:covers` and the passage to the
+      normalization are not formalized, and that `prop:loci-compare` and
+      `lem:tower-unnormalized` are assumed. The submission proves these and assumes only
+      purity and Abhyankar. `paper.tex` is hand-managed and ships in `pcf-public`.
 - [ ] Decide the submission relationship answer. Palomar records it permanently as a claim
       about the submitter: "I am a responsible author or maintainer", or "I have approval
       from one".
@@ -57,26 +62,22 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 ### Agent work
 
 - [x] Apache-2.0 `LICENSE` at repository root.
-- [ ] Lean toolchain `v4.35.0` (floor `v4.35.0-rc2`) with Mathlib `v4.35.0`. The toolchain
-      must equal Mathlib's own `lean-toolchain` exactly. In progress on branch
-      `toolchain-v4.35.0`.
-- [ ] **Port every `.lean` file in the repository to the Lean module system.** Palomar
-      requires a `module` header in every source file, at most 10,000 lines each; on
-      2026-10-15, 175 of 177 files in `lean/Pcf` lacked one. This needs `public import`,
-      exposed definitions where clients need bodies, then a rebuild.
-- [ ] `PcfChallenge.lean`: restate the transitive closure of `Pcf` definitions used by the
-      type of `Pcf.pcfAllTheWayDown_charZero`, verbatim and under the same names. Hard
-      limit 1,000 lines / 100 KiB; Palomar warns above 300 lines / 32 KiB. The size of that
-      closure has not been measured yet; if it is too large, the statement surface has to
-      be redesigned.
-- [ ] `PcfSolution.lean` and `lake-manifest.json` for this project.
-- [ ] A passing local Comparator run. On macOS this uses "fake landrun", which is weaker
-      evidence than Palomar's Linux sandbox.
+- [x] Lean toolchain `v4.35.0` with Mathlib `v4.35.0`, matching Mathlib's `lean-toolchain`
+      exactly.
+- [x] Every `.lean` file in `lean/Pcf` uses the module system. Exception: `../lean/tauceti/`
+      holds a non-module roadmap `Suggested.lean` and must be left out of `pcf-public`.
+- [x] `PcfChallenge.lean` (300 lines), `PcfSolution.lean`, `comparator.json` and
+      `lake-manifest.json`. The statement uses Mathlib vocabulary; `../lean/Pcf/Palomar/Bridge.lean`
+      proves it equivalent to the development's `Pcf.pcfAllTheWayDown_charZero`.
+- [x] Local `lake comparator --paranoid` run accepted the Solution under the default kernel,
+      lean4lean, nanoda, con-leche and con-ron. It ran on macOS with no sandbox, which is weaker
+      evidence than Palomar's Linux run.
+- [x] `project.description` re-derived from the elaborated Challenge.
 - [ ] A passing preflight run: Actions → "Palomar preflight", which needs the repository to
       be public. Upstream issue PalomarSubmission#154 (open on 2026-10-15) reports that the
       preflight can skip verification steps.
-- [ ] Re-derive the `project.description` abstract from the elaborated Challenge, and update
-      `../lean/PALOMAR.md` (the claim manifest) to the new pins.
+- [ ] Update `../lean/PALOMAR.md` (the claim manifest) and `../lean/HANDOFF.md` to the
+      `v4.35.0` pins and the `Pcf.Palomar` entry.
 
 ## Background
 
