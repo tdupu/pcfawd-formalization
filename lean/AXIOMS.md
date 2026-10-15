@@ -170,8 +170,9 @@ of them is now machine-checked:
   standard tamely ramified pieces. Scheme-theoretic; a field.
 * **Proved** (Stacks Tag 0EYF, *clauses 1 and 2 only*) — such a piece is finite free, and
   is étale where the divisor equation is invertible: `Abhyankar.finrank`, `Abhyankar.etale`,
-  `Abhyankar.ramificationIdx_eq_one`. Clause 3, tameness in codimension one, is not
-  stated anywhere. See §B.4.
+  `Abhyankar.ramificationIdx_eq_one`. Clause 3, tameness in codimension one, is stated
+  (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`) and proved only when every positive
+  integer is invertible (`Pcf.Stacks.standardCover_tameInCodimensionOne_charZero`). See §B.4.
 
 The interface is now `Pcf.KummerWitness` rather than `Pcf.UnramifiedWitness`.
 
@@ -302,13 +303,14 @@ The formalization now pins both halves so the confusion cannot recur:
 ## B.4 Stacks Tag 0EYF: which clauses are proved, and what they are worth
 
 `lean/Pcf/Abhyankar.lean` imports nothing outside Mathlib. Tag 0EYF makes three
-assertions about `C = A[x]/(x^e − f)`; this file addresses two.
+assertions about `C = A[x]/(x^e − f)`; that file addresses the first two, and
+`lean/Pcf/Stacks/Abhyankar/StandardCover.lean` addresses the third in characteristic zero.
 
 | Tag 0EYF clause | Status | Lean declaration |
 | --- | --- | --- |
 | 1. `Spec(C) → Spec(A)` finite locally free | **proved**, as free of rank `e` | `Abhyankar.finrank`; freeness and finiteness are Mathlib's `Polynomial.Monic.free_adjoinRoot` / `Monic.finite_adjoinRoot` |
 | 2. étale over `Spec(A_f)` | **proved** | `Abhyankar.etale`, `Abhyankar.ramificationIdx_eq_one`, `Abhyankar.etale_ramifiedPoly_general` |
-| 3. tamely ramified over `Spec(A)` in codimension 1 | **not proved, not stated** — no tameness predicate, no codimension, no `Spec(A)` in the file | — |
+| 3. tamely ramified over `Spec(A)` in codimension 1 | **stated; proved only when every positive integer is a unit in `A`** (the PCFAWD characteristic-zero setting). The general tame case is not proved. | predicate `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`; `Pcf.Stacks.standardCover_tameInCodimensionOne_charZero`, for the cover `x^e − u·a` with `u` a unit |
 
 Clause 3 is what the name "standard *tamely ramified* morphism" refers to, and it is the
 clause the proof of Tag 0EYG consumes.
