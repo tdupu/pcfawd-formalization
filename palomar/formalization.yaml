@@ -39,8 +39,7 @@ project:
     the formal statement is slightly more general there. At depth zero it
     restates the ambient PCF hypothesis.
   authors:
-    # TODO(Taylor): confirm that all four are authors of the *formalization*
-    # (they are the Lean file-header authors and the manuscript authors).
+    # Confirmed by Taylor 2026-10-15: all four are authors of the formalization.
     - Taylor Dupuy
     - Alon Levy
     - Thomas Tucker

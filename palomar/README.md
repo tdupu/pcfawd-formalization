@@ -20,7 +20,9 @@ explicit go-ahead, given at the time and separately from any instruction to prep
 
 Submission parameters, for when the time comes:
 
-- repository `tdupu/pcf` at one full commit SHA;
+- repository: **a new public repository `tdupu/pcf_public`**, not this private one (decided by
+  Taylor 2026-10-15), at one full commit SHA. It needs `LICENSE` at its root, `lean/`,
+  `palomar/`, and the preflight workflow. The paths below assume the same layout;
 - project path `palomar`;
 - Comparator configuration `palomar/comparator.json`;
 - metadata `palomar/formalization.yaml`.
@@ -32,11 +34,13 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 ### Needs Taylor
 
-- [ ] **Make `tdupu/pcf` public.** Palomar accepts only public GitHub repositories. The
-      repository also contains the unpublished manuscript under `latex/`
-      and `ai/`, so this is a real decision.
-- [ ] Resolve every `TODO(Taylor)` in `formalization.yaml`: the formalization's authors, the
-      automation account, `review.status`, and the manuscript's arXiv identifier.
+- [ ] **Create the public repository `tdupu/pcf_public`** and decide what moves into it.
+      Palomar accepts only public GitHub repositories, and `tdupu/pcf` stays private. The
+      minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and whatever
+      `formalization.yaml` cites: the manuscript and `ai/ai-usage.md`.
+- [x] Authors of the formalization: all four (Taylor, 2026-10-15).
+- [ ] Resolve the remaining `TODO(Taylor)` items in `formalization.yaml`: the automation
+      account, `review.status`, and the manuscript's arXiv identifier.
 - [ ] Decide the submission relationship answer. Palomar records it permanently as a claim
       about the submitter: "I am a responsible author or maintainer", or "I have approval
       from one".
