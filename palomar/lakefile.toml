@@ -1,0 +1,23 @@
+# Palomar submission project for `PCF all the way down`.
+# Selected project for Palomar: `palomar/`. The proof development is the
+# contained path dependency `../lean`; this directory holds only the
+# Challenge (statement) and Solution (proof wrapper) modules.
+name = "pcf_palomar"
+version = "0.1.0"
+defaultTargets = ["PcfChallenge", "PcfSolution"]
+packagesDir = "../lean/.lake/packages"
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "pcf"
+path = "../lean"
+
+[[lean_lib]]
+name = "PcfChallenge"
+
+[[lean_lib]]
+name = "PcfSolution"

@@ -1,0 +1,106 @@
+# Palomar metadata for the `PCF all the way down` Lean development.
+# Format: mathlib-initiative formalization.yaml v0.4, with Palomar's mandatory
+# additions (see PalomarRegistry/PalomarPolicy CONTRIBUTING.md, section 3).
+#
+# DRAFT. Every value marked TODO(Taylor) is a fact about people or process that
+# an agent cannot establish and that Palomar records permanently. Resolve each
+# one, then delete the TODO comment. Nothing here has been submitted.
+
+version: v0.4
+
+project:
+  name: "PCF all the way down in characteristic zero, conditional on Zariski–Nagata purity and Abhyankar's lemma"
+  # TODO(agent): this abstract was drafted from lean/README.md and
+  # lean/HANDOFF.md §9.42, not from the elaborated type. Re-derive every clause
+  # from `#check @Pcf.pcfAllTheWayDown_charZero` and the definitions restated
+  # in PcfChallenge.lean before submission.
+  description: |
+    A Lean 4 / Mathlib formalization of the characteristic-zero case of the
+    "PCF all the way down" theorem for finite self-maps of varieties.
+
+    Let k be a field of characteristic zero, X an integral, locally Noetherian,
+    Noetherian-space scheme locally of finite type over k, and f : X → X a
+    finite dominant k-morphism that is post-critically finite in the normalized
+    sense. The compared theorem `Pcf.pcfAllTheWayDown_charZero` concludes that
+    f is PCF all the way down: at every finite recursion depth, the return maps
+    induced on preperiodic integral effective divisors, and recursively on the
+    divisors of those, are again post-critically finite in the normalized sense.
+
+    The theorem is conditional. It takes as a hypothesis a structure
+    `PcfAllTheWayDownLocalTheorems` whose two fields are universe-wide
+    statements of Zariski–Nagata purity of the branch locus (Stacks Project Tag
+    0BMB) and of Abhyankar's lemma (Stacks Project Tags 0EYG/0EYH). Neither is
+    proved in this formalization. No other mathematical input is assumed: the
+    normalization, the divisor lifts, the bounding theorem and the recursive
+    assembly are all proved. The proof uses only the axioms propext,
+    Classical.choice and Quot.sound.
+
+    Separatedness, which the manuscript includes in "variety", is not used, so
+    the formal statement is slightly more general there. At depth zero it
+    restates the ambient PCF hypothesis.
+  authors:
+    # TODO(Taylor): confirm that all four are authors of the *formalization*
+    # (they are the Lean file-header authors and the manuscript authors).
+    - Taylor Dupuy
+    - Alon Levy
+    - Thomas Tucker
+    - Zhuoran Wang
+  license: Apache-2.0
+  responsible_maintainers:
+    - Taylor Dupuy
+
+classification:
+  arxiv: [math.DS, math.AG, math.NT]
+  msc2020: [37P05, 37P15, 14E22]
+
+sources:
+  - title: "PCF all the way down"
+    type: paper
+    authors: [Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang]
+    # TODO(Taylor): add the arXiv identifier once posted. Until then the
+    # manuscript is latex/paper.tex at the submitted commit.
+    identifier: "latex/paper.tex in this repository (preprint)"
+    relationship: adapts
+    author_endorsement: participated
+    note: >
+      Formalizes Theorem A / Corollary cor:pcfawd of the manuscript in its
+      characteristic-zero form, with two adaptations: Zariski–Nagata purity and
+      Abhyankar's lemma, which the manuscript cites, enter as explicit
+      hypotheses; and varieties are encoded as integral, locally Noetherian,
+      Noetherian-space schemes locally of finite type over k, without
+      separatedness.
+  - title: "Finite ramification for preimage fields of post-critically finite morphisms"
+    type: paper
+    authors: [Andrew Bridy, Patrick Ingram, Rafe Jones, Jamie Juul, Alon Levy, Michelle Manes, Simon Rubinstein-Salzedo, Joseph H. Silverman]
+    identifier: "Math. Res. Lett. 24 (2017), no. 6, 1633–1647; arXiv:1511.00194"
+    relationship: background
+    note: The PCF-all-the-way-down conjecture is quoted on page 2 of this paper.
+  - title: "The Stacks Project, Tags 0BMB (purity of branch locus), 0EYG and 0EYH (Abhyankar's lemma)"
+    type: book
+    identifier: "https://stacks.math.columbia.edu/tag/0BMB"
+    relationship: background
+    note: >
+      The two results assumed as hypotheses of the compared theorem. Their
+      formal statements are fields of `PcfAllTheWayDownLocalTheorems`.
+
+automation:
+  methods:
+    # TODO(Taylor): confirm the model list and the human role. Repository
+    # records (ai/ai-usage.md, lean/HANDOFF.md) name Claude Opus 5 / 5.5 in
+    # Claude Code.
+    - method: agent
+      tool_setup: "Claude Code CLI with Anthropic Claude Opus models (Opus 5, Opus 5.5)"
+      notes: >
+        The Lean development was written by AI agents under the direction of
+        the authors. The per-task record is ai/ai-usage.md at the submitted
+        commit.
+
+review:
+  # TODO(Taylor): `agent-reviewed` is accurate only if no human has checked
+  # the Lean statements. If an author has checked the Challenge statement
+  # against the manuscript, say so here instead.
+  status: agent-reviewed
+  notes: >
+    Statement fidelity was audited by agents against the manuscript; see
+    lean/PALOMAR.md (claim manifest with does-not-claim blocks) and
+    lean/AXIOMS.md.

@@ -1,0 +1,6 @@
+{
+  "challenge_module": "PcfChallenge",
+  "solution_module": "PcfSolution",
+  "theorem_names": ["Pcf.pcfAllTheWayDown_charZero"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}
