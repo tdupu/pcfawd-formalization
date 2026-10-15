@@ -5,16 +5,14 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Bounding.PcfAllTheWayDownCharZero
+public import Pcf.Palomar.Bridge
 
 /-!
 # Solution: PCF all the way down in characteristic zero
 
-The proof half of the Palomar entry. Importing the development supplies, under the same
-names, every declaration restated in `PcfChallenge`: the definitions with their actual
-values, and proofs of `Pcf.pcfAllTheWayDown_charZero` and of every hole listed in
-`comparator.json` (the supporting lemmas and the auxiliary `_proof_<n>` obligations of the
-definitions). The main proof is `Pcf.pcfAllTheWayDown_charZero` in
-`Pcf/Bounding/PcfAllTheWayDownCharZero.lean`. It depends only on `propext`,
-`Classical.choice` and `Quot.sound`.
+The declarations compared with `PcfChallenge` are defined and proved in the `Pcf` development:
+the statement surface in `Pcf.Palomar.Statement`, and the three compared theorems in
+`Pcf.Palomar.Bridge`, where `Pcf.Palomar.pcfAllTheWayDown_charZero` is derived from
+`Pcf.pcfAllTheWayDown_charZero` through proved equivalences of every hypothesis and of the
+conclusion.
 -/

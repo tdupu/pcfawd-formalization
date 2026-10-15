@@ -130,5 +130,6 @@ public import Pcf.Examples.Cusp
 public import Pcf.Examples.CofiniteWitness
 public import Pcf.Examples.Pinched
 public import Pcf.Audit
+public import Pcf.Palomar.Bridge
 
 @[expose] public section
