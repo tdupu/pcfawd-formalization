@@ -9,7 +9,7 @@ A Lean 4 + Mathlib formalization of parts of `../latex/paper.tex`.
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
 | Manuscript | `../latex/paper.tex`, cited below **by `\label`**, never by number (see [HANDOFF.md](HANDOFF.md) §1 for why) |
-| Provenance | [`../ai/ai-usage.md`](../ai/ai-usage.md), [`../ai/tokens.md`](../ai/tokens.md) |
+| Provenance | [`../provenance/AI-STATEMENT.md`](../provenance/AI-STATEMENT.md), [`../provenance/DUMPS.md`](../provenance/DUMPS.md) (the per-task AI-usage and token ledgers are kept privately) |
 
 ## What the paper proves, and what this development proves
 
@@ -266,8 +266,8 @@ assumed inputs are structure fields, so `#print axioms` (run for every headline 
 [AXIOMS.md](AXIOMS.md) before drawing conclusions from that.
 
 The two early adversarial reviews of this development are retained at
-`../ai/2026-09-21-prop41-formalization/adversarial-review.md` and
-`../ai/2026-09-21-abhyankar-formalization/adversarial-review.md`. The first caught a claim
+[`../provenance/dumps/2026-09-21-prop41-formalization/adversarial-review.md`](../provenance/dumps/2026-09-21-prop41-formalization/adversarial-review.md) and
+[`../provenance/dumps/2026-09-21-abhyankar-formalization/adversarial-review.md`](../provenance/dumps/2026-09-21-abhyankar-formalization/adversarial-review.md). The first caught a claim
 that the bounding theorem's per-divisor statement had been *derived*; the second caught a
 claim that the assumption had been *weakened*. Both refutations are Lean theorems
 (`Pcf.nonempty_kummerWitness_iff`, `Pcf.kummerWitness_iff_unramifiedWitness`,
@@ -275,7 +275,7 @@ claim that the assumption had been *weakened*. Both refutations are Lean theorem
 fields of anything; the derivation that replaces them is in `Pcf/Bounding/`, and its own
 self-audit is AXIOMS.md §G.  The final actual-scheme theorem was independently attacked
 from three directions; the consolidated verdict and its two scope qualifications are in
-`../ai/2026-10-07-general-theorem-fidelity.md`.
+[`../provenance/dumps/2026-10-07-general-theorem-fidelity.md`](../provenance/dumps/2026-10-07-general-theorem-fidelity.md).
 
 ## Layout
 

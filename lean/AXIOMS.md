@@ -161,7 +161,7 @@ So there are three routes to Theorem `thm:normal-invariant`:
 taken to be the identity map `ℤ → ℤ`, with no geometry in it at all. So that interface
 carried exactly the conclusion of Theorem `thm:bounding` (per-divisor form), and the step to `notMem_branch` was
 a one-line repackaging. The correction was produced by an adversarial review of the
-development, retained at `ai/2026-09-21-prop41-formalization/adversarial-review.md`.
+development, retained at `provenance/dumps/2026-09-21-prop41-formalization/adversarial-review.md`.
 
 **What has since changed, and what has not.** Abhyankar's lemma has two halves, and one
 of them is now machine-checked:
@@ -957,7 +957,7 @@ the restriction `R/(a) → S/𝔭` is étale at every prime of `S/𝔭` — is t
 hypotheses) and two classical theorems, stated as `Prop`s about rings in
 `Pcf/Stacks/Purity.lean` and `Pcf/Stacks/Abhyankar.lean`. Their interfaces were checked
 against the Stacks text on 2026-10-04 and their tag-by-tag proof spines were rechecked on
-2026-10-09; `ai/2026-10-09-pcfawd-completeness/stacks-tag-proof-spine.md` records the exact
+2026-10-09; `provenance/dumps/2026-10-09-pcfawd-completeness/stacks-tag-proof-spine.md` records the exact
 dependency map. The
 three standard facts used by the derivation are proved. Nothing valued in `KummerWitness`
 or `UnramifiedWitness` survives as a field.
@@ -1100,7 +1100,7 @@ different: its carrier is `SchemeDivisorPoint`, `crit₁` is defined by the actu
 map, the restriction and its iterates are identified as concrete scheme morphisms, and
 the chart is constructed from A6i. A6i contains G1/G2 and ordinary Step 0 facts, but no
 field from which formal étaleness or `key1` follows without G1/G2. The adversarial record
-at `ai/2026-10-04-divisor-bridge/fidelity.md` checks these fields one by one.
+at `provenance/dumps/2026-10-04-divisor-bridge/fidelity.md` checks these fields one by one.
 
 ### G.5 Removed
 
