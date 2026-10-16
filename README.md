@@ -30,9 +30,7 @@ The precise statement, with what it does not claim, is in
 [`lean/PALOMAR.md`](lean/PALOMAR.md). The census of assumed inputs is
 [`lean/AXIOMS.md`](lean/AXIOMS.md). The statement was reviewed by AI agents
 against the manuscript, not yet by a human author. AI use is summarized in
-[`provenance/AI-STATEMENT.md`](provenance/AI-STATEMENT.md) and in `palomar/formalization.yaml`
-(`automation`). The research dumps whose results the paper or the Lean uses are indexed in
-[`provenance/DUMPS.md`](provenance/DUMPS.md); the per-task AI-usage ledger is kept privately.
+`palomar/formalization.yaml` (`automation`); the authors keep the per-task record privately.
 
 ## Layout
 
@@ -40,7 +38,6 @@ against the manuscript, not yet by a human author. AI use is summarized in
 | --- | --- |
 | `lean/` | The Lean development (library `Pcf`). |
 | `palomar/` | Palomar registry project: `PcfChallenge.lean` (the statement, Mathlib imports only), `PcfSolution.lean`, `comparator.json`, `formalization.yaml`. |
-| `provenance/` | AI statement, index of research dumps, and the dumps used by the paper or the Lean (`dumps/`). |
 | `.github/workflows/palomar-preflight.yml` | Manually triggered Palomar preflight. |
 
 ## Building

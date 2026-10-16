@@ -8,8 +8,8 @@ A Lean 4 + Mathlib formalization of parts of `../latex/paper.tex`.
 | Mathlib | `v4.35.0` (rev `56a005855ea1`) |
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
-| Manuscript | `../latex/paper.tex`, cited below **by `\label`**, never by number (see [HANDOFF.md](HANDOFF.md) §1 for why) |
-| Provenance | [`../provenance/AI-STATEMENT.md`](../provenance/AI-STATEMENT.md), [`../provenance/DUMPS.md`](../provenance/DUMPS.md) (the per-task AI-usage and token ledgers are kept privately) |
+| Manuscript | `../latex/paper.tex`, cited below **by `\label`**, never by number |
+| Provenance | AI use is summarized in `../palomar/formalization.yaml` (`automation`); the per-task record is kept privately |
 
 ## What the paper proves, and what this development proves
 
@@ -266,8 +266,8 @@ assumed inputs are structure fields, so `#print axioms` (run for every headline 
 [AXIOMS.md](AXIOMS.md) before drawing conclusions from that.
 
 The two early adversarial reviews of this development are retained at
-[`../provenance/dumps/2026-09-21-prop41-formalization/adversarial-review.md`](../provenance/dumps/2026-09-21-prop41-formalization/adversarial-review.md) and
-[`../provenance/dumps/2026-09-21-abhyankar-formalization/adversarial-review.md`](../provenance/dumps/2026-09-21-abhyankar-formalization/adversarial-review.md). The first caught a claim
+the authors' private research note `2026-09-21-prop41-formalization/adversarial-review.md` and
+the authors' private research note `2026-09-21-abhyankar-formalization/adversarial-review.md`. The first caught a claim
 that the bounding theorem's per-divisor statement had been *derived*; the second caught a
 claim that the assumption had been *weakened*. Both refutations are Lean theorems
 (`Pcf.nonempty_kummerWitness_iff`, `Pcf.kummerWitness_iff_unramifiedWitness`,
@@ -275,7 +275,7 @@ claim that the assumption had been *weakened*. Both refutations are Lean theorem
 fields of anything; the derivation that replaces them is in `Pcf/Bounding/`, and its own
 self-audit is AXIOMS.md §G.  The final actual-scheme theorem was independently attacked
 from three directions; the consolidated verdict and its two scope qualifications are in
-[`../provenance/dumps/2026-10-07-general-theorem-fidelity.md`](../provenance/dumps/2026-10-07-general-theorem-fidelity.md).
+the authors' private research note `2026-10-07-general-theorem-fidelity.md`.
 
 ## Layout
 
@@ -349,7 +349,6 @@ lean/
 │       ├── Cusp.lean        ← ex:cusp, ex:branch-singular
 │       └── CharP.lean       ← ex:frobenius-line, ex:wild
 ├── AXIOMS.md                ← axiom census: everything assumed
-├── HANDOFF.md               ← session handoff; §1 explains why labels, not numbers
 ├── lakefile.toml, lean-toolchain, lake-manifest.json
 └── .lake/                   ← build output, never tracked
 ```

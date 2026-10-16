@@ -523,8 +523,8 @@ more faithful.
   *fields* of `Pcf.DivDyn`, `Pcf.PcfSetup` and `Pcf.PurityData`, and structure fields
   are invisible to `#print axioms` by construction.
 * Two adversarial reviews are retained at
-  `provenance/dumps/2026-09-21-abhyankar-formalization/adversarial-review.md` and
-  `provenance/dumps/2026-09-21-zariski-nagata/adversarial-review.md`.
+  the authors' private research note `2026-09-21-abhyankar-formalization/adversarial-review.md` and
+  the authors' private research note `2026-09-21-zariski-nagata/adversarial-review.md`.
 * **Correction to this file's introducing commit.** The commit message of `facc8e2`
   states "Mathlib is for human-only formalizations" (that commit created this file at
   `palomar/registry-entries.md`, before it was moved here). That is **false as stated**, and
