@@ -27,8 +27,8 @@ All values re-derived 2026-10-15 at `tdupu/pcf` commit `7f3f5b1`.
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcf-public`, which exists but is still empty. |
-| Commit | supply at submission time: one full SHA of `tdupu/pcf-public` |
+| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which exists but is still empty. |
+| Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
 | `lean/` subtree | `f8684d02390386e9d01e5fa8a9b849995b0945cc` at `7f3f5b1`, before this file was edited. This file lives inside `lean/`, so the hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
@@ -55,7 +55,7 @@ file. Statement-to-declaration map: `README.md`, likewise.
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act. Still open before any submission (from
-`palomar/README.md`): populating `tdupu/pcf-public`, getting a passing Palomar preflight
+`palomar/README.md`): populating `tdupu/pcfawd-formalization`, getting a passing Palomar preflight
 run there, the relationship answer, and reconciling `latex/paper.tex`. Its "Formalization"
 subsubsection still says `thm:general`, `lem:covers` and the passage to the normalization
 are not formalized, which contradicts Entry 0.
@@ -247,7 +247,7 @@ Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arX
 * **Verification so far is local.** `lake comparator --paranoid` accepted the Solution
   on macOS with no sandbox, under the default kernel, lean4lean, nanoda, con-leche and
   con-ron (per `palomar/README.md`; not re-run for this file). It is not Palomar's Linux
-  run, and the Palomar preflight has not run, since `tdupu/pcf-public` is not populated.
+  run, and the Palomar preflight has not run, since `tdupu/pcfawd-formalization` is not populated.
 * **No human author has reviewed the statement.** `review.status` is `agent-reviewed`.
 
 **Axioms.** All three: `[propext, Classical.choice, Quot.sound]`

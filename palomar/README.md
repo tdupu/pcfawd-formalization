@@ -20,7 +20,7 @@ explicit go-ahead, given at the time and separately from any instruction to prep
 
 Submission parameters, for when the time comes:
 
-- repository: **a new public repository `tdupu/pcf-public`**, not this private one (decided by
+- repository: **a new public repository `tdupu/pcfawd-formalization`**, not this private one (decided by
   Taylor 2026-10-15), at one full commit SHA. It needs `LICENSE` at its root, `lean/`,
   `palomar/`, and the preflight workflow. The paths below assume the same layout;
 - project path `palomar`;
@@ -34,8 +34,8 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 ### Needs Taylor
 
-- [x] Public repository `tdupu/pcf-public` created by Taylor 2026-10-15 (empty; not populated yet).
-- [ ] Decide what moves into `tdupu/pcf-public`, and when.
+- [x] Public repository `tdupu/pcfawd-formalization` created by Taylor 2026-10-15 (empty; not populated yet).
+- [ ] Decide what moves into `tdupu/pcfawd-formalization`, and when.
       Leave out `lean/tauceti/`: its `Suggested.lean` is not a Lean module, which Palomar
       rejects anywhere in a submitted repository.
       Palomar accepts only public GitHub repositories, and `tdupu/pcf` stays private. The
@@ -46,14 +46,14 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 - [x] Automation account, review status, arXiv (Taylor, 2026-10-15): the code was built with
       `using-leanpowers` (`tdupu/agent-skills-public`), which builds on `CBirkbeck/mathlib-quality`;
       agents reviewed the statements; there is no arXiv identifier yet, so `latex/paper.tex`
-      must ship in `pcf-public`.
+      must ship in `pcfawd-formalization`.
 - [x] **One more statement-fidelity review** of the final `PcfChallenge.lean` against the
       manuscript (2026-10-15): approved, recorded in `review.notes`.
 - [ ] **Reconcile `latex/paper.tex` with the formalization.** Its "Formalization"
       subsubsection still says `thm:general`, `lem:covers` and the passage to the
       normalization are not formalized, and that `prop:loci-compare` and
       `lem:tower-unnormalized` are assumed. The submission proves these and assumes only
-      purity and Abhyankar. `paper.tex` is hand-managed and ships in `pcf-public`.
+      purity and Abhyankar. `paper.tex` is hand-managed and ships in `pcfawd-formalization`.
 - [ ] Decide the submission relationship answer. Palomar records it permanently as a claim
       about the submitter: "I am a responsible author or maintainer", or "I have approval
       from one".
@@ -66,7 +66,7 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 - [x] Lean toolchain `v4.35.0` with Mathlib `v4.35.0`, matching Mathlib's `lean-toolchain`
       exactly.
 - [x] Every `.lean` file in `lean/Pcf` uses the module system. Exception: `../lean/tauceti/`
-      holds a non-module roadmap `Suggested.lean` and must be left out of `pcf-public`.
+      holds a non-module roadmap `Suggested.lean` and must be left out of `pcfawd-formalization`.
 - [x] `PcfChallenge.lean` (300 lines), `PcfSolution.lean`, `comparator.json` and
       `lake-manifest.json`. The statement uses Mathlib vocabulary; `../lean/Pcf/Palomar/Bridge.lean`
       proves it equivalent to the development's `Pcf.pcfAllTheWayDown_charZero`.
@@ -84,7 +84,7 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 - `../lean/PALOMAR.md`: the claim manifest. It covers the informal-versus-formal half of a
   submission, with does-not-claim blocks for each entry.
-- `../lean/PALOMAR-PROCESS.md` (private; not copied to `pcf-public`): notes from 2026-09-24 on
+- `../lean/PALOMAR-PROCESS.md` (private; not copied to `pcfawd-formalization`): notes from 2026-09-24 on
   how Palomar works. Superseded where it disagrees with this file.
 - Palomar's only trusted Tau Ceti revision (`221bb56`, Lean `v4.31.0-rc2`) was below
   Palomar's own toolchain floor on 2026-10-15. The Challenge here imports Mathlib only, so

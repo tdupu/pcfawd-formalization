@@ -1,11 +1,13 @@
 # PCF all the way down
 
 A Lean 4 / Mathlib formalization of the characteristic-zero case of "PCF all the
-way down", together with the manuscript it formalizes:
+way down", from the manuscript
 
 > Taylor Dupuy, Alon Levy, Thomas Tucker and Zhuoran Wang, *PCF all the way
-> down*. Unpublished manuscript, [`latex/paper.tex`](latex/paper.tex); not yet
-> on arXiv.
+> down*. Manuscript in preparation; not yet public.
+
+The manuscript is not included here yet. References in the Lean sources and documentation
+to `latex/paper.tex` and its `\label`s (for example `cor:pcfawd`) are to that manuscript.
 
 ## What is proved
 
@@ -38,7 +40,6 @@ against the manuscript, not yet by a human author. AI use is summarized in
 | --- | --- |
 | `lean/` | The Lean development (library `Pcf`). |
 | `palomar/` | Palomar registry project: `PcfChallenge.lean` (the statement, Mathlib imports only), `PcfSolution.lean`, `comparator.json`, `formalization.yaml`. |
-| `latex/` | The manuscript `paper.tex` and its bibliography `pcf.bib`. |
 | `provenance/` | AI statement, index of research dumps, and the dumps used by the paper or the Lean (`dumps/`). |
 | `.github/workflows/palomar-preflight.yml` | Manually triggered Palomar preflight. |
 
@@ -60,9 +61,6 @@ directory, so build `lean/` first:
 cd palomar
 lake build
 ```
-
-The manuscript builds with `pdflatex paper; bibtex paper; pdflatex paper;
-pdflatex paper` in `latex/`.
 
 ## History
 

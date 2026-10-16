@@ -59,8 +59,8 @@ sources:
     type: paper
     authors: [Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang]
     # No arXiv identifier yet (Taylor, 2026-10-15). Replace this when posted.
-    # Until then the manuscript must be present in the public repository.
-    identifier: "Unpublished manuscript, latex/paper.tex in this repository; not yet on arXiv"
+    # The manuscript is not in the submission repository until it is posted.
+    identifier: "Manuscript in preparation; not yet public"
     relationship: adapts
     author_endorsement: participated
     note: >
@@ -107,7 +107,7 @@ review:
     Statement fidelity was audited by agents against the manuscript. The final
     pass (2026-10-15, lean-fidelity skill, Claude Opus 5.5) reviewed
     palomar/PcfChallenge.lean definition by definition against
-    latex/paper.tex and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the
+    the manuscript and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the
     statement faithfully formalizes cor:pcfawd, is slightly more general (no
     separatedness; f need not be a k-morphism), and both assumed hypotheses
     are true statements, so it is not vacuous. See also lean/PALOMAR.md and
