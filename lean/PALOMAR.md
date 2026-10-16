@@ -1,4 +1,4 @@
-# Palomar registry entries — `tdupu/pcf`
+# Palomar registry entries — `tdupu/pcfawd-formalization`
 
 Prepared for submission to the [Palomar registry](https://palomar-registry.org/),
 which records a claim about **one exact version** of a repository: the formal
@@ -23,13 +23,13 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
-All values re-derived 2026-10-15 at `tdupu/pcf` commit `7f3f5b1`.
+All values re-derived 2026-10-15 at commit `fc306fc` ("Apply the final Palomar fidelity review to the metadata and Challenge docs"). The Lean sources under `lean/Pcf/` are unchanged since that commit.
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which exists but is still empty. |
+| Repository | `github.com/tdupu/pcfawd-formalization` (public; Palomar accepts only public repositories) |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
-| `lean/` subtree | `f8684d02390386e9d01e5fa8a9b849995b0945cc` at `7f3f5b1`, before this file was edited. This file lives inside `lean/`, so the hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
+| `lean/` subtree | `ca1f4b7b904fc70222f225a54765e7841e770c1b` at `fc306fc`, before this file was edited. This file lives inside `lean/`, so the hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
 | Module system | all 178 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
@@ -55,10 +55,8 @@ file. Statement-to-declaration map: `README.md`, likewise.
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act. Still open before any submission (from
-`palomar/README.md`): populating `tdupu/pcfawd-formalization`, getting a passing Palomar preflight
-run there, the relationship answer, and reconciling `latex/paper.tex`. Its "Formalization"
-subsubsection still says `thm:general`, `lem:covers` and the passage to the normalization
-are not formalized, which contradicts Entry 0.
+`palomar/README.md`): getting a passing Palomar preflight run on
+`tdupu/pcfawd-formalization`, and the relationship answer.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -246,8 +244,8 @@ Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arX
   reader, and the Challenge does not depend on it.
 * **Verification so far is local.** `lake comparator --paranoid` accepted the Solution
   on macOS with no sandbox, under the default kernel, lean4lean, nanoda, con-leche and
-  con-ron (per `palomar/README.md`; not re-run for this file). It is not Palomar's Linux
-  run, and the Palomar preflight has not run, since `tdupu/pcfawd-formalization` is not populated.
+  con-ron (not re-run for this file). It is not Palomar's Linux run, and the Palomar
+  preflight has not yet run on `tdupu/pcfawd-formalization`.
 * **No human author has reviewed the statement.** `review.status` is `agent-reviewed`.
 
 **Axioms.** All three: `[propext, Classical.choice, Quot.sound]`
