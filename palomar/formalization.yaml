@@ -97,8 +97,8 @@ automation:
         (https://github.com/CBirkbeck/mathlib-quality).
       notes: >
         The Lean development was written by AI agents under the direction of
-        the authors. The per-task record is ai/ai-usage.md at the submitted
-        commit.
+        the authors. The authors keep a per-task record of AI use privately;
+        it is not part of the submitted repository.
 
 review:
   # Confirmed by Taylor 2026-10-15: agents reviewed the statements.

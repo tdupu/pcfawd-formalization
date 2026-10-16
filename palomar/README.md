@@ -39,8 +39,9 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
       Leave out `lean/tauceti/`: its `Suggested.lean` is not a Lean module, which Palomar
       rejects anywhere in a submitted repository.
       Palomar accepts only public GitHub repositories, and `tdupu/pcf` stays private. The
-      minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and whatever
-      `formalization.yaml` cites: the manuscript and `ai/ai-usage.md`.
+      minimum is `LICENSE`, `lean/`, `palomar/`, the workflow, and the manuscript
+      `latex/paper.tex` (cited by `formalization.yaml`). Not public (Taylor, 2026-10-15):
+      `ai/ai-usage.md`, `lean/PALOMAR-PROCESS.md`, `lean/tauceti/`.
 - [x] Authors of the formalization: all four (Taylor, 2026-10-15).
 - [x] Automation account, review status, arXiv (Taylor, 2026-10-15): the code was built with
       `using-leanpowers` (`tdupu/agent-skills-public`), which builds on `CBirkbeck/mathlib-quality`;
@@ -83,8 +84,8 @@ read 2026-10-15. Palomar changes often, so re-read them before acting.
 
 - `../lean/PALOMAR.md`: the claim manifest. It covers the informal-versus-formal half of a
   submission, with does-not-claim blocks for each entry.
-- `../lean/PALOMAR-PROCESS.md`: notes from 2026-09-24 on how Palomar works. Superseded where
-  it disagrees with this file.
+- `../lean/PALOMAR-PROCESS.md` (private; not copied to `pcf-public`): notes from 2026-09-24 on
+  how Palomar works. Superseded where it disagrees with this file.
 - Palomar's only trusted Tau Ceti revision (`221bb56`, Lean `v4.31.0-rc2`) was below
   Palomar's own toolchain floor on 2026-10-15. The Challenge here imports Mathlib only, so
   this does not affect us.
