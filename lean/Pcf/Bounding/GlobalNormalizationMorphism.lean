@@ -376,7 +376,7 @@ theorem schemeGlobalNormalizationRamifiedCover_ramificationIdx
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f)
     (Q : SchemeDivisorPoint (schemeGlobalNormalization Y)) :
-    (schemeGlobalNormalizationRamifiedCover k f g π hcomm).ram Q =
+    (schemeGlobalNormalizationRamifiedCover k f g π hcomm).ramificationIdx Q =
       schemeDivisorRamificationIdx (schemeGlobalNormalizationMorphism π) Q := rfl
 
 /-- `lem:covers` for the paper's normalized branch locus on possibly nonnormal

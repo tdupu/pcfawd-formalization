@@ -88,20 +88,21 @@ structure RamifiedCover where
   /-- The cover intertwines the self-maps. -/
   comm : ∀ q, map (E.step q) = D.step (map q)
   /-- Ramification index of the cover. -/
-  ram : Q → ℕ
+  ramificationIdx : Q → ℕ
   /-- The indices are positive. -/
-  ram_pos : ∀ q, 0 < ram q
+  ramificationIdx_pos : ∀ q, 0 < ramificationIdx q
   /-- The cover has finitely many branch divisors. -/
-  branch_finite : {p | ∃ q, map q = p ∧ 1 < ram q}.Finite
+  branch_finite : {p | ∃ q, map q = p ∧ 1 < ramificationIdx q}.Finite
   /-- Multiplicativity around the commuting square. -/
-  ram_comp : ∀ q, D.ramificationIdx (map q) * ram q = ram (E.step q) * E.ramificationIdx q
+  ram_comp : ∀ q, D.ramificationIdx (map q) * ramificationIdx q = ramificationIdx (E.step q) *
+      E.ramificationIdx q
 
 namespace RamifiedCover
 
 variable {D E} (C : RamifiedCover D E)
 
 /-- Branch divisors of the cover itself. -/
-def branch : Set P := {p | ∃ q, C.map q = p ∧ 1 < C.ram q}
+def branch : Set P := {p | ∃ q, C.map q = p ∧ 1 < C.ramificationIdx q}
 
 /-- Finiteness of a divisor set is preserved by inverse image through the
 cover. This records the geometric finite-fibre input separately from descent. -/
@@ -125,10 +126,10 @@ branch identity used in `lem:covers`. -/
 theorem branch_union :
     D.branch ∪ D.step '' C.branch = C.branch ∪ C.map '' E.branch := by
   have hram (q : Q) :
-      (1 < D.ramificationIdx (C.map q) ∨ 1 < C.ram q) ↔
-        (1 < C.ram (E.step q) ∨ 1 < E.ramificationIdx q) := by
-    rw [← one_lt_mul_iff_of_pos (D.ramificationIdx_pos _) (C.ram_pos _), C.ram_comp,
-      one_lt_mul_iff_of_pos (C.ram_pos _) (E.ramificationIdx_pos _)]
+      (1 < D.ramificationIdx (C.map q) ∨ 1 < C.ramificationIdx q) ↔
+        (1 < C.ramificationIdx (E.step q) ∨ 1 < E.ramificationIdx q) := by
+    rw [← one_lt_mul_iff_of_pos (D.ramificationIdx_pos _) (C.ramificationIdx_pos _), C.ram_comp,
+      one_lt_mul_iff_of_pos (C.ramificationIdx_pos _) (E.ramificationIdx_pos _)]
   apply Set.Subset.antisymm
   · rintro p (hp | ⟨r, hr, rfl⟩)
     · obtain ⟨r, hr, hrRam⟩ := hp
@@ -189,8 +190,8 @@ noncomputable def schemeRamifiedCover
     change π (g q.1) = f (π q.1)
     simpa only [AlgebraicGeometry.Scheme.Hom.comp_apply] using
       congrArg (fun h : Y ⟶ X ↦ h q.1) hcomm
-  ram := schemeDivisorRamificationIdx π
-  ram_pos := schemeDivisorRamificationIdx_pos π
+  ramificationIdx := schemeDivisorRamificationIdx π
+  ramificationIdx_pos := schemeDivisorRamificationIdx_pos π
   branch_finite := by
     refine (hπ.image (fun q ↦ q.mapFiniteDominantNormal π)).subset ?_
     rintro p ⟨q, hqp, hq⟩
