@@ -1,4 +1,4 @@
-# Palomar registry entries — `tdupu/pcfawd-formalization`
+# Palomar registry entries — `tdupu/pcf`
 
 Prepared for submission to the [Palomar registry](https://palomar-registry.org/),
 which records a claim about **one exact version** of a repository: the formal
@@ -24,14 +24,14 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
-All values re-derived 2026-10-17 at commit `156bee7` ("Compare the unconditional theorem in the
-Palomar Challenge"), before this file was edited.
+All values re-derived 2026-10-17 at `tdupu/pcf` commit `cfcdac4` ("Compare the unconditional
+theorem in the Palomar Challenge"), before this file was edited.
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcfawd-formalization` (public; Palomar accepts only public repositories) |
+| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which carries `lean/` and `palomar/` with private files removed (`PUBLIC-RELEASE.md`). |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
-| `lean/` subtree | `b398537c3df11f9f6665f066de30a4cb589c573b` at `156bee7` (`lean/Pcf` alone: `fca7d1d254b142fe9c3ba6577ef5e8fa601144b8`; `palomar/`: `96967331872e381eb24e89ce8e470d6984505783`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
+| `lean/` subtree | `56e8e5d1a2c0935606fe0aa73efbc69ee4c3ea4d` at `cfcdac4` (`lean/Pcf` alone: `fca7d1d254b142fe9c3ba6577ef5e8fa601144b8`; `palomar/`: `655ba995ea055da5af32ee5e8e3676aa11b3aa74`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes, and the public repository's `lean/` hash differs because private files are left out; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
 | Module system | all 242 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
@@ -57,9 +57,11 @@ file. Statement-to-declaration map: `README.md`, likewise.
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act. Still open before any submission (from
-the authors' checklist): a passing Palomar preflight for the unconditional Challenge on
-`tdupu/pcfawd-formalization`, and the relationship answer. The manuscript is not part of this
-repository.
+`palomar/README.md`): the relationship answer and reconciling `latex/paper.tex`. (The Palomar
+preflight for the unconditional Challenge passed on `tdupu/pcfawd-formalization` `2f33fee`,
+run 39037647205.) Its
+"Formalization" subsubsection still says `thm:general`, `lem:covers` and the passage to the
+normalization are not formalized, which contradicts Entry 0.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -156,7 +158,8 @@ three compared types (through types, definition bodies, inductive constructors),
 body. The two lists, from the `PcfChallenge` and `PcfSolution` environments, are identical.
 This is a scratch check, not Comparator: the local unsandboxed `lake comparator` run was not
 permitted to the agent on 2026-10-17, so Comparator itself has run only in the Palomar
-preflight (Pin, below).
+preflight: run 39037647205 on `tdupu/pcfawd-formalization` `2f33fee` passed, with the solution
+accepted by con-ron (73,310 declarations), nanoda and the Lean default kernel.
 
 **Informal claim.** Let `k` be a field of characteristic zero. Let `X` be an integral,
 locally Noetherian scheme whose underlying space is Noetherian, with a morphism
