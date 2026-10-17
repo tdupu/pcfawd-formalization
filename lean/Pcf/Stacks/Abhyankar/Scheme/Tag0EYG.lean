@@ -45,7 +45,8 @@ Three forms:
 
 Route difference: Stacks proves the affine statement with `B` (the cover itself) as input; the
 affine theorem of `A′` takes the normalization `S` of `A` in `B`.
-`hasLocalizedStandardCoverAt_of_tame` bridges the two by applying it to the local ring `A_y`, where the normalization is finite, and
+`hasLocalizedStandardCoverAt_of_tame` bridges the two by applying it to the local ring `A_y`,
+where the normalization is finite, and
 then passing through the strict henselization (`AffineTame.lean`).
 -/
 

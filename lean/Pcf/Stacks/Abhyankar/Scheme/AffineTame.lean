@@ -39,7 +39,8 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 * `Spec(A_λ) → Spec(A)` is the required étale neighbourhood: `hasLocalizedStandardCoverAt_of_stage`.
 
 The differences in the second and third steps are forced by the shape of the affine hypothesis:
-like phase 1's `Pcf.Stacks.AbhyankarLemma`, it is stated for the finite normalization `S` of `R` in `S[1/a]`,
+like phase 1's `Pcf.Stacks.AbhyankarLemma`, it is stated for the finite normalization `S` of `R`
+in `S[1/a]`,
 whose finiteness over `R` is not available before the theorem; over the regular local ring `R_y`
 it is (Stacks Tag `032L`, `finite_ny`).
 -/
