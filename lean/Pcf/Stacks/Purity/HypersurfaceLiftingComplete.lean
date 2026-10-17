@@ -13,8 +13,11 @@ public import Pcf.Stacks.Common.RegularNormal
 public import Pcf.Stacks.Purity.Completion
 public import Pcf.Stacks.Purity.DimensionTwo
 public import Pcf.Stacks.Purity.FormalEtaleLift
+public import Pcf.Stacks.Purity.FiniteNormalHartogs
 public import Pcf.Stacks.Purity.HenselianFiniteEtaleLift
 public import Pcf.Stacks.Purity.HypersurfaceLifting
+public import Pcf.Stacks.Purity.Tag0BM9Equivalence
+public import Pcf.Stacks.Purity.Tag0BMAClauses
 
 /-!
 # Hypersurface finite étale lifting over a complete regular local ring
@@ -59,8 +62,11 @@ statement is unchanged.  Informally:
    `A` and the Stacks-normal algebra `B` is integrally closed in its total ring of fractions,
    `φ` is surjective.  So `B ≅ C` is finite étale over `A`, and `Y = Spec B` extends `V`.
 
-Steps 3–6 are in this file; step 4 is `exists_algHom_lift_of_isAdicComplete`.  No local
-cohomology, no formal functions and no normality of `C` are used.
+Step 4 is `exists_algHom_lift_of_isAdicComplete` (in `FormalEtaleLift`); steps 3, 5, 6 are the
+algebraic core `exists_algHom_bijective_of_hypersurface_lift` below; steps 0–2 are the
+translation from the finite étale covers to algebra (`exists_algHom_of_pullback_iso`,
+`hypersurfacePullbackIso`), assembled in `hypersurfaceFiniteEtaleLifting_of_isAdicComplete`.
+No local cohomology, no formal functions and no normality of `C` are used.
 -/
 
 @[expose] public section
@@ -69,7 +75,7 @@ noncomputable section
 
 set_option linter.style.haveILetI false
 
-open IsLocalRing RingTheory.Sequence Polynomial
+open AlgebraicGeometry CategoryTheory Limits IsLocalRing RingTheory.Sequence Polynomial
 open scoped Pointwise
 
 universe u v w
@@ -681,11 +687,450 @@ theorem etale_of_hypersurface_lift
 
 end Core
 
+/-! ### From the geometric isomorphism over the punctured hypersurface to algebra -/
+
+set_option backward.isDefEq.respectTransparency false in
+/-- From an isomorphism over the punctured spectrum between the restrictions of `Spec D'` and
+`Spec D`, and the Hartogs property for `D'`, produce an `R`-algebra map `D → D'` which becomes
+bijective after inverting any element of the maximal ideal (stated elementwise). -/
+theorem exists_algHom_of_pullback_iso
+    (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
+    (B B' : CommRingCat.{u}) [Algebra R B] [Algebra R B'] [Module.Finite R B]
+    (g : Over.mk (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap R B')))
+        (puncturedSpectrum R).ι) ⟶
+      Over.mk (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap R B)))
+        (puncturedSpectrum R).ι)) [IsIso g]
+    (hB' : Function.Bijective
+      (((Scheme.ΓSpecIso B').inv ≫
+        (pullback.fst (Spec.map (CommRingCat.ofHom (algebraMap R B')))
+          (puncturedSpectrum R).ι).appTop).hom)) :
+    ∃ φ : B →ₐ[R] B',
+      (∀ x ∈ maximalIdeal R, ∀ b : B, φ b = 0 → ∃ k : ℕ, x ^ k • b = 0) ∧
+      (∀ x ∈ maximalIdeal R, ∀ c : B', ∃ (k : ℕ) (b : B), x ^ k • c = φ b) := by
+  let p : Spec B ⟶ Spec (.of R) := Spec.map (CommRingCat.ofHom (algebraMap R B))
+  let p' : Spec B' ⟶ Spec (.of R) := Spec.map (CommRingCat.ofHom (algebraMap R B'))
+  let i := (puncturedSpectrum R).ι
+  let P := pullback p i
+  let P' := pullback p' i
+  let j : P ⟶ Spec B := pullback.fst p i
+  let j' : P' ⟶ Spec B' := pullback.fst p' i
+  let q : P ⟶ puncturedSpectrumScheme R := pullback.snd p i
+  let q' : P' ⟶ puncturedSpectrumScheme R := pullback.snd p' i
+  let W : (Spec B).Opens := j.opensRange
+  let γ : B ⟶ Γ(P, ⊤) := (Scheme.ΓSpecIso B).inv ≫ j.appTop
+  let γ' : B' ⟶ Γ(P', ⊤) := (Scheme.ΓSpecIso B').inv ≫ j'.appTop
+  have hγ' : Function.Bijective γ'.hom := hB'
+  let gP : P' ⟶ P := g.left
+  have hgq : gP ≫ q = q' := Over.w g
+  haveI : IsIso gP := by
+    change IsIso ((Over.forget _).map g)
+    infer_instance
+  let gΓ : Γ(P, ⊤) ⟶ Γ(P', ⊤) := gP.appTop
+  have hgΓ : Function.Bijective gΓ.hom :=
+    (ConcreteCategory.isIso_iff_bijective gΓ).mp inferInstance
+  -- compatibility with the base ring
+  have hγR : ∀ r : R, gΓ (γ (algebraMap R B r)) = γ' (algebraMap R B' r) := by
+    intro r
+    have hp : CommRingCat.ofHom (algebraMap R B) ≫ (Scheme.ΓSpecIso B).inv =
+        (Scheme.ΓSpecIso (.of R)).inv ≫ p.appTop := by
+      exact Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (algebraMap R B))
+    have hp' : CommRingCat.ofHom (algebraMap R B') ≫ (Scheme.ΓSpecIso B').inv =
+        (Scheme.ΓSpecIso (.of R)).inv ≫ p'.appTop := by
+      exact Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (algebraMap R B'))
+    have hjp : j ≫ p = q ≫ i := pullback.condition
+    have hjp' : j' ≫ p' = q' ≫ i := pullback.condition
+    have h1 : γ (algebraMap R B r) =
+        ((Scheme.ΓSpecIso (.of R)).inv ≫ (q ≫ i).appTop) r := by
+      change (CommRingCat.ofHom (algebraMap R B) ≫ (Scheme.ΓSpecIso B).inv ≫ j.appTop) r = _
+      rw [← Category.assoc, hp, Category.assoc, ← Scheme.Hom.comp_appTop, hjp]
+    have h1' : γ' (algebraMap R B' r) =
+        ((Scheme.ΓSpecIso (.of R)).inv ≫ (q' ≫ i).appTop) r := by
+      change (CommRingCat.ofHom (algebraMap R B') ≫ (Scheme.ΓSpecIso B').inv ≫
+        j'.appTop) r = _
+      rw [← Category.assoc, hp', Category.assoc, ← Scheme.Hom.comp_appTop, hjp']
+    rw [h1, h1']
+    change ((Scheme.ΓSpecIso (.of R)).inv ≫ (q ≫ i).appTop ≫ gP.appTop) r = _
+    rw [← Scheme.Hom.comp_appTop, ← Category.assoc, hgq]
+  -- the algebra map
+  let γ'e : B' ≃+* Γ(P', ⊤) := RingEquiv.ofBijective γ'.hom hγ'
+  let φ₀ : B →+* B' := γ'e.symm.toRingHom.comp (gΓ.hom.comp γ.hom)
+  have hφ₀ : ∀ b, γ' (φ₀ b) = gΓ (γ b) := fun b ↦ γ'e.apply_symm_apply _
+  let φ : B →ₐ[R] B' :=
+    { φ₀ with
+      commutes' := fun r ↦ by
+        apply hγ'.injective
+        change γ' (φ₀ (algebraMap R B r)) = γ' (algebraMap R B' r)
+        rw [hφ₀, hγR] }
+  have hφ : ∀ b, φ b = φ₀ b := fun _ ↦ rfl
+  -- the open `W` and its sections
+  have hW : W = p ⁻¹ᵁ puncturedSpectrum R := by
+    dsimp only [W, j]
+    rw [Scheme.Hom.opensRange_pullbackFst, Scheme.Opens.opensRange_ι]
+  have hWcompact : IsCompact W.1 := by
+    rw [hW]
+    haveI : IsFinite p := by
+      rw [IsFinite.SpecMap_iff]
+      exact RingHom.finite_algebraMap.mpr inferInstance
+    exact p.isCompact_preimage (isCompact_puncturedSpectrum R)
+  letI : Algebra B Γ(Spec B, W) :=
+    (((Scheme.ΓSpecIso B).inv ≫
+      (Spec B).presheaf.map (homOfLE (show W ≤ ⊤ from le_top)).op).hom).toAlgebra
+  let e := IsOpenImmersion.ΓIsoTop j
+  have he : ∀ b : B, e.inv (algebraMap B Γ(Spec B, W) b) = γ b := by
+    intro b
+    have etop : (⊤ : P.Opens) ≤ j ⁻¹ᵁ W := by
+      change (⊤ : P.Opens) ≤ j ⁻¹ᵁ j.opensRange
+      rw [← j.image_top_eq_opensRange, j.preimage_image_eq]
+    have hcomp : (Spec B).presheaf.map
+          (eqToHom j.image_top_eq_opensRange).op ≫
+          (j.appIso ⊤).hom =
+        j.appLE W ⊤ etop := by
+      rw [j.appIso_hom']
+      exact j.map_appLE' etop j.image_top_eq_opensRange
+    simp only [e, IsOpenImmersion.ΓIsoTop, Iso.trans_inv,
+      Functor.mapIso_inv, Iso.op_inv, eqToIso.inv, eqToHom_op,
+      Iso.symm_inv]
+    change ((Spec B).presheaf.map
+          (eqToHom j.image_top_eq_opensRange).op ≫
+        (j.appIso ⊤).hom).hom
+        (((Scheme.ΓSpecIso B).inv ≫
+          (Spec B).presheaf.map
+            (homOfLE (show W ≤ ⊤ from le_top)).op).hom b) = _
+    rw [← CommRingCat.comp_apply, hcomp]
+    change ((Spec B).presheaf.map
+        (homOfLE (show W ≤ ⊤ from le_top)).op ≫
+      j.appLE W ⊤ etop).hom ((Scheme.ΓSpecIso B).inv b) = _
+    rw [j.map_appLE]
+    simp [Scheme.Hom.appLE, γ]
+  have heinj : Function.Injective e.inv.hom :=
+    ((ConcreteCategory.isIso_iff_bijective e.inv).mp inferInstance).injective
+  have hehom : ∀ s : Γ(P, ⊤), e.inv (e.hom s) = s := fun s ↦ by
+    rw [← CommRingCat.comp_apply, e.hom_inv_id]
+    rfl
+  -- basic opens inside `W`
+  have hDx : ∀ x ∈ maximalIdeal R,
+      @LE.le (Spec B).Opens _ (PrimeSpectrum.basicOpen (algebraMap R B x)) W := by
+    intro x hxm
+    rw [hW]
+    intro z hz
+    change p.base z ∈ puncturedSpectrum R
+    rw [mem_puncturedSpectrum_iff]
+    intro heq
+    have hxnot : algebraMap R B x ∉ z.asIdeal :=
+      (PrimeSpectrum.mem_basicOpen (algebraMap R B x) z).mp hz
+    apply hxnot
+    change x ∈ (p.base z).asIdeal
+    rw [heq]
+    exact hxm
+  have hD : ∀ x ∈ maximalIdeal R,
+      @Eq (Spec B).Opens ((Spec B).basicOpen (algebraMap B Γ(Spec B, W) (algebraMap R B x)))
+        (PrimeSpectrum.basicOpen (algebraMap R B x)) := by
+    intro x hxm
+    change (Spec B).basicOpen ((Spec B).presheaf.map
+      (homOfLE (show W ≤ ⊤ from le_top)).op ((Scheme.ΓSpecIso B).inv (algebraMap R B x))) = _
+    rw [Scheme.basicOpen_res, basicOpen_eq_of_affine, inf_eq_right.mpr (hDx x hxm)]
+  refine ⟨φ, fun x hxm b hb ↦ ?_, fun x hxm c ↦ ?_⟩
+  · -- injectivity after inverting `x`
+    have h1 : gΓ (γ b) = 0 := by
+      rw [← hφ₀, ← hφ, hb, map_zero]
+    have h2 : γ b = 0 := hgΓ.injective (by rw [h1, map_zero])
+    have h3 : algebraMap B Γ(Spec B, W) b = 0 := heinj (by rw [he, h2, map_zero])
+    let Dx : (Spec B).Opens := PrimeSpectrum.basicOpen (algebraMap R B x)
+    have h4 : (Spec B).presheaf.map (homOfLE (hDx x hxm)).op (algebraMap B Γ(Spec B, W) b) = 0 := by
+      rw [h3, map_zero]
+    erw [spec_algebraMap_res] at h4
+    obtain ⟨⟨m, n, rfl⟩, hm⟩ := (IsLocalization.map_eq_zero_iff
+      (Submonoid.powers (algebraMap R B x)) Γ(Spec B, Dx) b).mp h4
+    refine ⟨n, ?_⟩
+    rw [Algebra.smul_def, map_pow]
+    exact hm
+  · -- surjectivity after inverting `x`
+    obtain ⟨s, hs⟩ := hgΓ.surjective (γ' c)
+    let t : Γ(Spec B, W) := e.hom s
+    have ht : e.inv t = s := hehom s
+    let xb : B := algebraMap R B x
+    let Dx : (Spec B).Opens := PrimeSpectrum.basicOpen xb
+    let r : Γ(Spec B, W) := algebraMap B Γ(Spec B, W) xb
+    let tx : Γ(Spec B, Dx) := (Spec B).presheaf.map (homOfLE (hDx x hxm)).op t
+    obtain ⟨b, n, hsec⟩ : ∃ (b : B) (n : ℕ),
+        tx * algebraMap B Γ(Spec B, Dx) (xb ^ n) = algebraMap B Γ(Spec B, Dx) b :=
+      ⟨_, _, IsLocalization.Away.sec_spec xb tx⟩
+    let u : Γ(Spec B, W) := r ^ n * t - algebraMap B Γ(Spec B, W) b
+    have hu : (Spec B).presheaf.map (homOfLE (hDx x hxm)).op u = 0 := by
+      have e1 : (Spec B).presheaf.map (homOfLE (hDx x hxm)).op (algebraMap B Γ(Spec B, W) b) =
+          algebraMap B Γ(Spec B, Dx) b := spec_algebraMap_res (hDx x hxm) b
+      have e2 : (Spec B).presheaf.map (homOfLE (hDx x hxm)).op r =
+          algebraMap B Γ(Spec B, Dx) xb := spec_algebraMap_res (hDx x hxm) xb
+      change (Spec B).presheaf.map (homOfLE (hDx x hxm)).op
+        (r ^ n * t - algebraMap B Γ(Spec B, W) b) = 0
+      rw [map_sub, map_mul, map_pow, e1, e2, ← map_pow, mul_comm]
+      change tx * _ - _ = 0
+      rw [hsec, sub_self]
+    have hu' : u |_ ((Spec B).basicOpen r) = 0 := by
+      have hzcast := congrArg
+        (fun z : Γ(Spec B, Dx) ↦ (Spec B).presheaf.map (eqToHom (hD x hxm)).op z) hu
+      rw [map_zero, ← (Spec B).presheaf.map_comp_apply,
+        ← op_comp, eqToHom_comp_homOfLE] at hzcast
+      exact hzcast
+    obtain ⟨m, hm⟩ :=
+      exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (Spec B) hWcompact u r hu'
+    have h5 : r ^ (m + n) * t = r ^ m * algebraMap B Γ(Spec B, W) b := by
+      rw [pow_add]
+      linear_combination hm
+    -- transport to `Γ(P, ⊤)`, then to `Γ(P', ⊤)`
+    have h6 : γ (xb ^ (m + n)) * s = γ (xb ^ m * b) := by
+      have := congrArg e.inv.hom h5
+      rw [map_mul, map_mul, ht] at this
+      simp only [r, ← map_pow, he] at this
+      rw [← map_mul] at this
+      simpa only [he] using this
+    have h7 : γ' (algebraMap R B' (x ^ (m + n)) * c) = γ' (φ (xb ^ m * b)) := by
+      rw [map_mul, hφ, hφ₀, ← h6, map_mul, hs, ← hγR, map_pow, map_pow]
+    refine ⟨m + n, x ^ m • b, ?_⟩
+    have h8 := hγ'.injective h7
+    rw [Algebra.smul_def, h8, Algebra.smul_def, map_pow]
+
+/-! ### Henselian local rings from completeness -/
+
+/-- An `m`-adically complete local ring is henselian local. -/
+theorem henselianLocalRing_of_isAdicComplete (R : Type u) [CommRing R] [IsLocalRing R]
+    [IsAdicComplete (maximalIdeal R) R] : HenselianLocalRing R where
+  is_henselian f hf a₀ h₁ h₂ :=
+    HenselianRing.is_henselian (I := maximalIdeal R) f hf a₀ h₁ (h₂.map (Ideal.Quotient.mk _))
+
+/-! ### The two pullbacks over the punctured hypersurface -/
+
+section Identifications
+
+variable (A : Type u) [CommRing A] [IsLocalRing A] [IsNoetherianRing A] (f : A)
+
+local notation "A₀" => A ⧸ Ideal.span (Set.singleton f)
+
+open scoped TensorProduct in
+set_option backward.isDefEq.respectTransparency false in
+/-- Restricting `Spec B ×_X U` to the punctured hypersurface `U₀` is the restriction of
+`Spec (A₀ ⊗[A] B)` to `U₀`. -/
+noncomputable def hypersurfacePullbackIso [IsLocalRing A₀]
+    (B : Type u) [CommRing B] [Algebra A B] :
+    (Over.pullback (puncturedHypersurfaceMap A f)).obj
+        ((Over.pullback (puncturedSpectrum A).ι).obj
+          (Over.mk (Spec.map (CommRingCat.ofHom (algebraMap A B))))) ≅
+      Over.mk (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap A₀ (A₀ ⊗[A] B))))
+        (puncturedSpectrum A₀).ι) := by
+  let h := puncturedHypersurfaceMap A f
+  let ι := (puncturedSpectrum A).ι
+  let ι₀ := (puncturedSpectrum A₀).ι
+  let j : Spec (.of A₀) ⟶ Spec (.of A) := Spec.map (CommRingCat.ofHom (algebraMap A A₀))
+  let Z : Over (Spec (.of A)) := Over.mk (Spec.map (CommRingCat.ofHom (algebraMap A B)))
+  have hsq : h ≫ ι = ι₀ ≫ j := puncturedHypersurfaceMap_comp_ι A f
+  let e1 : (Over.pullback h).obj ((Over.pullback ι).obj Z) ≅ (Over.pullback (h ≫ ι)).obj Z :=
+    ((Over.pullbackComp h ι).app Z).symm
+  let e2 : (Over.pullback (h ≫ ι)).obj Z ≅ (Over.pullback (ι₀ ≫ j)).obj Z :=
+    eqToIso (congrArg (fun m : puncturedSpectrumScheme A₀ ⟶ Spec (.of A) ↦
+      (Over.pullback m).obj Z) hsq)
+  let e3 : (Over.pullback (ι₀ ≫ j)).obj Z ≅ (Over.pullback ι₀).obj ((Over.pullback j).obj Z) :=
+    (Over.pullbackComp ι₀ j).app Z
+  let e4 : (Over.pullback j).obj Z ≅
+      Over.mk (Spec.map (CommRingCat.ofHom (algebraMap A₀ (A₀ ⊗[A] B)))) := by
+    refine Over.isoMk (pullbackSymmetry _ _ ≪≫ pullbackSpecIso A A₀ B) ?_
+    change (pullbackSymmetry (Spec.map (CommRingCat.ofHom (algebraMap A B))) j).hom ≫
+        (pullbackSpecIso A A₀ B).hom ≫
+          Spec.map (CommRingCat.ofHom (algebraMap A₀ (A₀ ⊗[A] B))) =
+      pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap A B))) j
+    rw [pullbackSpecIso_hom_fst', pullbackSymmetry_hom_comp_fst]
+  exact e1 ≪≫ e2 ≪≫ e3 ≪≫ (Over.pullback ι₀).mapIso e4
+
+end Identifications
+
+/-! ### The hypersurface finite étale lifting -/
+
+section Main
+
+open scoped TensorProduct
+
+variable (A : Type u) [CommRing A] [IsRegularLocalRing A] [IsAdicComplete (maximalIdeal A) A]
+
+set_option backward.isDefEq.respectTransparency false in
+/-- **Stacks Tag 0BLM, complete regular local case.**
+
+Let `A` be a complete regular local ring of dimension `d + 1 ≥ 3` and `f ∈ m \ m²`.  If a finite
+étale cover of the punctured spectrum of `A` restricts over the punctured spectrum of `A/(f)` to
+a cover which extends over `Spec (A/(f))`, then it extends over `Spec A`.
+
+Divergence from Stacks: the statement is the case of Lemma 58.20.7 (`0BLM`) in which `A` is
+complete and regular (depth `≥ 3` being automatic) and `f` is a minimal generator of `m`, which
+is the case used in the induction of Tag `0BMA`.  The proof does not use the local cohomology
+argument of Lemmas 58.19.6/58.20.6 (`0BM6`) and the formal-functions theorem (`0EKS`); see the
+module docstring. -/
+@[stacks 0BLM "complete regular local case, for `f ∉ m²`"]
+theorem hypersurfaceFiniteEtaleLifting_of_isAdicComplete
+    (d : ℕ) (hd : 2 ≤ d) (hdim : ringKrullDim A = d + 1)
+    (f : A) (hf : f ∈ maximalIdeal A) (hf2 : f ∉ maximalIdeal A ^ 2)
+    [IsLocalRing (A ⧸ Ideal.span (Set.singleton f))]
+    [IsNoetherianRing (A ⧸ Ideal.span (Set.singleton f))] :
+    HypersurfaceFiniteEtaleLifting A f := by
+  classical
+  -- the base rings
+  let I : Ideal A := Ideal.span (Set.singleton f)
+  have hI : I = Ideal.span {f} := rfl
+  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI hA : IsIntegrallyClosed A :=
+    isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) A
+  haveI : HenselianLocalRing A := henselianLocalRing_of_isAdicComplete A
+  haveI : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hf)
+  haveI hA₀reg : IsRegularLocalRing (A ⧸ I) := isRegularLocalRing_quotient_minimalGenerator hf hf2
+  haveI : IsDomain (A ⧸ I) := isDomain_of_isRegularLocalRing _
+  haveI hA₀ : IsIntegrallyClosed (A ⧸ I) :=
+    isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) _
+  have hdim₀ : ringKrullDim (A ⧸ I) = d := ringKrullDim_quotient_minimalGenerator_eq hf hf2 d hdim
+  have hdim₀' : 2 ≤ ringKrullDim (A ⧸ I) := by
+    rw [hdim₀]
+    exact_mod_cast hd
+  have hdim1 : 1 ≤ ringKrullDim A := by
+    rw [hdim]
+    exact_mod_cast (by omega : 1 ≤ d + 1)
+  intro V hV
+  obtain ⟨Y₀, ⟨e₀⟩⟩ := hV
+  -- Step 0: the finite normal algebra `B` of `V` (Tag 0BM9)
+  obtain ⟨Bobj, ⟨eB⟩⟩ := puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra (.of A) hdim1 V
+  let B : Type u := Bobj.obj.unop
+  letI : CommRing B := inferInstance
+  letI : Algebra A B := inferInstance
+  haveI : Module.Finite A B := inferInstance
+  haveI : Module.IsTorsionFree A B := inferInstance
+  have hBnormal : IsStacksNormalRing B := Bobj.isStacksNormalRing
+  have hBetale : ∀ (q : Ideal B) [q.IsPrime], q.under A ≠ maximalIdeal A →
+      Algebra.IsEtaleAt A q := fun q _ hq ↦
+    Algebra.isEtaleAt_of_puncturedSpectrum_pullback_etale Bobj.property.2.2.2 q hq
+  -- Step 1: the finite étale `A ⧸ I`-algebra `C₀` of `Y₀`, and its lift `C` (Tag 09ZL)
+  let Cop : (CommAlgCat (A ⧸ I))ᵒᵖ :=
+    (algΓ (.of (A ⧸ I))).obj ((FiniteEtaleCover.forget _).obj Y₀)
+  let C₀ : Type u := Cop.unop
+  letI : CommRing C₀ := inferInstance
+  letI : Algebra (A ⧸ I) C₀ := inferInstance
+  have hC₀ := finiteEtaleCover_sections_finite_etale (A ⧸ I) Y₀
+  haveI : Module.Finite (A ⧸ I) C₀ := hC₀.1
+  haveI : Algebra.Etale (A ⧸ I) C₀ := hC₀.2
+  have hIle : I ≤ maximalIdeal A := by
+    rw [hI]
+    exact Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hf)
+  obtain ⟨C, _, _, hCfin, hCet, ⟨ψ⟩⟩ := exists_finite_etale_lift_of_henselianLocalRing hIle C₀
+  haveI : Module.Finite A C := hCfin
+  haveI : Algebra.Etale A C := hCet
+  -- Step 2: the isomorphism over `U₀` as an isomorphism of pullbacks of affine schemes
+  let ι₀ := (puncturedSpectrum (A ⧸ I)).ι
+  let F₀ := FiniteEtaleCover.forget (puncturedSpectrumScheme (A ⧸ I))
+  let unitY := (algΓAlgSpecAdjunction (.of (A ⧸ I))).unit.app ((FiniteEtaleCover.forget _).obj Y₀)
+  haveI : IsIso unitY := finiteEtaleCover_algGamma_unit_isIso (A ⧸ I) Y₀
+  let eY : F₀.obj ((restrictFiniteEtaleToPuncturedSpectrum (A ⧸ I)).obj Y₀) ≅
+      Over.mk (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap (A ⧸ I) C₀))) ι₀) :=
+    (Over.pullback ι₀).mapIso (asIso unitY)
+  let eV : F₀.obj ((restrictFiniteEtaleToPuncturedHypersurface A f).obj V) ≅
+      Over.mk (pullback.snd (Spec.map (CommRingCat.ofHom (algebraMap (A ⧸ I) ((A ⧸ I) ⊗[A] B))))
+        ι₀) :=
+    F₀.mapIso ((restrictFiniteEtaleToPuncturedHypersurface A f).mapIso eB.symm) ≪≫
+      hypersurfacePullbackIso A f B
+  let g := (eY.symm ≪≫ F₀.mapIso e₀ ≪≫ eV).hom
+  haveI : IsIso g := inferInstance
+  -- Step 3: the algebraic shadow of the isomorphism
+  have hHartogs : Function.Bijective
+      (((Scheme.ΓSpecIso (.of C₀)).inv ≫
+        (pullback.fst (Spec.map (CommRingCat.ofHom (algebraMap (A ⧸ I) C₀))) ι₀).appTop).hom) :=
+    finiteEtaleAlgebra_pullbackSections_bijective (.of (A ⧸ I)) hdim₀' Cop
+  obtain ⟨φ, hφinj, hφsurj⟩ := exists_algHom_of_pullback_iso (.of (A ⧸ I))
+    (.of ((A ⧸ I) ⊗[A] B)) (.of C₀) g hHartogs
+  -- Step 4: transport to `φ₀ : B → C / fC`
+  letI : Algebra A C₀ := Algebra.compHom C₀ (algebraMap A (A ⧸ I))
+  haveI : IsScalarTower A (A ⧸ I) C₀ := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  let eT : (A ⧸ I) ⊗[A] C ≃ₐ[A] C ⧸ Ideal.span {algebraMap A C f} :=
+    (Algebra.TensorProduct.comm A (A ⧸ I) C).trans
+      (((Algebra.TensorProduct.quotIdealMapEquivTensorQuot C I).restrictScalars A).symm.trans
+        (Ideal.quotientEquivAlgOfEq A (by rw [hI, Ideal.map_span, Set.image_singleton])))
+  let ψ' : C₀ ≃ₐ[A] C ⧸ Ideal.span {algebraMap A C f} := (ψ.restrictScalars A).symm.trans eT
+  let eBq : (B ⧸ I.map (algebraMap A B)) ≃ₐ[A ⧸ I] (A ⧸ I) ⊗[A] B :=
+    Algebra.TensorProduct.quotIdealMapEquivQuotTensor B I
+  have hBqmap : I.map (algebraMap A B) = Ideal.span {algebraMap A B f} := by
+    rw [hI, Ideal.map_span, Set.image_singleton]
+  let φ₀ : B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f} :=
+    ψ'.toAlgHom.comp ((φ.restrictScalars A).comp Algebra.TensorProduct.includeRight)
+  have hφ₀ : ∀ b : B, φ₀ b = ψ' (φ (1 ⊗ₜ[A] b)) := fun _ ↦ rfl
+  haveI : IsLocalHom (Ideal.Quotient.mk I) :=
+    IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
+  have hxbar : ∀ x ∈ maximalIdeal A, algebraMap A (A ⧸ I) x ∈ maximalIdeal (A ⧸ I) := by
+    intro x hx
+    rw [mem_maximalIdeal, mem_nonunits_iff]
+    intro hu
+    exact (mem_maximalIdeal x).mp hx (isUnit_of_map_unit (Ideal.Quotient.mk I) x hu)
+  have hφ₀inj : ∀ x ∈ maximalIdeal A, ∀ b : B, φ₀ b = 0 →
+      ∃ k : ℕ, x ^ k • b ∈ Ideal.span {algebraMap A B f} := by
+    intro x hx b hb
+    rw [hφ₀] at hb
+    have h1 : φ (1 ⊗ₜ[A] b) = 0 := ψ'.injective (by rw [hb, map_zero])
+    obtain ⟨k, hk⟩ : ∃ k : ℕ, (algebraMap A (A ⧸ I) x) ^ k • (1 ⊗ₜ[A] b : (A ⧸ I) ⊗[A] B) = 0 :=
+      hφinj _ (hxbar x hx) _ h1
+    have h2 : (algebraMap A (A ⧸ I) x) ^ k • (1 ⊗ₜ[A] b : (A ⧸ I) ⊗[A] B) =
+        1 ⊗ₜ[A] (x ^ k • b) := by
+      rw [← map_pow, algebraMap_smul, TensorProduct.tmul_smul]
+    refine ⟨k, ?_⟩
+    rw [← hBqmap, ← Ideal.Quotient.eq_zero_iff_mem]
+    apply eBq.injective
+    rw [map_zero]
+    rw [Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk, ← h2, hk]
+  have hφ₀surj : ∀ x ∈ maximalIdeal A, ∀ c : C ⧸ Ideal.span {algebraMap A C f},
+      ∃ (k : ℕ) (b : B), x ^ k • c = φ₀ b := by
+    intro x hx c
+    obtain ⟨k, bt, hbt⟩ : ∃ (k : ℕ) (bt : (A ⧸ I) ⊗[A] B),
+        (algebraMap A (A ⧸ I) x) ^ k • ψ'.symm c = φ bt :=
+      hφsurj _ (hxbar x hx) (ψ'.symm c)
+    obtain ⟨bq, hbq⟩ := eBq.surjective bt
+    obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective bq
+    refine ⟨k, b, ?_⟩
+    have h3 : (1 ⊗ₜ[A] b : (A ⧸ I) ⊗[A] B) = bt := by
+      rw [← hbq]
+      exact (Algebra.TensorProduct.quotIdealMapEquivQuotTensor_mk B I b).symm
+    rw [hφ₀, h3, ← hbt, ← map_pow, algebraMap_smul, map_smul, AlgEquiv.apply_symm_apply]
+  -- Step 5: the core theorem
+  have hBet : Algebra.Etale A B :=
+    etale_of_hypersurface_lift A d hd hdim f hf hf2 B hBnormal hBetale C φ₀ hφ₀inj hφ₀surj
+  -- Step 6: the finite étale cover `Spec B` extends `V`
+  let p : Spec (.of B) ⟶ Spec (.of A) := ((algSpec (.of A)).obj Bobj.obj).hom
+  have hpFinite : IsFinite p := Bobj.isFinite_algSpec
+  have hpEtale : Etale p := by
+    change Etale (Spec.map (CommRingCat.ofHom (algebraMap A B)))
+    exact HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr hBet)
+  let Y : FiniteEtaleCover (Spec (.of A)) := MorphismProperty.Over.mk ⊤ p ⟨hpFinite, hpEtale⟩
+  refine ⟨Y, ⟨?_ ≪≫ eB⟩⟩
+  exact MorphismProperty.Comma.isoFromComma (Iso.refl _)
+
+/-- The complete case of the outer induction step of Stacks Tag `0BMA`: for a complete regular
+local ring of dimension `d + 1 ≥ 3`, punctured-spectrum purity follows from purity for the
+regular hypersurfaces `A/(x)`, `x ∈ m \ m²`, with no further hypothesis.  This records that the
+lifting theorem above has exactly the shape consumed by
+`regularLocal_puncturedSpectrumPurity_induction_step`. -/
+theorem regularLocal_puncturedSpectrumPurity_induction_step_of_isAdicComplete
+    (d : ℕ) (hd : 2 ≤ d) (hdim : ringKrullDim A = d + 1)
+    (hInduction :
+      ∀ (x : A) (_hx : x ∈ maximalIdeal A) (_hx2 : x ∉ maximalIdeal A ^ 2)
+        [IsRegularLocalRing (A ⧸ Ideal.span ({x} : Set A))],
+        ringKrullDim (A ⧸ Ideal.span ({x} : Set A)) = d →
+          PuncturedSpectrumPurity (A ⧸ Ideal.span ({x} : Set A))) :
+    PuncturedSpectrumPurity A :=
+  regularLocal_puncturedSpectrumPurity_induction_step A d hd hdim hInduction
+    (fun x hx hx2 _ ↦ hypersurfaceFiniteEtaleLifting_of_isAdicComplete A d hd hdim x hx hx2)
+
+end Main
+
+
 #print axioms exists_isRegular_triple
 #print axioms etale_localization_away_of_isEtaleAt
 #print axioms localized_bijective_of_mod_isSMulRegular
 #print axioms mem_span_of_scaleRoots_aeval_eq_zero_of_isStacksNormalRing
 #print axioms exists_algHom_bijective_of_hypersurface_lift
 #print axioms etale_of_hypersurface_lift
+#print axioms exists_algHom_of_pullback_iso
+#print axioms henselianLocalRing_of_isAdicComplete
+#print axioms hypersurfacePullbackIso
+#print axioms hypersurfaceFiniteEtaleLifting_of_isAdicComplete
+#print axioms regularLocal_puncturedSpectrumPurity_induction_step_of_isAdicComplete
 
 end Pcf.Stacks
