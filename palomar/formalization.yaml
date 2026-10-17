@@ -42,9 +42,9 @@ project:
     the conclusion restates the hypothesis, and the depth is not bounded by
     the dimension of X.
   authors:
-    # Confirmed by Taylor 2026-10-15: all four are authors of the formalization.
+    # Taylor 2026-10-17: Alon Levy is an author of the manuscript, not of the
+    # formalization.
     - Taylor Dupuy
-    - Alon Levy
     - Thomas Tucker
     - Zhuoran Wang
   license: Apache-2.0
