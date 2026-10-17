@@ -1,0 +1,213 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
+-/
+module
+
+public import Pcf.Stacks.Common.EtaleNormal
+public import Pcf.Stacks.Common.RegularLocalization
+public import Pcf.Stacks.Common.RegularNormal
+public import Pcf.Stacks.Purity.Completion
+public import Pcf.Stacks.Purity.CompletionDescent
+public import Pcf.Stacks.Purity.DimensionTwo
+public import Pcf.Stacks.Purity.HypersurfaceLiftingComplete
+public import Pcf.Stacks.Purity.Tag0BM9
+public import Pcf.Stacks.Purity.Tag0BMAClauses
+public import Pcf.Stacks.Purity.Tag0BMB
+
+/-!
+# Purity for regular local rings (Stacks Tag `0BMA`) and unconditional Zariski--Nagata purity
+
+Stacks Lemma 58.21.3 (`0BMA`): for a regular local ring `A` of dimension `d ≥ 2`,
+
+1. every finite étale cover of the punctured spectrum extends over `Spec A`
+   (`PuncturedSpectrumPurity A`), and
+2. every finite normal `A`-algebra which is étale over the punctured spectrum is étale
+   (`FiniteNormalPuncturedEtalePurity A`, pcf's finite, torsion-free, Stacks-normal form).
+
+The assembly here:
+
+* `puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity`: clause (2) ⇒ clause (1), via
+  essential surjectivity in Tag `0BM9`; the converse is the existing
+  `finiteNormalPuncturedEtalePurity_of_puncturedSpectrumPurity`.
+* `puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete`: clause (1) for complete
+  regular local rings, by induction on the dimension. The base case `d = 2` is `DimensionTwo`;
+  the step uses the complete-case hypersurface lifting theorem (`0BLM`, complete regular case)
+  for `A/(x)`, which is again complete regular local of one less dimension.
+* `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`: clause (2) in general, by descent
+  from the completion (`CompletionDescent`).
+* `puncturedSpectrumPurity_of_isRegularLocalRing`: clause (1) in general.
+* `zariskiNagataPurity`, `palomar_zariskiNagataPurity`: Stacks Tag `0BMB` with no hypotheses.
+
+Proof route diverges from Stacks: the induction runs over complete rings and replaces the
+local-cohomology argument of `0BM6`/`0EKS` (behind `0BLM`) by an elementary formal lifting, and
+the passage from `A` to its completion replaces `0BLL`/`0BLH` by a Hartogs plus fpqc-descent
+argument.
+-/
+
+@[expose] public section
+
+noncomputable section
+
+open AlgebraicGeometry CategoryTheory IsLocalRing
+
+universe u
+
+namespace Pcf.Stacks
+
+/-- Regular local rings are integrally closed (Stacks `0567`, local case), packaged in the form
+consumed by the completion descent. -/
+theorem isIntegrallyClosed_of_isRegularLocalRing' (R : Type u) [CommRing R]
+    [IsRegularLocalRing R] : IsIntegrallyClosed R :=
+  isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) R
+
+/-- Clause (2) of Stacks Tag `0BMA` implies clause (1).
+
+Every finite étale cover `V` of the punctured spectrum comes from a finite torsion-free normal
+algebra `B` (essential surjectivity in Tag `0BM9`); clause (2) makes `B` étale, so `Spec B` is a
+finite étale cover of `Spec R` restricting to `V` (the "if" direction of the last sentence of
+Tag `0BM9`). -/
+theorem puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
+    (R : Type u) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
+    [IsIntegrallyClosed R] (hdim : 1 ≤ ringKrullDim R)
+    (hpurity : FiniteNormalPuncturedEtalePurity R) :
+    PuncturedSpectrumPurity R := by
+  constructor
+  intro V
+  obtain ⟨Bobj, ⟨eB⟩⟩ := puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra (.of R) hdim V
+  have hBet : Algebra.Etale R Bobj.obj.unop := hpurity Bobj.obj Bobj.property
+  let p : Spec (.of Bobj.obj.unop) ⟶ Spec (.of R) := ((algSpec (.of R)).obj Bobj.obj).hom
+  have hpFinite : IsFinite p := Bobj.isFinite_algSpec
+  have hpEtale : Etale p := by
+    change Etale (Spec.map (CommRingCat.ofHom (algebraMap R Bobj.obj.unop)))
+    exact HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr hBet)
+  let Y : FiniteEtaleCover (Spec (.of R)) := MorphismProperty.Over.mk ⊤ p ⟨hpFinite, hpEtale⟩
+  refine ⟨Y, ⟨?_ ≪≫ eB⟩⟩
+  exact MorphismProperty.Comma.isoFromComma (Iso.refl _)
+
+/-- Clause (1) of Stacks Tag `0BMA` in dimension two. -/
+theorem puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
+    (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : ringKrullDim A = 2) :
+    PuncturedSpectrumPurity A := by
+  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing' A
+  exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
+    (by rw [hdim]; norm_num)
+    (finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
+      A hdim)
+
+/-- **Stacks Tag `0BMA`, clause (1), complete case.** Every finite étale cover of the punctured
+spectrum of a complete regular local ring of dimension `≥ 2` extends over the whole spectrum.
+
+Proof: induction on the dimension, as in Stacks. The base case `d = 2` is `DimensionTwo`
+(via clause (2) ⇒ clause (1)). In the step, `A/(x)` for `x ∈ m \ m²` is again a complete
+regular local ring, of one less dimension.
+
+Proof route diverges from Stacks: the step uses the complete-case lifting theorem
+`hypersurfaceFiniteEtaleLifting_of_isAdicComplete` instead of `0BLM` via `0BM6`/`0EKS`. -/
+@[stacks 0BMA "clause (1), complete regular local case"]
+theorem puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
+    (A : Type u) [CommRing A] [IsRegularLocalRing A] [IsAdicComplete (maximalIdeal A) A]
+    (hdim : 2 ≤ ringKrullDim A) :
+    PuncturedSpectrumPurity A := by
+  suffices key : ∀ d : ℕ, 2 ≤ d → ∀ (B : Type u) [CommRing B] [IsRegularLocalRing B]
+      [IsAdicComplete (maximalIdeal B) B], ringKrullDim B = d → PuncturedSpectrumPurity B by
+    have hfin : ringKrullDim A ≠ ⊤ := ringKrullDim_ne_top
+    have hbot : ringKrullDim A ≠ ⊥ := ringKrullDim_ne_bot
+    obtain ⟨n, hn⟩ : ∃ n : ℕ, ringKrullDim A = n := by
+      induction h : ringKrullDim A using WithBot.recBotCoe with
+      | bot => exact absurd h hbot
+      | coe e =>
+        induction e using ENat.recTopCoe with
+        | top => exact absurd h hfin
+        | coe n => exact ⟨n, rfl⟩
+    refine key n ?_ A hn
+    rw [hn] at hdim
+    exact_mod_cast hdim
+  intro d hd
+  induction d, hd using Nat.le_induction with
+  | base =>
+    intro B _ _ _ hB
+    exact puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two B (by exact_mod_cast hB)
+  | succ d hd ih =>
+    intro B _ _ _ hB
+    refine regularLocal_puncturedSpectrumPurity_induction_step_of_isAdicComplete B d hd
+      (by exact_mod_cast hB) ?_
+    intro x hx hx2 _ hdimx
+    have : IsAdicComplete (maximalIdeal (B ⧸ Ideal.span ({x} : Set B)))
+        (B ⧸ Ideal.span ({x} : Set B)) :=
+      isAdicComplete_maximalIdeal_quotient _
+    exact ih _ hdimx
+
+/-- **Stacks Tag `0BMA`, clause (2)**, in pcf's finite-normal form: for a regular local ring `A`
+of dimension `≥ 2`, every finite, torsion-free, Stacks-normal `A`-algebra which is étale over the
+punctured spectrum is étale.
+
+Divergence from Stacks: the statement is clause (2) with "finite `A → B`, `B` normal" made
+precise as `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal), the target
+category of Tag `0BM9`.
+
+Proof route diverges from Stacks: clause (1) is proved for the completion `A^∧` (complete case
+above, using the elementary formal lifting in place of `0BM6`/`0EKS`), and clause (2) for `A`
+then follows by completion descent (Hartogs for a regular pair plus fpqc descent of étaleness,
+in place of `0BLL`/`0BLH`). -/
+@[stacks 0BMA "clause (2), finite-normal form"]
+theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
+    (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
+    FiniteNormalPuncturedEtalePurity A :=
+  finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity A
+    (fun R _ _ ↦ isIntegrallyClosed_of_isRegularLocalRing' R) hdim
+    (puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete _
+      ((ringKrullDim_adicCompletion A).symm ▸ hdim))
+
+/-- **Stacks Tag `0BMA`, clause (1)**: for a regular local ring of dimension `≥ 2`, every finite
+étale cover of the punctured spectrum extends to a finite étale cover of the spectrum.
+
+Proof route diverges from Stacks: obtained from clause (2) (see
+`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`) through Tag `0BM9`. -/
+@[stacks 0BMA "clause (1)"]
+theorem puncturedSpectrumPurity_of_isRegularLocalRing
+    (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
+    PuncturedSpectrumPurity A := by
+  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing' A
+  exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
+    (le_trans (by norm_num) hdim) (finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A hdim)
+
+/-- **Zariski--Nagata purity, Stacks Tag `0BMB`**, affine pointwise form, with no hypotheses.
+
+This discharges the two inputs of `zariskiNagataPurity_of_inputs`: `033C` by
+`IsStacksNormalRing.of_etale` and `0BMA` by
+`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`.
+Proof route diverges from Stacks inside `0BMA`; see that theorem. -/
+@[stacks 0BMB "affine, pointwise"]
+theorem zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
+    ZariskiNagataPurity R S :=
+  zariskiNagataPurity_of_inputs (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
+    (fun A _ _ h ↦ finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A h) R S
+
+/-- The Palomar-facing form of `zariskiNagataPurity`: the compact statement
+`Pcf.Palomar.ZariskiNagataPurity`, with no hypotheses. -/
+theorem palomar_zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
+    Pcf.Palomar.ZariskiNagataPurity R S :=
+  palomar_zariskiNagataPurity_of_inputs (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
+    (fun A _ _ h ↦ finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A h) R S
+
+#print axioms puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
+#print axioms puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
+#print axioms finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
+#print axioms puncturedSpectrumPurity_of_isRegularLocalRing
+#print axioms zariskiNagataPurity
+#print axioms palomar_zariskiNagataPurity
+
+#check @isIntegrallyClosed_of_isRegularLocalRing'
+#check @puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
+#check @puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
+#check @puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
+#check @finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
+#check @puncturedSpectrumPurity_of_isRegularLocalRing
+#check @zariskiNagataPurity
+#check @palomar_zariskiNagataPurity
+
+end Pcf.Stacks
