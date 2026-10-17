@@ -153,13 +153,15 @@ Concretely, "finite `A → B`, `B` normal" is made precise as `FiniteNormalPunct
 (finite, torsion-free, Stacks-normal), the target category of Tag `0BM9`.
 
 Follows the Stacks proof of `0BMA`? No (phase-1 proof, not re-proved): the Stacks proof is by
-induction on `d` for `A` itself using `0BLL`/`0BLH` and `0BM6`/`0EKS`; this proof does not follow it.
+induction on `d` for `A` itself using `0BLL`/`0BLH` and `0BM6`/`0EKS`;
+this proof does not follow it.
 
 Proof route diverges from Stacks: clause (1) is proved for the completion `A^∧` (complete case
 above, using the elementary formal lifting in place of `0BM6`/`0EKS`), and clause (2) for `A`
 then follows by completion descent (Hartogs for a regular pair plus fpqc descent of étaleness,
 in place of `0BLL`/`0BLH`). -/
-@[stacks 0BMA "clause (2), with B torsion-free over A added: the literal clause (2) is false for B = A × κ(𝔪)"]
+@[stacks 0BMA "clause (2), with B torsion-free over A added; literal clause (2) is false for
+  B = A × κ(𝔪)"]
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
     FiniteNormalPuncturedEtalePurity A :=
