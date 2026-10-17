@@ -105,6 +105,7 @@ public import Pcf.Stacks.Purity.Tag0BMA
 public import Pcf.Stacks.Purity.Tag0BMB
 public import Pcf.Stacks.Purity.Tag0BMBLocalModel
 public import Pcf.Stacks.Purity.Tag0BMBScheme
+public import Pcf.Stacks.Purity.Tag0BMBSchemeAPI
 public import Pcf.Stacks.Purity.GabberPolynomialIdempotent
 public import Pcf.Stacks.Abhyankar.DivisorNormalizationTransport
 public import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
@@ -1580,6 +1581,7 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 #print axioms Pcf.Stacks.zariskiNagataPurity
 #print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
+#print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.palomar_zariskiNagataPurity
 #print axioms Pcf.Stacks.abhyankarLemma
 #print axioms Pcf.Stacks.palomar_abhyankarLemma
@@ -1952,6 +1954,43 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.isRegularLocalRing_atPrime_of_eq
 #print axioms Pcf.Stacks.stacksEtaleAt_of_isEtaleAt
 #print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
+
+-- Pcf.Stacks.Purity.Tag0BMBSchemeAPI
+#print axioms Pcf.Stacks.HasRingHomProperty.resLE_iff_appLE
+#print axioms Pcf.Stacks.HasRingHomProperty.resLE_of_comp_ι
+#print axioms Pcf.Stacks.HasRingHomProperty.comp_ι_iff_resLE
+#print axioms Pcf.Stacks.HasRingHomProperty.appLE_of_comp_ι
+#print axioms Pcf.Stacks.HasRingHomProperty.exists_appLE_iff_exists_comp_ι
+#print axioms Pcf.Stacks.HasRingHomProperty.appLE_of_appLE_of_le
+#print axioms Pcf.Stacks.IsZariskiLocalAtSource.iff_forall_exists_comp_ι
+#print axioms Pcf.Stacks.IsZariskiLocalAtSource.isOpen_setOf_exists_comp_ι
+#print axioms Pcf.Stacks.IsZariskiLocalAtSource.exists_comp_ι_comp_iff
+#print axioms Pcf.Stacks.mem_basicOpen_of_notMem_primeIdealOf
+#print axioms Pcf.Stacks.appLE_basicOpen_of_away
+#print axioms Pcf.Stacks.stacksEtaleAt_iff_exists_etale
+#print axioms Pcf.Stacks.StacksEtaleAt.etale_appLE
+#print axioms Pcf.Stacks.etale_appLE_of_le
+#print axioms Pcf.Stacks.forall_stacksEtaleAt_iff
+#print axioms Pcf.Stacks.stacksEtaleAt_of_etale
+#print axioms Pcf.Stacks.isOpen_setOf_stacksEtaleAt
+#print axioms Pcf.Stacks.stacksEtaleAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.stacksEtaleAt_ι_comp_iff
+#print axioms Pcf.Stacks.stacksUnramifiedAt_iff_exists
+#print axioms Pcf.Stacks.forall_stacksUnramifiedAt_iff
+#print axioms Pcf.Stacks.isOpen_setOf_stacksUnramifiedAt
+#print axioms Pcf.Stacks.stacksUnramifiedAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.stacksUnramifiedAt_iff_stalkMap
+#print axioms Pcf.Stacks.StacksEtaleAt.stacksUnramifiedAt
+#print axioms Pcf.Stacks.quasiFiniteAt_iff_appLE
+#print axioms Pcf.Stacks.stacksQuasiFiniteAt_iff
+#print axioms Pcf.Stacks.stacksQuasiFiniteAt_iff_quasiFiniteAt
+#print axioms Pcf.Stacks.forall_stacksQuasiFiniteAt_iff
+#print axioms Pcf.Stacks.StacksUnramifiedAt.stacksQuasiFiniteAt
+#print axioms Pcf.Stacks.StacksEtaleAt.stacksQuasiFiniteAt
+#print axioms Pcf.Stacks.isOpen_setOf_stacksQuasiFiniteAt
+#print axioms Pcf.Stacks.stacksQuasiFiniteAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
+#print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity_of_locallyOfFiniteType
 
 -- Pcf.Stacks.Purity.GabberPolynomialIdempotent
 #print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_aeval_eq_zero_of_gabberPolynomial
