@@ -21,8 +21,8 @@ Leaf A5 of the Abhyankar run, codimension-one part.  Paragraph 4 of the proof of
 > is still at least tamely ramified over `Spec(A')` in codimension 1. But Abhyankar's lemma tells
 > us that the ramification indices have all become equal to 1.
 
-This file records the reductions of that assertion that are proved, states the remaining input
-as the structure `StrictRootComponentData`, and combines it with the classification of
+This file records the reductions of that assertion, states the codimension-one input as the
+structure `StrictRootComponentData` (constructed downstream, see below), and combines it with the classification of
 `StrictComponentClassification.lean`:
 
 * `under_eq_of_height_eq_one_of_mem`: a height-one prime of a finite normal domain extension
@@ -40,38 +40,22 @@ as the structure `StrictRootComponentData`, and combines it with the classificat
   the strict henselization `LocalColimit R Ω`: given such data and Zariski–Nagata purity, the
   fraction field of the component `N` is `K(a^{1/n})` with `n ∣ E`.
 
-## What remains open (reported, not forced)
+## Where `StrictRootComponentData` is constructed
 
-The construction of `StrictRootComponentData` is **not** carried out here.  It has two parts.
+This file only states `StrictRootComponentData`; its construction is carried out downstream.
 
-1. *Normalization existence.*  `(A' ⊗_A N)[1/x]` is finite étale over `A'[1/x]`, hence a finite
-   product of normal domains (`033C`, `030C`); for each factor `B'_j` with fraction field `L'_j`
-   the integral closure `N'_j` of `A'` in `L'_j` is a finite normal domain
-   (`IsIntegralClosure.finite`) with `N'_j[1/x] ≅ B'_j`, so `N'_j` is étale over `A'` away from
-   `x` and receives `N` (elements of `N` are integral over `A ⊂ A'`).  This is standard and
-   uses only existing pcf/Mathlib normalization results.
+1. *Normalization existence* (`StrictRootComponent.lean`): `exists_strictRootComponentPreData`
+   and `exists_strictRootComponentPreData_strictBaseChangeFactor` build a normal-domain component
+   `N'` of the normalization of `A'` in `(A' ⊗_A N)[1/x]`, finite over `A'`, étale away from `x`,
+   and receiving `N` (`StrictRootComponentPreData`).
 
-2. *Codimension-one unramifiedness (`0BRM` transport, `0EYC`/`0EYD`).*  At a height-one prime
-   `Q'` of `N'_j` over `(x)`, with `q = Q' ∩ N` (a height-one prime of `N` over `(a)`, by
-   `under_eq_of_height_eq_one_of_mem`), `(N'_j)_{Q'}` is a localization of the normalization of
-   the DVR `N_q` in `N_q[x]/(x^E − a)[1/x]`.  Stacks `0BRM` (Lemma 15.116.4) gives
-   unramifiedness over `A'_{(x)}` whenever the ramification index `e_q` of `N_q/A_(a)` **divides**
-   `E`.  The DVR form available in pcf (`DVRKummerBaseChange.lean`,
-   `KummerNormalizationAssembly.lean`,
-   `isUnramifiedAt_of_standardRoot_dvrRootPuncturedNormalization_of_root_mem`)
-   is the special case `E = e_q` and moreover assumes the upper DVR `N_q` finite over `A_(a)`,
-   which forces `q` to be the only height-one prime of `N` over `(a)`.  Since one `E` must serve
-   all height-one primes `q` of `N` over `(a)` and these may have different ramification indices
-   (and `N_(a)` need not be local a priori; it is a posteriori, by the conclusion of `0EYG`),
-   the divisibility form of `0BRM` is needed.  Proof route for it (not formalized): with
-   `a = u·π_q^{e_q}` in `N_q`, `E = d·e_q`, the normalization of `N_q` in
-   `N_q[x]/(x^E − a)[1/x]` is `V = U[x]/(x^d − π_q y)` where `U = N_q[y]/(y^{e_q} − u)` is the
-   étale Kummer algebra of pcf's exact case; `V` is the base change of `U` along
-   `A_(a)[w]/(w^{e_q} − a) → A_(a)[x]/(x^d − w) = A'_{(x)}`, so it is étale over `A'_{(x)}`
-   (`Algebra.Etale.baseChange` applied to pcf's `etale_of_dvr_standardRoot_kummerUnit_square`),
-   and `V[1/x] ≅ N_q[x]/(x^E − a)[1/x]` by the substitution `y = x^d/π_q`.  The transport from
-   `(N'_j)_{Q'}` to this DVR normalization is the localization comparison of
-   `LocalizedNormalizationComparison.lean` and `DivisorNormalizationTransport.lean`.
+2. *Codimension-one unramifiedness* (`DVRAbhyankarDivisible.lean`,
+   `StrictHeightOneUnramified.lean`): the divisibility form of Stacks `0BRM` (ramification index
+   `e_q` dividing `E`, with no finiteness of the upper DVR over the lower one) is
+   `formallyUnramified_dvrRoot_of_dvd`; it is transported to the component by
+   `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`, which completes the
+   data in `StrictRootComponentPreData.toDataOfDvd`. `exists_strictRootComponentData` combines
+   this with `exists_common_multiple_ramificationIdx` above.
 -/
 
 @[expose] public section

@@ -17,7 +17,7 @@ public import Pcf.Stacks.Purity.NormalRing
 This file proves Stacks Project Tag `0567`: a regular ring is normal.  Here a regular ring is
 Mathlib's `IsRegularRing` (Noetherian, every localization at a prime is a regular local ring),
 which is the Stacks definition (Tag `00OD`), and normal is pcf's `IsStacksNormalRing`, the
-Stacks definition (Tag `037B`).
+Stacks definition (Tag `00GV`, Definition 10.37.11).
 
 ## Route
 
@@ -286,7 +286,7 @@ theorem isRegularRing_localization_atPrime (R : Type*) [CommRing R] [IsRegularRi
 /-- **Stacks Project Tag 0567.** A regular ring is normal.
 
 Here "regular" is Mathlib's `IsRegularRing` (Stacks Tag `00OD`) and "normal" is
-`IsStacksNormalRing` (Stacks Tag `037B`), so the statement is exactly the tag.  The proof route
+`IsStacksNormalRing` (Stacks Tag `00GV`), so the statement is exactly the tag.  The proof route
 differs from Stacks: see `isIntegrallyClosed_of_isRegularRing`. -/
 @[stacks 0567]
 theorem isStacksNormalRing_of_isRegularRing (R : Type u) [CommRing R] [IsRegularRing R] :
