@@ -163,6 +163,16 @@ public import Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
 public import Pcf.Stacks.Abhyankar.StrictHeightOneUnramified
 public import Pcf.Stacks.Abhyankar.StrictGenericPresentation
 public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Abhyankar.Tame.ComponentClassification
+public import Pcf.Stacks.Abhyankar.Tame.DVRAbhyankarResidue
+public import Pcf.Stacks.Abhyankar.Tame.Defs
+public import Pcf.Stacks.Abhyankar.Tame.GenericPresentation
+public import Pcf.Stacks.Abhyankar.Tame.HeightOneUnramified
+public import Pcf.Stacks.Abhyankar.Tame.KummerClassification
+public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
+public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
+public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
+public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 public import Pcf.Audit
 public import Pcf.Palomar.Bridge
 public import Pcf.Palomar.Unconditional

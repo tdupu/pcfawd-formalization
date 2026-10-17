@@ -91,6 +91,16 @@ public import Pcf.Stacks.Abhyankar.StrictNormalizationColimit
 public import Pcf.Stacks.Abhyankar.StrictRootComponent
 public import Pcf.Stacks.Abhyankar.StrictRootCover
 public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Abhyankar.Tame.ComponentClassification
+public import Pcf.Stacks.Abhyankar.Tame.DVRAbhyankarResidue
+public import Pcf.Stacks.Abhyankar.Tame.Defs
+public import Pcf.Stacks.Abhyankar.Tame.GenericPresentation
+public import Pcf.Stacks.Abhyankar.Tame.HeightOneUnramified
+public import Pcf.Stacks.Abhyankar.Tame.KummerClassification
+public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
+public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
+public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
+public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 public import Pcf.Stacks.Common.EtaleNormal
 public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Common.RegularNormal
@@ -2064,3 +2074,62 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Examples.Pinched.nodeUnnormDyn_not_pcf0
 #print axioms Pcf.Examples.Pinched.nodeUnnormDyn_not_pcf1
 #print axioms Pcf.Examples.Pinched.nodeUnnormDyn_pcf
+
+
+-- Pcf.Stacks.Abhyankar.Tame.ComponentClassification
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
+
+-- Pcf.Stacks.Abhyankar.Tame.DVRAbhyankarResidue
+#print axioms Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd_and_isSeparable
+
+-- Pcf.Stacks.Abhyankar.Tame.Defs
+#print axioms Pcf.Stacks.AbhyankarLemma.of_tame
+#print axioms Pcf.Stacks.isUnit_natCast_residueField_iff
+#print axioms Pcf.Stacks.mem_minimalPrimes_span_singleton_iff_height_eq_one
+#print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_iff
+
+-- Pcf.Stacks.Abhyankar.Tame.GenericPresentation
+#print axioms Pcf.Stacks.exists_strictRootCover_equiv_of_idempotent_factor_tame
+#print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
+
+-- Pcf.Stacks.Abhyankar.Tame.HeightOneUnramified
+#print axioms Pcf.Stacks.StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
+#print axioms Pcf.Stacks.StrictRootComponentPreData.toDataOfDvd_tame_carrier
+#print axioms Pcf.Stacks.exists_common_multiple_ramificationIdx_tame
+#print axioms Pcf.Stacks.exists_strictRootComponentData_tame
+
+-- Pcf.Stacks.Abhyankar.Tame.KummerClassification
+#print axioms Pcf.Stacks.dvrRootFraction_intermediate_eq_power_tame
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_tame
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame
+
+-- Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
+#print axioms Pcf.Stacks.isUnit_of_mul_eq_pow_of_not_dvd
+#print axioms Pcf.Stacks.isUnit_natCast_localizationAway_of_etale
+#print axioms Pcf.Stacks.isUnit_natCast_of_strictRootCover_etale_away
+
+-- Pcf.Stacks.Abhyankar.Tame.StandardDescent
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_natCast_isUnit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtale_standardTameCover_of_strict_tame
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_tame
+
+-- Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
+#print axioms Pcf.Stacks.comap_algHom_under_eq
+#print axioms Pcf.Stacks.isUnramifiedAt_comap_of_etale
+#print axioms Pcf.Stacks.algebraMap_mem_map_under_of_etale
+#print axioms Pcf.Stacks.residueFieldMapₐOfLiesOver_apply
+#print axioms Pcf.Stacks.isUnramifiedAt_residue_of_etale_cover
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.stageToStrictBaseChange_tmul
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_strictBaseChange
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_etale_cover_strictBaseChange
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.module_flat_strictBaseChange
+#print axioms Pcf.Stacks.eq_of_le_of_height_eq_one
+#print axioms Pcf.Stacks.isTamelyRamifiedAt_of_etale_cover_of_flat
+#print axioms Pcf.Stacks.isTamelyRamifiedAt_quotient_idempotent_of_etale_cover
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.isTamelyRamifiedAt_strictBaseChangeFactor
+
+-- Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
+#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor_tame
+#print axioms Pcf.Stacks.abhyankarLemma_tame
+#print axioms Pcf.Stacks.abhyankarLemma_of_tame
