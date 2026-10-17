@@ -208,17 +208,6 @@ attribute [instance] StrictRootComponentData.commRing StrictRootComponentData.al
 
 variable {A N a E}
 
-/-- Codimension-one unramifiedness in `StrictRootComponentData` only has to be supplied at the
-height-one primes containing the root. -/
-theorem StrictRootComponentData.unramified_of_root_mem
-    (C : StrictRootComponentData A N a E)
-    (hroot : ∀ w : PrimeSpectrum C.carrier, w.asIdeal.height = 1 →
-      algebraMap (StrictRootCover a E) C.carrier (strictRoot a E) ∈ w.asIdeal →
-        Algebra.IsUnramifiedAt (StrictRootCover a E) w.asIdeal) :
-    ∀ w : PrimeSpectrum C.carrier, w.asIdeal.height = 1 →
-      Algebra.IsUnramifiedAt (StrictRootCover a E) w.asIdeal :=
-  forall_height_one_isUnramifiedAt_of_root_mem _ C.etaleAway hroot
-
 /-- **Per-component classification from the root-cover data (Stacks `0EYG`, paragraphs 4–5).**
 Given the normalization component data over the root cover and Zariski–Nagata purity for it,
 the fraction field of the component `N` is `K(a^{1/n})` for a divisor `n` of `E`. -/

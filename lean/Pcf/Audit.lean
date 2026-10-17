@@ -1617,7 +1617,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.StrictRootComponentData.towerComponent
 #print axioms Pcf.Stacks.StrictRootComponentData.towerRoot
 #print axioms Pcf.Stacks.StrictRootComponentData.unramified
-#print axioms Pcf.Stacks.StrictRootComponentData.unramified_of_root_mem
 #print axioms Pcf.Stacks.exists_common_multiple_ramificationIdx
 #print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 #print axioms Pcf.Stacks.forall_height_one_isUnramifiedAt_of_root_mem
@@ -1887,7 +1886,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_isIntegral_of_henselian
 #print axioms Pcf.Stacks.exists_monic_factorization_lift_of_henselian
 #print axioms Pcf.Stacks.hasFiniteEtaleLift_of_finrank_eq
-#print axioms Pcf.Stacks.hypersurfaceFiniteEtaleLifting_of_henselian_of_fullyFaithful
 #print axioms Pcf.Stacks.isCoprime_of_isCoprime_map_of_le_jacobson
 #print axioms Pcf.Stacks.restrictFiniteEtaleToHypersurface_essSurj
 #print axioms Pcf.Stacks.subsingleton_of_subsingleton_closedFibre

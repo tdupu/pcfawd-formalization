@@ -43,9 +43,8 @@ as essential surjectivity of the scheme-theoretic restriction functor
   algebras over such a pair (existence half of Tag `09XI`, condition (4), local base ring).
 * `exists_finite_etale_lift_of_henselianLocalRing`: Tag `09ZL`, essential surjectivity, for a
   henselian local ring `A` and `I ⊆ m_A`.
-* `restrictFiniteEtaleToHypersurface_essSurj` and
-  `hypersurfaceFiniteEtaleLifting_of_henselian_of_fullyFaithful`: the scheme-theoretic form,
-  plugged into the `0BLM` categorical assembly.
+* `restrictFiniteEtaleToHypersurface_essSurj`: the scheme-theoretic form (essential
+  surjectivity of restriction to the hypersurface), the input of the `0BLM` categorical assembly.
 
 ## Proof route (divergence from the Stacks proof)
 
@@ -720,18 +719,6 @@ theorem restrictFiniteEtaleToHypersurface_essSurj [IsLocalRing Rbar] :
   rw [hu, ← Spec.map_comp, hring]
   exact pullbackSpecIso_hom_snd R B Rbar
 
-/-- The categorical assembly of Stacks Tags `0BLS`/`0BLM` for a henselian (for instance
-complete) local ring: the essential-surjectivity input of
-`hypersurfaceFiniteEtaleLifting_of_essSurj_of_fullyFaithful` is discharged by
-`restrictFiniteEtaleToHypersurface_essSurj`, leaving only the fully-faithful restriction of
-Stacks Tag `0BM6`. -/
-theorem hypersurfaceFiniteEtaleLifting_of_henselian_of_fullyFaithful [IsNoetherianRing R]
-    [IsLocalRing Rbar] [IsNoetherianRing Rbar]
-    (hDetect : (restrictFiniteEtaleToPuncturedHypersurface R x).FullyFaithful) :
-    HypersurfaceFiniteEtaleLifting R x :=
-  hypersurfaceFiniteEtaleLifting_of_essSurj_of_fullyFaithful R x
-    (restrictFiniteEtaleToHypersurface_essSurj R x) hDetect
-
 end Scheme
 
 #print axioms exists_monic_factorization_lift_of_henselian
@@ -751,6 +738,5 @@ end Scheme
 #print axioms hasFiniteEtaleLift_of_finrank_eq
 #print axioms exists_finite_etale_lift_of_henselianLocalRing
 #print axioms restrictFiniteEtaleToHypersurface_essSurj
-#print axioms hypersurfaceFiniteEtaleLifting_of_henselian_of_fullyFaithful
 
 end Pcf.Stacks
