@@ -96,6 +96,7 @@ public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Common.RegularNormal
 public import Pcf.Stacks.Purity.Completion
 public import Pcf.Stacks.Purity.CompletionDescent
+public import Pcf.Stacks.Purity.RegularPairSections
 public import Pcf.Stacks.Purity.FormalEtaleLift
 public import Pcf.Stacks.Purity.HenselianFiniteEtaleLift
 public import Pcf.Stacks.Purity.HypersurfaceLiftingComplete
@@ -371,6 +372,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteEtaleCover_sections_finite_etale
 #print axioms Pcf.Stacks.finiteEtaleCover_algGamma_unit_isIso
 #print axioms Pcf.Stacks.puncturedSectionsSpecAdjunction_counit_isIso_of_bijective
+#print axioms Pcf.Stacks.finiteEtaleAlgebra_exists_regularPair
+#print axioms Pcf.Stacks.etale_puncturedRestriction_of_etale
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_openSections_bijective
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_pullbackSections_bijective
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_puncturedSectionsSpecAdjunction_counit_isIso
@@ -1839,10 +1842,12 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 -- Pcf.Stacks.Purity.CompletionDescent
 #print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity
 #print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_faithfullyFlat_puncturedSpectrumPurity
-#print axioms Pcf.Stacks.openSections_bijective_of_regularPair_of_puncturedEtale
 #print axioms Pcf.Stacks.preimage_puncturedSpectrum_eq_of_map_maximalIdeal_eq
-#print axioms Pcf.Stacks.pullbackSections_bijective_of_regularPair_of_puncturedEtale
 #print axioms Pcf.Stacks.puncturedEtale_tensorProduct_of_map_maximalIdeal_eq
+
+-- Pcf.Stacks.Purity.RegularPairSections
+#print axioms Pcf.Stacks.openSections_bijective_of_regularPair_of_puncturedEtale
+#print axioms Pcf.Stacks.pullbackSections_bijective_of_regularPair_of_puncturedEtale
 
 -- Pcf.Stacks.Purity.FormalEtaleLift
 #print axioms Pcf.Stacks.Ideal.Quotient.mk_smul_base
