@@ -196,9 +196,9 @@ two differences: the strict henselization of `R` is compared to that of `R_y` (S
 models (`strictRootCoverEquivOfFractionRingEquiv`) rather than over `A_f`, which gives the
 `0EYH` conclusion directly. -/
 @[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
-    of D; standard pieces R'[x]/(x^e - u_i a) with units u_i",
+    of D; pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D; \
-    standard pieces R'[x]/(x^e - u_i a) with units u_i"]
+    pieces R'[x]/(x^e - f), f = u_i a"]
 theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemma R S a := by
   intro _ ha hreg hfin hetale hint hnat y hy
