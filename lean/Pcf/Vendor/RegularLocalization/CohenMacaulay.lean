@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2025 Nailin Guan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Nailin Guan
+Authors: Nailin Guan, Yongle Hu
 -/
--- Vendored into pcf from mathlib4 PR #29802 (author Nailin Guan, GitHub `Thmoas-Guan`),
+-- Vendored into pcf from mathlib4 PR #29802 (authors Nailin Guan, GitHub `Thmoas-Guan`,
+-- and Yongle Hu, GitHub `mbkybky`),
 -- head commit 8183b4ca0327e9a3f9c994493a49c8c5eb5ef0fc,
 -- file `Mathlib/RingTheory/CohenMacaulay/Basic.lean`.
 -- All declarations are placed in the namespace `Pcf.Vendor` so that nothing clashes with

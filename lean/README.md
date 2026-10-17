@@ -332,7 +332,7 @@ lean/
 │   │   │   └── Strict*, Kummer*, DVR*, StandardCover* ← strict henselization, Kummer theory, 0BRM, 0EYF
 │   │   └── Common/          ← shared regularity/normality lemmas (0567, 033C, 0AFS)
 │   ├── Palomar/             ← compared statement and `pcfAllTheWayDown_charZero_unconditional`
-│   ├── Vendor/              ← vendored Mathlib PR #29802 (localization of regular local rings)
+│   ├── Vendor/              ← vendored Mathlib PR #29802 by Nailin Guan and Yongle Hu (localization of regular local rings)
 │   ├── Bounding/            ← thm:bounding DERIVED from purity and Abhyankar (2026-10-04)
 │   │   ├── Stacks.lean      ← supporting Tags 036W and 01JT; imports the theorem boundaries above
 │   │   ├── StandardPiece.lean ← Step 3 completed: √(aC) = (z), R/(a) → C/(z) bijective
