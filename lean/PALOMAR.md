@@ -275,17 +275,17 @@ Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arX
 
 # Entry 1 — the descent (CONDITIONAL)
 
-**Declaration** `Pcf.pcf_all_the_way_down`
+**Declaration** `Pcf.pcfAllTheWayDown_divisorDynamics`
 
 ```
-@Pcf.pcf_all_the_way_down : ∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivDyn (P i))
-  (S : (i : ℕ) → Pcf.PcfSetup (P i) (P (i + 1))),
+@Pcf.pcfAllTheWayDown_divisorDynamics : ∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivisorDynamics (P i))
+  (S : (i : ℕ) → Pcf.PCFSetup (P i) (P (i + 1))),
   (∀ (i : ℕ), (S i).res = D (i + 1)) →
     (∀ (i : ℕ), ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n) → (D 0).PCF → ∀ (i : ℕ), (D i).PCF
 ```
 
 *(Entries 1–11 were re-extracted on 2026-10-15 under `v4.35.0`. The types are unchanged
-from the `v4.34.0` record except for line breaking and, in `Abhyankar.not_etale_wild`, two
+from the `v4.34.0` record except for line breaking and, in `Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero`, two
 numeral type ascriptions that the earlier record had added by hand. They are now quoted as
 printed.)*
 
@@ -303,14 +303,14 @@ morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.0019
 
 **Does not claim.**
 
-* **This is not a statement about varieties.** `Pcf.DivDyn` and `Pcf.PcfSetup` are
-  abstract structures. Nothing in this repository constructs a `Pcf.DivDyn` from a
+* **This is not a statement about varieties.** `Pcf.DivisorDynamics` and `Pcf.PCFSetup` are
+  abstract structures. Nothing in this repository constructs a `Pcf.DivisorDynamics` from a
   morphism of schemes; that bridge is assumptions A1–A5 of `lean/AXIOMS.md`.
-* **Theorem `thm:bounding` (per-divisor form) of the manuscript is assumed**, as the field `PcfSetup.key`.
+* **Theorem `thm:bounding` (per-divisor form) of the manuscript is assumed**, as the field `PCFSetup.notMem_branch_iterate`.
   It is not proved here, and three attempts to reduce it were retracted — see
   entries 9–11.
-* **Lying over is assumed** (`DivDyn.step_surjective`), and so is finiteness of the
-  branch divisor for the ambient system (`DivDyn.branch_finite'`).
+* **Lying over is assumed** (`DivisorDynamics.step_surjective`), and so is finiteness of the
+  branch divisor for the ambient system (`DivisorDynamics.step_image_ramified_finite`).
 * **The tower is given, not produced.** The statement asserts nothing about the
   existence of periodic primes at any stage.
 * **The recursion does not terminate.** The manuscript's "at most `dim X` steps" is
@@ -322,11 +322,11 @@ morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647; `arXiv:1511.0019
 
 # Entries 2–4 — Stacks Tag 0EYF, clauses 1–2
 
-**Declaration** `Abhyankar.etale`
+**Declaration** `Pcf.Kummer.etale_adjoinRoot_kummerPoly`
 
 ```
 ∀ {R : Type u_1} [inst : CommRing R] (u : Rˣ) {e : ℕ},
-  e ≠ 0 → IsUnit ↑e → Algebra.Etale R (AdjoinRoot (Abhyankar.kummerPoly u e))
+  e ≠ 0 → IsUnit ↑e → Algebra.Etale R (AdjoinRoot (Pcf.Kummer.kummerPoly u e))
 ```
 
 **Informal claim.** Let `R` be a commutative ring, `u` a unit of `R`, and `e ≥ 1` an
@@ -336,11 +336,11 @@ over `R`.
 Both hypotheses are necessary, and two companion entries prove it rather than
 asserting it:
 
-**Declaration** `Abhyankar.not_etale_wild`
+**Declaration** `Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero`
 
 ```
-@Abhyankar.not_etale_wild : ∀ {k : Type u_1} [inst : Field k],
-  2 = 0 → ¬Algebra.Etale k (AdjoinRoot (Abhyankar.kummerPoly 1 2))
+@Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero : ∀ {k : Type u_1} [inst : Field k],
+  2 = 0 → ¬Algebra.Etale k (AdjoinRoot (Pcf.Kummer.kummerPoly 1 2))
 ```
 
 (Here `2 = 0` is the equation in `k`, and `1` is the unit `1 : kˣ`; the printer omits
@@ -350,7 +350,7 @@ the ascriptions.)
 is **not** étale — so the conclusion above genuinely fails without tameness, not
 merely its proof.
 
-**Declaration** `Abhyankar.not_etale_of_not_isUnit`
+**Declaration** `Pcf.Kummer.not_etale_of_not_isUnit`
 
 ```
 ∀ {k : Type u_1} [inst : Field k] (u : kˣ) {e : ℕ},
@@ -364,7 +364,7 @@ constant term `0` — is not étale over `k`.
 
 * **This is not Stacks Tag 0EYF.** That tag makes three assertions about
   `C = A[x]/(xᵉ − f)`. Clause 1 (finite locally free) is proved separately as
-  `Abhyankar.finrank`, with freeness and finiteness supplied by Mathlib's
+  `Pcf.Kummer.finrank_adjoinRoot_kummerPoly`, with freeness and finiteness supplied by Mathlib's
   `Polynomial.Monic.free_adjoinRoot` and `Monic.finite_adjoinRoot`. Clause 2 is the
   entry above. **Clause 3, tame ramification in codimension one, is not part of these
   entries.** It is the clause the name "standard *tamely ramified* morphism" refers to,
@@ -386,7 +386,7 @@ constant term `0` — is not étale over `k`.
 
 # Entry 5 — separable monic implies standard étale
 
-**Declaration** `Abhyankar.isStandardEtale_adjoinRoot_of_separable`
+**Declaration** `Pcf.Kummer.isStandardEtale_adjoinRoot_of_separable`
 
 ```
 ∀ {R : Type u_1} [inst : CommRing R] {f : Polynomial R},
@@ -476,7 +476,7 @@ ring of a divisor prime) **is not formalized**; `lean/AXIOMS.md` §E records thi
 **Informal claim.** Lying over (Stacks Tag 00HS): if `φ : R → S` is an injective
 integral ring homomorphism, the induced map `Spec S → Spec R` is surjective.
 
-**Does not claim.** This does **not** discharge `Pcf.DivDyn.step_surjective`, which is
+**Does not claim.** This does **not** discharge `Pcf.DivisorDynamics.step_surjective`, which is
 about a self-map of *divisors* rather than points. Transporting it there would require
 that the image of a closed set under a finite morphism is closed and that codimension
 is preserved; neither is available here.
@@ -517,14 +517,14 @@ deliver, supplying such a witness is supplying the conclusion.
 replaced are interderivable, uniformly in `n`, with no hypotheses. The replacement
 therefore restated the assumption rather than weakening it.
 
-**Declaration** `Pcf.PurityData.ofZariskiNagata_toZariskiNagata`
+**Declaration** `Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity`
 
 ```
 ∀ {X : Type u_1} [inst : TopologicalSpace X] (D : Pcf.PurityData X),
-  Pcf.PurityData.ofZariskiNagata D.toZariskiNagata ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ = D
+  Pcf.PurityData.ofAbstractZariskiNagataPurity D.toZariskiNagata ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ ⋯ = D
 ```
 
-**Informal claim.** A `Pcf.PurityData` can be converted to a `Pcf.ZariskiNagata` — a
+**Informal claim.** A `Pcf.PurityData` can be converted to a `Pcf.AbstractZariskiNagataPurity` — a
 structure stating Stacks Tag 0BMB with all five of its hypotheses present — and back,
 and the roundtrip is the identity, definitionally. The two are therefore
 interderivable, and restating the tag with its hypotheses did not make the assumption
@@ -539,7 +539,7 @@ more faithful.
 * `lean/AXIOMS.md` is the assumption census and is the document to read before drawing
   conclusions from any `#print axioms` output. Reporting only the three standard axioms
   is **not** a claim that nothing is assumed: the assumed mathematics is carried in
-  *fields* of `Pcf.DivDyn`, `Pcf.PcfSetup` and `Pcf.PurityData`, and structure fields
+  *fields* of `Pcf.DivisorDynamics`, `Pcf.PCFSetup` and `Pcf.PurityData`, and structure fields
   are invisible to `#print axioms` by construction.
 * Two adversarial reviews are retained at
   the authors' private research note `2026-09-21-abhyankar-formalization/adversarial-review.md` and

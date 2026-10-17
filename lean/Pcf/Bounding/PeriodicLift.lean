@@ -110,14 +110,14 @@ theorem exists_periodic_lift_of_surjective_finite_fibers
 
 /-- The periodic-lift selection specialized to the corrected two-carrier normalization
 dynamics. -/
-theorem NormalizationUnnormDyn.exists_periodic_lift
-    {PN : Type u} {PU : Type v} (D : NormalizationUnnormDyn PN PU)
+theorem NormalizationUnnormalizedDynamics.exists_periodic_lift
+    {PN : Type u} {PU : Type v} (D : NormalizationUnnormalizedDynamics PN PU)
     (hsurj : Function.Surjective D.normalization)
     (A : PU) (s : ℕ) (hA : D.step^[s] A = A) :
     ∃ Q, D.normalization Q = A ∧
-      ∃ c, 0 < c ∧ D.norm.step^[s * c] Q = Q :=
+      ∃ c, 0 < c ∧ D.normalized.step^[s * c] Q = Q :=
   exists_periodic_lift_of_surjective_finite_fibers
-    D.norm.step D.step D.normalization D.normalization_step hsurj
+    D.normalized.step D.step D.normalization D.normalization_step hsurj
     D.normalization_finite_fiber A s hA
 
 /-- Actual scheme-level periodic lifting.  For a finite normalization morphism with
@@ -162,7 +162,7 @@ theorem exists_periodic_normalization_divisor
 #print axioms exists_periodic_point_of_finite_nonempty
 #print axioms exists_periodic_lift_of_finite_fiber
 #print axioms exists_periodic_lift_of_surjective_finite_fibers
-#print axioms NormalizationUnnormDyn.exists_periodic_lift
+#print axioms NormalizationUnnormalizedDynamics.exists_periodic_lift
 #print axioms exists_periodic_normalization_divisor
 
 end

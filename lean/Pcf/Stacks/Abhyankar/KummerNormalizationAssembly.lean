@@ -120,7 +120,7 @@ theorem isUnramifiedAt_of_standardRoot_dvrRootPuncturedNormalization_localFactor
       isIntegralClosure_of_genericEquiv S N D C genericEquiv
     let unit := dvrRamificationUnit
       R S pi hpi piS hpiS exponent hramification
-    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
     let _ : IsIntegralClosure U S C :=
       kummerUnit_isIntegralClosure_localizationAway_uniformizer
         S piS hpiS unit exponent hexponent heUnit

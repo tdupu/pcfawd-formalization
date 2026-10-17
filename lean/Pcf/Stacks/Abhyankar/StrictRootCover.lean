@@ -390,7 +390,7 @@ theorem strictRoot_pow :
 
 omit [IsNoetherianRing A] [IsLocalRing A] in
 theorem strictRootCover_finite (hE : 1 ≤ E) : Module.Finite A (StrictRootCover a E) :=
-  Pcf.LocalModel.finite 1 a hE
+  Pcf.LocalModel.finite_adjoinRoot 1 a hE
 
 omit [IsLocalRing A] in
 theorem strictRootCover_isNoetherianRing (hE : 1 ≤ E) : IsNoetherianRing (StrictRootCover a E) :=

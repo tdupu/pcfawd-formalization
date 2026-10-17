@@ -43,8 +43,8 @@ as separate data; the manuscript verifies them in a single sentence.
 * `Pcf.PurityData.codim_eq_one` — **the global purity theorem**: every
   irreducible component of the non-étale locus has a codimension-one generic
   point, i.e. `E` is pure of codimension one.
-* `Pcf.PurityData.finite_isPrime_subset_nonEtale` — combined with the Noetherian
-  finiteness of `Pcf.finite_isPrime_subset`, the branch divisor has finitely
+* `Pcf.PurityData.finite_isProperIrreducibleClosed_subset_nonEtale` — combined with the Noetherian
+  finiteness of `Pcf.finite_isProperIrreducibleClosed_subset`, the branch divisor has finitely
   many components (§`sec:defs`, after Definition `def:crit-branch`).
 -/
 
@@ -164,15 +164,15 @@ components of `Branch(g)`.
 Together with `Pcf.PurityData.codim_eq_one`, which identifies those components
 as exactly the codimension-one ones, this is the manuscript's finiteness
 argument with only the properness of `E` left as input. -/
-theorem finite_isPrime_subset_nonEtale [NoetherianSpace X] :
-    {P : Set X | IsPrime P ∧ P ⊆ D.nonEtale}.Finite :=
-  Pcf.finite_isPrime_subset D.nonEtale_isClosed D.nonEtale_ne_univ
+theorem finite_isProperIrreducibleClosed_subset_nonEtale [NoetherianSpace X] :
+    {P : Set X | IsProperIrreducibleClosed P ∧ P ⊆ D.nonEtale}.Finite :=
+  Pcf.finite_isProperIrreducibleClosed_subset D.nonEtale_isClosed D.nonEtale_ne_univ
 
 /-- The image of the branch primes under any map — the form in which §`sec:defs` concludes
 that `Branch(g)` has finitely many components. -/
-theorem finite_image_isPrime_subset_nonEtale [NoetherianSpace X] {β : Type*}
-    (f : Set X → β) : (f '' {P : Set X | IsPrime P ∧ P ⊆ D.nonEtale}).Finite :=
-  (finite_isPrime_subset_nonEtale (D := D)).image f
+theorem finite_image_isProperIrreducibleClosed_subset_nonEtale [NoetherianSpace X] {β : Type*}
+    (f : Set X → β) : (f '' {P : Set X | IsProperIrreducibleClosed P ∧ P ⊆ D.nonEtale}).Finite :=
+  (finite_isProperIrreducibleClosed_subset_nonEtale (D := D)).image f
 
 end PurityData
 

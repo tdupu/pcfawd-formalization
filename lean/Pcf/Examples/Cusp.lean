@@ -191,7 +191,7 @@ theorem mem_cuspAlg_iff {p : Polynomial k} : p ∈ cuspAlg k ↔ p.coeff 1 = 0 :
 
 /-- Example `ex:cusp` of `paper.tex`: `t ∉ k[t², t³]`, i.e. the cusp is not smooth — its
 coordinate ring is a proper subring of its normalization. -/
-theorem X_not_mem_cuspAlg : (X : Polynomial k) ∉ cuspAlg k := by
+theorem X_notMem_cuspAlg : (X : Polynomial k) ∉ cuspAlg k := by
   intro h
   simpa using coeff_one_eq_zero_of_mem k h
 
@@ -370,7 +370,7 @@ end Pcf.Examples.Cusp
 #print axioms Pcf.Examples.Cusp.jacobian_cuspSource
 #print axioms Pcf.Examples.Cusp.cusp_inter_branch
 #print axioms Pcf.Examples.Cusp.mem_cuspAlg_iff
-#print axioms Pcf.Examples.Cusp.X_not_mem_cuspAlg
+#print axioms Pcf.Examples.Cusp.X_notMem_cuspAlg
 #print axioms Pcf.Examples.Cusp.isIntegral_X
 #print axioms Pcf.Examples.Cusp.isIntegral_cuspAlg
 #print axioms Pcf.Examples.Cusp.isIntegralClosure_cuspAlg

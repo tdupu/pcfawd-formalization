@@ -40,7 +40,7 @@ The remaining two stay assumptions, and they are the mathematically substantial 
 ## Main results
 
 * `Pcf.isClosed_nonEtaleLocus` — the non-étale locus is closed. **Proved.**
-* `Pcf.closure_eq_univ_of_specCodim_eq_zero` — height-zero primes are generic. **Proved.**
+* `Pcf.closure_eq_univ_of_primeSpectrumCodimension_eq_zero` — height-zero primes are generic. **Proved.**
 * `Pcf.purityDataOfAlgebra` — the assembled `Pcf.PurityData (PrimeSpectrum S)`.
 * `Pcf.codim_eq_one_of_algebra` — global purity on `Spec S`, i.e. `E` is pure of
   codimension one, from Tag 0BMB and generic étaleness and nothing else.
@@ -78,7 +78,7 @@ Definition `def:crit-branch` of `latex/paper.tex` says the branch divisor is whe
 ramifies, and
 §`sec:bounding` uses that a ramified point is a non-étale point. In the abstract layer that
 implication
-is a *hypothesis* (`hbranch` in `Pcf.divDynOfGeometry`, `ramified_subset_nonEtale` in
+is a *hypothesis* (`hbranch` in `Pcf.divisorDynamicsOfGeometry`, `ramified_subset_nonEtale` in
 `Pcf/Wiring.lean`). Over an honest algebra it is a **theorem**, because Mathlib's
 `Ideal.ramificationIdx_eq_one` derives index `1` from unramifiedness and étale implies
 unramified. -/
@@ -114,7 +114,7 @@ theorem ramificationIdx_eq_one_of_notMem_nonEtaleLocus [Algebra.EssFiniteType R 
 truncates. The truncation is harmless exactly when heights are finite, which is why
 `Pcf.purityDataOfAlgebra` takes that as a hypothesis rather than hiding it: without it a
 prime of infinite height would masquerade as one of codimension zero. -/
-noncomputable def specCodim (p : PrimeSpectrum S) : ℕ := (p.asIdeal.height).toNat
+noncomputable def primeSpectrumCodimension (p : PrimeSpectrum S) : ℕ := (p.asIdeal.height).toNat
 
 variable {S}
 
@@ -122,8 +122,8 @@ variable {S}
 
 Over a domain, a prime of height zero is `⊥`, and `V(⊥)` is everything: a codimension-zero
 point of `Spec S` is the generic point. -/
-theorem closure_eq_univ_of_specCodim_eq_zero [IsDomain S] (p : PrimeSpectrum S)
-    (hfin : p.asIdeal.height ≠ ⊤) (h : specCodim S p = 0) :
+theorem closure_eq_univ_of_primeSpectrumCodimension_eq_zero [IsDomain S] (p : PrimeSpectrum S)
+    (hfin : p.asIdeal.height ≠ ⊤) (h : primeSpectrumCodimension S p = 0) :
     closure ({p} : Set (PrimeSpectrum S)) = Set.univ := by
   have h0 : p.asIdeal.height = 0 := by
     have := (ENat.toNat_eq_zero).mp h
@@ -143,15 +143,15 @@ Zariski–Nagata purity itself. -/
 noncomputable def purityDataOfAlgebra [IsDomain S] [Algebra.FinitePresentation R S]
     (hfin : ∀ p : PrimeSpectrum S, p.asIdeal.height ≠ ⊤)
     (hgen : nonEtaleLocus R S ≠ Set.univ)
-    (hloc : ∀ x : PrimeSpectrum S, 1 ≤ specCodim S x →
-      (∀ x', x' ⤳ x → specCodim S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S) :
+    (hloc : ∀ x : PrimeSpectrum S, 1 ≤ primeSpectrumCodimension S x →
+      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S) :
     PurityData (PrimeSpectrum S) where
-  codim := specCodim S
+  codim := primeSpectrumCodimension S
   nonEtale := nonEtaleLocus R S
   nonEtale_isClosed := isClosed_nonEtaleLocus R S
   nonEtale_ne_univ := hgen
   closure_eq_univ_of_codim_eq_zero := fun x hx =>
-    closure_eq_univ_of_specCodim_eq_zero x (hfin x) hx
+    closure_eq_univ_of_primeSpectrumCodimension_eq_zero x (hfin x) hx
   localPurity := hloc
 
 /-- The non-étale locus is empty exactly when the algebra is étale. -/
@@ -186,20 +186,20 @@ closedness of `E` and the identification of codimension-zero points are now theo
 theorem codim_eq_one_of_algebra [IsDomain S] [Algebra.FinitePresentation R S]
     (hfin : ∀ p : PrimeSpectrum S, p.asIdeal.height ≠ ⊤)
     (hgen : nonEtaleLocus R S ≠ Set.univ)
-    (hloc : ∀ x : PrimeSpectrum S, 1 ≤ specCodim S x →
-      (∀ x', x' ⤳ x → specCodim S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S)
+    (hloc : ∀ x : PrimeSpectrum S, 1 ≤ primeSpectrumCodimension S x →
+      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S)
     {E₀ : Set (PrimeSpectrum S)}
     (hE₀ : (purityDataOfAlgebra R S hfin hgen hloc).IsComponent E₀)
     {η : PrimeSpectrum S} (hη : closure ({η} : Set (PrimeSpectrum S)) = E₀) :
-    specCodim S η = 1 :=
+    primeSpectrumCodimension S η = 1 :=
   PurityData.codim_eq_one hE₀ hη
 
 /-- **Finiteness of the branch divisor on `Spec S`.** For `S` Noetherian the non-étale
 locus, being a proper closed subset, contains only finitely many primes in the sense of
-`Pcf.IsPrime`. -/
-theorem finite_isPrime_subset_nonEtaleLocus [IsNoetherianRing S]
+`Pcf.IsProperIrreducibleClosed`. -/
+theorem finite_isProperIrreducibleClosed_subset_nonEtaleLocus [IsNoetherianRing S]
     [Algebra.FinitePresentation R S] (hgen : nonEtaleLocus R S ≠ Set.univ) :
-    {P : Set (PrimeSpectrum S) | IsPrime P ∧ P ⊆ nonEtaleLocus R S}.Finite :=
-  Pcf.finite_isPrime_subset (isClosed_nonEtaleLocus R S) hgen
+    {P : Set (PrimeSpectrum S) | IsProperIrreducibleClosed P ∧ P ⊆ nonEtaleLocus R S}.Finite :=
+  Pcf.finite_isProperIrreducibleClosed_subset (isClosed_nonEtaleLocus R S) hgen
 
 end Pcf

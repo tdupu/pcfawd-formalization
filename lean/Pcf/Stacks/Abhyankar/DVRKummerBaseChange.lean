@@ -50,17 +50,17 @@ theorem kummerUnit_isIntegralClosure_localizationAway_uniformizer
     (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
     (heUnit : IsUnit (exponent : S)) :
     IsIntegralClosure
-      (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) S
+      (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) S
       (Localization.Away
-        (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) pi)) := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+        (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) pi)) := by
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let C := Localization.Away (algebraMap S U pi)
   letI : Module.Free S U :=
-    (Abhyankar.kummerPoly_monic unit (by omega)).free_adjoinRoot
+    (Pcf.Kummer.kummerPoly_monic unit (by omega)).free_adjoinRoot
   letI : Module.Finite S U :=
-    (Abhyankar.kummerPoly_monic unit (by omega)).finite_adjoinRoot
+    (Pcf.Kummer.kummerPoly_monic unit (by omega)).finite_adjoinRoot
   letI : Algebra.Etale S U :=
-    Abhyankar.etale unit (by omega) heUnit
+    Pcf.Kummer.etale_adjoinRoot_kummerPoly unit (by omega) heUnit
   have hpi_regular : pi ∈ nonZeroDivisors S :=
     mem_nonZeroDivisors_iff_ne_zero.mpr hpi.ne_zero
   have hsmul : IsSMulRegular U pi :=
@@ -83,7 +83,7 @@ theorem kummerUnit_isIntegralClosure_localizationAway_uniformizer
   let _ : IsIntegrallyClosedIn U C :=
     isIntegrallyClosedIn_away_of_span_isRadical hmap_regular hrad
   let _ : Algebra.IsIntegral S U :=
-    AdjoinRoot.isIntegral_of_monic (Abhyankar.kummerPoly_monic unit (by omega))
+    AdjoinRoot.isIntegral_of_monic (Pcf.Kummer.kummerPoly_monic unit (by omega))
   exact IsIntegralClosure.of_isIntegrallyClosedIn
 
 /-- A closed local factor of the root-of-a-unit Kummer algebra over a DVR is regular
@@ -93,13 +93,13 @@ theorem kummerUnit_localizationAtPrime_isRegularLocalRing
     (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
     (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
     (heUnit : IsUnit (exponent : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent))) [q.IsPrime]
     (hq : q.under S = maximalIdeal S) :
     IsRegularLocalRing (Localization.AtPrime q) := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let T := Localization.AtPrime q
   letI : Algebra.Etale S U :=
-    Abhyankar.etale unit (by omega) heUnit
+    Pcf.Kummer.etale_adjoinRoot_kummerPoly unit (by omega) heUnit
   letI : IsLocalHom (algebraMap S T) := by
     apply ((IsLocalRing.local_hom_TFAE
       (algebraMap S T)).out 5 1).mp
@@ -113,7 +113,7 @@ theorem kummerUnit_localizationAtPrime_isDomain
     (S : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuationRing S]
     (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
     (heUnit : IsUnit (exponent : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent))) [q.IsPrime]
     (hq : q.under S = maximalIdeal S) :
     IsDomain (Localization.AtPrime q) := by
   letI : IsRegularLocalRing (Localization.AtPrime q) :=
@@ -129,15 +129,15 @@ theorem kummerUnit_localizationAtPrime_isDiscreteValuationRing
     (pi : S) (hpi : Irreducible pi)
     (unit : Sˣ) (exponent : ℕ) (hexponent : 1 ≤ exponent)
     (heUnit : IsUnit (exponent : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent))) [q.IsPrime]
     (hq : q.under S = maximalIdeal S) :
     @IsDiscreteValuationRing (Localization.AtPrime q) _
       (kummerUnit_localizationAtPrime_isDomain
         S unit exponent hexponent heUnit q hq) := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let T := Localization.AtPrime q
   letI : Algebra.Etale S U :=
-    Abhyankar.etale unit (by omega) heUnit
+    Pcf.Kummer.etale_adjoinRoot_kummerPoly unit (by omega) heUnit
   letI : IsLocalHom (algebraMap S T) := by
     apply ((IsLocalRing.local_hom_TFAE
       (algebraMap S T)).out 5 1).mp
@@ -193,14 +193,14 @@ noncomputable def localizationEquivKummerUnit_of_isIntegralClosure
     [Algebra S N] [Algebra S C] [Algebra N C] [IsScalarTower S N C]
     [IsIntegralClosure N S C]
     (unit : Sˣ) (e : ℕ)
-    [Algebra (AdjoinRoot (Abhyankar.kummerPoly unit e)) C]
-    [IsScalarTower S (AdjoinRoot (Abhyankar.kummerPoly unit e)) C]
-    [IsIntegralClosure (AdjoinRoot (Abhyankar.kummerPoly unit e)) S C]
+    [Algebra (AdjoinRoot (Pcf.Kummer.kummerPoly unit e)) C]
+    [IsScalarTower S (AdjoinRoot (Pcf.Kummer.kummerPoly unit e)) C]
+    [IsIntegralClosure (AdjoinRoot (Pcf.Kummer.kummerPoly unit e)) S C]
     (m : Ideal N) [m.IsPrime] :
-    let g : N ≃ₐ[S] AdjoinRoot (Abhyankar.kummerPoly unit e) :=
+    let g : N ≃ₐ[S] AdjoinRoot (Pcf.Kummer.kummerPoly unit e) :=
       IsIntegralClosure.equiv S N C _
     Localization.AtPrime m ≃ₐ[S] Localization.AtPrime (m.map g) := by
-  let g : N ≃ₐ[S] AdjoinRoot (Abhyankar.kummerPoly unit e) :=
+  let g : N ≃ₐ[S] AdjoinRoot (Pcf.Kummer.kummerPoly unit e) :=
     IsIntegralClosure.equiv S N C _
   exact Localization.localAlgEquiv m (m.map g) g
     (Ideal.comap_map_of_bijective g g.bijective).symm
@@ -311,15 +311,15 @@ noncomputable def dvrRootToKummerNormalization
     [IsIntegralClosure N S C]
     (pi : R) (piS : S) (unit : Sˣ) (exponent : ℕ)
     (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent)
-    [Algebra (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
-    [IsScalarTower S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
+    [Algebra (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) C]
+    [IsScalarTower S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) C]
     [IsIntegralClosure
-      (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) S C] :
+      (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) S C] :
     AdjoinRoot (dvrRootPoly pi exponent) →ₐ[R] N := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let g : N ≃ₐ[S] U := IsIntegralClosure.equiv S N C U
   let rootN : N := g.symm
-    (algebraMap S U piS * AdjoinRoot.root (Abhyankar.kummerPoly unit exponent))
+    (algebraMap S U piS * AdjoinRoot.root (Pcf.Kummer.kummerPoly unit exponent))
   apply AdjoinRoot.liftAlgHom _ (Algebra.ofId R N) rootN
   change Polynomial.aeval rootN (dvrRootPoly pi exponent) = 0
   rw [dvrRootPoly, map_sub, Polynomial.aeval_X_pow, Polynomial.aeval_C]
@@ -327,7 +327,7 @@ noncomputable def dvrRootToKummerNormalization
   rw [map_zero]
   rw [map_sub, map_pow]
   simp only [rootN, g.apply_symm_apply]
-  rw [mul_pow, Abhyankar.root_pow]
+  rw [mul_pow, Pcf.Kummer.root_kummerPoly_pow]
   have hpi : g (algebraMap R N pi) = algebraMap S U (algebraMap R S pi) := by
     rw [IsScalarTower.algebraMap_apply R S N]
     exact g.commutes (algebraMap R S pi)
@@ -424,7 +424,7 @@ abbrev DVRRamificationKummerAlgebra
     (pi : R) (hpi : Irreducible pi) (piS : S) (hpiS : Irreducible piS)
     (exponent : ℕ)
     (hramification : (maximalIdeal S).ramificationIdx R = exponent) :=
-  AdjoinRoot (Abhyankar.kummerPoly
+  AdjoinRoot (Pcf.Kummer.kummerPoly
     (dvrRamificationUnit R S pi hpi piS hpiS exponent hramification) exponent)
 
 /-- The generic Kummer ambient algebra canonically determined by the DVR ramification
@@ -489,9 +489,9 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
     (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent) :
     DVRRootPuncturedBaseChange R S pi piS exponent ≃ₐ[S]
       Localization.Away
-        (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS) := by
+        (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS) := by
   let K := Localization.Away piS
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let unitK : Kˣ := Units.map (algebraMap S K) unit
   let piK : Kˣ := (IsLocalization.Away.algebraMap_isUnit piS).unit
   let eRS :
@@ -547,16 +547,16 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
   let eSubstitution :
       AdjoinRoot (Pcf.LocalModel.localPoly
           unitK ((piK : K) ^ exponent) exponent) ≃ₐ[K]
-        AdjoinRoot (Abhyankar.kummerPoly unitK exponent) :=
-    Abhyankar.substEquiv unitK piK exponent
+        AdjoinRoot (Pcf.Kummer.kummerPoly unitK exponent) :=
+    Pcf.Kummer.localPolyEquivKummerPoly unitK piK exponent
   let eKummerBaseChange :
       K ⊗[S] U ≃ₐ[K]
-        AdjoinRoot (Abhyankar.kummerPoly unitK exponent) := by
+        AdjoinRoot (Pcf.Kummer.kummerPoly unitK exponent) := by
     let ePolynomialS :
         U ≃ₐ[S] AdjoinRoot
           (Pcf.LocalModel.localPoly unit 1 exponent) :=
       AdjoinRoot.algEquivOfEq S _ _ <| by
-        simp [Abhyankar.kummerPoly, Pcf.LocalModel.localPoly]
+        simp [Pcf.Kummer.kummerPoly, Pcf.LocalModel.localPoly]
     let eTensorS :
         K ⊗[S] U ≃ₐ[K]
           K ⊗[S] AdjoinRoot (Pcf.LocalModel.localPoly unit 1 exponent) :=
@@ -566,9 +566,9 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
     let ePolynomialK :
         AdjoinRoot (Pcf.LocalModel.localPoly
           (Units.map (algebraMap S K) unit) (algebraMap S K 1) exponent) ≃ₐ[K]
-          AdjoinRoot (Abhyankar.kummerPoly unitK exponent) :=
+          AdjoinRoot (Pcf.Kummer.kummerPoly unitK exponent) :=
       AdjoinRoot.algEquivOfEq K _ _ <| by
-        simp [unitK, Abhyankar.kummerPoly, Pcf.LocalModel.localPoly]
+        simp [unitK, Pcf.Kummer.kummerPoly, Pcf.LocalModel.localPoly]
     exact (eTensorS.trans eBaseChangeS).trans ePolynomialK
   let eLocalization := Localization.tensorRightAlgEquiv (Submonoid.powers piS) U
   have hLocalizationSubmonoid :
@@ -736,10 +736,10 @@ theorem isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
     [Algebra S N] [Algebra R N] [IsScalarTower R S N]
     [Algebra S C] [Algebra N C] [IsScalarTower S N C]
     [IsIntegralClosure N S C]
-    [Algebra (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
-    [IsScalarTower S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) C]
+    [Algebra (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) C]
+    [IsScalarTower S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) C]
     [IsIntegralClosure
-      (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) S C]
+      (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) S C]
     (m : Ideal N) [m.IsPrime]
     (hmS : m.under S = maximalIdeal S)
     [Algebra (AdjoinRoot (dvrRootPoly pi exponent))
@@ -759,7 +759,7 @@ theorem isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
       (maximalIdeal (Localization.AtPrime m)) := by
   let A := AdjoinRoot (dvrRootPoly pi exponent)
   let T := Localization.AtPrime m
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let g : N ≃ₐ[S] U := IsIntegralClosure.equiv S N C U
   let q : Ideal U := m.map g
   let equiv : T ≃ₐ[S] Localization.AtPrime q :=
@@ -789,7 +789,7 @@ theorem isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
     isLocalHom_of_maximalIdeal_under_eq A T hunderA
   letI : Module.Flat A T := inferInstance
   letI : Algebra.Etale S U :=
-    Abhyankar.etale unit (by omega) heUnit
+    Pcf.Kummer.etale_adjoinRoot_kummerPoly unit (by omega) heUnit
   letI : Module.Flat S (Localization.AtPrime q) := inferInstance
   letI : Module.Flat S T := Module.Flat.of_linearEquiv equiv.toLinearEquiv
   letI : Algebra.EssFiniteType S (Localization.AtPrime q) := inferInstance
@@ -857,11 +857,11 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
     (unit : Sˣ) (heUnit : IsUnit (exponent : S))
     [Algebra S N] [Algebra R N] [IsScalarTower R S N]
     [Algebra N (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     [IsScalarTower S N (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     [IsIntegralClosure N S (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     (m : Ideal N) [m.IsMaximal]
     [Algebra (AdjoinRoot (dvrRootPoly pi exponent)) N]
     [IsScalarTower R (AdjoinRoot (dvrRootPoly pi exponent)) N]
@@ -869,7 +869,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
     Algebra.IsUnramifiedAt
       (AdjoinRoot (dvrRootPoly pi exponent))
       (maximalIdeal (Localization.AtPrime m)) := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let C := Localization.Away (algebraMap S U piS)
   letI : IsIntegralClosure U S C :=
     kummerUnit_isIntegralClosure_localizationAway_uniformizer
@@ -924,7 +924,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
   letI : IsLocalHom (algebraMap S T) :=
     isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal S N m hmS
   letI : Algebra.Etale S U :=
-    Abhyankar.etale unit (by omega) heUnit
+    Pcf.Kummer.etale_adjoinRoot_kummerPoly unit (by omega) heUnit
   letI : Module.Flat S V := inferInstance
   letI : Module.Flat S T := Module.Flat.of_linearEquiv equiv.toLinearEquiv
   letI : Module.FaithfullyFlat S T :=
@@ -963,14 +963,14 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of
     (hfactor : algebraMap R S pi = (unit : S) * piS ^ exponent)
     [Algebra S N] [Algebra R N] [IsScalarTower R S N]
     [Algebra N (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     [IsScalarTower S N (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     [IsIntegralClosure N S (Localization.Away
-      (algebraMap S (AdjoinRoot (Abhyankar.kummerPoly unit exponent)) piS))]
+      (algebraMap S (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)) piS))]
     (m : Ideal N) [m.IsMaximal]
     (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
-    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
     let C := Localization.Away (algebraMap S U piS)
     let _ : IsIntegralClosure U S C :=
       kummerUnit_isIntegralClosure_localizationAway_uniformizer
@@ -983,7 +983,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor_of
       (AdjoinRoot (dvrRootPoly pi exponent))
       (maximalIdeal (Localization.AtPrime m)) := by
   dsimp only
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
   let C := Localization.Away (algebraMap S U piS)
   letI : IsIntegralClosure U S C :=
     kummerUnit_isIntegralClosure_localizationAway_uniformizer
@@ -1028,7 +1028,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor
     (m : Ideal N) [m.IsMaximal] :
     let unit := dvrRamificationUnit
       R S pi hpi piS hpiS exponent hramification
-    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
     let C := Localization.Away (algebraMap S U piS)
     let _ : IsIntegralClosure U S C :=
       kummerUnit_isIntegralClosure_localizationAway_uniformizer
@@ -1087,7 +1087,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerNormalization_localFactor_of_generi
       isIntegralClosure_of_genericEquiv S N D C genericEquiv
     let unit := dvrRamificationUnit
       R S pi hpi piS hpiS exponent hramification
-    let U := AdjoinRoot (Abhyankar.kummerPoly unit exponent)
+    let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent)
     let _ : IsIntegralClosure U S C :=
       kummerUnit_isIntegralClosure_localizationAway_uniformizer
         S piS hpiS unit exponent hexponent heUnit
@@ -1120,11 +1120,11 @@ theorem etale_of_equiv_localization_kummerUnit
     (S : Type v) (T : Type x) [CommRing S] [CommRing T] [Algebra S T]
     [IsNoetherianRing S] [Module.Finite S T]
     (unit : Sˣ) (e : ℕ) (he : e ≠ 0) (heUnit : IsUnit (e : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit e))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit e))) [q.IsPrime]
     (equiv : T ≃ₐ[S] Localization.AtPrime q) :
     Algebra.Etale S T := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit e)
-  letI : Algebra.Etale S U := Abhyankar.etale unit he heUnit
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit e)
+  letI : Algebra.Etale S U := Pcf.Kummer.etale_adjoinRoot_kummerPoly unit he heUnit
   letI : Algebra.FormallyEtale S (Localization.AtPrime q) := inferInstance
   letI : Algebra.FormallyEtale S T :=
     Algebra.FormallyEtale.of_equiv equiv.symm
@@ -1150,13 +1150,13 @@ theorem isUnramifiedAt_of_kummerUnit_local_ramification_square
     [IsLocalHom (algebraMap S T)] [IsLocalHom (algebraMap A T)]
     [Algebra.HasSeparableResidueFieldsAt A T ((maximalIdeal T).under A)]
     (unit : Sˣ) (e : ℕ) (he : e ≠ 0) (heUnit : IsUnit (e : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit e))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit e))) [q.IsPrime]
     (equiv : T ≃ₐ[S] Localization.AtPrime q)
     (hindex : (maximalIdeal S).ramificationIdx R =
       (maximalIdeal A).ramificationIdx R) :
     Algebra.IsUnramifiedAt A (maximalIdeal T) := by
-  let U := AdjoinRoot (Abhyankar.kummerPoly unit e)
-  letI : Algebra.Etale S U := Abhyankar.etale unit he heUnit
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly unit e)
+  letI : Algebra.Etale S U := Pcf.Kummer.etale_adjoinRoot_kummerPoly unit he heUnit
   letI : Module.Flat S (Localization.AtPrime q) := inferInstance
   letI : Module.Flat S T := Module.Flat.of_linearEquiv equiv.toLinearEquiv
   letI : Algebra.EssFiniteType S (Localization.AtPrime q) := inferInstance
@@ -1197,7 +1197,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerUnit_local_square
       (AdjoinRoot (dvrRootPoly pi exponent)) T
       ((maximalIdeal T).under (AdjoinRoot (dvrRootPoly pi exponent)))]
     (unit : Sˣ) (heUnit : IsUnit (exponent : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent))) [q.IsPrime]
     (equiv : T ≃ₐ[S] Localization.AtPrime q)
     (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
     Algebra.IsUnramifiedAt
@@ -1236,7 +1236,7 @@ theorem etale_of_dvr_kummerUnit_ramification_square
     [IsLocalHom (algebraMap S T)] [IsLocalHom (algebraMap A T)]
     [Algebra.HasSeparableResidueFieldsAt A T ((maximalIdeal T).under A)]
     (unit : Sˣ) (e : ℕ) (he : e ≠ 0) (heUnit : IsUnit (e : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit e))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit e))) [q.IsPrime]
     (equiv : T ≃ₐ[S] Localization.AtPrime q)
     (hindex : (maximalIdeal S).ramificationIdx R =
       (maximalIdeal A).ramificationIdx R) :
@@ -1272,7 +1272,7 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
       (AdjoinRoot (dvrRootPoly pi exponent)) T
       ((maximalIdeal T).under (AdjoinRoot (dvrRootPoly pi exponent)))]
     (unit : Sˣ) (heUnit : IsUnit (exponent : S))
-    (q : Ideal (AdjoinRoot (Abhyankar.kummerPoly unit exponent))) [q.IsPrime]
+    (q : Ideal (AdjoinRoot (Pcf.Kummer.kummerPoly unit exponent))) [q.IsPrime]
     (equiv : T ≃ₐ[S] Localization.AtPrime q)
     (hramification : (maximalIdeal S).ramificationIdx R = exponent) :
     Algebra.Etale (AdjoinRoot (dvrRootPoly pi exponent)) T := by

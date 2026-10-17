@@ -13,7 +13,7 @@ public import Pcf.Bounding.FibreProduct
 # The bounding chart on the concrete affine divisor carrier
 
 `Pcf.affineCrit1` is the codimension-one non-étale locus of an actual ring map, rather than
-an abstract predicate supplied as a field of `Pcf.UnnormDyn`.  The theorem below applies the
+an abstract predicate supplied as a field of `Pcf.UnnormalizedDynamics`.  The theorem below applies the
 derived bounding theorem to this carrier: the restriction attached to a `BoundingChart` has
 no codimension-one critical points.
 

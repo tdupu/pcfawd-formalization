@@ -229,12 +229,12 @@ theorem maximalIdeal_eq_span_root_of_dvd_and_isSeparable
     ((u.map (algebraMap S T : S →* T)).isUnit) he
     (by rw [← pow_mul, hx, map_mul, map_pow, mul_comm]) hπ0 hx0
   -- Step 2: the étale Kummer algebra `U = S[y]/(yᵉ − u)` and its localization `U_𝔪`.
-  let U := AdjoinRoot (Abhyankar.kummerPoly u e)
-  letI : Module.Free S U := (Abhyankar.kummerPoly_monic u he0).free_adjoinRoot
-  letI : Module.Finite S U := (Abhyankar.kummerPoly_monic u he0).finite_adjoinRoot
-  letI : Algebra.Etale S U := Abhyankar.etale u he0 heUnit
-  have hyU : (Abhyankar.kummerPoly u e).eval₂ (algebraMap S T) y = 0 := by
-    simp [Abhyankar.kummerPoly, hye]
+  let U := AdjoinRoot (Pcf.Kummer.kummerPoly u e)
+  letI : Module.Free S U := (Pcf.Kummer.kummerPoly_monic u he0).free_adjoinRoot
+  letI : Module.Finite S U := (Pcf.Kummer.kummerPoly_monic u he0).finite_adjoinRoot
+  letI : Algebra.Etale S U := Pcf.Kummer.etale_adjoinRoot_kummerPoly u he0 heUnit
+  have hyU : (Pcf.Kummer.kummerPoly u e).eval₂ (algebraMap S T) y = 0 := by
+    simp [Pcf.Kummer.kummerPoly, hye]
   let ψ : U →ₐ[S] T := AdjoinRoot.liftAlgHom _ (Algebra.ofId S T) y hyU
   have hψroot : ψ (AdjoinRoot.root _) = y := AdjoinRoot.liftAlgHom_root _ _ _ _
   let m : Ideal U := (maximalIdeal T).comap ψ.toRingHom
@@ -267,11 +267,11 @@ theorem maximalIdeal_eq_span_root_of_dvd_and_isSeparable
     rw [IsDiscreteValuationRing.irreducible_iff_uniformizer,
       ← Algebra.FormallyUnramified.map_maximalIdeal (R := S) (S := Um),
       hπ.maximalIdeal_eq, Ideal.map_span, Set.image_singleton]
-  have hyUm_unit : IsUnit (algebraMap U Um (AdjoinRoot.root (Abhyankar.kummerPoly u e))) := by
+  have hyUm_unit : IsUnit (algebraMap U Um (AdjoinRoot.root (Pcf.Kummer.kummerPoly u e))) := by
     apply (isUnit_pow_iff he0).mp
-    rw [← map_pow, Abhyankar.root_pow, ← IsScalarTower.algebraMap_apply]
+    rw [← map_pow, Pcf.Kummer.root_kummerPoly_pow, ← IsScalarTower.algebraMap_apply]
     exact (u.map (algebraMap S Um : S →* Um)).isUnit
-  set ϖ : Um := algebraMap S Um π * algebraMap U Um (AdjoinRoot.root (Abhyankar.kummerPoly u e))
+  set ϖ : Um := algebraMap S Um π * algebraMap U Um (AdjoinRoot.root (Pcf.Kummer.kummerPoly u e))
     with hϖdef
   have hϖ : Irreducible ϖ := (irreducible_mul_isUnit hyUm_unit).mpr hπUm
   -- The map `U_𝔪 → T`.

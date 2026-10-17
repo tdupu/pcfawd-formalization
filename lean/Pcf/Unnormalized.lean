@@ -14,7 +14,7 @@ This file formalizes the abstract part of Appendix `app:other-defs` of `latex/pa
 and the `1`-PCF conclusion of Theorem `thm:normal-invariant`.
 
 Definition `def:branch-loci` of the manuscript introduces, beside the normalized branch
-locus `branch(g)` that `Pcf.DivDyn.branch` models, two *unnormalized* loci: `branch₀(g)`,
+locus `branch(g)` that `Pcf.DivisorDynamics.branch` models, two *unnormalized* loci: `branch₀(g)`,
 the divisors over which the fibre is not reduced (equivalently, `g(crit₀(g))` with
 `crit₀(g)` the divisors at whose generic point `g` is not unramified), and `branch₁(g)`,
 the divisors over which `g` is not étale (`g(crit₁(g))`). Definition
@@ -22,7 +22,7 @@ the divisors over which `g` is not étale (`g(crit₁(g))`). Definition
 
 ## What the abstraction records
 
-`Pcf.UnnormDyn` extends `Pcf.DivDyn` by the two critical predicates `crit₀`, `crit₁`,
+`Pcf.UnnormalizedDynamics` extends `Pcf.DivisorDynamics` by the two critical predicates `crit₀`, `crit₁`,
 *indexed by the iterate* `m`, because unlike the normalized index there is no formula
 computing `crit_i(gᵐ)` from `crit_i(g)`; the manuscript proves only one-sided inclusions
 (Lemma `lem:tower-unnormalized`). The fields are:
@@ -38,17 +38,17 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
 
 ## What is proved
 
-* `Pcf.UnnormDyn.orbit_unnormalized_zero`, `Pcf.UnnormDyn.orbit_unnormalized_one` —
+* `Pcf.UnnormalizedDynamics.orbit_unnormalized_zero`, `Pcf.UnnormalizedDynamics.orbit_unnormalized_one` —
   Corollary `cor:orbit-unnormalized`.
-* `Pcf.UnnormDyn.pcf1_of_branch1_subset` — the dynamical half of Theorem
+* `Pcf.UnnormalizedDynamics.isNonEtaleBranchPCF_of_nonEtaleBranch_subset` — the dynamical half of Theorem
   `thm:normal-invariant`: if `branch₁(gᵐ) ⊆ Σ` for all `m ≥ 1` and `Σ` is finite, then
   `g` is `1`-PCF.
-* `Pcf.UnnormDyn.pcf_of_pcf0`, `Pcf.UnnormDyn.pcf0_of_pcf1` — `1`-PCF ⟹ `0`-PCF ⟹ PCF,
+* `Pcf.UnnormalizedDynamics.isPCF_of_isNonUnramifiedBranchPCF`, `Pcf.UnnormalizedDynamics.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF` — `1`-PCF ⟹ `0`-PCF ⟹ PCF,
   the sentence after Definition `def:pcf-unnormalized`.
-* `Pcf.PcfSetup1.res_pcf1` — Theorem `thm:normal-invariant` in its `1`-PCF form, from
-  the étale form of the bounding theorem (`PcfSetup1.key1`), wired to the finite set
-  `Pcf.PcfSetup.bound` of the existing development; `Pcf.PcfSetup1.res_pcf0` and
-  `Pcf.PcfSetup1.res_pcf` are Corollary `cor:normal-invariant-pcf`.
+* `Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF` — Theorem `thm:normal-invariant` in its `1`-PCF form, from
+  the étale form of the bounding theorem (`NonEtalePCFSetup.notMem_nonEtaleBranch_iterate`), wired to the finite set
+  `Pcf.PCFSetup.bound` of the existing development; `Pcf.NonEtalePCFSetup.restriction_isNonUnramifiedBranchPCF` and
+  `Pcf.NonEtalePCFSetup.restriction_isPCF` are Corollary `cor:normal-invariant-pcf`.
 
 ## Fidelity caveats
 
@@ -56,7 +56,7 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
   (`ram`, computed on the normalization, assumption A1) and for the unnormalized loci
   (`crit₀`, `crit₁`, which live on `A` itself). When `A` is regular in codimension one
   the two sets of primes coincide; in general `ν : Ã → A` is only finite-to-one on
-  primes, and this layer does not model `ν`. The existing `PcfSetup` already makes the
+  primes, and this layer does not model `ν`. The existing `PCFSetup` already makes the
   same identification for `sing` and `meets`. See `lean/AXIOMS.md` §B.8.
 * `crit₀ 0`, `crit₁ 0` (the identity) are unconstrained; nothing below uses them.
 * `key1` is the *conclusion* of Theorem `thm:bounding` for every iterate, not its proof;
@@ -74,113 +74,113 @@ namespace Pcf
 predicates of Definition `def:branch-loci`, indexed by the iterate.
 
 `crit0 m` is `Irr(crit₀(gᵐ))`, the primes of `A` at whose generic point `gᵐ` is not
-unramified, and `crit1 m` is `Irr(crit₁(gᵐ))`, those at which `gᵐ` is not étale. The
+unramified, and `nonEtaleLocus m` is `Irr(crit₁(gᵐ))`, those at which `gᵐ` is not étale. The
 five `Prop` fields are Proposition `prop:loci-compare` (1)–(2) and Lemma
 `lem:tower-unnormalized` (1)–(2), the latter for `g` and `h = gⁿ`; all are assumed, see
 `lean/AXIOMS.md` §B.8. -/
-structure UnnormDyn (P : Type u) extends DivDyn P where
+structure UnnormalizedDynamics (P : Type u) extends DivisorDynamics P where
   /-- `crit0 m = Irr(crit₀(gᵐ))`: `gᵐ` is not unramified at the generic point. -/
-  crit0 : ℕ → Set P
-  /-- `crit1 m = Irr(crit₁(gᵐ))`: `gᵐ` is not étale at the generic point. -/
-  crit1 : ℕ → Set P
+  nonUnramifiedLocus : ℕ → Set P
+  /-- `nonEtaleLocus m = Irr(crit₁(gᵐ))`: `gᵐ` is not étale at the generic point. -/
+  nonEtaleLocus : ℕ → Set P
   /-- Proposition `prop:loci-compare`(2), first inclusion, for `gᵐ`: a prime with
   ramification index `e(Q/gᵐ(Q)) > 1` is in `crit₀(gᵐ)`. -/
-  crit_subset_crit0 : ∀ m Q, 1 < ∏ i ∈ Finset.range m, ram (step^[i] Q) → Q ∈ crit0 m
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx : ∀ m Q, 1 < ∏ i ∈ Finset.range m, ramificationIdx (step^[i] Q) → Q ∈ nonUnramifiedLocus m
   /-- Proposition `prop:loci-compare`(2), second inclusion: unramified ⟸ étale. -/
-  crit0_subset_crit1 : ∀ m, crit0 m ⊆ crit1 m
+  nonUnramifiedLocus_subset_nonEtaleLocus : ∀ m, nonUnramifiedLocus m ⊆ nonEtaleLocus m
   /-- Proposition `prop:loci-compare`(1): `crit₁(gᵐ)` has finitely many components. -/
-  crit1_finite : ∀ m, (crit1 m).Finite
+  nonEtaleLocus_finite : ∀ m, (nonEtaleLocus m).Finite
   /-- Lemma `lem:tower-unnormalized`(1) for `h = gⁿ`: if `g` is not unramified at `Q`
   then neither is `gⁿ⁺¹ = gⁿ ∘ g`. -/
-  crit0_tower : ∀ n, crit0 1 ⊆ crit0 (n + 1)
+  nonUnramifiedLocus_tower : ∀ n, nonUnramifiedLocus 1 ⊆ nonUnramifiedLocus (n + 1)
   /-- Lemma `lem:tower-unnormalized`(2) for `h = gⁿ`: if `g` is not étale at `Q`, then
   `gⁿ⁺¹` is not étale at `Q` or `gⁿ` is not étale at `g(Q)`. -/
-  crit1_tower : ∀ n, ∀ Q ∈ crit1 1, Q ∈ crit1 (n + 1) ∨ step Q ∈ crit1 n
+  nonEtaleLocus_tower : ∀ n, ∀ Q ∈ nonEtaleLocus 1, Q ∈ nonEtaleLocus (n + 1) ∨ step Q ∈ nonEtaleLocus n
 
-namespace UnnormDyn
+namespace UnnormalizedDynamics
 
-variable {P : Type u} (D : UnnormDyn P)
+variable {P : Type u} (D : UnnormalizedDynamics P)
 
 /-- `Irr(branch₀(gᵐ)) = gᵐ(crit₀(gᵐ))` (Definition `def:branch-loci`(1)). -/
-def branch0 (m : ℕ) : Set P := D.step^[m] '' D.crit0 m
+def nonUnramifiedBranch (m : ℕ) : Set P := D.step^[m] '' D.nonUnramifiedLocus m
 
 /-- `Irr(branch₁(gᵐ)) = gᵐ(crit₁(gᵐ))` (Definition `def:branch-loci`(2)). -/
-def branch1 (m : ℕ) : Set P := D.step^[m] '' D.crit1 m
+def nonEtaleBranch (m : ℕ) : Set P := D.step^[m] '' D.nonEtaleLocus m
 
 /-- The `0`-postcritical set `PC₀(g)` (Definition `def:pcf-unnormalized`). -/
-def pcSet0 : Set P := ⋃ n : ℕ, D.step^[n] '' D.branch0 1
+def nonUnramifiedPostcriticalSet : Set P := ⋃ n : ℕ, D.step^[n] '' D.nonUnramifiedBranch 1
 
 /-- The `1`-postcritical set `PC₁(g)` (Definition `def:pcf-unnormalized`). -/
-def pcSet1 : Set P := ⋃ n : ℕ, D.step^[n] '' D.branch1 1
+def nonEtalePostcriticalSet : Set P := ⋃ n : ℕ, D.step^[n] '' D.nonEtaleBranch 1
 
 /-- `g` is `0`-PCF (Definition `def:pcf-unnormalized`). -/
-def PCF0 : Prop := D.pcSet0.Finite
+def IsNonUnramifiedBranchPCF : Prop := D.nonUnramifiedPostcriticalSet.Finite
 
 /-- `g` is `1`-PCF (Definition `def:pcf-unnormalized`). -/
-def PCF1 : Prop := D.pcSet1.Finite
+def IsNonEtaleBranchPCF : Prop := D.nonEtalePostcriticalSet.Finite
 
-theorem mem_pcSet0_iff {Q : P} : Q ∈ D.pcSet0 ↔ ∃ n, ∃ R ∈ D.branch0 1, D.step^[n] R = Q := by
-  simp only [pcSet0, Set.mem_iUnion, Set.mem_image]
+theorem mem_nonUnramifiedPostcriticalSet_iff {Q : P} : Q ∈ D.nonUnramifiedPostcriticalSet ↔ ∃ n, ∃ R ∈ D.nonUnramifiedBranch 1, D.step^[n] R = Q := by
+  simp only [nonUnramifiedPostcriticalSet, Set.mem_iUnion, Set.mem_image]
 
-theorem mem_pcSet1_iff {Q : P} : Q ∈ D.pcSet1 ↔ ∃ n, ∃ R ∈ D.branch1 1, D.step^[n] R = Q := by
-  simp only [pcSet1, Set.mem_iUnion, Set.mem_image]
+theorem mem_nonEtalePostcriticalSet_iff {Q : P} : Q ∈ D.nonEtalePostcriticalSet ↔ ∃ n, ∃ R ∈ D.nonEtaleBranch 1, D.step^[n] R = Q := by
+  simp only [nonEtalePostcriticalSet, Set.mem_iUnion, Set.mem_image]
 
 /-! ### Proposition `prop:loci-compare`, transported to branch loci and postcritical sets -/
 
 /-- The normalized branch locus of `gᵐ` lies in `branch₀(gᵐ)`. -/
-theorem branch_iter_subset_branch0 (m : ℕ) : (D.toDivDyn.iter m).branch ⊆ D.branch0 m := by
+theorem branch_iterate_subset_nonUnramifiedBranch (m : ℕ) : (D.toDivisorDynamics.iterate m).branch ⊆ D.nonUnramifiedBranch m := by
   rintro Q ⟨Q', hQ', hram⟩
-  exact ⟨Q', D.crit_subset_crit0 m Q' hram, hQ'⟩
+  exact ⟨Q', D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx m Q' hram, hQ'⟩
 
 /-- `branch(g) ⊆ branch₀(g)` (Proposition `prop:loci-compare`(2)). -/
-theorem branch_subset_branch0 : D.toDivDyn.branch ⊆ D.branch0 1 := by
+theorem branch_subset_nonUnramifiedBranch : D.toDivisorDynamics.branch ⊆ D.nonUnramifiedBranch 1 := by
   rintro Q ⟨Q', hQ', hram⟩
-  refine ⟨Q', D.crit_subset_crit0 1 Q' ?_, by simpa using hQ'⟩
+  refine ⟨Q', D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx 1 Q' ?_, by simpa using hQ'⟩
   simpa using hram
 
 /-- `branch₀(gᵐ) ⊆ branch₁(gᵐ)` (Proposition `prop:loci-compare`(2)). -/
-theorem branch0_subset_branch1 (m : ℕ) : D.branch0 m ⊆ D.branch1 m :=
-  Set.image_mono (D.crit0_subset_crit1 m)
+theorem nonUnramifiedBranch_subset_nonEtaleBranch (m : ℕ) : D.nonUnramifiedBranch m ⊆ D.nonEtaleBranch m :=
+  Set.image_mono (D.nonUnramifiedLocus_subset_nonEtaleLocus m)
 
-theorem branch1_finite (m : ℕ) : (D.branch1 m).Finite := (D.crit1_finite m).image _
+theorem nonEtaleBranch_finite (m : ℕ) : (D.nonEtaleBranch m).Finite := (D.nonEtaleLocus_finite m).image _
 
-theorem branch0_finite (m : ℕ) : (D.branch0 m).Finite :=
-  (D.branch1_finite m).subset (D.branch0_subset_branch1 m)
+theorem nonUnramifiedBranch_finite (m : ℕ) : (D.nonUnramifiedBranch m).Finite :=
+  (D.nonEtaleBranch_finite m).subset (D.nonUnramifiedBranch_subset_nonEtaleBranch m)
 
 /-- `PC(g) ⊆ PC₀(g)`. -/
-theorem pcSet_subset_pcSet0 : D.toDivDyn.pcSet ⊆ D.pcSet0 :=
-  Set.iUnion_mono fun _ => Set.image_mono D.branch_subset_branch0
+theorem postcriticalSet_subset_nonUnramifiedPostcriticalSet : D.toDivisorDynamics.postcriticalSet ⊆ D.nonUnramifiedPostcriticalSet :=
+  Set.iUnion_mono fun _ => Set.image_mono D.branch_subset_nonUnramifiedBranch
 
 /-- `PC₀(g) ⊆ PC₁(g)`. -/
-theorem pcSet0_subset_pcSet1 : D.pcSet0 ⊆ D.pcSet1 :=
-  Set.iUnion_mono fun _ => Set.image_mono (D.branch0_subset_branch1 1)
+theorem nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet : D.nonUnramifiedPostcriticalSet ⊆ D.nonEtalePostcriticalSet :=
+  Set.iUnion_mono fun _ => Set.image_mono (D.nonUnramifiedBranch_subset_nonEtaleBranch 1)
 
 /-- A `1`-PCF map is `0`-PCF (sentence after Definition `def:pcf-unnormalized`). -/
-theorem pcf0_of_pcf1 (h : D.PCF1) : D.PCF0 := h.subset D.pcSet0_subset_pcSet1
+theorem isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) : D.IsNonUnramifiedBranchPCF := h.subset D.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
 
 /-- A `0`-PCF map is PCF (sentence after Definition `def:pcf-unnormalized`). -/
-theorem pcf_of_pcf0 (h : D.PCF0) : D.toDivDyn.PCF := h.subset D.pcSet_subset_pcSet0
+theorem isPCF_of_isNonUnramifiedBranchPCF (h : D.IsNonUnramifiedBranchPCF) : D.toDivisorDynamics.IsPCF := h.subset D.postcriticalSet_subset_nonUnramifiedPostcriticalSet
 
 /-! ### Corollary `cor:orbit-unnormalized` -/
 
 /-- **Corollary `cor:orbit-unnormalized`, `i = 0`.** If `Q ∈ crit₀(g)` and `D = g(Q)`, then
 `gⁿ(D)` lies in `branch₀(gⁿ⁺¹)`. (The manuscript states this for `n ≥ 1`; for `n = 0`
 it is the definition of `branch₀(g)`.) -/
-theorem orbit_unnormalized_zero (n : ℕ) {Q : P} (hQ : Q ∈ D.crit0 1) :
-    D.step^[n] (D.step Q) ∈ D.branch0 (n + 1) :=
-  ⟨Q, D.crit0_tower n hQ, (Function.iterate_succ_apply D.step n Q).symm⟩
+theorem orbit_unnormalized_zero (n : ℕ) {Q : P} (hQ : Q ∈ D.nonUnramifiedLocus 1) :
+    D.step^[n] (D.step Q) ∈ D.nonUnramifiedBranch (n + 1) :=
+  ⟨Q, D.nonUnramifiedLocus_tower n hQ, (Function.iterate_succ_apply D.step n Q).symm⟩
 
 /-- **Corollary `cor:orbit-unnormalized`, `i = 1`.** If `Q ∈ crit₁(g)` and `D = g(Q)`, then
 `gⁿ(D)` lies in `branch₁(gʲ)` for some `j ∈ {n, n + 1}`. -/
-theorem orbit_unnormalized_one (n : ℕ) {Q : P} (hQ : Q ∈ D.crit1 1) :
-    D.step^[n] (D.step Q) ∈ D.branch1 (n + 1) ∨ D.step^[n] (D.step Q) ∈ D.branch1 n := by
-  rcases D.crit1_tower n Q hQ with h | h
+theorem orbit_unnormalized_one (n : ℕ) {Q : P} (hQ : Q ∈ D.nonEtaleLocus 1) :
+    D.step^[n] (D.step Q) ∈ D.nonEtaleBranch (n + 1) ∨ D.step^[n] (D.step Q) ∈ D.nonEtaleBranch n := by
+  rcases D.nonEtaleLocus_tower n Q hQ with h | h
   · exact Or.inl ⟨Q, h, (Function.iterate_succ_apply D.step n Q).symm⟩
   · exact Or.inr ⟨D.step Q, h, rfl⟩
 
 /-- Corollary `cor:orbit-unnormalized` in the manuscript's phrasing. -/
-theorem orbit_unnormalized_one' (n : ℕ) {Q : P} (hQ : Q ∈ D.crit1 1) :
-    ∃ j, (j = n ∨ j = n + 1) ∧ D.step^[n] (D.step Q) ∈ D.branch1 j := by
+theorem orbit_unnormalized_one_of_mem (n : ℕ) {Q : P} (hQ : Q ∈ D.nonEtaleLocus 1) :
+    ∃ j, (j = n ∨ j = n + 1) ∧ D.step^[n] (D.step Q) ∈ D.nonEtaleBranch j := by
   rcases D.orbit_unnormalized_one n hQ with h | h
   · exact ⟨n + 1, Or.inr rfl, h⟩
   · exact ⟨n, Or.inl rfl, h⟩
@@ -189,10 +189,10 @@ theorem orbit_unnormalized_one' (n : ℕ) {Q : P} (hQ : Q ∈ D.crit1 1) :
 
 /-- If `branch₁(gᵐ) ⊆ Σ` for every `m ≥ 1`, then `PC₁(g) ⊆ Σ`. This is the last
 paragraph of the proof of Theorem `thm:normal-invariant`. -/
-theorem pcSet1_subset_of_branch1_subset {Sig : Set P}
-    (hSig : ∀ m, 1 ≤ m → D.branch1 m ⊆ Sig) : D.pcSet1 ⊆ Sig := by
+theorem nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset {Sig : Set P}
+    (hSig : ∀ m, 1 ≤ m → D.nonEtaleBranch m ⊆ Sig) : D.nonEtalePostcriticalSet ⊆ Sig := by
   intro R hR
-  obtain ⟨n, _, ⟨Q, hQ, rfl⟩, rfl⟩ := D.mem_pcSet1_iff.mp hR
+  obtain ⟨n, _, ⟨Q, hQ, rfl⟩, rfl⟩ := D.mem_nonEtalePostcriticalSet_iff.mp hR
   simp only [Function.iterate_one]
   rcases D.orbit_unnormalized_one n hQ with h | h
   · exact hSig (n + 1) (by omega) h
@@ -202,102 +202,102 @@ theorem pcSet1_subset_of_branch1_subset {Sig : Set P}
 
 /-- **Theorem `thm:normal-invariant`, dynamical half.** If the `1`-branch loci of all
 iterates `gᵐ`, `m ≥ 1`, lie in one finite set `Σ` of primes, then `g` is `1`-PCF. -/
-theorem pcf1_of_branch1_subset {Sig : Set P} (hfin : Sig.Finite)
-    (hSig : ∀ m, 1 ≤ m → D.branch1 m ⊆ Sig) : D.PCF1 :=
-  hfin.subset (D.pcSet1_subset_of_branch1_subset hSig)
+theorem isNonEtaleBranchPCF_of_nonEtaleBranch_subset {Sig : Set P} (hfin : Sig.Finite)
+    (hSig : ∀ m, 1 ≤ m → D.nonEtaleBranch m ⊆ Sig) : D.IsNonEtaleBranchPCF :=
+  hfin.subset (D.nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset hSig)
 
-end UnnormDyn
+end UnnormalizedDynamics
 
-/-! ### Wiring to the bounding set of `Pcf.PcfSetup` -/
+/-! ### Wiring to the bounding set of `Pcf.PCFSetup` -/
 
 /-- The data of Theorem `thm:normal-invariant` with the restricted system carrying the
 unnormalized loci, and with the **étale** form of Theorem `thm:bounding` as hypothesis.
 
-Compared with `Pcf.PcfSetup`, the field `key1` concludes `Q ∉ branch₁(gᵐ)` instead of
+Compared with `Pcf.PCFSetup`, the field `key1` concludes `Q ∉ branch₁(gᵐ)` instead of
 `Q ∉ branch(gᵐ)`; by Proposition `prop:loci-compare` the former is stronger, and
-`Pcf.PcfSetup1.toPcfSetup` recovers a `Pcf.PcfSetup`. The hypotheses of `key1` are
-exactly those of `PcfSetup.key`: `Q` is a prime of `A` outside `Sing(X) ∪ Sing(A)` and
+`Pcf.NonEtalePCFSetup.toPCFSetup` recovers a `Pcf.PCFSetup`. The hypotheses of `key1` are
+exactly those of `PCFSetup.notMem_branch_iterate`: `Q` is a prime of `A` outside `Sing(X) ∪ Sing(A)` and
 outside `A ∩ E` for every component `E ≠ A` of `branch(fᵐ)`. `key1` is **assumed**; it is
 the conclusion of the bounding theorem, which is not formalized. -/
-structure PcfSetup1 (PX : Type u) (PA : Type v) where
+structure NonEtalePCFSetup (PX : Type u) (PA : Type v) where
   /-- The ambient system `f` on the primes of the normal variety `X`. -/
-  amb : DivDyn PX
+  ambient : DivisorDynamics PX
   /-- The invariant prime `A ⊆ X`. -/
   fixedPrime : PX
   /-- `f(A) = A`. -/
-  fixed : amb.step fixedPrime = fixedPrime
+  fixed : ambient.step fixedPrime = fixedPrime
   /-- The restricted system `g = f|_A`, with its unnormalized loci. -/
-  res : UnnormDyn PA
+  restriction : UnnormalizedDynamics PA
   /-- Primes of `A` inside `Sing(X) ∪ Sing(A)`. -/
-  sing : Set PA
+  singularPrimes : Set PA
   /-- Step 0 of Theorem `thm:bounding` with Lemma `lem:finitely-many`. -/
-  sing_finite : sing.Finite
+  singularPrimes_finite : singularPrimes.Finite
   /-- `meets E` collects the primes of `A` contained in `A ∩ E`. -/
   meets : PX → Set PA
   /-- Step 0 of Theorem `thm:bounding` with Lemma `lem:finitely-many`. -/
   meets_finite : ∀ E, E ≠ fixedPrime → (meets E).Finite
   /-- **Theorem `thm:bounding`** (étale form) applied to `fᵐ`, `m ≥ 1`: a prime of `A`
   outside `Σ_m` is not in `branch₁(gᵐ)`. -/
-  key1 : ∀ (m : ℕ), 1 ≤ m → ∀ (Q : PA), Q ∉ sing →
-      (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
-      Q ∉ res.branch1 m
+  notMem_nonEtaleBranch_iterate : ∀ (m : ℕ), 1 ≤ m → ∀ (Q : PA), Q ∉ singularPrimes →
+      (∀ E ∈ (ambient.iterate m).branch, E ≠ fixedPrime → Q ∉ meets E) →
+      Q ∉ restriction.nonEtaleBranch m
 
-namespace PcfSetup1
+namespace NonEtalePCFSetup
 
-variable {PX : Type u} {PA : Type v} (S : PcfSetup1 PX PA)
+variable {PX : Type u} {PA : Type v} (S : NonEtalePCFSetup PX PA)
 
-/-- The underlying `Pcf.PcfSetup`: `key` follows from `key1` and Proposition
+/-- The underlying `Pcf.PCFSetup`: `key` follows from `key1` and Proposition
 `prop:loci-compare`(2), and for `m = 0` from `branch(g⁰) = ∅`. -/
-def toPcfSetup : PcfSetup PX PA where
-  amb := S.amb
+def toPCFSetup : PCFSetup PX PA where
+  ambient := S.ambient
   fixedPrime := S.fixedPrime
   fixed := S.fixed
-  res := S.res.toDivDyn
-  sing := S.sing
-  sing_finite := S.sing_finite
+  restriction := S.restriction.toDivisorDynamics
+  singularPrimes := S.singularPrimes
+  singularPrimes_finite := S.singularPrimes_finite
   meets := S.meets
   meets_finite := S.meets_finite
-  key := by
+  notMem_branch_iterate := by
     intro m Q hs hm hQ
     rcases Nat.eq_zero_or_pos m with rfl | hpos
     · obtain ⟨_, _, hr⟩ := hQ
       simp at hr
-    · exact S.key1 m hpos Q hs hm
-        (S.res.branch0_subset_branch1 m (S.res.branch_iter_subset_branch0 m hQ))
+    · exact S.notMem_nonEtaleBranch_iterate m hpos Q hs hm
+        (S.restriction.nonUnramifiedBranch_subset_nonEtaleBranch m (S.restriction.branch_iterate_subset_nonUnramifiedBranch m hQ))
 
-@[simp] theorem toPcfSetup_amb : S.toPcfSetup.amb = S.amb := rfl
-@[simp] theorem toPcfSetup_res : S.toPcfSetup.res = S.res.toDivDyn := rfl
+@[simp] theorem toPCFSetup_ambient : S.toPCFSetup.ambient = S.ambient := rfl
+@[simp] theorem toPCFSetup_restriction : S.toPCFSetup.restriction = S.restriction.toDivisorDynamics := rfl
 
 /-- The `1`-branch locus of every iterate `gᵐ`, `m ≥ 1`, lies in the single finite set
-`Pcf.PcfSetup.bound`, which does not depend on `m`. -/
-theorem branch1_iter_subset_bound (m : ℕ) (hm : 1 ≤ m) :
-    S.res.branch1 m ⊆ S.toPcfSetup.bound := by
+`Pcf.PCFSetup.bound`, which does not depend on `m`. -/
+theorem nonEtaleBranch_iterate_subset_bound (m : ℕ) (hm : 1 ≤ m) :
+    S.restriction.nonEtaleBranch m ⊆ S.toPCFSetup.bound := by
   intro Q hQ
   by_contra hQb
-  refine S.key1 m hm Q (fun hs => hQb (Or.inl hs)) ?_ hQ
+  refine S.notMem_nonEtaleBranch_iterate m hm Q (fun hs => hQb (Or.inl hs)) ?_ hQ
   intro E hE hEA hmeets
   exact hQb (Or.inr (Set.mem_biUnion
-    ⟨S.amb.branch_iter_subset_pcSet m hE, by simpa [toPcfSetup] using hEA⟩ hmeets))
+    ⟨S.ambient.branch_iterate_subset_postcriticalSet m hE, by simpa [toPCFSetup] using hEA⟩ hmeets))
 
 /-- **Theorem `thm:normal-invariant`.** If `f` is PCF then `g = f|_A` is `1`-PCF. -/
-theorem res_pcf1 (h : S.amb.PCF) : S.res.PCF1 :=
-  S.res.pcf1_of_branch1_subset (S.toPcfSetup.bound_finite h) S.branch1_iter_subset_bound
+theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonEtaleBranchPCF :=
+  S.restriction.isNonEtaleBranchPCF_of_nonEtaleBranch_subset (S.toPCFSetup.bound_finite h) S.nonEtaleBranch_iterate_subset_bound
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is `0`-PCF. -/
-theorem res_pcf0 (h : S.amb.PCF) : S.res.PCF0 := S.res.pcf0_of_pcf1 (S.res_pcf1 h)
+theorem restriction_isNonUnramifiedBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonUnramifiedBranchPCF := S.restriction.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF (S.restriction_isNonEtaleBranchPCF h)
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is PCF. -/
-theorem res_pcf (h : S.amb.PCF) : S.res.toDivDyn.PCF := S.res.pcf_of_pcf0 (S.res_pcf0 h)
+theorem restriction_isPCF (h : S.ambient.IsPCF) : S.restriction.toDivisorDynamics.IsPCF := S.restriction.isPCF_of_isNonUnramifiedBranchPCF (S.restriction_isNonUnramifiedBranchPCF h)
 
 /-- **Corollary `cor:normal-preperiodic`**, in the abstract form of
-`Pcf.PcfSetup.res_pcf_of_iter`: if the ambient system is the iterate `fˢ` of a PCF system,
+`Pcf.PCFSetup.restriction_isPCF_of_iterate`: if the ambient system is the iterate `fˢ` of a PCF system,
 the restriction to the `fˢ`-invariant prime is `1`-PCF. -/
-theorem res_pcf1_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
-    (hS : S.amb = D.iter n) (h : D.PCF) : S.res.PCF1 := by
-  refine S.res_pcf1 ?_
+theorem restriction_isNonEtaleBranchPCF_of_iterate {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n)
+    (hS : S.ambient = D.iterate n) (h : D.IsPCF) : S.restriction.IsNonEtaleBranchPCF := by
+  refine S.restriction_isNonEtaleBranchPCF ?_
   rw [hS]
-  exact D.pcf_iter_iff.mp h n hn
+  exact D.isPCF_iterate_iff.mp h n hn
 
-end PcfSetup1
+end NonEtalePCFSetup
 
 end Pcf

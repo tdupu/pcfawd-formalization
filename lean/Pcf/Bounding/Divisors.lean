@@ -58,7 +58,7 @@ abbrev HeightOnePrime (A : Type*) [CommRing A] :=
   {p : PrimeSpectrum A // p.asIdeal.height = 1}
 
 /-- The codimension-one non-étale locus of an actual affine morphism.  Unlike the
-`UnnormDyn.crit1` field of the abstract dynamics, this set is defined directly from the
+`UnnormalizedDynamics.nonEtaleLocus` field of the abstract dynamics, this set is defined directly from the
 localized ring map. -/
 def affineCrit1 (R S : Type*) [CommRing R] [CommRing S] [Algebra R S] :
     Set (HeightOnePrime S) :=
@@ -277,7 +277,7 @@ theorem affineDivisorUnder_val (Q) :
       PrimeSpectrum.comap (algebraMap R S) Q.1 := rfl
 
 /-- Lying over, restricted to codimension-one points.  This is the affine divisor version
-of `DivDyn.step_surjective`. -/
+of `DivisorDynamics.step_surjective`. -/
 theorem heightOneUnder_surjective :
     Function.Surjective (heightOneUnder (R := R) (S := S)) := by
   intro p
@@ -1014,7 +1014,7 @@ theorem heightOneRam_pos (Q : HeightOnePrime S) :
 omit [Module.Finite R S] in
 /-- Ramification indices at codimension-one primes multiply in a tower when the
 localized upper extension is flat.  This is the geometric tower identity behind
-the product used by `DivDyn.iterRam`; unlike that product identity, this theorem
+the product used by `DivisorDynamics.iterateRamificationIdx`; unlike that product identity, this theorem
 is about Mathlib's actual local ramification index. -/
 theorem heightOneRam_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
     [IsScalarTower R S T] (Q : HeightOnePrime S) (P : HeightOnePrime T)
@@ -1119,7 +1119,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 /-- The branch set of a finite dominant normal affine map on codimension-one points.
 
 A target divisor belongs to this set exactly when some source divisor above it has
-ramification index greater than one.  This is the two-ring analogue of `DivDyn.branch`.
+ramification index greater than one.  This is the two-ring analogue of `DivisorDynamics.branch`.
 -/
 def heightOneBranch : Set (HeightOnePrime R) :=
   heightOneUnder (R := R) (S := S) ''
@@ -1262,16 +1262,16 @@ function is Mathlib's `Ideal.ramificationIdx`.  Thus `step_surjective`, positivi
 finiteness of the branch set are theorems rather than supplied fields. -/
 noncomputable def divDynOfFiniteNormalSelfAlgebra
     (hgen : nonEtaleLocus R R ≠ Set.univ) :
-    DivDyn (HeightOnePrime R) := by
+    DivisorDynamics (HeightOnePrime R) := by
   let step : HeightOnePrime R → HeightOnePrime R :=
     heightOneUnder (R := R) (S := R)
   let ram : HeightOnePrime R → ℕ := heightOneRam (R := R)
   refine
     { step := step
-      ram := ram
-      ram_pos := ?_
+      ramificationIdx := ram
+      ramificationIdx_pos := ?_
       step_surjective := ?_
-      branch_finite' := ?_ }
+      step_image_ramified_finite := ?_ }
   · exact heightOneRam_pos (R := R)
   · exact heightOneUnder_surjective (R := R) (S := R)
   · refine ((finite_heightOne_ramified (R := R) (S := R) hgen).image step).subset ?_
@@ -1288,7 +1288,7 @@ theorem divDynOfFiniteNormalSelfAlgebra_step
 @[simp]
 theorem divDynOfFiniteNormalSelfAlgebra_ram
     (hgen : nonEtaleLocus R R ≠ Set.univ) (Q : HeightOnePrime R) :
-    (divDynOfFiniteNormalSelfAlgebra hgen).ram Q = heightOneRam (R := R) Q :=
+    (divDynOfFiniteNormalSelfAlgebra hgen).ramificationIdx Q = heightOneRam (R := R) Q :=
   rfl
 
 /-- The abstract branch set of the canonical affine divisor dynamics is exactly the
@@ -1298,7 +1298,7 @@ theorem divDynOfFiniteNormalSelfAlgebra_branch
     (divDynOfFiniteNormalSelfAlgebra hgen).branch =
       heightOneBranch (R := R) (S := R) := by
   ext D
-  simp only [DivDyn.mem_branch_iff, divDynOfFiniteNormalSelfAlgebra_step,
+  simp only [DivisorDynamics.mem_branch_iff, divDynOfFiniteNormalSelfAlgebra_step,
     divDynOfFiniteNormalSelfAlgebra_ram, mem_heightOneBranch_iff]
   constructor
   · rintro ⟨Q, hQD, hQ⟩

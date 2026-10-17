@@ -48,19 +48,19 @@ theorem dvrRootPoly_monic (π : A) {n : ℕ} (hn : 1 ≤ n) : (dvrRootPoly π n)
 theorem dvrRootAlgebra_finite (π : A) {n : ℕ} (hn : 1 ≤ n) :
     Module.Finite A (AdjoinRoot (dvrRootPoly π n)) := by
   rw [dvrRootPoly_eq_localPoly]
-  exact Pcf.LocalModel.finite 1 π hn
+  exact Pcf.LocalModel.finite_adjoinRoot 1 π hn
 
 /-- The root algebra in `09EV` is free over `A`. -/
 theorem dvrRootAlgebra_free (π : A) {n : ℕ} (hn : 1 ≤ n) :
     Module.Free A (AdjoinRoot (dvrRootPoly π n)) := by
   rw [dvrRootPoly_eq_localPoly]
-  exact Pcf.LocalModel.free 1 π hn
+  exact Pcf.LocalModel.free_adjoinRoot 1 π hn
 
 /-- The root algebra has rank `n`, the module-theoretic input to clause (1) of `09EV`. -/
 theorem dvrRootAlgebra_finrank [Nontrivial A] (π : A) {n : ℕ} (hn : 1 ≤ n) :
     Module.finrank A (AdjoinRoot (dvrRootPoly π n)) = n := by
   rw [dvrRootPoly_eq_localPoly]
-  exact Pcf.LocalModel.finrank_eq 1 π hn
+  exact Pcf.LocalModel.finrank_adjoinRoot 1 π hn
 
 /-- The distinguished root satisfies `root^n = π`. -/
 theorem dvrRoot_pow_eq (π : A) (n : ℕ) :

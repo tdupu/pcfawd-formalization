@@ -59,8 +59,8 @@ theorem invariantDivisorNormalization_norm_pcf_of_finiteType
           (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).PCF) :
-    (invariantDivisorNormalization k s f A hA).norm.PCF :=
+      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
   (invariantDivisorSetupOfFiniteType k s f A hA cover).norm_pcf hpcf
 
 #print axioms invariantDivisorSetupOfFiniteType

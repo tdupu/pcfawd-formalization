@@ -161,7 +161,7 @@ def invariantDivisorStep0LocalDataOfRegular
     (hambient : (pointClosureIdealSheaf A.1).subschemeι Q.1 ∉ stalkSingularLocus X)
     (hdivisor : Q.1 ∉ stalkSingularLocus (pointClosureIdealSheaf A.1).subscheme)
     (hmeets : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      ∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).iter m |>.branch,
+      ∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).iterate m |>.branch,
         E ≠ A → Q ∉ invariantDivisorMeets A E)
     (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1 = Q.1)
     (cover : ∀ (U : X.affineOpens) (hx : Q'.1 ∈
@@ -260,8 +260,8 @@ theorem invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).PCF) :
-    (invariantDivisorNormalization k s f A hA).norm.PCF :=
+      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
   (invariantDivisorSetupOfFiniteRegularityCorrection k s f A hA
     sing hsing hregular cover).norm_pcf hpcf
 
@@ -277,8 +277,8 @@ theorem invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringInputs f A m U Q' hx)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).PCF) :
-    (invariantDivisorNormalization k s f A hA).norm.PCF :=
+      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
   (invariantDivisorSetupOfClosedSingularLoci k s f A hA hX hSingA cover).norm_pcf hpcf
 
 end Assembly

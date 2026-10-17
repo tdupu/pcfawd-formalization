@@ -28,7 +28,7 @@ additionally records that the standard piece is free over the base with basis
 
 * `Pcf.LocalModel.localPoly u a e` : the polynomial `X ^ e - C (u * a)` cutting out a
   standard piece of a tame cyclic cover.
-* `Pcf.LocalModel.basis` : the `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece.
+* `Pcf.LocalModel.adjoinRootBasis` : the `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece.
 * `Pcf.LocalModel.restrictionMap` : the restriction map `R/(a) → C/(z)` along the divisor,
   i.e. the algebraic form of `V(z) → V(a)`.
 * `Pcf.LocalModel.restrictionEquiv` : that map packaged as an `R`-algebra isomorphism.
@@ -36,7 +36,7 @@ additionally records that the standard piece is free over the base with basis
 ## Main results
 
 * `Pcf.LocalModel.localPoly_monic` : `X ^ e - C (u * a)` is monic for `1 ≤ e`.
-* `Pcf.LocalModel.free` / `Pcf.LocalModel.finite` / `Pcf.LocalModel.finrank_eq` :
+* `Pcf.LocalModel.free_adjoinRoot` / `Pcf.LocalModel.finite_adjoinRoot` / `Pcf.LocalModel.finrank_adjoinRoot` :
   the standard piece is a finite free `R`-module of rank `e`.
 * `Pcf.LocalModel.quotientRootEquiv` : **the main result**, the `R`-algebra isomorphism
   `R[z]/(z ^ e - u * a, z) ≃ₐ[R] R/(a)`.  This is the statement
@@ -156,40 +156,40 @@ variable (u : Rˣ) (a : R) {e : ℕ}
 standard piece `C = R[z]/(z ^ e - u * a)`, from the Remark *Regularity of the source in the
 local model* of `paper.tex`: "since the defining polynomial is monic, `C` is free over `R`
 with basis `1, z, …, z^{e-1}`". -/
-noncomputable def powerBasis (he : 1 ≤ e) : PowerBasis R (AdjoinRoot (localPoly u a e)) :=
+noncomputable def adjoinRootPowerBasis (he : 1 ≤ e) : PowerBasis R (AdjoinRoot (localPoly u a e)) :=
   AdjoinRoot.powerBasis' (localPoly_monic u a he)
 
 /-- A standard piece `C = R[z]/(z ^ e - u * a)` is a free `R`-module
 (Remark *Regularity of the source in the local model* of `paper.tex`). -/
-theorem free (he : 1 ≤ e) : Module.Free R (AdjoinRoot (localPoly u a e)) :=
-  Module.Free.of_basis (powerBasis u a he).basis
+theorem free_adjoinRoot (he : 1 ≤ e) : Module.Free R (AdjoinRoot (localPoly u a e)) :=
+  Module.Free.of_basis (adjoinRootPowerBasis u a he).basis
 
 /-- A standard piece `C = R[z]/(z ^ e - u * a)` is a finite `R`-module. -/
-theorem finite (he : 1 ≤ e) : Module.Finite R (AdjoinRoot (localPoly u a e)) :=
-  Module.Finite.of_basis (powerBasis u a he).basis
+theorem finite_adjoinRoot (he : 1 ≤ e) : Module.Finite R (AdjoinRoot (localPoly u a e)) :=
+  Module.Finite.of_basis (adjoinRootPowerBasis u a he).basis
 
 /-- The `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece
 `C = R[z]/(z ^ e - u * a)`, indexed by `Fin e`.  See the Remark
 *Regularity of the source in the local model* of `paper.tex`. -/
-noncomputable def basis [Nontrivial R] (he : 1 ≤ e) :
+noncomputable def adjoinRootBasis [Nontrivial R] (he : 1 ≤ e) :
     Module.Basis (Fin e) R (AdjoinRoot (localPoly u a e)) :=
-  (powerBasis u a he).basis.reindex (finCongr (localPoly_natDegree u a e))
+  (adjoinRootPowerBasis u a he).basis.reindex (finCongr (localPoly_natDegree u a e))
 
-/-- The `i`-th vector of `Pcf.LocalModel.basis` is `z ^ i`: the basis really is
+/-- The `i`-th vector of `Pcf.LocalModel.adjoinRootBasis` is `z ^ i`: the basis really is
 `1, z, …, z ^ (e - 1)`, as in the Remark *Regularity of the source in the local model*
 of `paper.tex`. -/
 @[simp]
-theorem basis_apply [Nontrivial R] (he : 1 ≤ e) (i : Fin e) :
-    basis u a he i = AdjoinRoot.root (localPoly u a e) ^ (i : ℕ) := by
-  simp only [basis, powerBasis, Module.Basis.reindex_apply, PowerBasis.basis_eq_pow,
+theorem adjoinRootBasis_apply [Nontrivial R] (he : 1 ≤ e) (i : Fin e) :
+    adjoinRootBasis u a he i = AdjoinRoot.root (localPoly u a e) ^ (i : ℕ) := by
+  simp only [adjoinRootBasis, adjoinRootPowerBasis, Module.Basis.reindex_apply, PowerBasis.basis_eq_pow,
     AdjoinRoot.powerBasis'_gen]
   rfl
 
 /-- A standard piece `C = R[z]/(z ^ e - u * a)` is free of rank `e` over `R`:
 the cover has degree `e`. -/
-theorem finrank_eq [Nontrivial R] (he : 1 ≤ e) :
+theorem finrank_adjoinRoot [Nontrivial R] (he : 1 ≤ e) :
     Module.finrank R (AdjoinRoot (localPoly u a e)) = e := by
-  rw [Module.finrank_eq_card_basis (basis u a he), Fintype.card_fin]
+  rw [Module.finrank_eq_card_basis (adjoinRootBasis u a he), Fintype.card_fin]
 
 end Free
 
@@ -439,7 +439,7 @@ restriction to the divisor, which is an isomorphism
 (`Pcf.LocalModel.restrictionMap_bijective`).
 
 The proof uses that `C` is free over `R` with basis `1, z, …, z ^ (e - 1)`
-(`Pcf.LocalModel.basis`): if the class of `z` vanished then `z = a * c` in `C`, and reading
+(`Pcf.LocalModel.adjoinRootBasis`): if the class of `z` vanished then `z = a * c` in `C`, and reading
 off the coefficient of the basis vector `z` — a genuine basis vector, distinct from `1`,
 precisely because `2 ≤ e` — gives `a * c₁ = 1`, making `a` a unit.
 
@@ -455,13 +455,13 @@ theorem root_ne_zero_mod_algebraMap [Nontrivial R] (he : 2 ≤ e) (ha : ¬ IsUni
   intro hzero
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hzero
   obtain ⟨c, hc⟩ := hzero
-  have hroot : basis u a he1 ⟨1, hlt⟩ = AdjoinRoot.root (localPoly u a e) := by
-    rw [basis_apply]; simp
-  have h1 : (basis u a he1).repr (AdjoinRoot.root (localPoly u a e)) ⟨1, hlt⟩ = 1 := by
+  have hroot : adjoinRootBasis u a he1 ⟨1, hlt⟩ = AdjoinRoot.root (localPoly u a e) := by
+    rw [adjoinRootBasis_apply]; simp
+  have h1 : (adjoinRootBasis u a he1).repr (AdjoinRoot.root (localPoly u a e)) ⟨1, hlt⟩ = 1 := by
     rw [← hroot, Module.Basis.repr_self, Finsupp.single_eq_same]
-  have h2 : (basis u a he1).repr
+  have h2 : (adjoinRootBasis u a he1).repr
         (algebraMap R (AdjoinRoot (localPoly u a e)) a * c) ⟨1, hlt⟩
-      = a * (basis u a he1).repr c ⟨1, hlt⟩ := by
+      = a * (adjoinRootBasis u a he1).repr c ⟨1, hlt⟩ := by
     rw [← Algebra.smul_def, map_smul, Finsupp.smul_apply, smul_eq_mul]
   exact ha (IsUnit.of_mul_eq_one _ (by rw [← h2, ← hc, h1]))
 
@@ -530,7 +530,7 @@ theorem root_mem_nonZeroDivisors (he : 1 ≤ e) (ha : a ∈ nonZeroDivisors R) :
   have hpow : c * AdjoinRoot.root (localPoly u a e) ^ e = 0 := by
     rw [hsplit, ← mul_assoc, mul_right_comm, hc, zero_mul]
   rw [root_pow_eq] at hpow
-  refine eq_zero_of_smul_eq_zero_of_basis (powerBasis u a he).basis hua ?_
+  refine eq_zero_of_smul_eq_zero_of_basis (adjoinRootPowerBasis u a he).basis hua ?_
   rw [Algebra.smul_def, mul_comm]
   exact hpow
 
@@ -539,9 +539,9 @@ end NonZeroDivisor
 end Pcf.LocalModel
 
 #print axioms Pcf.LocalModel.localPoly_monic
-#print axioms Pcf.LocalModel.basis_apply
-#print axioms Pcf.LocalModel.free
-#print axioms Pcf.LocalModel.finrank_eq
+#print axioms Pcf.LocalModel.adjoinRootBasis_apply
+#print axioms Pcf.LocalModel.free_adjoinRoot
+#print axioms Pcf.LocalModel.finrank_adjoinRoot
 #print axioms Pcf.LocalModel.quotientRootEquiv
 #print axioms Pcf.LocalModel.restrictionMap_bijective
 #print axioms Pcf.LocalModel.root_mem_nonZeroDivisors

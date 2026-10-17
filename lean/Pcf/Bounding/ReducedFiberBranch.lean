@@ -461,7 +461,7 @@ theorem schemeReducedFiberBranch_eq_divDyn_branch
     schemeReducedFiberBranch f =
       (divDynOfFiniteDominantNormal f hcrit).branch := by
   ext E
-  rw [mem_schemeReducedFiberBranch_iff f E, DivDyn.mem_branch_iff]
+  rw [mem_schemeReducedFiberBranch_iff f E, DivisorDynamics.mem_branch_iff]
   constructor
   · rintro ⟨Q, hQE, hram⟩
     exact ⟨Q, Subtype.ext hQE, hram⟩

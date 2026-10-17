@@ -14,8 +14,8 @@ public import Pcf.Stacks.Abhyankar.FiniteNormalization
 
 The compact notions of `Pcf.Palomar.Statement` agree with the development's:
 
-* `isPCF_iff_divDyn_PCF`: `IsPCF` of a finite dominant endomorphism of a normal Noetherian
-  integral scheme is `DivDyn.PCF` of its divisor dynamics;
+* `isPCF_iff_divisorDynamics_isPCF`: `IsPCF` of a finite dominant endomorphism of a normal Noetherian
+  integral scheme is `DivisorDynamics.IsPCF` of its divisor dynamics;
 * `isNormalizationLift_unique` / `isNormalizationLift_lift`: the canonical normalization lift
   `schemeGlobalNormalizationLift f` is the unique `IsNormalizationLift`, so
   `IsNormalizedPCF f ↔ SchemeNormalizedPCFOfFiniteType k s f`;
@@ -60,7 +60,7 @@ theorem endPow_apply {X : Scheme.{u}} (f : X ⟶ X) (n : ℕ) (x : X) :
 
 /-! ## Post-critical finiteness -/
 
-theorem divDyn_step_iterate_val {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
+theorem divisorDynamics_step_iterate_val {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))] (n : ℕ) (x : SchemeDivisorPoint X) :
     ((divDynOfFiniteDominantNormalCharZero f).step^[n] x).1 = (⇑f)^[n] x.1 := by
@@ -71,24 +71,24 @@ theorem divDyn_step_iterate_val {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsD
       rfl
 
 /-- `IsPCF` is the post-critical finiteness of the development's divisor dynamics. -/
-theorem isPCF_iff_divDyn_PCF {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
+theorem isPCF_iff_divisorDynamics_isPCF {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))] :
-    IsPCF f ↔ (divDynOfFiniteDominantNormalCharZero f).PCF := by
+    IsPCF f ↔ (divDynOfFiniteDominantNormalCharZero f).IsPCF := by
   let D := divDynOfFiniteDominantNormalCharZero f
-  have himage : Subtype.val '' D.pcSet = postcriticalSet f := by
+  have himage : Subtype.val '' D.postcriticalSet = postcriticalSet f := by
     ext y
     constructor
     · rintro ⟨Q, hQ, rfl⟩
-      obtain ⟨n, R, ⟨Q', hQ'R, hram⟩, hRQ⟩ := D.mem_pcSet_iff.mp hQ
+      obtain ⟨n, R, ⟨Q', hQ'R, hram⟩, hRQ⟩ := D.mem_postcriticalSet_iff.mp hQ
       refine ⟨Q'.1, Q'.2, hram, n, ?_⟩
-      rw [← hRQ, ← hQ'R, ← Function.iterate_succ_apply, divDyn_step_iterate_val]
+      rw [← hRQ, ← hQ'R, ← Function.iterate_succ_apply, divisorDynamics_step_iterate_val]
     · rintro ⟨x, hx, hram, n, rfl⟩
       let Q' : SchemeDivisorPoint X := ⟨x, hx⟩
-      refine ⟨D.step^[n] (D.step Q'), D.mem_pcSet_iff.mpr ⟨n, D.step Q', ⟨Q', rfl, hram⟩, rfl⟩,
+      refine ⟨D.step^[n] (D.step Q'), D.mem_postcriticalSet_iff.mpr ⟨n, D.step Q', ⟨Q', rfl, hram⟩, rfl⟩,
         ?_⟩
-      rw [← Function.iterate_succ_apply, divDyn_step_iterate_val]
-  unfold IsPCF DivDyn.PCF
+      rw [← Function.iterate_succ_apply, divisorDynamics_step_iterate_val]
+  unfold IsPCF DivisorDynamics.IsPCF
   rw [← himage]
   exact Set.finite_image_iff Subtype.val_injective.injOn
 
@@ -145,7 +145,7 @@ theorem isNormalizedPCF_iff_scheme (k : Type u) [Field k] [CharZero k]
   rw [isNormalizedPCF_iff_lift, schemeNormalizedPCFOfFiniteType_iff_lift]
   letI := schemeGlobalNormalizationMap_isFinite X k s
   letI := schemeStalkCharZeroOfField k s (genericPoint X)
-  exact isPCF_iff_divDyn_PCF _
+  exact isPCF_iff_divisorDynamics_isPCF _
 
 /-! ## Restrictions to point closures -/
 

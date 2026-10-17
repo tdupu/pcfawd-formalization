@@ -351,7 +351,7 @@ def schemeGlobalNormalizationRamifiedCover
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f) :
-    DivDyn.RamifiedCover (schemeGlobalNormalizationUnnormDyn k f).norm
+    DivisorDynamics.RamifiedCover (schemeGlobalNormalizationUnnormDyn k f).norm
       (schemeGlobalNormalizationUnnormDyn k g).norm := by
   letI := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType X k
   letI := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType Y k

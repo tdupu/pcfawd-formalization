@@ -28,7 +28,7 @@ This uses the ramification presentation in `def:crit-branch`.  The theorem
 `schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch` identifies
 it with the reduced scheme-theoretic fiber presentation on the normalization.
 
-The unnormalized loci `branch0` and `branch1` remain distinct: their PCF
+The unnormalized loci `nonUnramifiedBranch` and `nonEtaleBranch` remain distinct: their PCF
 conditions imply this normalized PCF condition, but the converse is not
 asserted and is false in general (`ex:pinched`).
 -/
@@ -39,16 +39,16 @@ universe u v
 
 namespace Pcf
 
-namespace NormalizationUnnormDyn
+namespace NormalizationUnnormalizedDynamics
 
-variable {PN : Type u} {PU : Type v} (D : NormalizationUnnormDyn PN PU)
+variable {PN : Type u} {PU : Type v} (D : NormalizationUnnormalizedDynamics PN PU)
 
 /-- The normalized critical locus on the downstairs divisor carrier
 (`def:crit-branch`). Ramification is measured only upstairs. -/
-def crit : Set PU := D.normalization '' {Q | 1 < D.norm.ram Q}
+def crit : Set PU := D.normalization '' {Q | 1 < D.normalized.ramificationIdx Q}
 
 /-- The normalized branch locus is the downstairs image of the normalized
-critical locus. It is distinct from the unnormalized locus `branch0`. -/
+critical locus. It is distinct from the unnormalized locus `nonUnramifiedBranch`. -/
 def branch : Set PU := D.step '' D.crit
 
 /-- The normalized postcritical set, defined using downstairs forward orbits
@@ -60,17 +60,17 @@ def PCF : Prop := D.pcSet.Finite
 
 /-- The commuting normalization square gives `eq:branch-normalization`. -/
 theorem branch_eq_normalization_image :
-    D.branch = D.normalization '' D.norm.branch := by
+    D.branch = D.normalization '' D.normalized.branch := by
   ext Q
   constructor
   · rintro ⟨_, ⟨R, hR, rfl⟩, rfl⟩
-    exact ⟨D.norm.step R, ⟨R, rfl, hR⟩, D.normalization_step R⟩
+    exact ⟨D.normalized.step R, ⟨R, rfl, hR⟩, D.normalization_step R⟩
   · rintro ⟨_, ⟨R, rfl, hR⟩, rfl⟩
     exact ⟨D.normalization R, ⟨R, hR, rfl⟩, (D.normalization_step R).symm⟩
 
 theorem branch_finite : D.branch.Finite := by
   rw [D.branch_eq_normalization_image]
-  exact D.norm.branch_finite.image _
+  exact D.normalized.branch_finite.image _
 
 theorem mem_pcSet_iff {Q : PU} :
     Q ∈ D.pcSet ↔ ∃ n, ∃ R ∈ D.branch, D.step^[n] R = Q := by
@@ -79,17 +79,17 @@ theorem mem_pcSet_iff {Q : PU} :
 /-- The set equality in `lem:normalization`. Both postcritical sets are
 defined by their own forward orbits; normalization intertwines those orbits. -/
 theorem pcSet_eq_normalization_image :
-    D.pcSet = D.normalization '' D.norm.pcSet := by
+    D.pcSet = D.normalization '' D.normalized.postcriticalSet := by
   ext Q
   constructor
   · intro hQ
     obtain ⟨n, R, hR, hRQ⟩ := D.mem_pcSet_iff.mp hQ
     rw [D.branch_eq_normalization_image] at hR
     obtain ⟨S, hS, rfl⟩ := hR
-    refine ⟨D.norm.step^[n] S, D.norm.mem_pcSet_iff.mpr ⟨n, S, hS, rfl⟩, ?_⟩
+    refine ⟨D.normalized.step^[n] S, D.normalized.mem_postcriticalSet_iff.mpr ⟨n, S, hS, rfl⟩, ?_⟩
     rw [D.normalization_iterate, hRQ]
   · rintro ⟨R, hR, rfl⟩
-    obtain ⟨n, S, hS, hSR⟩ := D.norm.mem_pcSet_iff.mp hR
+    obtain ⟨n, S, hS, hSR⟩ := D.normalized.mem_postcriticalSet_iff.mp hR
     refine D.mem_pcSet_iff.mpr ⟨n, D.normalization S, ?_, ?_⟩
     · rw [D.branch_eq_normalization_image]
       exact ⟨S, hS, rfl⟩
@@ -97,7 +97,7 @@ theorem pcSet_eq_normalization_image :
 
 /-- The two-way PCF assertion of `lem:normalization`. The reverse implication
 uses finite fibers, without injectivity or an identification of the carriers. -/
-theorem pcf_iff_norm_pcf : D.PCF ↔ D.norm.PCF := by
+theorem pcf_iff_norm_pcf : D.PCF ↔ D.normalized.IsPCF := by
   constructor
   · intro h
     have hpre : (D.normalization ⁻¹' D.pcSet).Finite :=
@@ -112,20 +112,20 @@ theorem pcf_iff_norm_pcf : D.PCF ↔ D.norm.PCF := by
     exact h.image _
 
 /-- The normalized branch locus lies in the unnormalized branch-0 locus. -/
-theorem branch_subset_branch0 : D.branch ⊆ D.branch0 1 := by
+theorem branch_subset_branch0 : D.branch ⊆ D.nonUnramifiedBranch 1 := by
   rw [D.branch_eq_normalization_image]
-  exact D.normalization_image_branch_subset_branch0
+  exact D.normalization_image_branch_subset_nonUnramifiedBranch
 
 /-- The normalized postcritical set lies in the unnormalized one. -/
-theorem pcSet_subset_pcSet0 : D.pcSet ⊆ D.pcSet0 := by
+theorem pcSet_subset_pcSet0 : D.pcSet ⊆ D.nonUnramifiedPostcriticalSet := by
   rw [D.pcSet_eq_normalization_image]
-  exact D.normalization_image_pcSet_subset_pcSet0
+  exact D.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet
 
-theorem pcf_of_pcf0 (h : D.PCF0) : D.PCF := h.subset D.pcSet_subset_pcSet0
+theorem pcf_of_pcf0 (h : D.IsNonUnramifiedBranchPCF) : D.PCF := h.subset D.pcSet_subset_pcSet0
 
-theorem pcf_of_pcf1 (h : D.PCF1) : D.PCF := D.pcf_of_pcf0 (D.pcf0_of_pcf1 h)
+theorem pcf_of_pcf1 (h : D.IsNonEtaleBranchPCF) : D.PCF := D.pcf_of_pcf0 (D.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF h)
 
-end NormalizationUnnormDyn
+end NormalizationUnnormalizedDynamics
 
 open CategoryTheory _root_.AlgebraicGeometry TopologicalSpace
 
@@ -134,24 +134,24 @@ namespace SchemeNormalizationUnnormDyn
 variable {A : Scheme.{u}} {PN : Type v} (D : SchemeNormalizationUnnormDyn A PN)
 
 /-- The normalized branch locus for the actual downstairs map. -/
-def branch : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormDyn.branch
+def branch : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormalizedDynamics.branch
 
 /-- The normalized postcritical set for the actual downstairs map. -/
-def pcSet : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormDyn.pcSet
+def pcSet : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormalizedDynamics.pcSet
 
 /-- PCF for the normalized branch locus of the actual downstairs map. -/
 def PCF : Prop := D.pcSet.Finite
 
 theorem branch_eq_normalization_image :
     D.branch = D.normalization '' D.norm.branch :=
-  D.toNormalizationUnnormDyn.branch_eq_normalization_image
+  D.toNormalizationUnnormalizedDynamics.branch_eq_normalization_image
 
 theorem pcSet_eq_normalization_image :
-    D.pcSet = D.normalization '' D.norm.pcSet :=
-  D.toNormalizationUnnormDyn.pcSet_eq_normalization_image
+    D.pcSet = D.normalization '' D.norm.postcriticalSet :=
+  D.toNormalizationUnnormalizedDynamics.pcSet_eq_normalization_image
 
-theorem pcf_iff_norm_pcf : D.PCF ↔ D.norm.PCF :=
-  D.toNormalizationUnnormDyn.pcf_iff_norm_pcf
+theorem pcf_iff_norm_pcf : D.PCF ↔ D.norm.IsPCF :=
+  D.toNormalizationUnnormalizedDynamics.pcf_iff_norm_pcf
 
 end SchemeNormalizationUnnormDyn
 
@@ -200,7 +200,7 @@ theorem schemeNormalizedPcSet_eq_iUnion :
 /-- The upstairs ramification is computed from the actual lifted stalk map. -/
 @[simp] theorem schemeGlobalNormalizationUnnormDyn_norm_ram
     (Q : SchemeDivisorPoint (schemeGlobalNormalization A)) :
-    (schemeGlobalNormalizationUnnormDyn k g).norm.ram Q =
+    (schemeGlobalNormalizationUnnormDyn k g).norm.ramificationIdx Q =
       schemeDivisorRam (schemeGlobalNormalizationLift g) Q := rfl
 
 theorem schemeNormalizedBranch_eq_normalization_image :
@@ -223,7 +223,7 @@ theorem schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch :
   rw [schemeNormalizedBranch_eq_normalization_image]
   congr 1
   ext E
-  rw [DivDyn.mem_branch_iff,
+  rw [DivisorDynamics.mem_branch_iff,
     mem_schemeReducedFiberBranch_iff (schemeGlobalNormalizationLift g) E]
   constructor
   · rintro ⟨Q, hQE, hram⟩
@@ -278,35 +278,35 @@ normalization and actual lifted ramification dynamics. -/
 theorem schemeNormalizedPcSet_eq_normalization_image :
     schemeNormalizedPcSet k g =
       (schemeGlobalNormalizationUnnormDyn k g).normalization ''
-        (schemeGlobalNormalizationUnnormDyn k g).norm.pcSet :=
+        (schemeGlobalNormalizationUnnormDyn k g).norm.postcriticalSet :=
   (schemeGlobalNormalizationUnnormDyn k g).pcSet_eq_normalization_image
 
 /-- `lem:normalization`, PCF equivalence, for the actual canonical normalization.
 All geometric comparison and finite-fiber inputs are supplied by the global
 normalization construction; none is an additional theorem hypothesis. -/
 theorem schemeNormalizedPCF_iff_normalization :
-    SchemeNormalizedPCF k g ↔ (schemeGlobalNormalizationUnnormDyn k g).norm.PCF :=
+    SchemeNormalizedPCF k g ↔ (schemeGlobalNormalizationUnnormDyn k g).norm.IsPCF :=
   (schemeGlobalNormalizationUnnormDyn k g).pcf_iff_norm_pcf
 
 end GlobalNormalization
 
-#check @NormalizationUnnormDyn.pcSet_eq_normalization_image
-#check @NormalizationUnnormDyn.pcf_iff_norm_pcf
+#check @NormalizationUnnormalizedDynamics.pcSet_eq_normalization_image
+#check @NormalizationUnnormalizedDynamics.pcf_iff_norm_pcf
 #check @schemeNormalizedPcSet_eq_normalization_image
 #check @schemeNormalizedPCF_iff_normalization
-#print axioms NormalizationUnnormDyn.crit
-#print axioms NormalizationUnnormDyn.branch
-#print axioms NormalizationUnnormDyn.pcSet
-#print axioms NormalizationUnnormDyn.PCF
-#print axioms NormalizationUnnormDyn.branch_eq_normalization_image
-#print axioms NormalizationUnnormDyn.branch_finite
-#print axioms NormalizationUnnormDyn.mem_pcSet_iff
-#print axioms NormalizationUnnormDyn.pcSet_eq_normalization_image
-#print axioms NormalizationUnnormDyn.pcf_iff_norm_pcf
-#print axioms NormalizationUnnormDyn.branch_subset_branch0
-#print axioms NormalizationUnnormDyn.pcSet_subset_pcSet0
-#print axioms NormalizationUnnormDyn.pcf_of_pcf0
-#print axioms NormalizationUnnormDyn.pcf_of_pcf1
+#print axioms NormalizationUnnormalizedDynamics.crit
+#print axioms NormalizationUnnormalizedDynamics.branch
+#print axioms NormalizationUnnormalizedDynamics.pcSet
+#print axioms NormalizationUnnormalizedDynamics.PCF
+#print axioms NormalizationUnnormalizedDynamics.branch_eq_normalization_image
+#print axioms NormalizationUnnormalizedDynamics.branch_finite
+#print axioms NormalizationUnnormalizedDynamics.mem_pcSet_iff
+#print axioms NormalizationUnnormalizedDynamics.pcSet_eq_normalization_image
+#print axioms NormalizationUnnormalizedDynamics.pcf_iff_norm_pcf
+#print axioms NormalizationUnnormalizedDynamics.branch_subset_branch0
+#print axioms NormalizationUnnormalizedDynamics.pcSet_subset_pcSet0
+#print axioms NormalizationUnnormalizedDynamics.pcf_of_pcf0
+#print axioms NormalizationUnnormalizedDynamics.pcf_of_pcf1
 #print axioms SchemeNormalizationUnnormDyn.branch
 #print axioms SchemeNormalizationUnnormDyn.pcSet
 #print axioms SchemeNormalizationUnnormDyn.PCF

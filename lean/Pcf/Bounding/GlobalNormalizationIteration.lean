@@ -98,7 +98,7 @@ theorem schemeGlobalNormalizationUnnormDyn_norm_eq
 abstract iterate, with its actual stalk ramification indices. -/
 theorem schemeGlobalNormalizationUnnormDyn_norm_pow (m : ℕ) :
     (schemeGlobalNormalizationUnnormDyn k (End.of f ^ m).asHom).norm =
-      ((schemeGlobalNormalizationUnnormDyn k f).norm).iter m := by
+      ((schemeGlobalNormalizationUnnormDyn k f).norm).iterate m := by
   let := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType X k
   rw [schemeGlobalNormalizationUnnormDyn_norm_eq,
     schemeGlobalNormalizationUnnormDyn_norm_eq]
@@ -111,8 +111,8 @@ theorem schemeNormalizedPcSet_pow (m : ℕ) (hm : 1 ≤ m) :
     schemeNormalizedPcSet k (End.of f ^ m).asHom = schemeNormalizedPcSet k f := by
   rw [schemeNormalizedPcSet_eq_normalization_image,
     schemeNormalizedPcSet_eq_normalization_image,
-    schemeGlobalNormalizationUnnormDyn_norm_pow, DivDyn.pcSet_iter _ hm]
-  exact congrArg (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormDyn k f).norm.pcSet)
+    schemeGlobalNormalizationUnnormDyn_norm_pow, DivisorDynamics.postcriticalSet_iterate _ hm]
+  exact congrArg (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormDyn k f).norm.postcriticalSet)
     (funext fun Q ↦ Subtype.ext (by
       simp only [schemeGlobalNormalizationUnnormDyn_normalization_val]))
 

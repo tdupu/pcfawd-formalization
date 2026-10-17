@@ -200,11 +200,11 @@ standard logical axioms of Lean and Mathlib. That is *not* a claim that the
 development assumes nothing. The assumed mathematics of the manuscript
 (Theorem `thm:bounding`, finiteness of the branch divisor, lying over, and the
 scheme-theoretic meaning of "prime" and "ramification index") is carried in
-*fields* of `Pcf.DivDyn` and `Pcf.PcfSetup` — that is, in hypotheses — and
+*fields* of `Pcf.DivisorDynamics` and `Pcf.PCFSetup` — that is, in hypotheses — and
 hypotheses are invisible to `#print axioms` by construction.
 
 `Pcf.Examples.diagonalSquaring`'s `key` field is proved rather than assumed, so
-`Pcf.Examples.diagonalSquaring_res_pcf` witnesses that `Pcf.PcfSetup.res_pcf` is
+`Pcf.Examples.diagonalSquaring_restriction_isPCF` witnesses that `Pcf.PCFSetup.restriction_isPCF` is
 not vacuous. On the chart route (`Pcf/Bounding/`), `key1` is a theorem derived from
 Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
 -/
@@ -220,46 +220,46 @@ ramification for preimage fields of post-critically finite morphisms*, Math. Res
 **24** (2017), 1633–1647, `arXiv:1511.00194`. Both paragraphs are proved here, in the
 abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 
-#print axioms Pcf.pcf_periodic_prime
-#print axioms Pcf.pcf_all_the_way_down
-#print axioms Pcf.pcSet_finite_all_the_way_down
+#print axioms Pcf.isPCF_restriction_of_periodic
+#print axioms Pcf.pcfAllTheWayDown_divisorDynamics
+#print axioms Pcf.postcriticalSet_finite_allTheWayDown
 
 /-! ## §`sec:defs`–§`sec:prelim`: divisorial dynamics -/
 
-#print axioms Pcf.DivDyn.IsChain.extend
-#print axioms Pcf.DivDyn.exists_isChain_iff
-#print axioms Pcf.DivDyn.iterRam_add
-#print axioms Pcf.DivDyn.mem_branch_iter_iff
-#print axioms Pcf.DivDyn.mem_branch_iter_succ
-#print axioms Pcf.DivDyn.pcSet_iter
-#print axioms Pcf.DivDyn.pcf_iter_iff
-#print axioms Pcf.DivDyn.pcf_iff_forall_orbit_finite
-#print axioms Pcf.DivDyn.pcf_of_finite_cover
+#print axioms Pcf.DivisorDynamics.IsChain.extend
+#print axioms Pcf.DivisorDynamics.exists_isChain_iff
+#print axioms Pcf.DivisorDynamics.iterateRamificationIdx_add
+#print axioms Pcf.DivisorDynamics.mem_branch_iterate_iff
+#print axioms Pcf.DivisorDynamics.mem_branch_iterate_succ
+#print axioms Pcf.DivisorDynamics.postcriticalSet_iterate
+#print axioms Pcf.DivisorDynamics.isPCF_iterate_iff
+#print axioms Pcf.DivisorDynamics.isPCF_iff_forall_orbit_finite
+#print axioms Pcf.DivisorDynamics.isPCF_of_finite_cover
 
 /-! ## §`sec:main`: Theorem `thm:normal-invariant` and its corollaries -/
 
-#print axioms Pcf.PcfSetup.branch_iter_subset_bound
-#print axioms Pcf.PcfSetup.res_pcf
-#print axioms Pcf.PcfSetup.res_pcf_of_iter
-#print axioms Pcf.PcfSetup.normalization_pcf
-#print axioms Pcf.pcf_descent
+#print axioms Pcf.PCFSetup.branch_iterate_subset_bound
+#print axioms Pcf.PCFSetup.restriction_isPCF
+#print axioms Pcf.PCFSetup.restriction_isPCF_of_iterate
+#print axioms Pcf.PCFSetup.normalization_isPCF
+#print axioms Pcf.isPCF_of_isPCF_restriction
 
 /-! ## §`sec:bounding` Step 3: the standard tame local model -/
 
 #print axioms Pcf.LocalModel.localPoly_monic
-#print axioms Pcf.LocalModel.free
+#print axioms Pcf.LocalModel.free_adjoinRoot
 #print axioms Pcf.LocalModel.quotientRootEquiv
 #print axioms Pcf.LocalModel.root_mem_nonZeroDivisors
 
 /-! ## §`sec:bounding`: the finiteness engine and Zariski–Nagata purity -/
 
-#print axioms Pcf.IsPrime.not_subset_sUnion
-#print axioms Pcf.IsPrime.inter_sUnion_ne_self
+#print axioms Pcf.IsProperIrreducibleClosed.not_subset_sUnion
+#print axioms Pcf.IsProperIrreducibleClosed.inter_sUnion_ne_self
 #print axioms Pcf.not_subset_of_two_le_codim
-#print axioms Pcf.finite_isPrime_subset
+#print axioms Pcf.finite_isProperIrreducibleClosed_subset
 #print axioms Pcf.PurityData.notMem_nonEtale_of_specializes
 #print axioms Pcf.PurityData.codim_eq_one
-#print axioms Pcf.PurityData.finite_isPrime_subset_nonEtale
+#print axioms Pcf.PurityData.finite_isProperIrreducibleClosed_subset_nonEtale
 
 /-! ## §`sec:bounding`: Theorem `thm:bounding` -/
 
@@ -269,19 +269,19 @@ abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 #print axioms Pcf.nonempty_unramifiedWitness_iff
 #print axioms Pcf.UnramifiedWitness.eq_one
 #print axioms Pcf.LocalModel.unramifiedWitness
-#print axioms Pcf.Prop41Data.finite_bound
-#print axioms Pcf.Prop41Data.finite_sing_subtype
-#print axioms Pcf.Prop41Data.finite_meets_subtype
+#print axioms Pcf.BoundingCorrectionLoci.finite_bound
+#print axioms Pcf.BoundingCorrectionLoci.finite_sing_subtype
+#print axioms Pcf.BoundingCorrectionLoci.finite_meets_subtype
 
 /-! ## §`sec:bounding`→§`sec:main`: the join -/
 
 #print axioms Pcf.UnramifiedWitness.trivial
-#print axioms Pcf.divDynOfGeometry
-#print axioms Pcf.PcfGeometry.sing_finite
-#print axioms Pcf.PcfGeometry.meets_finite
-#print axioms Pcf.PcfGeometry.toPcfSetup
-#print axioms Pcf.PcfGeometry.res_pcf
-#print axioms Pcf.PcfGeometry.res_pcf_of_iter
+#print axioms Pcf.divisorDynamicsOfGeometry
+#print axioms Pcf.PCFGeometry.singularPrimes_finite
+#print axioms Pcf.PCFGeometry.meets_finite
+#print axioms Pcf.PCFGeometry.toPCFSetup
+#print axioms Pcf.PCFGeometry.restriction_isPCF
+#print axioms Pcf.PCFGeometry.restriction_isPCF_of_iterate
 
 /-! ## §`sec:bounding`: Theorem `thm:bounding` **derived** from purity and Abhyankar's lemma
 
@@ -892,7 +892,7 @@ hypotheses. -/
 #print axioms Pcf.exists_periodic_point_of_finite_nonempty
 #print axioms Pcf.exists_periodic_lift_of_finite_fiber
 #print axioms Pcf.exists_periodic_lift_of_surjective_finite_fibers
-#print axioms Pcf.NormalizationUnnormDyn.exists_periodic_lift
+#print axioms Pcf.NormalizationUnnormalizedDynamics.exists_periodic_lift
 #print axioms Pcf.exists_periodic_normalization_divisor
 #print axioms Pcf.heightOneUnder_surjective
 #print axioms Pcf.finite_heightOneUnder_fiber
@@ -1119,7 +1119,7 @@ hypotheses. -/
 #print axioms Pcf.SchemeNormalizationUnnormDyn.crit1_tower
 #print axioms Pcf.SchemeNormalizationUnnormDyn.finite_iterate
 #print axioms Pcf.SchemeNormalizationUnnormDyn.finitePresentation_iterate
-#print axioms Pcf.SchemeNormalizationUnnormDyn.toNormalizationUnnormDyn
+#print axioms Pcf.SchemeNormalizationUnnormDyn.toNormalizationUnnormalizedDynamics
 #print axioms Pcf.ramificationIdx_pos_of_quasiFinite
 #print axioms Pcf.SchemeDivisorPoint.stalk_isDiscreteValuationRing
 #print axioms Pcf.stalkMap_injective_of_dominant_integral
@@ -1137,7 +1137,7 @@ hypotheses. -/
 #print axioms Pcf.divDynOfFiniteDominantNormalCharZero
 #print axioms Pcf.divDynOfFiniteDominantNormal_iterate_step_val
 #print axioms Pcf.divDynOfFiniteDominantNormal_iterRam
-#print axioms Pcf.DivDyn.ext_of_step_ram
+#print axioms Pcf.DivisorDynamics.ext_of_step_ram
 #print axioms Pcf.divDynOfFiniteDominantNormal_pow_eq_iter
 #print axioms Pcf.divDynOfFiniteDominantNormalCharZero_pow_eq_iter
 #print axioms Pcf.divDynOfFiniteNormalization
@@ -1207,25 +1207,25 @@ hypotheses. -/
 #print axioms Pcf.BoundingChart.affineCrit1_restriction_eq_empty
 #print axioms Pcf.BoundingChart.not_mem_affineCrit1_restriction
 #print axioms Pcf.PcfSetupChart.key1
-#print axioms Pcf.PcfSetupChart.toPcfSetup1
+#print axioms Pcf.PcfSetupChart.toNonEtalePCFSetup
 #print axioms Pcf.PcfSetupChart.res_pcf1
 #print axioms Pcf.PcfSetupChart.res_pcf
 #print axioms Pcf.PcfSetupChart.res_pcf1_of_iter
 
 /-! ## §`sec:examples`: Examples `ex:squaring` and `ex:squaring-P2`, and the non-vacuity witness -/
 
-#print axioms Pcf.Examples.squaringP1_branch
-#print axioms Pcf.Examples.squaringP1_pcf
-#print axioms Pcf.Examples.squaringP1_branch_iter
+#print axioms Pcf.Examples.squaringProjectiveLine_branch
+#print axioms Pcf.Examples.squaringProjectiveLine_isPCF
+#print axioms Pcf.Examples.squaringProjectiveLine_branch_iterate
 #print axioms Pcf.Examples.diagonalSquaring_bound
-#print axioms Pcf.Examples.diagonalSquaring_res_pcf
+#print axioms Pcf.Examples.diagonalSquaring_restriction_isPCF
 
 /-! ## §`sec:bounding`: Examples `ex:cusp` and `ex:branch-singular` -/
 
 #print axioms Pcf.Examples.Cusp.cuspParam
 #print axioms Pcf.Examples.Cusp.jacobian_cuspSource
 #print axioms Pcf.Examples.Cusp.mem_cuspAlg_iff
-#print axioms Pcf.Examples.Cusp.X_not_mem_cuspAlg
+#print axioms Pcf.Examples.Cusp.X_notMem_cuspAlg
 #print axioms Pcf.Examples.Cusp.isFractionRing_cuspAlg
 #print axioms Pcf.Examples.Cusp.isIntegralClosure_cuspAlg
 #print axioms Pcf.Examples.Cusp.integralClosure_cuspAlg_eq_top
@@ -1235,40 +1235,40 @@ hypotheses. -/
 
 /-! ## The join is inhabited with genuine ramification -/
 
-#print axioms Pcf.Examples.isPrime_iff_singleton
-#print axioms Pcf.Examples.noetherianSpace_cofNat
+#print axioms Pcf.Examples.isProperIrreducibleClosed_iff_singleton
+#print axioms Pcf.Examples.noetherianSpace_cofiniteNat
 #print axioms Pcf.Examples.cofiniteGeometry
-#print axioms Pcf.Examples.resDyn_branch
-#print axioms Pcf.Examples.resDyn_pcf
+#print axioms Pcf.Examples.restrictionDynamics_branch
+#print axioms Pcf.Examples.restrictionDynamics_isPCF
 
-/-! ## `branch_finite'` fully discharged on `Spec S`
+/-! ## `step_image_ramified_finite` fully discharged on `Spec S`
 
-`Pcf.divDynOfSpectrum` builds a `Pcf.DivDyn` assuming only lying over and generic
+`Pcf.divisorDynamicsOfSpectrum` builds a `Pcf.DivisorDynamics` assuming only lying over and generic
 étaleness: `ram`, `ram_pos` and the ramified-implies-non-étale compatibility are all
 theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input — is needed. -/
 
 #print axioms Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx
 #print axioms Pcf.ramificationIdx_eq_one_of_notMem_nonEtaleLocus
-#print axioms Pcf.specRam
-#print axioms Pcf.specRam_pos
-#print axioms Pcf.subset_nonEtaleLocus_of_one_lt_specRam
+#print axioms Pcf.primeSpectrumRamificationIdx
+#print axioms Pcf.primeSpectrumRamificationIdx_pos
+#print axioms Pcf.subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx
 #print axioms Pcf.finite_ramified
 #print axioms Pcf.comap_surjective_of_isIntegral_of_injective
-#print axioms Pcf.specStep_surjective
-#print axioms Pcf.divDynOfSpectrum
+#print axioms Pcf.primeSpectrumSelfMap_surjective
+#print axioms Pcf.divisorDynamicsOfSpectrum
 
 /-! ## The purity layer wired into Theorem `thm:normal-invariant`
 
-`branch_finite'` for the restricted system is no longer a field on this route. -/
+`step_image_ramified_finite` for the restricted system is no longer a field on this route. -/
 
-#print axioms Pcf.resDivDynOfPurity
-#print axioms Pcf.resDivDynOfAlgebra
-#print axioms Pcf.PcfGeometry.ofPurityData
-#print axioms Pcf.PcfGeometry.res_pcf_of_purityData
+#print axioms Pcf.restrictionDivisorDynamicsOfPurity
+#print axioms Pcf.restrictionDivisorDynamicsOfAlgebra
+#print axioms Pcf.PCFGeometry.ofPurityData
+#print axioms Pcf.PCFGeometry.restriction_isPCF_of_purityData
 #print axioms Pcf.exists_nonEtale_of_branch_finite
-#print axioms Pcf.Examples.resDynOfPurity
-#print axioms Pcf.Examples.resDynOfPurity_branch
-#print axioms Pcf.Examples.resDynOfPurity_pcf
+#print axioms Pcf.Examples.restrictionDynamicsOfPurity
+#print axioms Pcf.Examples.restrictionDynamicsOfPurity_branch
+#print axioms Pcf.Examples.restrictionDynamicsOfPurity_isPCF
 
 /-! ## Zariski–Nagata purity
 
@@ -1277,17 +1277,17 @@ local form is restated so that it matches Stacks Tag 0BMB rather than exceeding 
 Purity itself is still assumed; see `lean/AXIOMS.md`, entry P1. -/
 
 #print axioms Pcf.isClosed_nonEtaleLocus
-#print axioms Pcf.closure_eq_univ_of_specCodim_eq_zero
+#print axioms Pcf.closure_eq_univ_of_primeSpectrumCodimension_eq_zero
 #print axioms Pcf.nonEtaleLocus_eq_empty_iff
 #print axioms Pcf.purityDataOfAlgebra
 #print axioms Pcf.purityDataOfEtale
 #print axioms Pcf.codim_eq_one_of_algebra
-#print axioms Pcf.finite_isPrime_subset_nonEtaleLocus
-#print axioms Pcf.ZariskiNagata.etale_of_codim_one_etale
-#print axioms Pcf.PurityData.ofZariskiNagata
-#print axioms Pcf.ZariskiNagata.codim_eq_one
-#print axioms Pcf.PurityData.toZariskiNagata
-#print axioms Pcf.PurityData.ofZariskiNagata_toZariskiNagata
+#print axioms Pcf.finite_isProperIrreducibleClosed_subset_nonEtaleLocus
+#print axioms Pcf.AbstractZariskiNagataPurity.etale_of_codim_one_etale
+#print axioms Pcf.PurityData.ofAbstractZariskiNagataPurity
+#print axioms Pcf.AbstractZariskiNagataPurity.codim_eq_one
+#print axioms Pcf.PurityData.toAbstractZariskiNagataPurity
+#print axioms Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity
 #print axioms Pcf.localPurity_of_codim_le_one
 #print axioms Pcf.PurityData.ofCodimLeOne
 
@@ -1297,15 +1297,15 @@ The Kummer-algebra material is correct standalone mathematics. The witness inter
 `Pcf.KummerWitness`/`Pcf.UnramifiedWitness` are retained only as the record of a retracted
 assumption; no field is valued in them. -/
 
-#print axioms Abhyankar.isStandardEtale_adjoinRoot_of_separable
-#print axioms Abhyankar.isStandardEtale
-#print axioms Abhyankar.etale
-#print axioms Abhyankar.ramificationIdx_eq_one
-#print axioms Abhyankar.nontrivial_adjoinRoot
-#print axioms Abhyankar.exists_isPrime
-#print axioms Abhyankar.subst
-#print axioms Abhyankar.substEquiv
-#print axioms Abhyankar.etale_ramifiedPoly
+#print axioms Pcf.Kummer.isStandardEtale_adjoinRoot_of_separable
+#print axioms Pcf.Kummer.isStandardEtale_adjoinRoot_kummerPoly
+#print axioms Pcf.Kummer.etale_adjoinRoot_kummerPoly
+#print axioms Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one
+#print axioms Pcf.Kummer.nontrivial_adjoinRoot_kummerPoly
+#print axioms Pcf.Kummer.exists_isPrime_adjoinRoot_kummerPoly
+#print axioms Pcf.Kummer.localPolyToKummerPoly
+#print axioms Pcf.Kummer.localPolyEquivKummerPoly
+#print axioms Pcf.Kummer.etale_adjoinRoot_localPoly
 #print axioms Pcf.KummerWitness.eq_one
 #print axioms Pcf.KummerWitness.ofKummer
 #print axioms Pcf.KummerWitness.ofTame
@@ -1313,10 +1313,10 @@ assumption; no field is valued in them. -/
 #print axioms Pcf.nonempty_kummerWitness_iff
 #print axioms Pcf.kummerWitness_iff_unramifiedWitness
 #print axioms Pcf.KummerWitness.ofEqOne
-#print axioms Abhyankar.finrank
-#print axioms Abhyankar.etale_ramifiedPoly_general
-#print axioms Abhyankar.not_etale_wild
-#print axioms Abhyankar.not_etale_of_not_isUnit
+#print axioms Pcf.Kummer.finrank_adjoinRoot_kummerPoly
+#print axioms Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit
+#print axioms Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero
+#print axioms Pcf.Kummer.not_etale_of_not_isUnit
 
 /-! ## §`sec:charp`: Example `ex:wild`, the wild counterexample -/
 
@@ -1326,50 +1326,50 @@ assumption; no field is valued in them. -/
 /-! ## Appendix `app:other-defs`: the unnormalized loci, and Theorem `thm:normal-invariant`
 in its `1`-PCF form
 
-`Pcf.UnnormDyn` carries Proposition `prop:loci-compare` and Lemma `lem:tower-unnormalized`
-as *fields* (assumed, see `lean/AXIOMS.md` §B.8); `Pcf.PcfSetup1.key1` is the étale form of
+`Pcf.UnnormalizedDynamics` carries Proposition `prop:loci-compare` and Lemma `lem:tower-unnormalized`
+as *fields* (assumed, see `lean/AXIOMS.md` §B.8); `Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate` is the étale form of
 Theorem `thm:bounding`, also assumed. Everything printed here is proved from those. -/
 
-#print axioms Pcf.UnnormDyn.branch_iter_subset_branch0
-#print axioms Pcf.UnnormDyn.branch_subset_branch0
-#print axioms Pcf.UnnormDyn.branch0_subset_branch1
-#print axioms Pcf.UnnormDyn.branch1_finite
-#print axioms Pcf.UnnormDyn.pcSet_subset_pcSet0
-#print axioms Pcf.UnnormDyn.pcSet0_subset_pcSet1
-#print axioms Pcf.UnnormDyn.pcf0_of_pcf1
-#print axioms Pcf.UnnormDyn.pcf_of_pcf0
-#print axioms Pcf.UnnormDyn.orbit_unnormalized_zero
-#print axioms Pcf.UnnormDyn.orbit_unnormalized_one
-#print axioms Pcf.UnnormDyn.orbit_unnormalized_one'
-#print axioms Pcf.UnnormDyn.pcSet1_subset_of_branch1_subset
-#print axioms Pcf.UnnormDyn.pcf1_of_branch1_subset
-#print axioms Pcf.PcfSetup1.toPcfSetup
-#print axioms Pcf.PcfSetup1.branch1_iter_subset_bound
-#print axioms Pcf.PcfSetup1.res_pcf1
-#print axioms Pcf.PcfSetup1.res_pcf0
-#print axioms Pcf.PcfSetup1.res_pcf
-#print axioms Pcf.PcfSetup1.res_pcf1_of_iter
+#print axioms Pcf.UnnormalizedDynamics.branch_iterate_subset_nonUnramifiedBranch
+#print axioms Pcf.UnnormalizedDynamics.branch_subset_nonUnramifiedBranch
+#print axioms Pcf.UnnormalizedDynamics.nonUnramifiedBranch_subset_nonEtaleBranch
+#print axioms Pcf.UnnormalizedDynamics.nonEtaleBranch_finite
+#print axioms Pcf.UnnormalizedDynamics.postcriticalSet_subset_nonUnramifiedPostcriticalSet
+#print axioms Pcf.UnnormalizedDynamics.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
+#print axioms Pcf.UnnormalizedDynamics.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF
+#print axioms Pcf.UnnormalizedDynamics.isPCF_of_isNonUnramifiedBranchPCF
+#print axioms Pcf.UnnormalizedDynamics.orbit_unnormalized_zero
+#print axioms Pcf.UnnormalizedDynamics.orbit_unnormalized_one
+#print axioms Pcf.UnnormalizedDynamics.orbit_unnormalized_one_of_mem
+#print axioms Pcf.UnnormalizedDynamics.nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset
+#print axioms Pcf.UnnormalizedDynamics.isNonEtaleBranchPCF_of_nonEtaleBranch_subset
+#print axioms Pcf.NonEtalePCFSetup.toPCFSetup
+#print axioms Pcf.NonEtalePCFSetup.nonEtaleBranch_iterate_subset_bound
+#print axioms Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF
+#print axioms Pcf.NonEtalePCFSetup.restriction_isNonUnramifiedBranchPCF
+#print axioms Pcf.NonEtalePCFSetup.restriction_isPCF
+#print axioms Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF_of_iterate
 
 /-! ## Normalized and unnormalized divisor carriers
 
-`Pcf.NormalizationUnnormDyn` keeps divisors on the normalization separate from divisors on
+`Pcf.NormalizationUnnormalizedDynamics` keeps divisors on the normalization separate from divisors on
 the possibly nonnormal scheme.  The PCF transfer below uses finite normalization fibers rather
 than a definitional identification of the two carriers. -/
 
-#print axioms Pcf.NormalizationUnnormDyn.normalization_iterate
-#print axioms Pcf.NormalizationUnnormDyn.normalization_image_branch_iter_subset_branch0
-#print axioms Pcf.NormalizationUnnormDyn.normalization_image_pcSet_subset_pcSet0
-#print axioms Pcf.NormalizationUnnormDyn.pcSet_subset_normalization_preimage_pcSet0
-#print axioms Pcf.NormalizationUnnormDyn.norm_pcf_of_pcf0
-#print axioms Pcf.NormalizationUnnormDyn.norm_pcf_of_pcf1
-#print axioms Pcf.NormalizationUnnormDyn.pcSet1_subset_of_branch1_subset
-#print axioms Pcf.NormalizationUnnormDyn.pcf1_of_branch1_subset
-#print axioms Pcf.NormalizationPcfSetup.branch1_iter_subset_bound
-#print axioms Pcf.NormalizationPcfSetup.res_pcf1
-#print axioms Pcf.NormalizationPcfSetup.norm_pcf
-#print axioms Pcf.NormalizationPcfSetup.norm_pcf_of_iter
+#print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_iterate
+#print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_image_branch_iterate_subset_nonUnramifiedBranch
+#print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet
+#print axioms Pcf.NormalizationUnnormalizedDynamics.postcriticalSet_subset_normalization_preimage_nonUnramifiedPostcriticalSet
+#print axioms Pcf.NormalizationUnnormalizedDynamics.normalized_isPCF_of_isNonUnramifiedBranchPCF
+#print axioms Pcf.NormalizationUnnormalizedDynamics.normalized_isPCF_of_isNonEtaleBranchPCF
+#print axioms Pcf.NormalizationUnnormalizedDynamics.nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset
+#print axioms Pcf.NormalizationUnnormalizedDynamics.isNonEtaleBranchPCF_of_nonEtaleBranch_subset
+#print axioms Pcf.NormalizationPCFSetup.nonEtaleBranch_iterate_subset_bound
+#print axioms Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF
+#print axioms Pcf.NormalizationPCFSetup.normalized_isPCF
+#print axioms Pcf.NormalizationPCFSetup.normalized_isPCF_of_iterate
 #print axioms Pcf.NormalizationPcfSetupChart.key1
-#print axioms Pcf.NormalizationPcfSetupChart.toNormalizationPcfSetup
+#print axioms Pcf.NormalizationPcfSetupChart.toNormalizationPCFSetup
 #print axioms Pcf.NormalizationPcfSetupChart.norm_pcf
 #print axioms Pcf.NormalizationPcfSetupChart.norm_pcf_of_iter
 
@@ -1379,19 +1379,19 @@ The normalized postcritical set is defined downstairs from actual divisor orbits
 identified with the image of the upstairs postcritical set.  Cover descent derives its
 branch identity from actual stalk ramification in the commuting square. -/
 
-#print axioms Pcf.NormalizationUnnormDyn.branch_eq_normalization_image
-#print axioms Pcf.NormalizationUnnormDyn.pcSet_eq_normalization_image
-#print axioms Pcf.NormalizationUnnormDyn.pcf_iff_norm_pcf
+#print axioms Pcf.NormalizationUnnormalizedDynamics.branch_eq_normalization_image
+#print axioms Pcf.NormalizationUnnormalizedDynamics.pcSet_eq_normalization_image
+#print axioms Pcf.NormalizationUnnormalizedDynamics.pcf_iff_norm_pcf
 #print axioms Pcf.SchemeNormalizationUnnormDyn.pcf_iff_norm_pcf
 #print axioms Pcf.schemeNormalizedBranch_eq_normalization_image
 #print axioms Pcf.schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch
 #print axioms Pcf.mem_schemeNormalizedBranch_iff_nonreduced_normalizedFiber
 #print axioms Pcf.schemeNormalizedPcSet_eq_normalization_image
 #print axioms Pcf.schemeNormalizedPCF_iff_normalization
-#print axioms Pcf.DivDyn.pcSet_subset_ramifiedCoverBound
-#print axioms Pcf.DivDyn.pcf_of_ramified_branch_union
-#print axioms Pcf.DivDyn.RamifiedCover.branch_union
-#print axioms Pcf.DivDyn.RamifiedCover.pcf
+#print axioms Pcf.DivisorDynamics.pcSet_subset_ramifiedCoverBound
+#print axioms Pcf.DivisorDynamics.pcf_of_ramified_branch_union
+#print axioms Pcf.DivisorDynamics.RamifiedCover.branch_union
+#print axioms Pcf.DivisorDynamics.RamifiedCover.pcf
 #print axioms Pcf.schemeRamifiedCover
 #print axioms Pcf.scheme_pcf_of_ramified_cover
 #print axioms Pcf.formallyEtale_stalkMap_genericPoint_of_cover_charZero
@@ -2029,11 +2029,11 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 /-! ## Example `ex:pinched`: the pinched plane
 
 Ring-level facts are proved outright. The dynamical statements take `o ∈ crit₀(g)` as a
-hypothesis (`pcSet0_infinite`) or stipulate it (`nodeUnnormDyn`); the fibre-length
+hypothesis (`nonUnramifiedPostcriticalSet_infinite`) or stipulate it (`nodeUnnormalizedDynamics`); the fibre-length
 computation behind it is not formalized. -/
 
-#print axioms Pcf.Examples.Pinched.sqMap_mem
-#print axioms Pcf.Examples.Pinched.sqMap_mem_of_mem
+#print axioms Pcf.Examples.Pinched.squaringMap_mem
+#print axioms Pcf.Examples.Pinched.squaringMap_mem_of_mem
 #print axioms Pcf.Examples.Pinched.w_mem
 #print axioms Pcf.Examples.Pinched.z_sq_mem
 #print axioms Pcf.Examples.Pinched.z_mul_w_sub_one_mem
@@ -2041,22 +2041,22 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Examples.Pinched.exists_reduce
 #print axioms Pcf.Examples.Pinched.glueIdeal_le_adjoin
 #print axioms Pcf.Examples.Pinched.sub_C_mem_glueIdeal
-#print axioms Pcf.Examples.Pinched.adjoin_gens_eq
+#print axioms Pcf.Examples.Pinched.adjoin_pinchedGenerators_eq
 #print axioms Pcf.Examples.Pinched.comp_sq_mem
-#print axioms Pcf.Examples.Pinched.sqOrbit_eq
-#print axioms Pcf.Examples.Pinched.sqOrbit_injective
-#print axioms Pcf.Examples.Pinched.sqStep_surjective
-#print axioms Pcf.Examples.Pinched.nodeDivDyn
-#print axioms Pcf.Examples.Pinched.nodeDivDyn_branch
-#print axioms Pcf.Examples.Pinched.nodeDivDyn_pcSet
-#print axioms Pcf.Examples.Pinched.nodeDivDyn_pcf
-#print axioms Pcf.Examples.Pinched.pt_four_pow_injective
-#print axioms Pcf.Examples.Pinched.pcSet0_infinite
-#print axioms Pcf.Examples.Pinched.pcSet1_infinite
-#print axioms Pcf.Examples.Pinched.nodeUnnormDyn
-#print axioms Pcf.Examples.Pinched.nodeUnnormDyn_not_pcf0
-#print axioms Pcf.Examples.Pinched.nodeUnnormDyn_not_pcf1
-#print axioms Pcf.Examples.Pinched.nodeUnnormDyn_pcf
+#print axioms Pcf.Examples.Pinched.squaringOrbit_eq
+#print axioms Pcf.Examples.Pinched.squaringOrbit_injective
+#print axioms Pcf.Examples.Pinched.squaringStep_surjective
+#print axioms Pcf.Examples.Pinched.nodeDivisorDynamics
+#print axioms Pcf.Examples.Pinched.nodeDivisorDynamics_branch
+#print axioms Pcf.Examples.Pinched.nodeDivisorDynamics_postcriticalSet
+#print axioms Pcf.Examples.Pinched.nodeDivisorDynamics_isPCF
+#print axioms Pcf.Examples.Pinched.point_four_pow_injective
+#print axioms Pcf.Examples.Pinched.nonUnramifiedPostcriticalSet_infinite
+#print axioms Pcf.Examples.Pinched.nonEtalePostcriticalSet_infinite
+#print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics
+#print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF
+#print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF
+#print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_isPCF
 
 
 -- shared lemmas (formerly Pcf.Stacks.Abhyankar.Tame.ComponentClassification), now in

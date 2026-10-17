@@ -15,7 +15,7 @@ postcritical set by `π '' PC(g) ∪ Branch(π)`.  The first theorem isolates ex
 the one-step branch inclusion needed for this argument; it does not assume an
 orbit bound or the PCF conclusion.
 
-`DivDyn.RamifiedCover` records positive ramification indices for the cover,
+`DivisorDynamics.RamifiedCover` records positive ramification indices for the cover,
 finite fibres, surjectivity, the commuting square, and multiplicativity of
 ramification around that square.  The branch identity is proved from these
 data, rather than supplied as a field.  The scheme constructor obtains this
@@ -33,33 +33,33 @@ universe u v
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 namespace Pcf
-namespace DivDyn
+namespace DivisorDynamics
 
-variable {P : Type u} {Q : Type v} (D : DivDyn P) (E : DivDyn Q)
+variable {P : Type u} {Q : Type v} (D : DivisorDynamics P) (E : DivisorDynamics Q)
 
 /-- The finite invariant set in the proof of `lem:covers`. -/
-def ramifiedCoverBound (π : Q → P) (C : Set P) : Set P := π '' E.pcSet ∪ C
+def ramifiedCoverBound (π : Q → P) (C : Set P) : Set P := π '' E.postcriticalSet ∪ C
 
 /-- The one-step branch inclusion and semiconjugacy imply the manuscript's
 postcritical-set bound.  Finite fibres are unnecessary in this direction. -/
 theorem pcSet_subset_ramifiedCoverBound (π : Q → P) (C : Set P)
     (hcomm : ∀ q, π (E.step q) = D.step (π q))
     (hbranch : D.branch ∪ D.step '' C ⊆ C ∪ π '' E.branch) :
-    D.pcSet ⊆ E.ramifiedCoverBound π C := by
+    D.postcriticalSet ⊆ E.ramifiedCoverBound π C := by
   have hinit : D.branch ⊆ E.ramifiedCoverBound π C := by
     intro p hp
     rcases hbranch (Or.inl hp) with hpC | ⟨q, hq, rfl⟩
     · exact Or.inr hpC
-    · exact Or.inl ⟨q, E.branch_subset_pcSet hq, rfl⟩
+    · exact Or.inl ⟨q, E.branch_subset_postcriticalSet hq, rfl⟩
   have hstep : ∀ p ∈ E.ramifiedCoverBound π C,
       D.step p ∈ E.ramifiedCoverBound π C := by
     rintro p (⟨q, hq, rfl⟩ | hpC)
-    · exact Or.inl ⟨E.step q, E.step_image_pcSet_subset ⟨q, hq, rfl⟩, hcomm q⟩
+    · exact Or.inl ⟨E.step q, E.step_image_postcriticalSet_subset ⟨q, hq, rfl⟩, hcomm q⟩
     · rcases hbranch (Or.inr ⟨p, hpC, rfl⟩) with hpC' | ⟨q, hq, hqp⟩
       · exact Or.inr hpC'
-      · exact Or.inl ⟨q, E.branch_subset_pcSet hq, hqp⟩
+      · exact Or.inl ⟨q, E.branch_subset_postcriticalSet hq, hqp⟩
   intro p hp
-  obtain ⟨n, q, hq, rfl⟩ := D.mem_pcSet_iff.mp hp
+  obtain ⟨n, q, hq, rfl⟩ := D.mem_postcriticalSet_iff.mp hp
   clear hp
   induction n with
   | zero => exact hinit hq
@@ -71,7 +71,7 @@ theorem pcSet_subset_ramifiedCoverBound (π : Q → P) (C : Set P)
 theorem pcf_of_ramified_branch_union (π : Q → P) (C : Set P)
     (hcomm : ∀ q, π (E.step q) = D.step (π q)) (hC : C.Finite)
     (hbranch : D.branch ∪ D.step '' C ⊆ C ∪ π '' E.branch)
-    (hE : E.PCF) : D.PCF :=
+    (hE : E.IsPCF) : D.IsPCF :=
   ((hE.image π).union hC).subset
     (D.pcSet_subset_ramifiedCoverBound E π C hcomm hbranch)
 
@@ -94,7 +94,7 @@ structure RamifiedCover where
   /-- The cover has finitely many branch divisors. -/
   branch_finite : {p | ∃ q, map q = p ∧ 1 < ram q}.Finite
   /-- Multiplicativity around the commuting square. -/
-  ram_comp : ∀ q, D.ram (map q) * ram q = ram (E.step q) * E.ram q
+  ram_comp : ∀ q, D.ramificationIdx (map q) * ram q = ram (E.step q) * E.ramificationIdx q
 
 namespace RamifiedCover
 
@@ -125,10 +125,10 @@ branch identity used in `lem:covers`. -/
 theorem branch_union :
     D.branch ∪ D.step '' C.branch = C.branch ∪ C.map '' E.branch := by
   have hram (q : Q) :
-      (1 < D.ram (C.map q) ∨ 1 < C.ram q) ↔
-        (1 < C.ram (E.step q) ∨ 1 < E.ram q) := by
-    rw [← one_lt_mul_iff_of_pos (D.ram_pos _) (C.ram_pos _), C.ram_comp,
-      one_lt_mul_iff_of_pos (C.ram_pos _) (E.ram_pos _)]
+      (1 < D.ramificationIdx (C.map q) ∨ 1 < C.ram q) ↔
+        (1 < C.ram (E.step q) ∨ 1 < E.ramificationIdx q) := by
+    rw [← one_lt_mul_iff_of_pos (D.ramificationIdx_pos _) (C.ram_pos _), C.ram_comp,
+      one_lt_mul_iff_of_pos (C.ram_pos _) (E.ramificationIdx_pos _)]
   apply Set.Subset.antisymm
   · rintro p (hp | ⟨r, hr, rfl⟩)
     · obtain ⟨r, hr, hrRam⟩ := hp
@@ -155,17 +155,17 @@ theorem branch_union :
 
 /-- Every downstairs postcritical divisor lies in the image of the upstairs
 postcritical set or in the branch locus of the cover. -/
-theorem pcSet_subset : D.pcSet ⊆ E.ramifiedCoverBound C.map C.branch :=
+theorem pcSet_subset : D.postcriticalSet ⊆ E.ramifiedCoverBound C.map C.branch :=
   D.pcSet_subset_ramifiedCoverBound E C.map C.branch C.comm C.branch_union.le
 
 include C in
 /-- PCF descends through a ramified cover. -/
-theorem pcf (hE : E.PCF) : D.PCF :=
+theorem pcf (hE : E.IsPCF) : D.IsPCF :=
   D.pcf_of_ramified_branch_union E C.map C.branch C.comm C.branch_finite
     C.branch_union.le hE
 
 end RamifiedCover
-end DivDyn
+end DivisorDynamics
 
 set_option linter.style.haveILetI false
 
@@ -179,7 +179,7 @@ noncomputable def schemeRamifiedCover
     [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
     (hf : (schemeDivisorCrit1 f).Finite) (hg : (schemeDivisorCrit1 g).Finite)
     (hπ : (schemeDivisorCrit1 π).Finite) (hcomm : g ≫ π = π ≫ f) :
-    DivDyn.RamifiedCover (divDynOfFiniteDominantNormal f hf)
+    DivisorDynamics.RamifiedCover (divDynOfFiniteDominantNormal f hf)
       (divDynOfFiniteDominantNormal g hg) where
   map q := q.mapFiniteDominantNormal π
   map_surjective := SchemeDivisorPoint.mapFiniteDominantNormal_surjective π
@@ -210,8 +210,8 @@ theorem scheme_pcf_of_ramified_cover
     [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
     (hf : (schemeDivisorCrit1 f).Finite) (hg : (schemeDivisorCrit1 g).Finite)
     (hπ : (schemeDivisorCrit1 π).Finite) (hcomm : g ≫ π = π ≫ f)
-    (hpcf : (divDynOfFiniteDominantNormal g hg).PCF) :
-    (divDynOfFiniteDominantNormal f hf).PCF :=
+    (hpcf : (divDynOfFiniteDominantNormal g hg).IsPCF) :
+    (divDynOfFiniteDominantNormal f hf).IsPCF :=
   (schemeRamifiedCover f g π hf hg hπ hcomm).pcf hpcf
 
 /-- A finite dominant cover of integral schemes is formally étale at the
@@ -267,7 +267,7 @@ noncomputable def schemeRamifiedCoverCharZero
     [CharZero (X.presheaf.stalk (genericPoint X))]
     [CharZero (Y.presheaf.stalk (genericPoint Y))]
     (hcomm : g ≫ π = π ≫ f) :
-    DivDyn.RamifiedCover (divDynOfFiniteDominantNormalCharZero f)
+    DivisorDynamics.RamifiedCover (divDynOfFiniteDominantNormalCharZero f)
       (divDynOfFiniteDominantNormalCharZero g) :=
   schemeRamifiedCover f g π
     (schemeDivisorCrit1_finite_of_cover_charZero f)
@@ -285,16 +285,16 @@ theorem scheme_pcf_of_ramified_cover_charZero
     [CharZero (X.presheaf.stalk (genericPoint X))]
     [CharZero (Y.presheaf.stalk (genericPoint Y))]
     (hcomm : g ≫ π = π ≫ f)
-    (hpcf : (divDynOfFiniteDominantNormalCharZero g).PCF) :
-    (divDynOfFiniteDominantNormalCharZero f).PCF :=
+    (hpcf : (divDynOfFiniteDominantNormalCharZero g).IsPCF) :
+    (divDynOfFiniteDominantNormalCharZero f).IsPCF :=
   (schemeRamifiedCoverCharZero f g π hcomm).pcf hpcf
 
-#print axioms DivDyn.pcSet_subset_ramifiedCoverBound
-#print axioms DivDyn.pcf_of_ramified_branch_union
-#print axioms DivDyn.RamifiedCover.finite_preimage
-#print axioms DivDyn.RamifiedCover.branch_union
-#print axioms DivDyn.RamifiedCover.pcSet_subset
-#print axioms DivDyn.RamifiedCover.pcf
+#print axioms DivisorDynamics.pcSet_subset_ramifiedCoverBound
+#print axioms DivisorDynamics.pcf_of_ramified_branch_union
+#print axioms DivisorDynamics.RamifiedCover.finite_preimage
+#print axioms DivisorDynamics.RamifiedCover.branch_union
+#print axioms DivisorDynamics.RamifiedCover.pcSet_subset
+#print axioms DivisorDynamics.RamifiedCover.pcf
 #print axioms schemeRamifiedCover
 #print axioms scheme_pcf_of_ramified_cover
 #print axioms formallyEtale_stalkMap_genericPoint_of_cover_charZero

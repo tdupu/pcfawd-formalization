@@ -22,8 +22,8 @@ public import Mathlib.RingTheory.Localization.AtPrime.Basic
 
 This file **derives** the conclusion of Theorem `thm:bounding` of `latex/paper.tex` from
 Zariski–Nagata purity and Abhyankar's lemma, following Steps 0–4 of the manuscript's proof.
-Until this file, the formalization *assumed* that conclusion (`Pcf.PcfSetup.key`,
-`Pcf.PcfSetup1.key1`, and — in a disguised form caught by two adversarial reviews — the
+Until this file, the formalization *assumed* that conclusion (`Pcf.PCFSetup.notMem_branch_iterate`,
+`Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate`, and — in a disguised form caught by two adversarial reviews — the
 `KummerWitness`-valued field `standardForm`). Here it is a theorem,
 `Pcf.BoundingChart.isEtaleAt_restriction`.
 

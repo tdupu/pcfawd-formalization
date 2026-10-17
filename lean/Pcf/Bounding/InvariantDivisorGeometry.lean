@@ -317,7 +317,7 @@ theorem invariantDivisorNormalization_iterate_step_val
     (f : X ⟶ X) [IsFinite f] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) (m : ℕ)
     (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme) :
-    (((invariantDivisorNormalization k s f A hA).toNormalizationUnnormDyn.step)^[m] Q).1 =
+    (((invariantDivisorNormalization k s f A hA).toNormalizationUnnormalizedDynamics.step)^[m] Q).1 =
       (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q.1 := by
   exact schemeDivisorMap_iterate_val _
     (invariantDivisorNormalization k s f A hA).g_preserves_divisors m Q

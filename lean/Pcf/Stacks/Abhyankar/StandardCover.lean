@@ -53,8 +53,8 @@ theorem localizedStandardUnit_val (u : Rˣ) (a : R) :
 /-- After inverting `a`, the standard ramified equation is literally a Kummer equation
 with unit constant term. -/
 theorem localizedStandardPoly_eq_kummerPoly (u : Rˣ) (a : R) (e : ℕ) :
-    localizedStandardPoly u a e = Abhyankar.kummerPoly (localizedStandardUnit u a) e := by
-  simp [localizedStandardPoly, Pcf.LocalModel.localPoly, Abhyankar.kummerPoly,
+    localizedStandardPoly u a e = Pcf.Kummer.kummerPoly (localizedStandardUnit u a) e := by
+  simp [localizedStandardPoly, Pcf.LocalModel.localPoly, Pcf.Kummer.kummerPoly,
     localizedStandardUnit_val]
 
 /-- The standard cover is étale after inverting the divisor equation, the second clause
@@ -66,22 +66,22 @@ theorem localizedStandardCover_etale (u : Rˣ) (a : R) {e : ℕ}
   have heUnit' : IsUnit (e : Localization.Away a) := by
     simpa only [map_natCast] using
       heUnit.map (algebraMap R (Localization.Away a))
-  exact Abhyankar.etale (localizedStandardUnit u a) he heUnit'
+  exact Pcf.Kummer.etale_adjoinRoot_kummerPoly (localizedStandardUnit u a) he heUnit'
 
 /-- The standard cover is finite over its base. -/
 theorem standardCover_finite (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
     Module.Finite R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
-  Pcf.LocalModel.finite u a he
+  Pcf.LocalModel.finite_adjoinRoot u a he
 
 /-- The standard cover is free over its base. -/
 theorem standardCover_free (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
     Module.Free R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
-  Pcf.LocalModel.free u a he
+  Pcf.LocalModel.free_adjoinRoot u a he
 
 /-- The standard cover is free of rank `e` over a nontrivial base. -/
 theorem standardCover_finrank [Nontrivial R] (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
     Module.finrank R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) = e :=
-  Pcf.LocalModel.finrank_eq u a he
+  Pcf.LocalModel.finrank_adjoinRoot u a he
 
 /-- Characteristic-zero form of the tame codimension-one clause of Example `0EYF`.
 
@@ -94,7 +94,7 @@ theorem standardCover_tameInCodimensionOne_charZero
     IsTamelyRamifiedInCodimensionOneAlong R
       (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a := by
   letI : Module.Finite R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
-    Pcf.LocalModel.finite u a he
+    Pcf.LocalModel.finite_adjoinRoot u a he
   exact isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
     R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) hunit a
 

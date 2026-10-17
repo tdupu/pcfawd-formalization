@@ -155,7 +155,7 @@ theorem schemeDivisorCrit1_tower {A : AlgebraicGeometry.Scheme.{u}} (g : A ⟶ A
 
 /-- Normalized divisor dynamics together with the actual unnormalized scheme map.
 
-Unlike `NormalizationUnnormDyn`, this structure has no arbitrary critical loci. Its
+Unlike `NormalizationUnnormalizedDynamics`, this structure has no arbitrary critical loci. Its
 non-unramified and non-étale loci are defined from the actual stalk maps of `g ^ m`.
 The inclusion U2, finiteness U3, and tower implications U4 and U5 are theorems.
 Normalized ramification comparison U1 remains a field. Finiteness follows from
@@ -175,7 +175,7 @@ structure SchemeNormalizationUnnormDyn (A : AlgebraicGeometry.Scheme.{u}) (PN : 
   g_preserves_divisors : ∀ Q : SchemeDivisorPoint A,
     Order.coheight (g Q.1) = 1
   /-- The normalized divisorial dynamics. -/
-  norm : DivDyn PN
+  norm : DivisorDynamics PN
   /-- Pushforward from normalized divisors to divisors of the actual scheme. -/
   normalization : PN → SchemeDivisorPoint A
   /-- Normalization commutes with divisor pushforward. -/
@@ -184,7 +184,7 @@ structure SchemeNormalizationUnnormDyn (A : AlgebraicGeometry.Scheme.{u}) (PN : 
   /-- The normalization map has finite fibers on divisors. -/
   normalization_finite_fiber : ∀ Q, (normalization ⁻¹' {Q}).Finite
   /-- Normalized ramification maps into the unnormalized non-unramified locus. -/
-  crit_subset_crit0 : ∀ m Q, 1 < norm.iterRam m Q →
+  crit_subset_crit0 : ∀ m Q, 1 < norm.iterateRamificationIdx m Q →
     normalization Q ∈ schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom
   /-- The invariant divisor is integral. -/
   integral : AlgebraicGeometry.IsIntegral A
@@ -272,29 +272,29 @@ theorem crit1_finite (m : ℕ) :
 
 /-- The ordinary two-carrier dynamics obtained by forgetting that its critical loci came
 from actual scheme stalk maps. -/
-def toNormalizationUnnormDyn :
-    NormalizationUnnormDyn PN (SchemeDivisorPoint A) where
-  norm := D.norm
+def toNormalizationUnnormalizedDynamics :
+    NormalizationUnnormalizedDynamics PN (SchemeDivisorPoint A) where
+  normalized := D.norm
   step := schemeDivisorMap D.g D.g_preserves_divisors
   normalization := D.normalization
   normalization_step := D.normalization_step
   normalization_finite_fiber := D.normalization_finite_fiber
-  crit0 := D.crit0
-  crit1 := fun m ↦ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom
-  crit_subset_crit0 := D.crit_subset_crit0
-  crit0_subset_crit1 := D.crit0_subset_crit1
-  crit1_finite := D.crit1_finite
-  crit0_tower := D.crit0_tower
-  crit1_tower := D.crit1_tower
+  nonUnramifiedLocus := D.crit0
+  nonEtaleLocus := fun m ↦ schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx := D.crit_subset_crit0
+  nonUnramifiedLocus_subset_nonEtaleLocus := D.crit0_subset_crit1
+  nonEtaleLocus_finite := D.crit1_finite
+  nonUnramifiedLocus_tower := D.crit0_tower
+  nonEtaleLocus_tower := D.crit1_tower
 
 @[simp]
 theorem toNormalizationUnnormDyn_step :
-    D.toNormalizationUnnormDyn.step = schemeDivisorMap D.g D.g_preserves_divisors :=
+    D.toNormalizationUnnormalizedDynamics.step = schemeDivisorMap D.g D.g_preserves_divisors :=
   rfl
 
 @[simp]
 theorem toNormalizationUnnormDyn_crit1 (m : ℕ) :
-    D.toNormalizationUnnormDyn.crit1 m =
+    D.toNormalizationUnnormalizedDynamics.nonEtaleLocus m =
       schemeDivisorCrit1 (CategoryTheory.End.of D.g ^ m).asHom :=
   rfl
 
@@ -308,7 +308,7 @@ possibly nonnormal invariant subscheme are literally `SchemeDivisorPoint A`. -/
 structure SchemeNormalizationPcfSetupChart (A : AlgebraicGeometry.Scheme.{u})
     (PX : Type v) (PN : Type w) where
   /-- The ambient divisorial dynamics. -/
-  amb : DivDyn PX
+  amb : DivisorDynamics PX
   /-- The invariant ambient divisor. -/
   fixedPrime : PX
   /-- Invariance of the ambient divisor. -/
@@ -328,8 +328,8 @@ structure SchemeNormalizationPcfSetupChart (A : AlgebraicGeometry.Scheme.{u})
   coordinate isomorphisms and arrow comparison are derived, and no non-étaleness
   implication is a field. -/
   chart : ∀ (m : ℕ), 1 ≤ m → ∀ (Q : SchemeDivisorPoint A), Q ∉ sing →
-    (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
-    ∀ (Q' : SchemeDivisorPoint A), res.toNormalizationUnnormDyn.step^[m] Q' = Q →
+    (∀ E ∈ (amb.iterate m).branch, E ≠ fixedPrime → Q ∉ meets E) →
+    ∀ (Q' : SchemeDivisorPoint A), res.toNormalizationUnnormalizedDynamics.step^[m] Q' = Q →
       SchemeStalkBoundingLocalizationPresentation
         (CategoryTheory.End.of res.g ^ m).asHom Q'.1
 
@@ -425,7 +425,7 @@ structure InvariantDivisorSchemeNormalizationPcfSetup
     [IsNormalScheme X]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
     (PX : Type v) (PN : Type w) where
-  amb : DivDyn PX
+  amb : DivisorDynamics PX
   fixedPrime : PX
   fixed : amb.step fixedPrime = fixedPrime
   res : SchemeNormalizationUnnormDyn (pointClosureIdealSheaf A.1).subscheme PN
@@ -438,9 +438,9 @@ structure InvariantDivisorSchemeNormalizationPcfSetup
   /-- Step-0 geometry for every point tested by the bounding argument. -/
   localData : ∀ (m : ℕ), 1 ≤ m →
     ∀ (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme), Q ∉ sing →
-    (∀ E ∈ (amb.iter m).branch, E ≠ fixedPrime → Q ∉ meets E) →
+    (∀ E ∈ (amb.iterate m).branch, E ≠ fixedPrime → Q ∉ meets E) →
     ∀ (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme),
-      res.toNormalizationUnnormDyn.step^[m] Q' = Q →
+      res.toNormalizationUnnormalizedDynamics.step^[m] Q' = Q →
       InvariantDivisorStep0LocalData X f A m Q Q'
 
 namespace InvariantDivisorSchemeNormalizationPcfSetup
@@ -499,8 +499,8 @@ variable {A : AlgebraicGeometry.Scheme.{u}} {PX : Type v} {PN : Type w}
 /-- The bounding conclusion for actual divisors, derived from purity and Abhyankar on the
 identified local stalk chart. -/
 theorem key1 (m : ℕ) (hm : 1 ≤ m) (Q : SchemeDivisorPoint A) (hs : Q ∉ S.sing)
-    (hmeets : ∀ E ∈ (S.amb.iter m).branch, E ≠ S.fixedPrime → Q ∉ S.meets E) :
-    Q ∉ S.res.toNormalizationUnnormDyn.branch1 m := by
+    (hmeets : ∀ E ∈ (S.amb.iterate m).branch, E ≠ S.fixedPrime → Q ∉ S.meets E) :
+    Q ∉ S.res.toNormalizationUnnormalizedDynamics.nonEtaleBranch m := by
   rintro ⟨Q', hcrit, hQ'Q⟩
   have hchart := S.chart m hm Q hs hmeets Q' hQ'Q
   have hnot : Q' ∉ schemeDivisorCrit1 (CategoryTheory.End.of S.res.g ^ m).asHom :=
@@ -508,30 +508,30 @@ theorem key1 (m : ℕ) (hm : 1 ≤ m) (Q : SchemeDivisorPoint A) (hs : Q ∉ S.s
   exact hnot hcrit
 
 /-- Forget the explicit scheme and charts after deriving the bounding conclusion. -/
-def toNormalizationPcfSetup :
-    NormalizationPcfSetup PX PN (SchemeDivisorPoint A) where
-  amb := S.amb
+def toNormalizationPCFSetup :
+    NormalizationPCFSetup PX PN (SchemeDivisorPoint A) where
+  ambient := S.amb
   fixedPrime := S.fixedPrime
   fixed := S.fixed
-  res := S.res.toNormalizationUnnormDyn
-  sing := S.sing
-  sing_finite := S.sing_finite
+  restriction := S.res.toNormalizationUnnormalizedDynamics
+  singularPrimes := S.sing
+  singularPrimes_finite := S.sing_finite
   meets := S.meets
   meets_finite := S.meets_finite
-  key1 := S.key1
+  notMem_nonEtaleBranch_iterate := S.key1
 
 /-- The unnormalized restriction is `1`-PCF on the actual-stalk chart route. -/
-theorem res_pcf1 (h : S.amb.PCF) : S.res.toNormalizationUnnormDyn.PCF1 :=
-  S.toNormalizationPcfSetup.res_pcf1 h
+theorem res_pcf1 (h : S.amb.IsPCF) : S.res.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
+  S.toNormalizationPCFSetup.restriction_isNonEtaleBranchPCF h
 
 /-- The normalized restriction is PCF on the actual-stalk chart route. -/
-theorem norm_pcf (h : S.amb.PCF) : S.res.norm.PCF :=
-  S.toNormalizationPcfSetup.norm_pcf h
+theorem norm_pcf (h : S.amb.IsPCF) : S.res.norm.IsPCF :=
+  S.toNormalizationPCFSetup.normalized_isPCF h
 
 /-- Periodic-prime form of `norm_pcf`. -/
-theorem norm_pcf_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
-    (hS : S.amb = D.iter n) (h : D.PCF) : S.res.norm.PCF :=
-  S.toNormalizationPcfSetup.norm_pcf_of_iter hn hS h
+theorem norm_pcf_of_iter {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n)
+    (hS : S.amb = D.iterate n) (h : D.IsPCF) : S.res.norm.IsPCF :=
+  S.toNormalizationPCFSetup.normalized_isPCF_of_iterate hn hS h
 
 end SchemeNormalizationPcfSetupChart
 
@@ -550,22 +550,22 @@ the literal Step-0 package and the two named local covering inputs. -/
 theorem key1 (m : ℕ) (hm : 1 ≤ m)
     (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hs : Q ∉ S.sing)
-    (hmeets : ∀ E ∈ (S.amb.iter m).branch,
+    (hmeets : ∀ E ∈ (S.amb.iterate m).branch,
       E ≠ S.fixedPrime → Q ∉ S.meets E) :
-    Q ∉ S.res.toNormalizationUnnormDyn.branch1 m :=
+    Q ∉ S.res.toNormalizationUnnormalizedDynamics.nonEtaleBranch m :=
   S.toSchemeNormalizationPcfSetupChart.key1 m hm Q hs hmeets
 
 /-- The actual unnormalized invariant-divisor restriction is `1`-PCF. -/
-theorem res_pcf1 (h : S.amb.PCF) : S.res.toNormalizationUnnormDyn.PCF1 :=
+theorem res_pcf1 (h : S.amb.IsPCF) : S.res.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
   S.toSchemeNormalizationPcfSetupChart.res_pcf1 h
 
 /-- The normalized invariant-divisor dynamics is PCF. -/
-theorem norm_pcf (h : S.amb.PCF) : S.res.norm.PCF :=
+theorem norm_pcf (h : S.amb.IsPCF) : S.res.norm.IsPCF :=
   S.toSchemeNormalizationPcfSetupChart.norm_pcf h
 
 /-- Periodic-prime form of the normalized PCF conclusion. -/
-theorem norm_pcf_of_iter {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n)
-    (hS : S.amb = D.iter n) (h : D.PCF) : S.res.norm.PCF :=
+theorem norm_pcf_of_iter {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n)
+    (hS : S.amb = D.iterate n) (h : D.IsPCF) : S.res.norm.IsPCF :=
   S.toSchemeNormalizationPcfSetupChart.norm_pcf_of_iter hn hS h
 
 end InvariantDivisorSchemeNormalizationPcfSetup

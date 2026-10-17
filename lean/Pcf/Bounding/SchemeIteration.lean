@@ -10,8 +10,8 @@ public import Pcf.Bounding.SchemeDynamics
 /-!
 # Actual divisor dynamics and scheme iterates
 
-This file identifies the `DivDyn` constructed from an actual scheme iterate with the
-abstract iterate of the `DivDyn` constructed from the original morphism.  The step map is
+This file identifies the `DivisorDynamics` constructed from an actual scheme iterate with the
+abstract iterate of the `DivisorDynamics` constructed from the original morphism.  The step map is
 identified on the underlying scheme points, and the ramification function is identified
 by the stalk ramification tower theorem.  The remaining structure fields are propositions,
 so proof irrelevance completes the equality.
@@ -27,8 +27,8 @@ namespace Pcf
 
 /-- Two divisorial dynamical systems with the same step and ramification functions are
 equal.  The positivity, lying-over, and branch-finiteness fields are propositions. -/
-theorem DivDyn.ext_of_step_ram {P : Type u} {D E : DivDyn P}
-    (hstep : D.step = E.step) (hram : D.ram = E.ram) : D = E := by
+theorem DivisorDynamics.ext_of_step_ram {P : Type u} {D E : DivisorDynamics P}
+    (hstep : D.step = E.step) (hram : D.ramificationIdx = E.ramificationIdx) : D = E := by
   cases D
   cases E
   simp_all
@@ -41,8 +41,8 @@ theorem divDynOfFiniteDominantNormal_pow_eq_iter
     (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ)
     (hcritm : (schemeDivisorCrit1 (CategoryTheory.End.of f ^ m).asHom).Finite) :
     divDynOfFiniteDominantNormal (CategoryTheory.End.of f ^ m).asHom hcritm =
-      (divDynOfFiniteDominantNormal f hcrit).iter m := by
-  apply DivDyn.ext_of_step_ram
+      (divDynOfFiniteDominantNormal f hcrit).iterate m := by
+  apply DivisorDynamics.ext_of_step_ram
   · funext x
     apply Subtype.ext
     change (CategoryTheory.End.of f ^ m).asHom.base x.1 =
@@ -50,7 +50,7 @@ theorem divDynOfFiniteDominantNormal_pow_eq_iter
     exact (divDynOfFiniteDominantNormal_iterate_step_val f hcrit m x).symm
   · funext x
     change schemeDivisorRam (CategoryTheory.End.of f ^ m).asHom x =
-      (divDynOfFiniteDominantNormal f hcrit).iterRam m x
+      (divDynOfFiniteDominantNormal f hcrit).iterateRamificationIdx m x
     exact (divDynOfFiniteDominantNormal_iterRam f hcrit m x).symm
 
 /-- Characteristic-zero specialization, with critical-locus finiteness constructed
@@ -61,7 +61,7 @@ theorem divDynOfFiniteDominantNormalCharZero_pow_eq_iter
     [NoetherianSpace X] [CharZero (X.presheaf.stalk (genericPoint X))]
     (m : ℕ) :
     divDynOfFiniteDominantNormalCharZero (CategoryTheory.End.of f ^ m).asHom =
-      (divDynOfFiniteDominantNormalCharZero f).iter m :=
+      (divDynOfFiniteDominantNormalCharZero f).iterate m :=
   divDynOfFiniteDominantNormal_pow_eq_iter f
     (schemeDivisorCrit1_finite_of_exists_formallyEtale f
       ⟨genericPoint X,
@@ -73,7 +73,7 @@ theorem divDynOfFiniteDominantNormalCharZero_pow_eq_iter
         ⟨genericPoint X,
           formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩ m))
 
-#print axioms DivDyn.ext_of_step_ram
+#print axioms DivisorDynamics.ext_of_step_ram
 #print axioms divDynOfFiniteDominantNormal_pow_eq_iter
 #print axioms divDynOfFiniteDominantNormalCharZero_pow_eq_iter
 

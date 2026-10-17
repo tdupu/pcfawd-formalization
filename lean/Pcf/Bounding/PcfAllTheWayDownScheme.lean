@@ -40,7 +40,7 @@ def SchemeNormalizedPCFOfFiniteType
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X] : Prop := by
   letI := schemeStalkCharZeroOfField k s (genericPoint X)
-  exact (schemeGlobalNormalizationUnnormDynOfFiniteType k s f).norm.PCF
+  exact (schemeGlobalNormalizationUnnormDynOfFiniteType k s f).norm.IsPCF
 
 /-- This presentation measures the actual lifted morphism on the actual global
 normalization; it introduces no substitute dynamics. -/
@@ -52,7 +52,7 @@ theorem schemeNormalizedPCFOfFiniteType_iff_lift
     SchemeNormalizedPCFOfFiniteType k s f ↔
       letI := schemeGlobalNormalizationMap_isFinite X k s
       letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero (schemeGlobalNormalizationLift f)).PCF :=
+      (divDynOfFiniteDominantNormalCharZero (schemeGlobalNormalizationLift f)).IsPCF :=
   Iff.rfl
 
 /-- Positive iteration does not change canonical normalized PCF. -/
@@ -71,7 +71,7 @@ theorem schemeNormalizedPCFOfFiniteType_pow_iff
   simp only [
     schemeGlobalNormalizationLift_pow,
     divDynOfFiniteDominantNormalCharZero_pow_eq_iter,
-    DivDyn.PCF, DivDyn.pcSet_iter _ hm]
+    DivisorDynamics.IsPCF, DivisorDynamics.postcriticalSet_iterate _ hm]
 
 /-- Normalized PCF descends along an actual finite dominant commuting cover.
 Both structure morphisms are used only to obtain finite normalizations and
@@ -170,7 +170,7 @@ theorem invariantDivisor_schemeNormalizedPCFOfFiniteType
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
     (cover : InvariantDivisorCoveringInputs f A)
     (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).PCF) :
+      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
     SchemeNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
       (A.invariantClosureMap f hA) :=
   invariantDivisorNormalization_norm_pcf_of_finiteType
@@ -209,10 +209,10 @@ theorem periodicDivisor_schemeNormalizedPCFOfFiniteType
   have hF : (End.of F ^ (p * c)).asHom.base B.1 = B.1 :=
     (schemeDivisorMap_iterate_val F _ (p * c) B).symm.trans
       (congrArg Subtype.val hperiodB)
-  have hpcfF : (divDynOfFiniteDominantNormalCharZero F).PCF := hpcf
-  have hpcfPower : (divDynOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).PCF := by
+  have hpcfF : (divDynOfFiniteDominantNormalCharZero F).IsPCF := hpcf
+  have hpcfPower : (divDynOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).IsPCF := by
     rw [divDynOfFiniteDominantNormalCharZero_pow_eq_iter]
-    exact (DivDyn.pcf_iter_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
+    exact (DivisorDynamics.isPCF_iterate_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
   have hpcfB := invariantDivisor_schemeNormalizedPCFOfFiniteType k sN
     (End.of F ^ (p * c)).asHom B hF (cover (p * c) B) hpcfPower
   let g := A.invariantClosureMap (End.of f ^ p).asHom hA

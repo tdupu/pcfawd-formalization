@@ -32,44 +32,44 @@ glued to a node `o`), and the restriction `g = f|_B` is `p(z) ↦ p(z²)`.
 **Rings** (`k` any commutative ring unless stated):
 
 * `Pcf.Examples.Pinched.pinchedAlg` — `R`, as the equalizer of the two evaluation maps.
-* `Pcf.Examples.Pinched.sqMap_mem` — `f̃*(h) ∈ R` for **every** `h ∈ k[z, w]`, hence
-  `f̃*(R) ⊆ R` (`sqMap_mem_of_mem`). The manuscript states the inclusion for `h ∈ R`; the
+* `Pcf.Examples.Pinched.squaringMap_mem` — `f̃*(h) ∈ R` for **every** `h ∈ k[z, w]`, hence
+  `f̃*(R) ⊆ R` (`squaringMap_mem_of_mem`). The manuscript states the inclusion for `h ∈ R`; the
   computation `h(f̃(p₁)) = h(4, 1) = h(f̃(p₂))` does not use `h ∈ R`.
 * `Pcf.Examples.Pinched.w_mem`, `z_sq_mem`, `z_mul_w_sub_one_mem`, `z_cubed_sub_mem` —
   `w, z², z(w − 1), z³ − 4z ∈ R`.
-* `Pcf.Examples.Pinched.adjoin_gens_eq` — these four elements **generate** `R` as a
+* `Pcf.Examples.Pinched.adjoin_pinchedGenerators_eq` — these four elements **generate** `R` as a
   `k`-algebra, for `k` a field of characteristic zero. The proof is the manuscript's:
   `R = k + (w − 1, z² − 4)` (`exists_reduce`, `sub_C_mem_glueIdeal`), and the ideal
   `(w − 1, z² − 4)` lies in the subalgebra generated (`glueIdeal_le_adjoin`). The only
   use of characteristic zero is `4 ≠ 0`.
 * `Pcf.Examples.Pinched.nodeAlg`, `comp_sq_mem` — `R_B` is closed under `p ↦ p(z²)`.
-* `Pcf.Examples.Pinched.sqOrbit_injective` — the orbit `4, 16, 256, …` of `z ↦ z²` from
+* `Pcf.Examples.Pinched.squaringOrbit_injective` — the orbit `4, 16, 256, …` of `z ↦ z²` from
   `4` is injective (characteristic zero).
 
 **Divisorial dynamics on `B`** (`k` algebraically closed of characteristic zero):
 
-* `Pcf.Examples.Pinched.Pts` — the closed points of `B`: `k` with `2 ∼ −2`.
-* `Pcf.Examples.Pinched.nodeDivDyn` — the normalized system of `g`: `step = (·)²`,
+* `Pcf.Examples.Pinched.NodalLinePoint` — the closed points of `B`: `k` with `2 ∼ −2`.
+* `Pcf.Examples.Pinched.nodeDivisorDynamics` — the normalized system of `g`: `step = (·)²`,
   `ram = 2` at `0` and `1` elsewhere. Its branch locus and postcritical set are `{0}`
-  (`nodeDivDyn_branch`, `nodeDivDyn_pcSet`), so `g` is PCF (`nodeDivDyn_pcf`).
-* `Pcf.Examples.Pinched.pcSet0_infinite` — for **any** `Pcf.UnnormDyn` on `Pts k` whose
+  (`nodeDivisorDynamics_branch`, `nodeDivisorDynamics_postcriticalSet`), so `g` is PCF (`nodeDivisorDynamics_isPCF`).
+* `Pcf.Examples.Pinched.nonUnramifiedPostcriticalSet_infinite` — for **any** `Pcf.UnnormalizedDynamics` on `Pts k` whose
   step is the squaring map and whose `crit₀(g)` contains the node `o`, the
   `0`-postcritical set is infinite; so is the `1`-postcritical set
-  (`pcSet1_infinite`). This isolates exactly the manuscript's input "`o ∈ crit₀(g)`".
-* `Pcf.Examples.Pinched.nodeUnnormDyn` — a `Pcf.UnnormDyn` satisfying those hypotheses,
+  (`nonEtalePostcriticalSet_infinite`). This isolates exactly the manuscript's input "`o ∈ crit₀(g)`".
+* `Pcf.Examples.Pinched.nodeUnnormalizedDynamics` — a `Pcf.UnnormalizedDynamics` satisfying those hypotheses,
   with `crit₀(gᵐ) = crit₁(gᵐ) = {o, 0}` for `m ≥ 1` *stipulated*, so that the hypotheses
-  are consistent and `nodeUnnormDyn_not_pcf0` is a genuine instance.
+  are consistent and `nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF` is a genuine instance.
 
 ## What is **not** formalized
 
 * That `o ∈ crit₀(g)`: the fibre `g⁻¹(Q)` over `z = 4` is a local Artinian ring of length
   two. The length computation, the snake-lemma argument, the non-reducedness of the fibre
-  and the Singular check are not formalized; `crit0` is stipulated in `nodeUnnormDyn`
-  and a hypothesis in `pcSet0_infinite`.
+  and the Singular check are not formalized; `crit0` is stipulated in `nodeUnnormalizedDynamics`
+  and a hypothesis in `nonUnramifiedPostcriticalSet_infinite`.
 * The Ferrand pushout, that `X` is a variety, that `ν` is the normalization, that `X` is
   regular in codimension one, that `f` is finite and surjective, and that `B` is an
   integral effective divisor with `f(B) = B`. Only the ring inclusions above are proved.
-* That `Pts k` is the set of closed points of `B`, or that `nodeDivDyn` is the divisorial
+* That `Pts k` is the set of closed points of `B`, or that `nodeDivisorDynamics` is the divisorial
   dynamical system of `g`: this is modelling assumption A1 of `lean/AXIOMS.md`, as for
   every other example. The identification `ram o = 1` reflects that both primes `±2` of
   the normalization over `o` are unramified for `z ↦ z²`.
@@ -92,25 +92,25 @@ section Ring
 variable (k : Type u) [CommRing k]
 
 /-- Evaluation at `p₁ = (2, 1)`; variable `0` is `z`, variable `1` is `w`. -/
-noncomputable def evalP₁ : MvPolynomial (Fin 2) k →ₐ[k] k := aeval ![2, 1]
+noncomputable def evalTwoOne : MvPolynomial (Fin 2) k →ₐ[k] k := aeval ![2, 1]
 
 /-- Evaluation at `p₂ = (−2, 1)`. -/
-noncomputable def evalP₂ : MvPolynomial (Fin 2) k →ₐ[k] k := aeval ![-2, 1]
+noncomputable def evalNegTwoOne : MvPolynomial (Fin 2) k →ₐ[k] k := aeval ![-2, 1]
 
 /-- The coordinate ring `R = {h ∈ k[z, w] : h(2, 1) = h(−2, 1)}` of the pinched plane. -/
 noncomputable def pinchedAlg : Subalgebra k (MvPolynomial (Fin 2) k) :=
-  AlgHom.equalizer (evalP₁ k) (evalP₂ k)
+  AlgHom.equalizer (evalTwoOne k) (evalNegTwoOne k)
 
 theorem mem_pinchedAlg_iff {h : MvPolynomial (Fin 2) k} :
     h ∈ pinchedAlg k ↔ aeval ![(2 : k), 1] h = aeval ![(-2 : k), 1] h := Iff.rfl
 
 /-- The pullback `f̃* : h ↦ h(z², w²)` along the squaring map. -/
-noncomputable def sqMap : MvPolynomial (Fin 2) k →ₐ[k] MvPolynomial (Fin 2) k :=
+noncomputable def squaringMap : MvPolynomial (Fin 2) k →ₐ[k] MvPolynomial (Fin 2) k :=
   aeval ![X 0 ^ 2, X 1 ^ 2]
 
 /-- `f̃*(h)` takes the value `h(4, 1)` at both `p₁` and `p₂`, so `f̃*(h) ∈ R` for every `h`. -/
-theorem sqMap_mem (h : MvPolynomial (Fin 2) k) : sqMap k h ∈ pinchedAlg k := by
-  rw [mem_pinchedAlg_iff, sqMap, ← AlgHom.comp_apply, comp_aeval, ← AlgHom.comp_apply,
+theorem squaringMap_mem (h : MvPolynomial (Fin 2) k) : squaringMap k h ∈ pinchedAlg k := by
+  rw [mem_pinchedAlg_iff, squaringMap, ← AlgHom.comp_apply, comp_aeval, ← AlgHom.comp_apply,
     comp_aeval]
   set v : Fin 2 → MvPolynomial (Fin 2) k := ![X 0 ^ 2, X 1 ^ 2] with hv
   have : (fun i => aeval ![(2 : k), 1] (v i)) = fun i => aeval ![(-2 : k), 1] (v i) := by
@@ -119,9 +119,9 @@ theorem sqMap_mem (h : MvPolynomial (Fin 2) k) : sqMap k h ∈ pinchedAlg k := b
   rw [this]
 
 /-- `f̃*(R) ⊆ R` (Example `ex:pinched`). -/
-theorem sqMap_mem_of_mem {h : MvPolynomial (Fin 2) k} (_ : h ∈ pinchedAlg k) :
-    sqMap k h ∈ pinchedAlg k :=
-  sqMap_mem k h
+theorem squaringMap_mem_of_mem {h : MvPolynomial (Fin 2) k} (_ : h ∈ pinchedAlg k) :
+    squaringMap k h ∈ pinchedAlg k :=
+  squaringMap_mem k h
 
 theorem w_mem : (X 1 : MvPolynomial (Fin 2) k) ∈ pinchedAlg k := by
   simp [mem_pinchedAlg_iff]
@@ -137,10 +137,10 @@ theorem z_cubed_sub_mem : (X 0 ^ 3 - 4 * X 0 : MvPolynomial (Fin 2) k) ∈ pinch
   norm_num
 
 /-- The four generators `w, z², z(w − 1), z³ − 4z` of Example `ex:pinched`. -/
-def gens : Set (MvPolynomial (Fin 2) k) :=
+def pinchedGenerators : Set (MvPolynomial (Fin 2) k) :=
   {X 1, X 0 ^ 2, X 0 * (X 1 - 1), X 0 ^ 3 - 4 * X 0}
 
-theorem adjoin_gens_le : Algebra.adjoin k (gens k) ≤ pinchedAlg k := by
+theorem adjoin_pinchedGenerators_le : Algebra.adjoin k (pinchedGenerators k) ≤ pinchedAlg k := by
   rw [Algebra.adjoin_le_iff]
   rintro h (rfl | rfl | rfl | rfl)
   · exact w_mem k
@@ -181,13 +181,13 @@ theorem exists_reduce (h : MvPolynomial (Fin 2) k) :
       convert Ideal.add_mem _ h1 h2 using 1
       ring
 
-theorem evalP₁_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ glueIdeal k) :
+theorem evalTwoOne_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ glueIdeal k) :
     aeval ![(2 : k), 1] x = 0 := by
   obtain ⟨p, q, rfl⟩ := Ideal.mem_span_pair.mp hx
   simp
   norm_num
 
-theorem evalP₂_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ glueIdeal k) :
+theorem evalNegTwoOne_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ glueIdeal k) :
     aeval ![(-2 : k), 1] x = 0 := by
   obtain ⟨p, q, rfl⟩ := Ideal.mem_span_pair.mp hx
   simp
@@ -195,14 +195,14 @@ theorem evalP₂_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ glueIde
 
 /-- The ideal `(w − 1, z² − 4)` lies in the subalgebra generated by the four generators. -/
 theorem glueIdeal_le_adjoin : (glueIdeal k : Set (MvPolynomial (Fin 2) k)) ⊆
-    Algebra.adjoin k (gens k) := by
-  set A := Algebra.adjoin k (gens k) with hA
-  have hw : (X 1 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [gens])
-  have hz2 : (X 0 ^ 2 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [gens])
+    Algebra.adjoin k (pinchedGenerators k) := by
+  set A := Algebra.adjoin k (pinchedGenerators k) with hA
+  have hw : (X 1 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [pinchedGenerators])
+  have hz2 : (X 0 ^ 2 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [pinchedGenerators])
   have hzw : (X 0 * (X 1 - 1) : MvPolynomial (Fin 2) k) ∈ A :=
-    Algebra.subset_adjoin (by simp [gens])
+    Algebra.subset_adjoin (by simp [pinchedGenerators])
   have hz3 : (X 0 ^ 3 - 4 * X 0 : MvPolynomial (Fin 2) k) ∈ A :=
-    Algebra.subset_adjoin (by simp [gens])
+    Algebra.subset_adjoin (by simp [pinchedGenerators])
   have hw1 : (X 1 - 1 : MvPolynomial (Fin 2) k) ∈ A := A.sub_mem hw A.one_mem
   have h4 : (4 : MvPolynomial (Fin 2) k) ∈ A := by exact_mod_cast A.natCast_mem 4
   have hz24 : (X 0 ^ 2 - 4 : MvPolynomial (Fin 2) k) ∈ A := A.sub_mem hz2 h4
@@ -248,8 +248,8 @@ element of the glue ideal. Uses only `4 ≠ 0`. -/
 theorem sub_C_mem_glueIdeal {h : MvPolynomial (Fin 2) k} (hh : h ∈ pinchedAlg k) :
     ∃ a : k, h - C a ∈ glueIdeal k := by
   obtain ⟨a, b, hab⟩ := exists_reduce k h
-  have e1 := evalP₁_eq_zero_of_mem k hab
-  have e2 := evalP₂_eq_zero_of_mem k hab
+  have e1 := evalTwoOne_eq_zero_of_mem k hab
+  have e2 := evalNegTwoOne_eq_zero_of_mem k hab
   rw [mem_pinchedAlg_iff] at hh
   simp only [map_sub, map_add, map_mul, aeval_C, aeval_X] at e1 e2
   simp only [Matrix.cons_val_zero] at e1 e2
@@ -262,13 +262,13 @@ theorem sub_C_mem_glueIdeal {h : MvPolynomial (Fin 2) k} (hh : h ∈ pinchedAlg 
   simpa [hb] using hab
 
 /-- **Example `ex:pinched`**: `R = k[w, z², z(w − 1), z³ − 4z]`. -/
-theorem adjoin_gens_eq : Algebra.adjoin k (gens k) = pinchedAlg k := by
-  refine le_antisymm (adjoin_gens_le k) ?_
+theorem adjoin_pinchedGenerators_eq : Algebra.adjoin k (pinchedGenerators k) = pinchedAlg k := by
+  refine le_antisymm (adjoin_pinchedGenerators_le k) ?_
   intro h hh
   obtain ⟨a, ha⟩ := sub_C_mem_glueIdeal k hh
   have : h = C a + (h - C a) := by ring
   rw [this]
-  exact (Algebra.adjoin k (gens k)).add_mem ((Algebra.adjoin k (gens k)).algebraMap_mem a)
+  exact (Algebra.adjoin k (pinchedGenerators k)).add_mem ((Algebra.adjoin k (pinchedGenerators k)).algebraMap_mem a)
     (glueIdeal_le_adjoin k ha)
 
 end Generation
@@ -293,13 +293,13 @@ theorem comp_sq_mem (p : Polynomial k) :
   norm_num
 
 /-- The forward orbit of `z = 4` under `z ↦ z²`: `4, 16, 256, …`. -/
-def sqOrbit (n : ℕ) : k := (fun x : k => x ^ 2)^[n] 4
+def squaringOrbit (n : ℕ) : k := (fun x : k => x ^ 2)^[n] 4
 
-theorem sqOrbit_eq (n : ℕ) : sqOrbit k n = 4 ^ 2 ^ n := by
+theorem squaringOrbit_eq (n : ℕ) : squaringOrbit k n = 4 ^ 2 ^ n := by
   induction n with
-  | zero => simp [sqOrbit]
+  | zero => simp [squaringOrbit]
   | succ n ih =>
-    rw [sqOrbit, Function.iterate_succ_apply', ← sqOrbit, ih, ← pow_mul, pow_succ]
+    rw [squaringOrbit, Function.iterate_succ_apply', ← squaringOrbit, ih, ← pow_mul, pow_succ]
 
 end Node
 
@@ -316,9 +316,9 @@ theorem four_pow_two_pow_injective : Function.Injective fun n : ℕ => (4 : k) ^
   exact this
 
 /-- **Example `ex:pinched`**: the orbit `4, 16, 256, …` is injective, hence infinite. -/
-theorem sqOrbit_injective : Function.Injective (sqOrbit k) := by
+theorem squaringOrbit_injective : Function.Injective (squaringOrbit k) := by
   intro n m h
-  rw [sqOrbit_eq, sqOrbit_eq] at h
+  rw [squaringOrbit_eq, squaringOrbit_eq] at h
   exact four_pow_two_pow_injective k h
 
 end NodeCharZero
@@ -346,40 +346,40 @@ theorem glueRel_equivalence : Equivalence (glueRel k) where
 def glueSetoid : Setoid k := ⟨glueRel k, glueRel_equivalence k⟩
 
 /-- The closed points of the nodal line `B`: `k` with `2 ∼ −2`. -/
-def Pts : Type u := Quotient (glueSetoid k)
+def NodalLinePoint : Type u := Quotient (glueSetoid k)
 
 /-- The point of `B` under `a ∈ k`. -/
-def pt (a : k) : Pts k := Quotient.mk (glueSetoid k) a
+def point (a : k) : NodalLinePoint k := Quotient.mk (glueSetoid k) a
 
 /-- The node `o = ν(2) = ν(−2)`. -/
-def node : Pts k := pt k 2
+def node : NodalLinePoint k := point k 2
 
-theorem pt_eq_iff {a b : k} : pt k a = pt k b ↔ glueRel k a b := Quotient.eq
+theorem point_eq_iff {a b : k} : point k a = point k b ↔ glueRel k a b := Quotient.eq
 
-theorem pt_neg_two : pt k (-2) = node k :=
-  (pt_eq_iff k).mpr (Or.inr ⟨by norm_num, by norm_num⟩)
+theorem point_neg_two : point k (-2) = node k :=
+  (point_eq_iff k).mpr (Or.inr ⟨by norm_num, by norm_num⟩)
 
 /-- The step map `z ↦ z²` on `Pts k`; it is well defined because `±2` have the same square. -/
-def sqStep : Pts k → Pts k :=
+def squaringStep : NodalLinePoint k → NodalLinePoint k :=
   Quotient.map (fun a => a ^ 2) fun a b h => by
     rcases h with rfl | ⟨ha, hb⟩
     · exact Or.inl rfl
     · exact Or.inl (ha.trans hb.symm)
 
-@[simp] theorem sqStep_pt (a : k) : sqStep k (pt k a) = pt k (a ^ 2) := rfl
+@[simp] theorem squaringStep_point (a : k) : squaringStep k (point k a) = point k (a ^ 2) := rfl
 
-theorem sqStep_iterate_pt (n : ℕ) (a : k) : (sqStep k)^[n] (pt k a) = pt k (a ^ 2 ^ n) := by
+theorem squaringStep_iterate_point (n : ℕ) (a : k) : (squaringStep k)^[n] (point k a) = point k (a ^ 2 ^ n) := by
   induction n with
   | zero => simp only [Function.iterate_zero, id, pow_zero, pow_one]
-  | succ n ih => rw [Function.iterate_succ_apply', ih, sqStep_pt, ← pow_mul, pow_succ]
+  | succ n ih => rw [Function.iterate_succ_apply', ih, squaringStep_point, ← pow_mul, pow_succ]
 
-theorem sqStep_node : sqStep k (node k) = pt k 4 := by
-  rw [node, sqStep_pt]; norm_num
+theorem squaringStep_node : squaringStep k (node k) = point k 4 := by
+  rw [node, squaringStep_point]; norm_num
 
-theorem sqStep_surjective [IsAlgClosed k] : Function.Surjective (sqStep k) := by
+theorem squaringStep_surjective [IsAlgClosed k] : Function.Surjective (squaringStep k) := by
   rintro ⟨b⟩
   obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq b (by norm_num : 0 < 2)
-  exact ⟨pt k a, by rw [sqStep_pt, ha]; rfl⟩
+  exact ⟨point k a, by rw [squaringStep_point, ha]; rfl⟩
 
 end Points
 
@@ -389,8 +389,8 @@ variable (k : Type u) [Field k] [CharZero k]
 
 theorem four_ne_zero' : (4 : k) ≠ 0 := by norm_num
 
-theorem pt_zero_eq_iff {a : k} : pt k a = pt k 0 ↔ a = 0 := by
-  rw [pt_eq_iff]
+theorem point_zero_eq_iff {a : k} : point k a = point k 0 ↔ a = 0 := by
+  rw [point_eq_iff]
   constructor
   · rintro (h | ⟨_, h⟩)
     · exact h
@@ -399,9 +399,9 @@ theorem pt_zero_eq_iff {a : k} : pt k a = pt k 0 ↔ a = 0 := by
 
 /-- The points `4^(2^n)` of `B` are pairwise distinct: none of them is the node, so the
 gluing does not identify any two of them. -/
-theorem pt_four_pow_injective : Function.Injective fun n : ℕ => pt k ((4 : k) ^ 2 ^ n) := by
+theorem point_four_pow_injective : Function.Injective fun n : ℕ => point k ((4 : k) ^ 2 ^ n) := by
   intro n m h
-  rw [pt_eq_iff] at h
+  rw [point_eq_iff] at h
   rcases h with h | ⟨h, _⟩
   · exact four_pow_two_pow_injective k h
   · exfalso
@@ -411,31 +411,31 @@ theorem pt_four_pow_injective : Function.Injective fun n : ℕ => pt k ((4 : k) 
     omega
 
 /-- `gᵐ(a) = 0` only for `a = 0`. -/
-theorem sqStep_iterate_eq_zero_iff (i : ℕ) (a : k) :
-    (sqStep k)^[i] (pt k a) = pt k 0 ↔ a = 0 := by
-  rw [sqStep_iterate_pt, pt_zero_eq_iff, pow_eq_zero_iff (by positivity)]
+theorem squaringStep_iterate_eq_zero_iff (i : ℕ) (a : k) :
+    (squaringStep k)^[i] (point k a) = point k 0 ↔ a = 0 := by
+  rw [squaringStep_iterate_point, point_zero_eq_iff, pow_eq_zero_iff (by positivity)]
 
 /-- **Example `ex:pinched`, abstract form.** For any unnormalized divisorial dynamics on
 the points of `B` whose step is `z ↦ z²` and whose `crit₀(g)` contains the node `o`, the
 `0`-postcritical set is infinite: it contains the orbit `4, 16, 256, …` of `g(o) = 4`. -/
-theorem pcSet0_infinite (U : UnnormDyn (Pts k)) (hstep : U.step = sqStep k)
-    (hnode : node k ∈ U.crit0 1) : U.pcSet0.Infinite := by
-  have horb : Set.range (fun n : ℕ => pt k ((4 : k) ^ 2 ^ n)) ⊆ U.pcSet0 := by
+theorem nonUnramifiedPostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k)) (hstep : U.step = squaringStep k)
+    (hnode : node k ∈ U.nonUnramifiedLocus 1) : U.nonUnramifiedPostcriticalSet.Infinite := by
+  have horb : Set.range (fun n : ℕ => point k ((4 : k) ^ 2 ^ n)) ⊆ U.nonUnramifiedPostcriticalSet := by
     rintro _ ⟨n, rfl⟩
-    refine U.mem_pcSet0_iff.mpr ⟨n, U.step (node k), ⟨node k, hnode, by simp⟩, ?_⟩
-    rw [hstep, sqStep_node, sqStep_iterate_pt]
-  exact (Set.infinite_range_of_injective (pt_four_pow_injective k)).mono horb
+    refine U.mem_nonUnramifiedPostcriticalSet_iff.mpr ⟨n, U.step (node k), ⟨node k, hnode, by simp⟩, ?_⟩
+    rw [hstep, squaringStep_node, squaringStep_iterate_point]
+  exact (Set.infinite_range_of_injective (point_four_pow_injective k)).mono horb
 
 /-- The `1`-postcritical set is infinite as well. -/
-theorem pcSet1_infinite (U : UnnormDyn (Pts k)) (hstep : U.step = sqStep k)
-    (hnode : node k ∈ U.crit0 1) : U.pcSet1.Infinite :=
-  (pcSet0_infinite k U hstep hnode).mono U.pcSet0_subset_pcSet1
+theorem nonEtalePostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k)) (hstep : U.step = squaringStep k)
+    (hnode : node k ∈ U.nonUnramifiedLocus 1) : U.nonEtalePostcriticalSet.Infinite :=
+  (nonUnramifiedPostcriticalSet_infinite k U hstep hnode).mono U.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
 
 variable [DecidableEq k]
 
 /-- The normalized ramification index of `g`: `2` at `0`, `1` elsewhere. Well defined
 because `±2 ≠ 0`. -/
-noncomputable def nodeRam : Pts k → ℕ :=
+noncomputable def nodeRamificationIdx : NodalLinePoint k → ℕ :=
   Quotient.lift (fun a => if a = 0 then 2 else 1) fun a b h => by
     rcases h with rfl | ⟨ha, hb⟩
     · rfl
@@ -443,114 +443,114 @@ noncomputable def nodeRam : Pts k → ℕ :=
       have hb' : b ≠ 0 := fun h => by simp [h] at hb
       simp [ha', hb']
 
-@[simp] theorem nodeRam_pt (a : k) : nodeRam k (pt k a) = if a = 0 then 2 else 1 := rfl
+@[simp] theorem nodeRamificationIdx_point (a : k) : nodeRamificationIdx k (point k a) = if a = 0 then 2 else 1 := rfl
 
-theorem one_lt_nodeRam_iff (Q : Pts k) : 1 < nodeRam k Q ↔ Q = pt k 0 := by
+theorem one_lt_nodeRamificationIdx_iff (Q : NodalLinePoint k) : 1 < nodeRamificationIdx k Q ↔ Q = point k 0 := by
   induction Q using Quotient.inductionOn with
   | h a =>
-    change 1 < nodeRam k (pt k a) ↔ pt k a = pt k 0
-    rw [nodeRam_pt, pt_zero_eq_iff]
+    change 1 < nodeRamificationIdx k (point k a) ↔ point k a = point k 0
+    rw [nodeRamificationIdx_point, point_zero_eq_iff]
     split_ifs with h <;> simp [h]
 
 variable [IsAlgClosed k]
 
 /-- The normalized divisorial dynamical system of `g : B → B`, `z ↦ z²`. -/
-noncomputable def nodeDivDyn : DivDyn (Pts k) where
-  step := sqStep k
-  ram := nodeRam k
-  ram_pos Q := by
+noncomputable def nodeDivisorDynamics : DivisorDynamics (NodalLinePoint k) where
+  step := squaringStep k
+  ramificationIdx := nodeRamificationIdx k
+  ramificationIdx_pos Q := by
     induction Q using Quotient.inductionOn with
-    | h a => change 0 < nodeRam k (pt k a); rw [nodeRam_pt]; split_ifs <;> norm_num
-  step_surjective := sqStep_surjective k
-  branch_finite' := by
-    refine (Set.finite_singleton (pt k 0)).subset ?_
+    | h a => change 0 < nodeRamificationIdx k (point k a); rw [nodeRamificationIdx_point]; split_ifs <;> norm_num
+  step_surjective := squaringStep_surjective k
+  step_image_ramified_finite := by
+    refine (Set.finite_singleton (point k 0)).subset ?_
     rintro Q ⟨Q', rfl, hQ'⟩
-    rw [one_lt_nodeRam_iff] at hQ'
+    rw [one_lt_nodeRamificationIdx_iff] at hQ'
     subst hQ'
-    simp [sqStep_pt]
+    simp [squaringStep_point]
 
 /-- `branch(g) = {0}`. -/
-theorem nodeDivDyn_branch : (nodeDivDyn k).branch = {pt k 0} := by
+theorem nodeDivisorDynamics_branch : (nodeDivisorDynamics k).branch = {point k 0} := by
   ext Q
   constructor
   · rintro ⟨Q', rfl, hQ'⟩
-    change 1 < nodeRam k Q' at hQ'
-    rw [one_lt_nodeRam_iff] at hQ'
+    change 1 < nodeRamificationIdx k Q' at hQ'
+    rw [one_lt_nodeRamificationIdx_iff] at hQ'
     subst hQ'
-    simp [nodeDivDyn, sqStep_pt]
+    simp [nodeDivisorDynamics, squaringStep_point]
   · rintro rfl
-    refine ⟨pt k 0, by simp [nodeDivDyn, sqStep_pt], ?_⟩
-    change 1 < nodeRam k (pt k 0)
+    refine ⟨point k 0, by simp [nodeDivisorDynamics, squaringStep_point], ?_⟩
+    change 1 < nodeRamificationIdx k (point k 0)
     simp
 
 /-- `PC(g) = {0}`: the normalized postcritical set of `g` is a single fixed point. -/
-theorem nodeDivDyn_pcSet : (nodeDivDyn k).pcSet = {pt k 0} := by
+theorem nodeDivisorDynamics_postcriticalSet : (nodeDivisorDynamics k).postcriticalSet = {point k 0} := by
   ext Q
-  rw [DivDyn.mem_pcSet_iff, nodeDivDyn_branch]
+  rw [DivisorDynamics.mem_postcriticalSet_iff, nodeDivisorDynamics_branch]
   constructor
   · rintro ⟨n, R, rfl, rfl⟩
-    change (sqStep k)^[n] (pt k 0) = pt k 0
-    rw [sqStep_iterate_pt]
+    change (squaringStep k)^[n] (point k 0) = point k 0
+    rw [squaringStep_iterate_point]
     simp
   · rintro rfl
-    exact ⟨0, pt k 0, rfl, rfl⟩
+    exact ⟨0, point k 0, rfl, rfl⟩
 
 /-- `g` is PCF, as Theorem `thm:general` predicts. -/
-theorem nodeDivDyn_pcf : (nodeDivDyn k).PCF := by
-  rw [DivDyn.PCF, nodeDivDyn_pcSet]
+theorem nodeDivisorDynamics_isPCF : (nodeDivisorDynamics k).IsPCF := by
+  rw [DivisorDynamics.IsPCF, nodeDivisorDynamics_postcriticalSet]
   exact Set.finite_singleton _
 
 /-- The unnormalized critical loci of `gᵐ`, **stipulated** as `{o, 0}` for `m ≥ 1` and `∅`
 for `m = 0`. The manuscript computes `o ∈ crit₀(g)` by a fibre-length argument that is
-not formalized here; this instance only shows that the hypotheses of `pcSet0_infinite`
-are consistent with every field of `Pcf.UnnormDyn`. -/
-def nodeCrit (m : ℕ) : Set (Pts k) := if m = 0 then ∅ else {node k, pt k 0}
+not formalized here; this instance only shows that the hypotheses of `nonUnramifiedPostcriticalSet_infinite`
+are consistent with every field of `Pcf.UnnormalizedDynamics`. -/
+def nodeCriticalLocus (m : ℕ) : Set (NodalLinePoint k) := if m = 0 then ∅ else {node k, point k 0}
 
-/-- A `Pcf.UnnormDyn` on the points of `B` with the stipulated critical loci. -/
-noncomputable def nodeUnnormDyn : UnnormDyn (Pts k) where
-  toDivDyn := nodeDivDyn k
-  crit0 := nodeCrit k
-  crit1 := nodeCrit k
-  crit_subset_crit0 := by
+/-- A `Pcf.UnnormalizedDynamics` on the points of `B` with the stipulated critical loci. -/
+noncomputable def nodeUnnormalizedDynamics : UnnormalizedDynamics (NodalLinePoint k) where
+  toDivisorDynamics := nodeDivisorDynamics k
+  nonUnramifiedLocus := nodeCriticalLocus k
+  nonEtaleLocus := nodeCriticalLocus k
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx := by
     intro m Q h
-    change 1 < (nodeDivDyn k).iterRam m Q at h
-    obtain ⟨i, hi, hgt⟩ := ((nodeDivDyn k).one_lt_iterRam_iff m Q).mp h
-    change 1 < nodeRam k ((sqStep k)^[i] Q) at hgt
-    rw [one_lt_nodeRam_iff] at hgt
+    change 1 < (nodeDivisorDynamics k).iterateRamificationIdx m Q at h
+    obtain ⟨i, hi, hgt⟩ := ((nodeDivisorDynamics k).one_lt_iterateRamificationIdx_iff m Q).mp h
+    change 1 < nodeRamificationIdx k ((squaringStep k)^[i] Q) at hgt
+    rw [one_lt_nodeRamificationIdx_iff] at hgt
     induction Q using Quotient.inductionOn with
     | h a =>
-      change (sqStep k)^[i] (pt k a) = pt k 0 at hgt
-      rw [sqStep_iterate_eq_zero_iff] at hgt
+      change (squaringStep k)^[i] (point k a) = point k 0 at hgt
+      rw [squaringStep_iterate_eq_zero_iff] at hgt
       subst hgt
-      simp only [nodeCrit, Nat.pos_iff_ne_zero.mp (lt_of_le_of_lt (Nat.zero_le i) hi), ite_false]
+      simp only [nodeCriticalLocus, Nat.pos_iff_ne_zero.mp (lt_of_le_of_lt (Nat.zero_le i) hi), ite_false]
       exact Or.inr rfl
-  crit0_subset_crit1 _ := le_rfl
-  crit1_finite m := by
-    unfold nodeCrit
+  nonUnramifiedLocus_subset_nonEtaleLocus _ := le_rfl
+  nonEtaleLocus_finite m := by
+    unfold nodeCriticalLocus
     split_ifs
     · exact Set.finite_empty
     · exact (Set.finite_singleton _).insert _
-  crit0_tower n := by simp [nodeCrit]
-  crit1_tower n Q hQ := Or.inl (by
-    simp only [nodeCrit, Nat.succ_ne_zero, ite_false]
-    simp only [nodeCrit, one_ne_zero, ite_false] at hQ
+  nonUnramifiedLocus_tower n := by simp [nodeCriticalLocus]
+  nonEtaleLocus_tower n Q hQ := Or.inl (by
+    simp only [nodeCriticalLocus, Nat.succ_ne_zero, ite_false]
+    simp only [nodeCriticalLocus, one_ne_zero, ite_false] at hQ
     exact hQ)
 
-theorem nodeUnnormDyn_step : (nodeUnnormDyn k).step = sqStep k := rfl
+theorem nodeUnnormalizedDynamics_step : (nodeUnnormalizedDynamics k).step = squaringStep k := rfl
 
-theorem node_mem_crit0 : node k ∈ (nodeUnnormDyn k).crit0 1 := by
-  simp [nodeUnnormDyn, nodeCrit]
+theorem node_mem_nonUnramifiedLocus : node k ∈ (nodeUnnormalizedDynamics k).nonUnramifiedLocus 1 := by
+  simp [nodeUnnormalizedDynamics, nodeCriticalLocus]
 
 /-- **Example `ex:pinched`**: `g` is not `0`-PCF (given `o ∈ crit₀(g)`)… -/
-theorem nodeUnnormDyn_not_pcf0 : ¬ (nodeUnnormDyn k).PCF0 :=
-  pcSet0_infinite k _ (nodeUnnormDyn_step k) (node_mem_crit0 k)
+theorem nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF : ¬ (nodeUnnormalizedDynamics k).IsNonUnramifiedBranchPCF :=
+  nonUnramifiedPostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k) (node_mem_nonUnramifiedLocus k)
 
 /-- …nor `1`-PCF… -/
-theorem nodeUnnormDyn_not_pcf1 : ¬ (nodeUnnormDyn k).PCF1 :=
-  pcSet1_infinite k _ (nodeUnnormDyn_step k) (node_mem_crit0 k)
+theorem nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF : ¬ (nodeUnnormalizedDynamics k).IsNonEtaleBranchPCF :=
+  nonEtalePostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k) (node_mem_nonUnramifiedLocus k)
 
 /-- …although it is PCF: `PC(g) = {0}` while `PC₀(g) ⊇ {4, 16, 256, …}`. -/
-theorem nodeUnnormDyn_pcf : (nodeUnnormDyn k).toDivDyn.PCF := nodeDivDyn_pcf k
+theorem nodeUnnormalizedDynamics_isPCF : (nodeUnnormalizedDynamics k).toDivisorDynamics.IsPCF := nodeDivisorDynamics_isPCF k
 
 end Dynamics
 

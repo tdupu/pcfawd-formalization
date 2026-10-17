@@ -36,8 +36,8 @@ The conjecture quoted above is the form in which it was posed. In `latex/paper.t
 Conjecture `conj:pcfawd`, stated for an arbitrary variety over a field of characteristic
 zero (no normality, projectivity or algebraic closedness), and proved there as Corollary
 `cor:pcfawd` via Theorem `thm:general`. **This file contains the abstract recursive
-induction.** `Pcf.pcf_periodic_prime` is the abstract form of Corollary
-`cor:normal-preperiodic`, and `Pcf.pcf_all_the_way_down` descends along a chain of such
+induction.** `Pcf.isPCF_restriction_of_periodic` is the abstract form of Corollary
+`cor:normal-preperiodic`, and `Pcf.pcfAllTheWayDown_divisorDynamics` descends along a chain of such
 steps.  Elsewhere, `Pcf.pcfAllTheWayDown_scheme` formalizes the one-divisor geometric
 Theorem `thm:general`, including nonnormal ambient schemes, the canonical normalization,
 periodic lifting, the two-way normalization PCF comparison, and ramified-cover descent.
@@ -52,20 +52,20 @@ actual recursion has no branch longer than the topological Krull dimension of `X
 **Both halves, and the recursion is a genuine induction** — not a schema, not an
 `n`-fold restatement:
 
-* `Pcf.pcf_periodic_prime` — the first paragraph: a periodic prime's return map is PCF.
-* `Pcf.pcf_all_the_way_down` — the second paragraph: along a chain of periodic-prime
+* `Pcf.isPCF_restriction_of_periodic` — the first paragraph: a periodic prime's return map is PCF.
+* `Pcf.pcfAllTheWayDown_divisorDynamics` — the second paragraph: along a chain of periodic-prime
   restrictions, **every** stage is PCF. The proof is `induction i`.
-* `Pcf.pcSet_finite_all_the_way_down` — the conclusion unfolded to Definition `def:pcf`.
+* `Pcf.postcriticalSet_finite_allTheWayDown` — the conclusion unfolded to Definition `def:pcf`.
 
 There is deliberately **no** separate "purity route" descent theorem here. `Pcf/Wiring.lean`
-discharges `DivDyn.branch_finite'` for a restricted system, so each stage of a tower may be
-built by `Pcf.PcfGeometry.ofPurityData` instead of by hand; but the descent induction is
+discharges `DivisorDynamics.step_image_ramified_finite` for a restricted system, so each stage of a tower may be
+built by `Pcf.PCFGeometry.ofPurityData` instead of by hand; but the descent induction is
 the same theorem either way, and stating a second copy of it with an unused hypothesis
 would suggest a distinction that does not exist.
 
 ## What is **not** formalized, and must be read alongside the above
 
-The statements below are about `Pcf.DivDyn` and `Pcf.PcfSetup` — the abstract
+The statements below are about `Pcf.DivisorDynamics` and `Pcf.PCFSetup` — the abstract
 combinatorial shadow of a finite surjective self-map, recorded through its action on
 primes and its ramification indices. They are **not** statements about varieties. In
 particular:
@@ -73,18 +73,18 @@ particular:
 1. **The geometric tower is not produced in this abstract file.** Elsewhere
    `Pcf.schemePCFAllTheWayDownAtDepth_of_cover` recursively constructs the actual
    scheme-level descent, and `Pcf.SchemePcfDescentBranch` packages its actual branches.
-   This file itself still takes a tower of `PcfSetup`s as input.
-2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PcfSetup.key` is supplied
+   This file itself still takes a tower of `PCFSetup`s as input.
+2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PCFSetup.notMem_branch_iterate` is supplied
    to the abstract induction. On the actual invariant-divisor chart route it is derived
    from the literal Step 0 data, Zariski--Nagata purity, and Abhyankar's lemma.
-3. **Lying over and branch-finiteness are fields of abstract `DivDyn`.** They are proved
+3. **Lying over and branch-finiteness are fields of abstract `DivisorDynamics`.** They are proved
    by the actual normal-scheme constructors used by the geometric route.
-4. **The chain is given, not produced.** `pcf_all_the_way_down` takes the tower of
-   `PcfSetup`s as input. It asserts nothing about the *existence* of periodic primes at
+4. **The chain is given, not produced.** `pcfAllTheWayDown_divisorDynamics` takes the tower of
+   `PCFSetup`s as input. It asserts nothing about the *existence* of periodic primes at
    each level, and the abstraction carries no dimension.  On the actual-scheme route,
    every recursive branch forgets to an actual divisor flag, whose length is proved to
    be at most `topologicalKrullDim X`.
-5. **Characteristic zero is implicit.** `Pcf.DivDyn.branch` is `1 < ram`, dropping
+5. **Characteristic zero is implicit.** `Pcf.DivisorDynamics.branch` is `1 < ram`, dropping
    the ramification paragraph before Definition `def:crit-branch`'s inseparable-residue-extension
    clause (assumption A3). That is faithful
    in characteristic zero, which is where the conjecture lives, and Example `ex:wild` in
@@ -110,11 +110,11 @@ given that the ambient system is post-critically finite.
 This is Corollary `cor:normal-preperiodic` of `latex/paper.tex` — the first paragraph of the
 conjecture quoted in
 this file's header — restated under a conjecture-facing name.
-`Pcf.PcfSetup.res_pcf_of_iter` is the same theorem. -/
-theorem pcf_periodic_prime {PX : Type u} {PA : Type u} (S : PcfSetup PX PA)
-    {D : DivDyn PX} {n : ℕ} (hn : 1 ≤ n) (hperiodic : S.amb = D.iter n) (h : D.PCF) :
-    S.res.PCF :=
-  S.res_pcf_of_iter hn hperiodic h
+`Pcf.PCFSetup.restriction_isPCF_of_iterate` is the same theorem. -/
+theorem isPCF_restriction_of_periodic {PX : Type u} {PA : Type u} (S : PCFSetup PX PA)
+    {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n) (hperiodic : S.ambient = D.iterate n) (h : D.IsPCF) :
+    S.restriction.IsPCF :=
+  S.restriction_isPCF_of_iterate hn hperiodic h
 
 /-- **PCF all the way down, second paragraph — the descent.**
 
@@ -127,21 +127,21 @@ than a finite schema. This abstract theorem does not stop because its abstractio
 no dimension. The actual-scheme companion recursion is separately proved to terminate
 after at most `topologicalKrullDim X` restriction steps (see the header).
 
-This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.pcf_descent` is the same theorem. -/
-theorem pcf_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))
-    (S : ∀ i, PcfSetup (P i) (P (i + 1)))
-    (hres : ∀ i, (S i).res = D (i + 1))
-    (hperiodic : ∀ i, ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n)
-    (h0 : (D 0).PCF) : ∀ i, (D i).PCF :=
-  pcf_descent D S hres hperiodic h0
+This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.isPCF_of_isPCF_restriction` is the same theorem. -/
+theorem pcfAllTheWayDown_divisorDynamics {P : ℕ → Type u} (D : ∀ i, DivisorDynamics (P i))
+    (S : ∀ i, PCFSetup (P i) (P (i + 1)))
+    (hres : ∀ i, (S i).restriction = D (i + 1))
+    (hperiodic : ∀ i, ∃ n, 1 ≤ n ∧ (S i).ambient = (D i).iterate n)
+    (h0 : (D 0).IsPCF) : ∀ i, (D i).IsPCF :=
+  isPCF_of_isPCF_restriction D S hres hperiodic h0
 
-/-- The conclusion of `Pcf.pcf_all_the_way_down` unfolded: at every level of the descent
+/-- The conclusion of `Pcf.pcfAllTheWayDown_divisorDynamics` unfolded: at every level of the descent
 the postcritical set has finitely many components, which is Definition `def:pcf`. -/
-theorem pcSet_finite_all_the_way_down {P : ℕ → Type u} (D : ∀ i, DivDyn (P i))
-    (S : ∀ i, PcfSetup (P i) (P (i + 1)))
-    (hres : ∀ i, (S i).res = D (i + 1))
-    (hperiodic : ∀ i, ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n)
-    (h0 : (D 0).PCF) : ∀ i, (D i).pcSet.Finite :=
-  pcf_all_the_way_down D S hres hperiodic h0
+theorem postcriticalSet_finite_allTheWayDown {P : ℕ → Type u} (D : ∀ i, DivisorDynamics (P i))
+    (S : ∀ i, PCFSetup (P i) (P (i + 1)))
+    (hres : ∀ i, (S i).restriction = D (i + 1))
+    (hperiodic : ∀ i, ∃ n, 1 ≤ n ∧ (S i).ambient = (D i).iterate n)
+    (h0 : (D 0).IsPCF) : ∀ i, (D i).postcriticalSet.Finite :=
+  pcfAllTheWayDown_divisorDynamics D S hres hperiodic h0
 
 end Pcf
