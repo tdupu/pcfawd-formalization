@@ -1246,8 +1246,8 @@ hypotheses. -/
 /-! ## `step_image_ramified_finite` fully discharged on `Spec S`
 
 `Pcf.divisorDynamicsOfSpectrum` builds a `Pcf.DivisorDynamics` assuming only lying over and generic
-étaleness: `ram`, `ram_pos` and the ramified-implies-non-étale compatibility are all
-theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input — is needed. -/
+étaleness: `ramificationIdx`, `ramificationIdx_pos` and the ramified-implies-non-étale compatibility
+are all theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input — is needed. -/
 
 #print axioms Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx
 #print axioms Pcf.ramificationIdx_eq_one_of_notMem_nonEtaleLocus

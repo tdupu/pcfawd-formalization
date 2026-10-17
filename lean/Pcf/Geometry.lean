@@ -414,14 +414,15 @@ This discharges the finiteness of the branch divisor (§`sec:defs`, after Defini
 point where `Pcf.DivisorDynamics` demands it. -/
 noncomputable def divisorDynamicsOfGeometry [NoetherianSpace B]
     (step : {s : Set B // IsProperIrreducibleClosed s} → {s : Set B // IsProperIrreducibleClosed s})
-    (ram : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ram_pos : ∀ Q, 0 < ram Q)
+    (ramificationIdx : {s : Set B // IsProperIrreducibleClosed s} → ℕ)
+        (ramificationIdx_pos : ∀ Q, 0 < ramificationIdx Q)
     (step_surjective : Function.Surjective step)
     (nonEtale : Set B) (hclosed : IsClosed nonEtale) (hne : nonEtale ≠ univ)
-    (hbranch : ∀ Q, 1 < ram Q → ((step Q : Set B) ⊆ nonEtale)) :
+    (hbranch : ∀ Q, 1 < ramificationIdx Q → ((step Q : Set B) ⊆ nonEtale)) :
     DivisorDynamics {s : Set B // IsProperIrreducibleClosed s} where
   step := step
-  ramificationIdx := ram
-  ramificationIdx_pos := ram_pos
+  ramificationIdx := ramificationIdx
+  ramificationIdx_pos := ramificationIdx_pos
   step_surjective := step_surjective
   step_image_ramified_finite := by
     have hfin : {Q : {s : Set B // IsProperIrreducibleClosed s} | (Q : Set B) ⊆ nonEtale}.Finite :=
