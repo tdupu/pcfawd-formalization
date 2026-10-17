@@ -5,7 +5,7 @@
 | Repo | `pcf` |
 | Scope | `lean/` |
 | Status | Draft |
-| Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07`; purity and Abhyankar proved `2026-10-16` (see the first section) |
+| Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07`; purity and Abhyankar proved `2026-10-16` (see the first section); phase-2 Stacks-form statements `2026-10-17` |
 | Manuscript | `latex/paper.tex`, cited by `\label` (the file was `pcf.tex` with different numbering when this census was first written) |
 | Toolchain | Lean `4.35.0`, Mathlib `v4.35.0` (`56a005855ea1`) since 2026-10-15 (was Lean `4.34.0`, Mathlib `5ed296525643`) |
 
@@ -91,7 +91,37 @@ is recorded in the declaration's docstring.
   product; `0BRM` is proved in the divisibility form `e ∣ E` without finiteness of the upper DVR
   (`DVRAbhyankarDivisible.lean`); henselianity of the root cover is replaced by the two
   consequences used (`StrictRootCover.lean`); Stacks' decomposition of `B` over `A_f` is done on
-  the integral model (`StrictNormalDecomposition.lean`, `StrictRootComponent.lean`).
+  the integral model (`StrictNormalDecomposition.lean`, `StrictRootComponent.lean`); Stacks'
+  final step (the exponent is a unit) is not needed, since every positive integer is invertible.
+  The six differences are listed in the docstring of `Pcf.Stacks.abhyankarLemma`.
+
+### Phase 2 (2026-10-17): Stacks-form statements
+
+Additional theorems; nothing above was changed or re-proved. Run record:
+the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`FRAME-PHASE2.md`, `STATUS.md`).
+
+| Claim | Theorem | File | `#print axioms` |
+| --- | --- | --- | --- |
+| Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
+| The same in Mathlib vocabulary (`Etale` on an open neighbourhood) | `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBSchemeAPI.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemma_tame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/Tame/Tag0EYGTame.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.tag0EYG` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Stacks `0EYH` (Lemma 58.31.6), scheme level, as stated ("finite locally free" written as finite, flat, locally of finite presentation, Tag `02KB`) | `Pcf.Stacks.SchemeLevel.tag0EYH` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYH.lean` | `[propext, Classical.choice, Quot.sound]` |
+
+Route divergences (each described in the docstring at the declaration):
+
+* `0BMB` scheme form: reduced Zariski-locally to the affine `Pcf.Stacks.zariskiNagataPurity`
+  instead of Stacks' étale-local induction on schemes (docstring of
+  `stacksEtaleAt_of_zariskiNagataPurity`).
+* `0EYG` tame affine: the phase-1 route (`04GW` comparison, integral models giving the `0EYH`
+  form) with `0EYD` proved by comparing ramification indices along the ind-étale base change
+  (module docstring of `Tame/Tag0EYGTame.lean`, `Tame/Defs.lean`).
+* `0EYG` scheme level: Stacks' affine step takes the cover `B`; here the affine theorem takes the
+  normalization, applied at the local rings `A_y` of a chart (module docstring of
+  `Scheme/Tag0EYG.lean`).
+* `0EYH` scheme level: the étale-local facts are descended explicitly on affine charts
+  (faithfully flat descent of finiteness and flatness, descent of principality and regularity),
+  which Stacks leaves implicit (module docstring of `Scheme/Tag0EYH.lean`).
 
 ## How to read `#print axioms` here
 

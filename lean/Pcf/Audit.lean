@@ -101,6 +101,8 @@ public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
 public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
 public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
+public import Pcf.Stacks.Abhyankar.Scheme.Tag0EYH
+public import Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 public import Pcf.Stacks.Common.EtaleNormal
 public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Common.RegularNormal
@@ -1595,6 +1597,9 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.palomar_zariskiNagataPurity
 #print axioms Pcf.Stacks.abhyankarLemma
 #print axioms Pcf.Stacks.palomar_abhyankarLemma
+#print axioms Pcf.Stacks.abhyankarLemma_tame
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYG
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYH
 #print axioms Pcf.pcfAllTheWayDownLocalTheorems
 #print axioms Pcf.pcfAllTheWayDown_charZero_unconditional
 #print axioms Pcf.Palomar.pcfAllTheWayDown_charZero
@@ -2133,3 +2138,174 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor_tame
 #print axioms Pcf.Stacks.abhyankarLemma_tame
 #print axioms Pcf.Stacks.abhyankarLemma_of_tame
+
+/-! ## Scheme-level Abhyankar (phase 2, A″, Stacks `0EYG`/`0EYH`)
+
+Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean environment). -/
+
+-- Pcf.Stacks.Abhyankar.Scheme.AffineNormalization
+#print axioms Pcf.Stacks.SchemeLevel.baseChange_integralClosure_equiv
+#print axioms Pcf.Stacks.SchemeLevel.exists_away_finite_flat_integralClosure
+#print axioms Pcf.Stacks.SchemeLevel.exists_away_span_nonZeroDivisor_of_atPrime
+#print axioms Pcf.Stacks.SchemeLevel.exists_eq_span_nonZeroDivisor_of_map_eq_span
+#print axioms Pcf.Stacks.SchemeLevel.exists_isPrime_tensorProduct_comap_eq
+#print axioms Pcf.Stacks.SchemeLevel.exists_radical_eq_span_of_mem
+#print axioms Pcf.Stacks.SchemeLevel.exists_span_nonZeroDivisor_atPrime_of_etale
+#print axioms Pcf.Stacks.SchemeLevel.finite_flat_away_of_cover
+#print axioms Pcf.Stacks.SchemeLevel.integralClosure_finite
+#print axioms Pcf.Stacks.SchemeLevel.integralClosure_finite_and_flat
+#print axioms Pcf.Stacks.SchemeLevel.integralClosure_flat
+#print axioms Pcf.Stacks.SchemeLevel.isReduced_of_etale
+#print axioms Pcf.Stacks.SchemeLevel.isRegularLocalRing_atPrime_of_etale
+#print axioms Pcf.Stacks.SchemeLevel.isRegularLocalRing_of_flat_of_map_maximalIdeal
+#print axioms Pcf.Stacks.SchemeLevel.isRegularRing_quotient_radical
+#print axioms Pcf.Stacks.SchemeLevel.pi_mem_nonZeroDivisors
+#print axioms Pcf.Stacks.SchemeLevel.pi_span_singleton_eq
+#print axioms Pcf.Stacks.SchemeLevel.spanFinrank_le_spanFinrank_map_of_faithfullyFlat
+#print axioms Pcf.Stacks.SchemeLevel.stage_reducedDivisor
+
+-- Pcf.Stacks.Abhyankar.Scheme.AffineTame
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.exists_stage_isUnit_natCast
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.exists_stage_localizedStandard
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.hasLocalizedStandardCoverAt_of_stage
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.ker_residueField
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.locStdC_finitePresentation
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.nonempty_localizedStandard_of_algHom
+#print axioms Pcf.Stacks.SchemeLevel.hasLocalizedStandardCoverAt_of_tame
+
+-- Pcf.Stacks.Abhyankar.Scheme.AffineTameLocal
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.algebraMap_tensor_tmul
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.comap_map
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.disjoint_primeCompl
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.etale_by
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.finite_integralClosure_of_etale_fractionRing
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.finite_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.instIsScalarTowerAtPrimeBy
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.instIsScalarTowerAtPrimeTensorProductBy
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isEtaleAt_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isIntegralClosure_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isIntegral_tensor
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_away_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_tensor
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isPrime_map
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAt_of_isLocalization
+
+-- Pcf.Stacks.Abhyankar.Scheme.AffineTameTransfer
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.comap_le
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.cp_isScalarTower
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.cp_isScalarTower'
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.hasAbhyankarStandardCoverAt_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_away_fractionRing
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_cp
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_sf
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isMaximal_map_cp
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedInCodimensionOneAlong_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isUnit_ay_by
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.kp_isScalarTower
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.nyToCp_val
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.rp_isLocalization
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.rp_isScalarTower
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.rp_ringKrullDim
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.rpk_isScalarTower
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.sf_algebraMap_tmul
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.sf_isScalarTower
+
+-- Pcf.Stacks.Abhyankar.Scheme.ChartData
+#print axioms Pcf.Stacks.SchemeLevel.etale_app_of_etale
+#print axioms Pcf.Stacks.SchemeLevel.finite_app_of_isFinite
+#print axioms Pcf.Stacks.SchemeLevel.inf_eq_basicOpen_of_ideal_eq
+#print axioms Pcf.Stacks.SchemeLevel.isAffineOpen_preimage_ι_of_ideal_eq
+#print axioms Pcf.Stacks.SchemeLevel.isLocalization_away_of_ideal_eq
+#print axioms Pcf.Stacks.SchemeLevel.isRegularRing_quotient_of_isRegularScheme
+#print axioms Pcf.Stacks.SchemeLevel.mem_support_iff_of_ideal_eq
+
+-- Pcf.Stacks.Abhyankar.Scheme.ChartFacts
+#print axioms Pcf.Stacks.SchemeLevel.bijective_ι_app_of_le
+#print axioms Pcf.Stacks.SchemeLevel.exists_affine_le_complement
+#print axioms Pcf.Stacks.SchemeLevel.finite_etale_of_le
+#print axioms Pcf.Stacks.SchemeLevel.hasLocalizedStandardCoverAt_chart
+
+-- Pcf.Stacks.Abhyankar.Scheme.Charts
+#print axioms Pcf.Stacks.SchemeLevel.exists_etale_pullback_iso_sigma
+#print axioms Pcf.Stacks.SchemeLevel.exists_pullback_iso_sigma
+#print axioms Pcf.Stacks.SchemeLevel.isIso_sigmaDesc_fin
+#print axioms Pcf.Stacks.SchemeLevel.isPullback_fromSpec_app
+#print axioms Pcf.Stacks.SchemeLevel.isPullback_tensor_fromSpec
+#print axioms Pcf.Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf
+
+-- Pcf.Stacks.Abhyankar.Scheme.Defs
+#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_forall
+#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_natCast_isUnit
+#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemmaTame_of_natCast_isUnit
+
+-- Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
+#print axioms Pcf.Stacks.SchemeLevel.ideal_eq_top_of_disjoint
+#print axioms Pcf.Stacks.SchemeLevel.isEffectiveCartier_iff
+
+-- Pcf.Stacks.Abhyankar.Scheme.FiniteEtaleSplitting
+#print axioms Pcf.Stacks.SchemeLevel.hasSplitCoverAt_of_finite_etale
+#print axioms Pcf.Stacks.SchemeLevel.isFiniteSplit_of_strictlyHenselianLocalRing
+#print axioms Pcf.Stacks.SchemeLevel.localColimit_strictlyHenselianLocalRing_of_prime
+#print axioms Pcf.Stacks.SchemeLevel.strictlyHenselianLocalRing_of_ringEquiv
+
+-- Pcf.Stacks.Abhyankar.Scheme.IntegralClosureAway
+#print axioms Pcf.Stacks.SchemeLevel.isIntegralClosure_localizationAway_integralClosure
+#print axioms Pcf.Stacks.SchemeLevel.isLocalization_away_integralClosure
+
+-- Pcf.Stacks.Abhyankar.Scheme.LocalOnTarget
+#print axioms Pcf.Stacks.SchemeLevel.bijective_presheaf_map_eqToHom
+#print axioms Pcf.Stacks.SchemeLevel.flat_of_iSup_eq_top
+#print axioms Pcf.Stacks.SchemeLevel.isFinite_of_iSup_eq_top
+
+-- Pcf.Stacks.Abhyankar.Scheme.NormalizationChart
+#print axioms Pcf.Stacks.SchemeLevel.exists_iso_normalization_restrict
+#print axioms Pcf.Stacks.SchemeLevel.fst_comp_eq_snd_of_mono
+#print axioms Pcf.Stacks.SchemeLevel.ideal_vanishingIdeal_eq_radical
+#print axioms Pcf.Stacks.SchemeLevel.isIso_fst_of_mono
+
+-- Pcf.Stacks.Abhyankar.Scheme.ReducedPreimage
+#print axioms Pcf.Stacks.SchemeLevel.ideal_radical_comap_eq
+#print axioms Pcf.Stacks.SchemeLevel.isEffectiveCartier_radical_comap
+#print axioms Pcf.Stacks.SchemeLevel.isRegularScheme_radical_comap
+
+-- Pcf.Stacks.Abhyankar.Scheme.RegularScheme
+#print axioms Pcf.Stacks.SchemeLevel.IsAffineOpen.primeIdealOf_fromSpec
+#print axioms Pcf.Stacks.SchemeLevel.IsRegularScheme.isLocallyNoetherian
+#print axioms Pcf.Stacks.SchemeLevel.IsRegularScheme.isRegularLocalRing_stalk
+#print axioms Pcf.Stacks.SchemeLevel.IsRegularScheme.isRegularRing
+#print axioms Pcf.Stacks.SchemeLevel.IsRegularScheme.of_isOpenImmersion
+#print axioms Pcf.Stacks.SchemeLevel.isRegularLocalRing_stalk_of_isRegularRing
+#print axioms Pcf.Stacks.SchemeLevel.isRegularRing_of_isRegularLocalRing_stalk
+#print axioms Pcf.Stacks.SchemeLevel.isRegularScheme_iff
+
+-- Pcf.Stacks.Abhyankar.Scheme.StandardRings
+#print axioms Pcf.Stacks.SchemeLevel.isStandardTameData_one_one
+#print axioms Pcf.Stacks.SchemeLevel.isStandardTameData_unit_mul
+
+-- Pcf.Stacks.Abhyankar.Scheme.Tag0EYG
+#print axioms Pcf.Stacks.SchemeLevel.exists_standardTame_of_mem
+#print axioms Pcf.Stacks.SchemeLevel.exists_standardTame_of_not_mem
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYG
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYG_of_affine
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYG_of_natCast_isUnit
+
+-- Pcf.Stacks.Abhyankar.Scheme.Tag0EYH
+#print axioms Pcf.Stacks.SchemeLevel.exists_rootCover_of_mem
+#print axioms Pcf.Stacks.SchemeLevel.exists_rootCover_of_not_mem
+#print axioms Pcf.Stacks.SchemeLevel.isRegularRing_of_subsingleton
+#print axioms Pcf.Stacks.SchemeLevel.normalization_chart
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYH
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYH_of_affine
+#print axioms Pcf.Stacks.SchemeLevel.tag0EYH_of_natCast_isUnit
+
+-- Pcf.Stacks.Abhyankar.Scheme.TameBridge
+#print axioms Pcf.Stacks.SchemeLevel.IsTamelyRamifiedAt.of_ringEquiv
+#print axioms Pcf.Stacks.SchemeLevel.IsTamelyRamifiedOver.of_ringEquiv
+#print axioms Pcf.Stacks.SchemeLevel.chartTame_of_isTamelyRamifiedInCodimOne
+#print axioms Pcf.Stacks.SchemeLevel.isIntegral_map_of_ringEquiv
+#print axioms Pcf.Stacks.SchemeLevel.length_quotient_map_ringEquiv
+#print axioms Pcf.Stacks.SchemeLevel.natCast_isUnit_residueField_iff
+#print axioms Pcf.Stacks.SchemeLevel.ramificationIdx_eq_of_ringEquiv
+#print axioms Pcf.Stacks.SchemeLevel.residueField_algebraMap_algebraMap
+#print axioms Pcf.Stacks.SchemeLevel.residueField_map_localRingEquiv_algebraMap
+#print axioms Pcf.Stacks.SchemeLevel.under_eq_comap_of_ringEquiv

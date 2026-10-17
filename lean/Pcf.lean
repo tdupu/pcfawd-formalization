@@ -173,6 +173,8 @@ public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
 public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
 public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
+public import Pcf.Stacks.Abhyankar.Scheme.Tag0EYH
+public import Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 public import Pcf.Audit
 public import Pcf.Palomar.Bridge
 public import Pcf.Palomar.Unconditional

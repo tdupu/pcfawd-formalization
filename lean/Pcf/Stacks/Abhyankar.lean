@@ -40,6 +40,22 @@ The statement in this file is proved downstream (this file cannot import the pro
 import cycle): `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` in
 `Pcf.Stacks.Abhyankar.Tag0EYG`, with axioms `[propext, Classical.choice, Quot.sound]`. That
 module is imported by the root module `Pcf`.
+
+## The three layers
+
+* **Characteristic zero, affine** (phase 1): `Pcf.Stacks.abhyankarLemma` in
+  `Pcf.Stacks.Abhyankar.Tag0EYG`, for this statement `AbhyankarLemma`, which assumes every
+  positive integer invertible in `R`.  It is the input of the PCFAWD headline and is unchanged.
+* **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemma_tame` in
+  `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame` (directory `Abhyankar/Tame/`), for
+  `Pcf.Stacks.AbhyankarLemmaTame`, whose hypothesis is the tag's "tamely ramified in
+  codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  It is a
+  second, independent proof; the characteristic-zero theorem is not derived from it.
+* **Scheme level** (phase 2): `Pcf.Stacks.SchemeLevel.tag0EYG` and
+  `Pcf.Stacks.SchemeLevel.tag0EYH` (directory `Abhyankar/Scheme/`), the statements of Stacks
+  Lemmas 58.31.5 and 58.31.6 for a locally Noetherian scheme, an effective Cartier divisor that
+  is a regular scheme, and a finite étale `Y → X ∖ D` tamely ramified in codimension 1.  They are
+  proved from the tame affine theorem on affine charts.
 -/
 
 @[expose] public section

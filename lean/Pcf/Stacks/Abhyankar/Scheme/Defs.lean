@@ -51,6 +51,23 @@ and the affine statement that the scheme-level proof takes as a hypothesis.
   Stacks Example 58.31.4 (Tag `0EYF`); `IsStandardTameData A f e` is that example's hypotheses
   (`A` Noetherian, `f` a nonzerodivisor, `A/fA` reduced, `e ≥ 1` invertible in `A`).
 
+## One notion of tameness
+
+There is a single pointwise tameness condition in pcf, `Pcf.Stacks.IsTamelyRamifiedAt`
+(`Pcf.Stacks.Abhyankar.TameRamification`: ramification index a unit of `κ(p)`, separable residue
+extension).  Everything else is a quantification of it:
+* affine, `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong R S a` (same file), over the primes
+  of `S` minimal over `aS` above primes minimal over `(a)`; its agreement with the Stacks
+  quantifier is `Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_iff` (`Tame/Defs.lean`);
+* here, `IsTamelyRamifiedOver` (Tag `09E9`, over the maximal ideals of the integral closure),
+  `IsTamelyRamifiedInCodimOne` (Tag `0BSE`, intrinsic on schemes) and its chart reading
+  `ChartTame`.
+The scheme layer passes from `IsTamelyRamifiedInCodimOne` to `ChartTame`
+(`chartTame_of_isTamelyRamifiedInCodimOne`, `TameBridge.lean`) and from `ChartTame` to the affine
+`IsTamelyRamifiedInCodimensionOneAlong` at the local rings of a chart
+(`AffineTame.isTamelyRamifiedInCodimensionOneAlong_ny`, `AffineTameTransfer.lean`), which is the
+hypothesis of `Pcf.Stacks.abhyankarLemma_tame`.
+
 ## The affine hypothesis
 
 `Pcf.Stacks.AbhyankarLemmaTame R S a` (defined in `Pcf.Stacks.Abhyankar.Tame.Defs`, proved by

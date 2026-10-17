@@ -189,12 +189,26 @@ Comparison with the tags (restrictions, all already part of the statement
   Points outside `D` (the tag's trivial case) are not treated.
 
 Proof route: follows the proof of `0EYG` (reduction to the strict henselization at `κ(y)ˢᵉᵖ`,
-decomposition into normal domains, root cover of exponent a common multiple `E` of the
-ramification indices, `0BRM`, `0EYE` with Zariski–Nagata purity, strict splitting, `09EV`), with
-two differences: the strict henselization of `R` is compared to that of `R_y` (Stacks `04GW`,
-`localColimitAtPrimeRingEquiv`), and the normalization step is carried out on the integral
-models (`strictRootCoverEquivOfFractionRingEquiv`) rather than over `A_f`, which gives the
-`0EYH` conclusion directly. -/
+decomposition into normal domains, root cover, `0BRM`, `0EYE` with Zariski–Nagata purity, strict
+splitting, `09EV`, descent to an étale stage), with these differences:
+* the strict henselization of `R` is compared to that of `R_y` (`04GW`,
+  `localColimitAtPrimeRingEquiv`, by a cofinality argument rather than Stacks' proof);
+* the decomposition into normal domains is of the normalization `Rˢʰ ⊗[R] S`, not of `B` over
+  `A_f` (`localColimit_tensor_exists_normalDomain_decomposition`);
+* the root-cover exponent is any common multiple `E` of the ramification indices, not their
+  product, and `0BRM` is used in the divisibility form `e ∣ E` (`DVRAbhyankarDivisible.lean`);
+* strict henselianity of the root cover `A'` is replaced by the two consequences used
+  (`StrictRootCover.lean`);
+* the normalization step is carried out on integral models
+  (`strictRootCoverEquivOfFractionRingEquiv`) rather than over `A_f`, giving the `0EYH` form
+  directly;
+* Stacks' final step (the exponent `n` is a unit) is not needed, since every positive integer is
+  invertible in `R`.
+
+A second, independent proof in any characteristic, under the tags' hypothesis "tamely ramified in
+codimension 1", is `Pcf.Stacks.abhyankarLemma_tame` (`Tame/Tag0EYGTame.lean`); this theorem is not
+derived from it.  The scheme-level statements of the tags are `Pcf.Stacks.SchemeLevel.tag0EYG`
+and `Pcf.Stacks.SchemeLevel.tag0EYH` (`Scheme/Tag0EYG.lean`, `Scheme/Tag0EYH.lean`). -/
 @[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
     of D; pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D; \
