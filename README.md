@@ -11,23 +11,23 @@ to `latex/paper.tex` and its `\label`s (for example `cor:pcfawd`) are to that ma
 
 ## What is proved
 
-`Pcf.Palomar.pcfAllTheWayDown_charZero` formalizes Corollary `cor:pcfawd` of
-the manuscript in characteristic zero: a finite dominant self-map of an
-integral, locally Noetherian scheme with Noetherian underlying space, locally
-of finite type over a field of characteristic zero, that is PCF on the
-normalization is PCF all the way down. Separatedness is not assumed, and the
-map need not be a morphism over the base field.
+`Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` formalizes Corollary
+`cor:pcfawd` of the manuscript in characteristic zero: a finite dominant
+self-map of an integral, locally Noetherian scheme with Noetherian underlying
+space, locally of finite type over a field of characteristic zero, that is PCF
+on the normalization is PCF all the way down. Separatedness is not assumed, and
+the map need not be a morphism over the base field.
 
-The theorem is **conditional**. It takes two hypotheses, each quantified over
-all commutative rings: an affine form of Zariski–Nagata purity of the branch
-locus (Stacks Project Tag 0BMB), and an affine form of Abhyankar's lemma (Tags
-0EYG/0EYH) for algebras in which every positive integer is invertible. Neither
-is proved here. The proof uses only the axioms `propext`, `Classical.choice`
-and `Quot.sound`.
+The theorem has no hypotheses beyond those in its statement. The two classical
+results the manuscript cites are proved here in affine forms and used in the
+proof: Zariski–Nagata purity of the branch locus (Stacks Project Tag 0BMB) and
+Abhyankar's lemma for a regular divisor (Tags 0EYG/0EYH) for algebras in which
+every positive integer is invertible. The proof uses only the axioms `propext`,
+`Classical.choice` and `Quot.sound`.
 
 The precise statement, with what it does not claim, is in
 [`palomar/formalization.yaml`](palomar/formalization.yaml) and Entry 0 of
-[`lean/PALOMAR.md`](lean/PALOMAR.md). The census of assumed inputs is
+[`lean/PALOMAR.md`](lean/PALOMAR.md). The census of assumed inputs and of proof routes is
 [`lean/AXIOMS.md`](lean/AXIOMS.md). The statement was reviewed by AI agents
 against the manuscript, not yet by a human author. AI use is summarized in
 `palomar/formalization.yaml` (`automation`); the authors keep the per-task record privately.
