@@ -253,64 +253,10 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
 
 end ComponentData
 
-namespace PointedEtaleNeighborhood
-
-variable {R Ω : Type u} [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [Field Ω]
-  [Algebra R Ω] [Algebra (ResidueField R) Ω] [IsScalarTower R (ResidueField R) Ω]
-  [IsSepClosure (ResidueField R) Ω]
-
-/-- **Strict-local form.**  Over the strict henselization `Rˢʰ = LocalColimit R Ω` of a
-Noetherian local ring `R` with `a ∈ 𝔪_R` a nonzerodivisor, `R ⧸ (a)` regular local, and all
-positive integers units, every finite normal domain component `N` of `Rˢʰ ⊗_R S` for which the
-root-cover component data exists has fraction field `K(a^{1/n})`, `n ∣ E`, `K = Frac(Rˢʰ)`,
-assuming Zariski–Nagata purity.
-
-The hypotheses on `Rˢʰ` in `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`
-are discharged by `06LJ` (Noetherian), the strict henselian structure, and `05WS`/`06LN`
-(`quotient_span_localColimit_isRegularLocalRing`). -/
-theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
-    (a : R) (ha : a ∈ maximalIdeal R) (ha0 : a ∈ nonZeroDivisors R)
-    [IsRegularLocalRing (R ⧸ Ideal.span ({a} : Set R))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R))
-    (N : Type u) [CommRing N] [Algebra (LocalColimit R Ω) N] [IsDomain N]
-    [FaithfulSMul (LocalColimit R Ω) N] [Module.Finite (LocalColimit R Ω) N]
-    (E : ℕ) (hE : 2 ≤ E)
-    (C : StrictRootComponentData (LocalColimit R Ω) N (algebraMap R (LocalColimit R Ω) a) E)
-    (hpurity : ZariskiNagataPurity
-      (StrictRootCover (algebraMap R (LocalColimit R Ω) a) E) C.carrier) :
-    letI : Algebra (FractionRing (LocalColimit R Ω)) (FractionRing N) :=
-      FractionRing.liftAlgebra (LocalColimit R Ω) (FractionRing N)
-    ∃ n : ℕ, n ∣ E ∧ 1 ≤ n ∧
-      Nonempty (FractionRing N ≃ₐ[FractionRing (LocalColimit R Ω)]
-        AdjoinRoot (dvrRootPoly (algebraMap (LocalColimit R Ω) (FractionRing (LocalColimit R Ω))
-          (algebraMap R (LocalColimit R Ω) a)) n)) := by
-  haveI : IsRegularLocalRing (LocalColimit R Ω ⧸
-      Ideal.span ({algebraMap R (LocalColimit R Ω) a} : Set (LocalColimit R Ω))) :=
-    quotient_span_localColimit_isRegularLocalRing (Ω := Ω) a
-  have ha' : algebraMap R (LocalColimit R Ω) a ∈ maximalIdeal (LocalColimit R Ω) :=
-    map_le_maximalIdeal_localColimit (Ideal.span {a})
-      (by rw [Ideal.span_le, Set.singleton_subset_iff]; exact ha)
-      (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_singleton a)))
-  have ha0' : algebraMap R (LocalColimit R Ω) a ∈ nonZeroDivisors (LocalColimit R Ω) :=
-    algebraMap_mem_nonZeroDivisors_localColimit ha0
-  -- `E` is a unit, hence not in the proper ideal `(a)`: the tameness input of the general lemma.
-  have hEa : ((E : ℕ) : LocalColimit R Ω) ∉
-      Ideal.span ({algebraMap R (LocalColimit R Ω) a} : Set (LocalColimit R Ω)) := fun h ↦ by
-    have hu : IsUnit ((E : ℕ) : LocalColimit R Ω) := by
-      simpa only [map_natCast] using (hnat E (by omega)).map (algebraMap R (LocalColimit R Ω))
-    exact (maximalIdeal.isMaximal _).ne_top (Ideal.eq_top_of_isUnit_mem _
-      (Ideal.span_le.mpr (Set.singleton_subset_iff.mpr ha') h) hu)
-  exact Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
-    ha' ha0' (by omega) hEa C hpurity
-
-end PointedEtaleNeighborhood
-
 #print axioms under_eq_of_height_eq_one_of_mem
 #print axioms forall_height_one_isUnramifiedAt_of_root_mem
 #print axioms mem_minimalPrimes_span_of_height_eq_one
 #print axioms exists_common_multiple_ramificationIdx_tame
 #print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
-#print axioms
-  PointedEtaleNeighborhood.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 
 end Pcf.Stacks

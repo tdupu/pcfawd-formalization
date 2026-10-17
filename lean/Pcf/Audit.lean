@@ -1604,7 +1604,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 -- Pcf.Stacks.Abhyankar.StrictComponentClassification
 #print axioms Pcf.Stacks.AlgHom.extendScalarsOfIsFractionRing_apply
-#print axioms Pcf.Stacks.charZero_of_forall_nat_isUnit
 #print axioms Pcf.Stacks.rootPoly_fractionRing_irreducible
 
 -- Pcf.Stacks.Abhyankar.StrictGenericPresentation
@@ -1612,8 +1611,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.strictRootCoverToRootFractionField_root
 
 -- Pcf.Stacks.Abhyankar.StrictHeightOneTransport
-#print axioms
-  Pcf.Stacks.PointedEtaleNeighborhood.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 #print axioms Pcf.Stacks.StrictRootComponentData.etaleAway
 #print axioms Pcf.Stacks.StrictRootComponentData.faithfulSMul
 #print axioms Pcf.Stacks.StrictRootComponentData.finite

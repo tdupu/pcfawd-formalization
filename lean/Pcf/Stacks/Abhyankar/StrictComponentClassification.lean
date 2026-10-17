@@ -154,17 +154,6 @@ theorem exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame
 
 end RootFieldTransport
 
-section CharZero
-
-/-- If every positive integer is a unit, the ring has characteristic zero. -/
-theorem charZero_of_forall_nat_isUnit {R : Type*} [CommRing R] [Nontrivial R]
-    (h : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) : CharZero R :=
-  charZero_of_inj_zero fun n hn ↦ by
-    by_contra hn0
-    exact (h n hn0).ne_zero hn
-
-end CharZero
-
 section Classification
 
 variable (A N N' : Type u) [CommRing A] [CommRing N] [CommRing N']

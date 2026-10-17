@@ -180,7 +180,7 @@ theorem dvrRootFractionEquiv_root
 /-- The same tame intermediate-field classification in the actual fraction field
 of the integral root algebra, transported across `dvrRootFractionEquiv`. -/
 theorem dvrRootFractionRing_intermediate_eq_power
-    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [CharZero A]
+    {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
     (π : A) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
     (hunit : IsUnit ((n : ℕ) : ResidueField A)) :
     letI : IsDomain (AdjoinRoot (dvrRootPoly π n)) :=

@@ -201,7 +201,7 @@ the preceding theorem is applied to the strict root cover, and a separate locali
 comparison identifies its fraction field with this DVR radical field. -/
 theorem exists_dvrRootFractionPowerEquiv_of_strict_local_normalization
     (A N D M : Type u)
-    [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [CharZero A]
+    [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
     [CommRing N] [IsDomain N] [IsIntegrallyClosed N]
     [Field D] [Field M]
     (pi : A) {n : ℕ} (hn : 2 ≤ n) (hpi : Irreducible pi)
