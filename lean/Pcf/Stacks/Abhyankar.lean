@@ -37,10 +37,11 @@ conclusion-shaped witness.
 * `09EV`: classification of intermediate fields in the Kummer extension;
 * `03GV`: normalization commutes with the étale base change used by `0EYH`.
 
-`Pcf.Abhyankar` already proves the finite-free and étale-away-from-the-divisor parts of
-`0EYF`.  The missing foundation is not the elementary Kummer polynomial calculation: it is
-strict henselization, tame ramification for extensions of DVRs, descent from the filtered
-étale neighbourhood, and the normalization/finite-étale assembly.
+`Pcf.Abhyankar` proves the finite-free and étale-away-from-the-divisor parts of `0EYF`.
+The statement in this file is proved downstream (this file cannot import the proof without an
+import cycle): `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` in
+`Pcf.Stacks.Abhyankar.Tag0EYG`, with axioms `[propext, Classical.choice, Quot.sound]`. That
+module is imported by the root module `Pcf`.
 -/
 
 @[expose] public section

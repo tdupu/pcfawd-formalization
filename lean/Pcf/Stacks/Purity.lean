@@ -75,17 +75,18 @@ the proved pieces of its Stacks Tag `0BMB` proof.
 * the outer regular-hypersurface induction step for Tag `0BMA`, conditional only on the exact
   hypersurface finite-etale lifting statement of Tag `0BLM`.
 
-## Remaining Stacks spine
+## Where the proof is completed
 
-The higher-dimensional induction still requires the hypersurface finite-etale lifting theorem
-(Tag `0BLM`). At the pinned Mathlib revision, the key étale-local finite factor of Tag `02LK` is
-already available as Tag `00UJ`,
-`Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq`. Tag `0BM9`, the dimension-two
-finite-free/discriminant branch, the height-one bridge, and the outer `0BMA` induction assembly
-are complete. After `0BLM`, the remaining work is the terminal `0BMA` base/induction theorem and
-the pointwise `0BMB` quasi-finite localization assembly.
+This file sits upstream of the proof of `0BMB`, so it cannot import it (that would be an import
+cycle). The completed proof is downstream:
 
-No declaration in this assembly file asserts the unproved terminal theorem.
+* `Pcf.Stacks.Purity.Tag0BMA`: `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing` (`0BMA`)
+  and `Pcf.Stacks.zariskiNagataPurity : ∀ R S, ZariskiNagataPurity R S` (`0BMB`, affine
+  pointwise form), with axioms `[propext, Classical.choice, Quot.sound]`;
+* `Pcf.Stacks.Purity.Tag0BMB`: the `0BMB` assembly from `033C` and `0BMA`;
+* `Pcf.Stacks.Purity.HypersurfaceLiftingComplete`: `0BLM` for complete regular local rings.
+
+All of these modules are imported by the root module `Pcf`.
 -/
 
 @[expose] public section
