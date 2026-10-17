@@ -127,4 +127,39 @@ theorem exists_pullback_iso_sigma {X Z : Scheme.{u}} (h : Z ⟶ X) {V : X.Opens}
     exact congrFun (g.commutes x) _
   rw [← hG, IsIso.inv_hom_id_assoc, IsPullback.isoPullback_inv_snd]
 
+/-- `x ∈ D(f)` iff `f ∉ 𝔭_x`, for `x` in an affine open. -/
+theorem mem_basicOpen_iff_notMem_primeIdealOf {X : Scheme.{u}} {V : X.Opens}
+    (hV : IsAffineOpen V) (f : Γ(X, V)) (x : V) :
+    (x : X) ∈ X.basicOpen f ↔ f ∉ (hV.primeIdealOf x).asIdeal := by
+  rw [← hV.fromSpec_primeIdealOf x]
+  change hV.primeIdealOf x ∈ hV.fromSpec ⁻¹ᵁ X.basicOpen f ↔ _
+  rw [hV.fromSpec_preimage_basicOpen]
+  rfl
+
+/-- **Étale chart.**  If `A` is an étale `Γ(V)`-algebra with a prime over the prime of `x ∈ V`,
+and `A ⊗_{Γ(V)} Γ(h⁻¹V) ≅ ∏_i C_i`, then `φ : Spec A → Spec Γ(V) ≅ V ⊂ X` is étale with `x` in
+its image, and `Z ×_X Spec A ≅ ∐_i Spec C_i` over `Spec A`. -/
+theorem exists_etale_pullback_iso_sigma {X Z : Scheme.{u}} (h : Z ⟶ X) {V : X.Opens}
+    (hV : IsAffineOpen V) (hZV : IsAffineOpen (h ⁻¹ᵁ V)) {x : X} (hx : x ∈ V)
+    (A : Type u) [CommRing A] [Algebra Γ(X, V) A] [Algebra.Etale Γ(X, V) A]
+    (hy : ∃ y' : PrimeSpectrum A, y'.asIdeal.under Γ(X, V) = (hV.primeIdealOf ⟨x, hx⟩).asIdeal)
+    {n : ℕ} (C : Fin n → Type u) [∀ i, CommRing (C i)] [∀ i, Algebra A (C i)]
+    (g : (letI := (h.app V).hom.toAlgebra
+      A ⊗[Γ(X, V)] Γ(Z, h ⁻¹ᵁ V)) ≃ₐ[A] ∀ i, C i) :
+    ∃ φ : Spec (CommRingCat.of A) ⟶ X, Etale φ ∧ x ∈ Set.range φ.base ∧
+      ∃ ψ : pullback h φ ≅ ∐ (fun i ↦ Spec (CommRingCat.of (C i))),
+        ψ.hom ≫ Sigma.desc (fun i ↦ Spec.map (CommRingCat.ofHom (algebraMap A (C i)))) =
+          pullback.snd h φ := by
+  obtain ⟨ψ, hψ⟩ := exists_pullback_iso_sigma h hV hZV A C g
+  refine ⟨_, ?_, ?_, ψ, hψ⟩
+  · have : Etale (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V) A))) :=
+      HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr inferInstance)
+    infer_instance
+  · obtain ⟨y', hy'⟩ := hy
+    refine ⟨y', ?_⟩
+    have hc : Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V) A)) y' =
+        hV.primeIdealOf ⟨x, hx⟩ := PrimeSpectrum.ext hy'
+    change hV.fromSpec (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V) A)) y') = x
+    rw [hc, hV.fromSpec_primeIdealOf]
+
 end Pcf.Stacks.SchemeLevel
