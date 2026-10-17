@@ -14,18 +14,23 @@ Stacks Project Lemma 10.110.6 (Tag `0AFS`): a Noetherian local ring is regular i
 has finite global dimension; in that case every localization at a prime is regular.
 
 The proofs are the Auslander–Buchsbaum–Serre theory of mathlib4 PR #29802 (Nailin Guan), vendored
-under `Pcf.Vendor.RegularLocalization`. This file restates the pcf-facing consequences:
+under `Pcf.Vendor.RegularLocalization`; pcf uses the vendored statements directly, which carry
+the Stacks tags (a pcf addition to the vendored copy).  This module re-exports them:
 
-* `Pcf.Stacks.isRegularLocalRing_iff_globalDimension_lt_top` : the first sentence of `0AFS`;
-* `Pcf.Stacks.isRegularLocalRing_localization_atPrime` : the second sentence of `0AFS`;
-* `Pcf.Stacks.IsRegularLocalRing.of_isLocalization_atPrime` : the same for any
-  `IsLocalization.AtPrime`;
-* `Pcf.Stacks.isRegularRing_of_isRegularLocalRing` : a regular local ring is a regular ring in
-  Mathlib's sense (every localization at a prime is regular local).
+* `Pcf.Vendor.Auslander_Buchsbaum_Serre` : the first sentence of `0AFS` (the global dimension is
+  computed in `ModuleCat.{v} R` for an auxiliary universe `v` with `Small.{v} R`; the statement
+  holds for every such `v`);
+* `Pcf.Vendor.isRegularLocalRing_localization` : the second sentence of `0AFS` (finite global
+  dimension localizes, Algebra, Lemma 10.109.13, and Auslander–Buchsbaum–Serre converts back to
+  regularity, as in Stacks);
+* `Pcf.Vendor.IsRegularLocalRing.of_isLocalization` : the same for any `IsLocalization.AtPrime`;
+* `Pcf.Vendor.isRegularRing_of_isRegularLocalRing` : a regular local ring is a regular ring in
+  Mathlib's sense (every localization at a prime is regular local);
+* `Pcf.Vendor.isDomain_of_isRegularLocalRing` : Stacks Tag `00NP`, a regular local ring is a
+  domain.
 
-None of these is a global instance (instance hygiene: Mathlib already has the low-priority
-instance `IsRegularRing → IsRegularLocalRing (Localization.AtPrime p)`). Downstream files can opt
-in with the scoped instances in the namespace `Pcf.Stacks.RegularLocalization`.
+None of the `0AFS` consequences is a global instance (instance hygiene: Mathlib already has the
+low-priority instance `IsRegularRing → IsRegularLocalRing (Localization.AtPrime p)`).
 
 ## Global instances from the vendored code
 
@@ -34,7 +39,7 @@ scope; the vendored copy keeps them as the PR declares them:
 
 * `IsRegularLocalRing R → IsDomain R` (`Pcf.Vendor.RegularLocalization.RegularLocalRingBasic`,
   priority lowered to `low` by pcf), so every importer finds `IsDomain` for a regular local ring
-  by instance search; the explicit `isDomain_of_isRegularLocalRing` still works;
+  by instance search; the explicit `Pcf.Vendor.isDomain_of_isRegularLocalRing` still works;
 * `Nontrivial M` for a maximal Cohen–Macaulay module `M`, priority `low`
   (`Pcf.Vendor.RegularLocalization.MaximalCohenMacaulay`);
 * `ModuleCat.IsCohenMacaulay (ModuleCat.of R R)` for a Cohen–Macaulay local ring `R`
@@ -43,62 +48,3 @@ scope; the vendored copy keeps them as the PR declares them:
 All three conclude a proposition, so they cannot create data diamonds with Mathlib; they
 disappear when the PR lands and the vendored copy is removed.
 -/
-
-@[expose] public section
-
-universe u v
-
-namespace Pcf.Stacks
-
-/-- **Stacks Project Tag 0AFS, first sentence.** A Noetherian local ring is a regular local ring
-if and only if it has finite global dimension.
-
-Divergence from Stacks: the global dimension is computed in `ModuleCat.{v} R` for an auxiliary
-universe `v` with `Small.{v} R`; the statement holds for every such `v`. -/
-@[stacks 0AFS "first sentence"]
-theorem isRegularLocalRing_iff_globalDimension_lt_top (R : Type u) [CommRing R] [IsLocalRing R]
-    [IsNoetherianRing R] [Small.{v} R] :
-    IsRegularLocalRing R ↔ Pcf.Vendor.globalDimension.{v} R < ⊤ :=
-  Pcf.Vendor.Auslander_Buchsbaum_Serre R
-
-/-- **Stacks Project Tag 0AFS, second sentence.** The localization of a regular local ring at a
-prime ideal is a regular local ring.
-
-Proof as in Stacks: finite global dimension localizes (Algebra, Lemma 10.109.13) and the
-Auslander–Buchsbaum–Serre theorem (vendored mathlib4 #29802) converts back to regularity. -/
-@[stacks 0AFS "second sentence"]
-theorem isRegularLocalRing_localization_atPrime (R : Type u) [CommRing R] [IsRegularLocalRing R]
-    (p : Ideal R) [p.IsPrime] : IsRegularLocalRing (Localization.AtPrime p) :=
-  Pcf.Vendor.isRegularLocalRing_localization R p
-
-/-- **Stacks Project Tag 0AFS, second sentence**, for an arbitrary localization at a prime. -/
-@[stacks 0AFS "second sentence, any `IsLocalization.AtPrime`"]
-theorem IsRegularLocalRing.of_isLocalization_atPrime (R : Type u) [CommRing R]
-    [IsRegularLocalRing R] (p : Ideal R) [p.IsPrime] (S : Type*) [CommRing S] [Algebra R S]
-    [IsLocalization.AtPrime S p] : IsRegularLocalRing S :=
-  Pcf.Vendor.IsRegularLocalRing.of_isLocalization R p S
-
-/-- A regular local ring is a regular ring in Mathlib's sense: all its localizations at primes
-are regular local rings. This is a restatement of the second sentence of Stacks Tag 0AFS in
-terms of Mathlib's `IsRegularRing`. -/
-@[stacks 0AFS "second sentence, as `IsRegularRing`"]
-theorem isRegularRing_of_isRegularLocalRing (R : Type u) [CommRing R] [IsRegularLocalRing R] :
-    IsRegularRing R :=
-  Pcf.Vendor.isRegularRing_of_isRegularLocalRing R
-
-namespace RegularLocalization
-
-/-- Opt-in instance: `open scoped Pcf.Stacks.RegularLocalization`. -/
-scoped instance (priority := low) instIsRegularLocalRingLocalizationAtPrime (R : Type u)
-    [CommRing R] [IsRegularLocalRing R] (p : Ideal R) [p.IsPrime] :
-    IsRegularLocalRing (Localization.AtPrime p) :=
-  isRegularLocalRing_localization_atPrime R p
-
-/-- Opt-in instance: `open scoped Pcf.Stacks.RegularLocalization`. -/
-scoped instance (priority := low) instIsRegularRingOfIsRegularLocalRing (R : Type u)
-    [CommRing R] [IsRegularLocalRing R] : IsRegularRing R :=
-  isRegularRing_of_isRegularLocalRing R
-
-end RegularLocalization
-
-end Pcf.Stacks

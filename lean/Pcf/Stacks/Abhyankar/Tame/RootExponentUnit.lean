@@ -233,7 +233,7 @@ theorem isUnit_natCast_of_strictRootCover_etale_away
     [Algebra.Etale A (Localization.Away (algebraMap A N a))] :
     IsUnit ((n : ℕ) : A) := by
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have ha0' : a ≠ 0 := nonZeroDivisors.ne_zero ha0
   haveI hp : (Ideal.span ({a} : Set A)).IsPrime := divisorPrime_isPrime a
   have hprime : Prime a := (Ideal.span_singleton_prime ha0').mp hp

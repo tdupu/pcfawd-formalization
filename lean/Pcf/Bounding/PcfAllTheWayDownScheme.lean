@@ -108,17 +108,6 @@ theorem pointClosureSubschemeMap_comm
   simp only [Category.assoc, pointClosureSubschemeMap_subschemeι,
     pointClosureSubschemeMap_subschemeι_assoc, hcomm]
 
-/-- A commuting square remains commuting after iterating both endomorphisms. -/
-theorem schemeEnd_pow_comm
-    {X Y : Scheme.{u}} (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
-    (hcomm : g ≫ π = π ≫ f) (m : ℕ) :
-    (End.of g ^ m).asHom ≫ π = π ≫ (End.of f ^ m).asHom := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-      simp only [pow_succ, End.mul_asHom, Category.assoc]
-      rw [ih, ← Category.assoc, hcomm, Category.assoc]
-
 /-- The two local covering packages needed for one invariant divisor, on every
 actual iterate and affine preimage chart. -/
 def InvariantDivisorCoveringHypotheses
@@ -160,22 +149,6 @@ theorem isNormalizedPCFOfFiniteType_iff
     IsNormalizedPCFOfFiniteType k s f ↔ IsNormalizedPCF k f :=
   (isNormalizedPCF_iff_normalization k f).symm
 
-/-- The invariant-divisor theorem stated directly for normalized PCF of its
-actual restriction morphism. -/
-theorem invariantDivisor_isNormalizedPCF_of_finiteType
-    (k : Type u) [Field k] [CharZero k]
-    {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
-    (f : X ⟶ X) [IsFinite f] [IsDominant f]
-    [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
-    (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
-    (cover : InvariantDivisorCoveringHypotheses f A)
-    (hpcf : letI := charZero_stalk_of_field k s (genericPoint X)
-      (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF) :
-    IsNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
-      (A.invariantClosureMap f hA) :=
-  invariantDivisorNormalization_normalized_isPCF_of_finiteType
-    k s f A hA cover hpcf
-
 /-- The general periodic-divisor theorem. The ambient scheme need not be normal.
 The only extra mathematical inputs are the explicit local purity and Abhyankar
 packages on the canonical normalization. -/
@@ -187,7 +160,7 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
     (A : SchemeDivisorPoint X) (p : ℕ) (hp : 1 ≤ p)
     (hA : (End.of f ^ p).asHom.base A.1 = A.1)
     (cover : letI := schemeGlobalNormalizationMap_isFinite X k s
-      ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
+      ∀ (n : ℕ) (B : SchemeDivisorPoint (Palomar.normalization X)),
         InvariantDivisorCoveringHypotheses (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B)
     (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     IsNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
@@ -196,8 +169,8 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
   letI := charZero_stalk_of_field k s (genericPoint X)
   letI (U : X.affineOpens) := schemeAffineAlgebraOfField k s U
   letI (U : X.affineOpens) := schemeAffineAlgebraOfField_finiteType k s U
-  let N := schemeGlobalNormalization X
-  let ν : N ⟶ X := schemeGlobalNormalizationMap X
+  let N := Palomar.normalization X
+  let ν : N ⟶ X := Palomar.normalizationMap X
   let F : N ⟶ N := schemeGlobalNormalizationLift f
   let sN := ν ≫ s
   have hperiod : (schemeDivisorMap f (coheight_apply_eq_one_of_finiteType f k))^[p] A = A := by
@@ -214,8 +187,10 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
       (divisorDynamicsOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).IsPCF := by
     rw [divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate]
     exact (DivisorDynamics.isPCF_iterate_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
-  have hpcfB := invariantDivisor_isNormalizedPCF_of_finiteType k sN
-    (End.of F ^ (p * c)).asHom B hF (cover (p * c) B) hpcfPower
+  have hpcfB : IsNormalizedPCFOfFiniteType k ((pointClosureIdealSheaf B.1).subschemeι ≫ sN)
+      (B.invariantClosureMap (End.of F ^ (p * c)).asHom hF) :=
+    invariantDivisorNormalization_normalized_isPCF_of_finiteType k sN
+      (End.of F ^ (p * c)).asHom B hF (cover (p * c) B) hpcfPower
   let g := A.invariantClosureMap (End.of f ^ p).asHom hA
   let gB := B.invariantClosureMap (End.of F ^ (p * c)).asHom hF
   let π := pointClosureSubschemeMap ν B.1 A.1 hν
@@ -232,7 +207,7 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
     rw [hpower]
     exact pointClosureSubschemeMap_comm (End.of f ^ (p * c)).asHom
       (End.of F ^ (p * c)).asHom ν
-      (schemeEnd_pow_comm f F ν (schemeGlobalNormalizationLift_comp f) (p * c))
+      (normalization_square_pow f F ν (schemeGlobalNormalizationLift_comp f) (p * c))
       A.1 B.1 _ hF hν
   have hdesc := isNormalizedPCFOfFiniteType_of_cover k
     ((pointClosureIdealSheaf A.1).subschemeι ≫ s)
@@ -286,7 +261,7 @@ theorem pcfAllTheWayDown_scheme
     (A : SchemeDivisorPoint X) (r p : ℕ) (hp : 1 ≤ p)
     (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1)
     (cover : letI := schemeGlobalNormalizationMap_isFinite X k s
-      ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
+      ∀ (n : ℕ) (B : SchemeDivisorPoint (Palomar.normalization X)),
         InvariantDivisorCoveringHypotheses (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B)
     (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     let B := schemeDivisorIterateOfFiniteType k s f r A
@@ -303,12 +278,10 @@ theorem pcfAllTheWayDown_scheme
 #print axioms isNormalizedPCFOfFiniteType_pow_iff
 #print axioms isNormalizedPCFOfFiniteType_of_cover
 #print axioms pointClosureSubschemeMap_comm
-#print axioms schemeEnd_pow_comm
 #print axioms InvariantDivisorCoveringHypotheses
 #print axioms schemeAffineAlgebraOfField
 #print axioms schemeAffineAlgebraOfField_finiteType
 #print axioms isNormalizedPCFOfFiniteType_iff
-#print axioms invariantDivisor_isNormalizedPCF_of_finiteType
 #print axioms periodicDivisor_isNormalizedPCFOfFiniteType
 #print axioms schemeDivisorIterateOfFiniteType
 #print axioms schemeDivisorIterateOfFiniteType_val

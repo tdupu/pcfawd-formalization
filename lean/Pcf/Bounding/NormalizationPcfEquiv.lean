@@ -70,7 +70,7 @@ theorem branch_eq_normalization_image :
 
 theorem branch_finite : D.branch.Finite := by
   rw [D.branch_eq_normalization_image]
-  exact D.normalized.branch_finite.image _
+  exact D.normalized.step_image_ramified_finite.image _
 
 theorem mem_postcriticalSet_iff {Q : PU} :
     Q ∈ D.postcriticalSet ↔ ∃ n, ∃ R ∈ D.branch, D.step^[n] R = Q := by
@@ -191,19 +191,19 @@ theorem schemeNormalizedPostcriticalSet_eq_iUnion :
 
 /-- The divisor map in the canonical package is the actual normalization map. -/
 @[simp] theorem schemeGlobalNormalizationUnnormalizedDynamics_normalization_val
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization A)) :
+    (Q : SchemeDivisorPoint (Palomar.normalization A)) :
     ((schemeGlobalNormalizationUnnormalizedDynamics k g).normalization Q).1 =
-      schemeGlobalNormalizationMap A Q.1 := rfl
+      Palomar.normalizationMap A Q.1 := rfl
 
 /-- The upstairs step is the actual lift of `g` to the canonical normalization. -/
 @[simp] theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_step_val
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization A)) :
+    (Q : SchemeDivisorPoint (Palomar.normalization A)) :
     ((schemeGlobalNormalizationUnnormalizedDynamics k g).normalized.step Q).1 =
       schemeGlobalNormalizationLift g Q.1 := rfl
 
 /-- The upstairs ramification is computed from the actual lifted stalk map. -/
 @[simp] theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_ramificationIdx
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization A)) :
+    (Q : SchemeDivisorPoint (Palomar.normalization A)) :
     (schemeGlobalNormalizationUnnormalizedDynamics k g).normalized.ramificationIdx Q =
       schemeDivisorRamificationIdx (schemeGlobalNormalizationLift g) Q := rfl
 
@@ -220,10 +220,10 @@ theorem schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch :
     schemeNormalizedBranch k g =
       (schemeGlobalNormalizationUnnormalizedDynamics k g).normalization ''
         schemeReducedFiberBranch (schemeGlobalNormalizationLift g) := by
-  let : IsFinite (schemeGlobalNormalizationMap A) :=
+  let : IsFinite (Palomar.normalizationMap A) :=
     schemeGlobalNormalizationMap_isFinite_of_affineFiniteType A k
-  let : IsLocallyNoetherian (schemeGlobalNormalization A) :=
-    LocallyOfFiniteType.isLocallyNoetherian (schemeGlobalNormalizationMap A)
+  let : IsLocallyNoetherian (Palomar.normalization A) :=
+    LocallyOfFiniteType.isLocallyNoetherian (Palomar.normalizationMap A)
   rw [schemeNormalizedBranch_eq_normalization_image]
   congr 1
   ext E
@@ -249,8 +249,8 @@ divisor over which the lifted map has a nonreduced intrinsic scheme fiber. -/
 theorem mem_schemeNormalizedBranch_iff_nonreduced_normalizedFiber
     (E : SchemeDivisorPoint A) :
     E ∈ schemeNormalizedBranch k g ↔
-      ∃ B : SchemeDivisorPoint (schemeGlobalNormalization A),
-        schemeGlobalNormalizationMap A B.1 = E.1 ∧
+      ∃ B : SchemeDivisorPoint (Palomar.normalization A),
+        Palomar.normalizationMap A B.1 = E.1 ∧
           ¬ AlgebraicGeometry.IsReduced
             ((schemeGlobalNormalizationLift g).fiber B.1) := by
   rw [schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch]
@@ -268,8 +268,8 @@ theorem mem_schemeNormalizedBranch_iff_nonreduced_normalizedFiber
 ramification index, as in `def:crit-branch`. -/
 theorem mem_schemeNormalizedBranch_iff (E : SchemeDivisorPoint A) :
     E ∈ schemeNormalizedBranch k g ↔
-      ∃ Q : SchemeDivisorPoint (schemeGlobalNormalization A),
-        schemeGlobalNormalizationMap A (schemeGlobalNormalizationLift g Q.1) = E.1 ∧
+      ∃ Q : SchemeDivisorPoint (Palomar.normalization A),
+        Palomar.normalizationMap A (schemeGlobalNormalizationLift g Q.1) = E.1 ∧
           1 < schemeDivisorRamificationIdx (schemeGlobalNormalizationLift g) Q := by
   rw [schemeNormalizedBranch_eq_normalization_image]
   constructor

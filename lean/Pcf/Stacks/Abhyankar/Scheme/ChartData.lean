@@ -86,11 +86,6 @@ theorem isLocalization_away_of_ideal_eq {D : X.IdealSheafData} {V : X.affineOpen
   rw [Scheme.Opens.ι_app]
   exact this
 
-/-- A finite morphism induces finite ring maps on affine opens of the target. -/
-theorem finite_app_of_isFinite {Y Z : Scheme.{u}} (f : Y ⟶ Z) [IsFinite f] {W : Z.Opens}
-    (hW : IsAffineOpen W) : (f.app W).hom.Finite :=
-  ((isFinite_iff f).mp inferInstance).2 W hW
-
 /-- An étale morphism induces étale ring maps on affine opens with affine preimage. -/
 theorem etale_app_of_etale {Y Z : Scheme.{u}} (f : Y ⟶ Z) [Etale f] {W : Z.Opens}
     (hW : IsAffineOpen W) (hW' : IsAffineOpen (f ⁻¹ᵁ W)) : (f.app W).hom.Etale := by

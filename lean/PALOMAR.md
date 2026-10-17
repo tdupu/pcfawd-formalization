@@ -111,8 +111,9 @@ with Zariski–Nagata purity and Abhyankar's lemma supplied as proved theorems.
 
 *History.* Until 2026-10-17 this entry compared `Pcf.Palomar.pcfAllTheWayDown_charZero`,
 which takes purity and Abhyankar's lemma as its first two arguments (`purity`, `abhyankar`).
-That theorem is still in `Bridge.lean`, with the Palomar forms of the two local theorems in
-`lean/Pcf/Palomar/LocalTheorems.lean`; neither is part of the Challenge any more. The
+That theorem and the Palomar forms of the two local theorems were removed on 2026-10-17 (they
+duplicated `Pcf.pcfAllTheWayDown_charZero` and `Pcf.Stacks.ZariskiNagataPurity` /
+`Pcf.Stacks.AbhyankarLemma`); neither was part of the Challenge any more. The
 compared statement is the earlier one with those two binders removed and nothing else
 changed. The earlier conditional Challenge passed the Palomar preflight on
 `tdupu/pcfawd-formalization` `ca90abd` (run 38939892378); that run does not cover this one.
@@ -233,10 +234,11 @@ Res. Lett. **24** (2017) 1633–1647, `arXiv:1511.00194`.
 
 # Entry 1 — the descent (CONDITIONAL)
 
-**Declaration** `Pcf.pcfAllTheWayDown_divisorDynamics`
+**Declaration** `Pcf.isPCF_of_isPCF_restriction` (until 2026-10-17 this entry quoted its
+restatement `Pcf.pcfAllTheWayDown_divisorDynamics`, which was removed as a duplicate)
 
 ```
-@Pcf.pcfAllTheWayDown_divisorDynamics : ∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivisorDynamics (P i))
+@Pcf.isPCF_of_isPCF_restriction : ∀ {P : ℕ → Type u_1} (D : (i : ℕ) → Pcf.DivisorDynamics (P i))
   (S : (i : ℕ) → Pcf.PCFSetup (P i) (P (i + 1))),
   (∀ (i : ℕ), (S i).res = D (i + 1)) →
     (∀ (i : ℕ), ∃ n, 1 ≤ n ∧ (S i).amb = (D i).iter n) → (D 0).PCF → ∀ (i : ℕ), (D i).PCF
@@ -425,12 +427,14 @@ ring of a divisor prime) **is not formalized**; `lean/AXIOMS.md` §E records thi
 
 # Entry 8 — lying over
 
-**Declaration** `Pcf.comap_surjective_of_isIntegral_of_injective`
+**Declaration** `RingHom.IsIntegral.comap_surjective` (Mathlib; until 2026-10-17 this entry
+quoted pcf's `Pcf.comap_surjective_of_isIntegral_of_injective`, which had the same statement and
+was removed as a duplicate)
 
 ```
 ∀ {R : Type u_1} {S : Type u_2} [inst : CommRing R] [inst_1 : CommRing S]
-  {φ : R →+* S}, φ.IsIntegral → Function.Injective ⇑φ →
-    Function.Surjective (PrimeSpectrum.comap φ)
+  {f : R →+* S}, f.IsIntegral → Function.Injective ⇑f →
+    Function.Surjective (PrimeSpectrum.comap f)
 ```
 
 **Informal claim.** Lying over (Stacks Tag 00HS): if `φ : R → S` is an injective
@@ -501,9 +505,7 @@ more faithful.
   is **not** a claim that nothing is assumed: the assumed mathematics is carried in
   *fields* of `Pcf.DivisorDynamics`, `Pcf.PCFSetup` and `Pcf.PurityData`, and structure fields
   are invisible to `#print axioms` by construction.
-* Two adversarial reviews are retained at
-  the authors' private research note `2026-09-21-abhyankar-formalization/adversarial-review.md` and
-  the authors' private research note `2026-09-21-zariski-nagata/adversarial-review.md`.
+* Two adversarial reviews (2026-09-21) checked the Abhyankar and Zariski--Nagata interfaces.
 * **Correction to this file's introducing commit.** The commit message of `facc8e2`
   states "Mathlib is for human-only formalizations" (that commit created this file at
   `palomar/registry-entries.md`, before it was moved here). That is **false as stated**, and

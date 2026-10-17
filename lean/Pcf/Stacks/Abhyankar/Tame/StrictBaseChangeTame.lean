@@ -368,7 +368,7 @@ theorem isTamelyRamifiedAt_of_etale_cover_of_flat
   let aA : A := algebraMap R A a
   -- the base `A`
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor aA ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   haveI : IsNoetherianRing N := IsNoetherianRing.of_finite A N
   have haA0 : aA ≠ 0 := nonZeroDivisors.ne_zero ha0

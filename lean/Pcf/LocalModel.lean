@@ -249,9 +249,15 @@ theorem algebraMap_mem_span_root (he : 1 ≤ e) :
           * (algebraMap R _ (((u⁻¹ : Rˣ) : R))
               * AdjoinRoot.root (localPoly u a (d + 1)) ^ d) := by ring
 
-/-- The `R`-algebra map `R/(a) → C/(z)` induced by the structure map `R → C`.
-See Step 3 of the proof of Theorem `thm:bounding` of `paper.tex`. -/
-noncomputable def fromQuotient (he : 1 ≤ e) :
+/-- **The restriction map `V(z) → V(a)`, algebraically.**  The `R`-algebra map
+`R/(a) → C/(z)`, `C = R[z]/(z ^ e - u * a)`, induced by the structure map `R → C`.
+On spectra this is the map `V(z) → V(a)` of Step 3 of the proof of Theorem `thm:bounding` in
+`paper.tex`: the restriction `g = f|_A` of the cover to the (reduced preimage of the) branch
+divisor (Steps 3 and 4 of the proof).
+
+Note that this is the map *along the divisor*, not the cover `R → C` itself; see the
+section *Ramification of the cover versus the restriction* in the module documentation. -/
+noncomputable def restrictionMap (he : 1 ≤ e) :
     R ⧸ Ideal.span ({a} : Set R) →ₐ[R]
       AdjoinRoot (localPoly u a e) ⧸
         Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
@@ -265,8 +271,8 @@ noncomputable def fromQuotient (he : 1 ≤ e) :
         (Ideal.mul_mem_right _ _ (algebraMap_mem_span_root u a he))
 
 @[simp]
-theorem fromQuotient_mk (he : 1 ≤ e) (r : R) :
-    fromQuotient u a he (Ideal.Quotient.mk (Ideal.span ({a} : Set R)) r)
+theorem restrictionMap_mk (he : 1 ≤ e) (r : R) :
+    restrictionMap u a he (Ideal.Quotient.mk (Ideal.span ({a} : Set R)) r)
       = Ideal.Quotient.mk _ (algebraMap R (AdjoinRoot (localPoly u a e)) r) :=
   rfl
 
@@ -300,11 +306,11 @@ noncomputable def quotientRootEquiv (he : 1 ≤ e) :
         Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
           Set (AdjoinRoot (localPoly u a e))))
       ≃ₐ[R] R ⧸ Ideal.span ({a} : Set R) :=
-  AlgEquiv.ofAlgHom (toQuotientDescend u a he) (fromQuotient u a he)
+  AlgEquiv.ofAlgHom (toQuotientDescend u a he) (restrictionMap u a he)
     (by
       ext x
       obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
-      rw [AlgHom.comp_apply, fromQuotient_mk, toQuotientDescend_mk, AlgHom.commutes,
+      rw [AlgHom.comp_apply, restrictionMap_mk, toQuotientDescend_mk, AlgHom.commutes,
         AlgHom.coe_id, id_eq, Ideal.Quotient.algebraMap_eq])
     (by
       ext x
@@ -312,7 +318,7 @@ noncomputable def quotientRootEquiv (he : 1 ≤ e) :
       obtain ⟨p, rfl⟩ := AdjoinRoot.mk_surjective y
       obtain ⟨q, hq⟩ : (X : R[X]) ∣ p - Polynomial.C (p.coeff 0) := by
         rw [X_dvd_iff]; simp
-      rw [AlgHom.comp_apply, toQuotientDescend_mk, toQuotient_mk, fromQuotient_mk,
+      rw [AlgHom.comp_apply, toQuotientDescend_mk, toQuotient_mk, restrictionMap_mk,
         AlgHom.coe_id, id_eq, AdjoinRoot.algebraMap_eq, ← AdjoinRoot.mk_C,
         Ideal.Quotient.mk_eq_mk_iff_sub_mem]
       have hsub : AdjoinRoot.mk (localPoly u a e) (Polynomial.C (p.coeff 0))
@@ -322,28 +328,6 @@ noncomputable def quotientRootEquiv (he : 1 ≤ e) :
           map_neg, map_mul, AdjoinRoot.mk_X]
       rw [hsub]
       exact neg_mem (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)))
-
-/-- **The restriction map `V(z) → V(a)`, algebraically.**  The `R`-algebra map
-`R/(a) → C/(z)`, `C = R[z]/(z ^ e - u * a)`, induced by the structure map `R → C`.
-On spectra this is the map `V(z) → V(a)` of Step 3 of the proof of Theorem `thm:bounding` in
-`paper.tex`: the restriction `g = f|_A` of the cover to the (reduced preimage of the) branch
-divisor.  It is a synonym for `Pcf.LocalModel.fromQuotient`, named for the role it plays in
-Steps 3 and 4 of the proof.
-
-Note that this is the map *along the divisor*, not the cover `R → C` itself; see the
-section *Ramification of the cover versus the restriction* in the module documentation. -/
-noncomputable def restrictionMap (he : 1 ≤ e) :
-    R ⧸ Ideal.span ({a} : Set R) →ₐ[R]
-      AdjoinRoot (localPoly u a e) ⧸
-        Ideal.span ({AdjoinRoot.root (localPoly u a e)} :
-          Set (AdjoinRoot (localPoly u a e))) :=
-  fromQuotient u a he
-
-@[simp]
-theorem restrictionMap_mk (he : 1 ≤ e) (r : R) :
-    restrictionMap u a he (Ideal.Quotient.mk (Ideal.span ({a} : Set R)) r)
-      = Ideal.Quotient.mk _ (algebraMap R (AdjoinRoot (localPoly u a e)) r) :=
-  rfl
 
 /-- `Pcf.LocalModel.restrictionMap` is the inverse of the isomorphism
 `Pcf.LocalModel.quotientRootEquiv` of Step 3 of Theorem `thm:bounding` in `paper.tex`. -/

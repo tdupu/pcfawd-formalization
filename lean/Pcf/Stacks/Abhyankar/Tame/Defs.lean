@@ -19,11 +19,10 @@ regular divisor and its proof, shared with the characteristic-zero theorem: the 
 positive integer is invertible" of `Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by
 the hypothesis of Stacks Tag `0EYG` itself, "`Y` is tamely ramified over `X` in codimension `1`"
 (Stacks `0BSE`, Section 58.31, with More on Algebra Definition 15.113.7 = Tag `09E9`), in any
-characteristic.  There is one proof: the characteristic-zero theorem
-`Pcf.Stacks.abhyankarLemmaOfFinite` derives tameness from "every positive integer is invertible"
-(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) and then runs through the same lemmas as
-`Pcf.Stacks.abhyankarLemmaTameOfFinite` (see "Shared
-lemmas" below); the public `Pcf.Stacks.abhyankarLemma` and `Pcf.Stacks.abhyankarLemmaTame`
+characteristic.  There is one proof: the characteristic-zero theorem `Pcf.Stacks.abhyankarLemma`
+derives tameness from "every positive integer is invertible"
+(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) and applies the tame theorem
+(`Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame`; see "Shared lemmas" below); the public `Pcf.Stacks.abhyankarLemma` and `Pcf.Stacks.abhyankarLemmaTame`
 (`Pcf.Stacks.Abhyankar.FiniteNormalization`) add the finiteness of the normalization.
 
 ## The statement
@@ -63,13 +62,10 @@ unchanged and no new definition is needed.
 
 ## Shared lemmas
 
-Every step of the proof of `0EYG` is proved once, in any characteristic, and used by both
-`Pcf.Stacks.abhyankarLemmaOfFinite` (characteristic zero) and
-`Pcf.Stacks.abhyankarLemmaTameOfFinite`, hence by `Pcf.Stacks.abhyankarLemma` and
-`Pcf.Stacks.abhyankarLemmaTame`.  The
-characteristic-zero theorem enters the shared route at the top:
-`hasAbhyankarStandardCoverAt_of_mem_divisor` (`Tag0EYG.lean`) is
-`hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame` with tameness from
+Every step of the proof of `0EYG` is proved once, in any characteristic, for
+`Pcf.Stacks.abhyankarLemmaTameOfFinite`, hence for `Pcf.Stacks.abhyankarLemmaTame`.  The
+characteristic-zero theorem `Pcf.Stacks.abhyankarLemma` enters the shared route at the top
+(`Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame`), with tameness from
 `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`.
 
 Steps that never used characteristic zero:
@@ -122,7 +118,7 @@ Steps stated with the tame hypothesis (Stacks' own; in characteristic zero it al
   `e_i` is invertible in `A_λ`");
 * `Tame/StrictBaseChangeTame`: the affine `0EYD` (58.31.1) transport of tameness from `S/R` to
   the components of `Rˢʰ ⊗_R S` over `Rˢʰ`;
-* `Tame/Tag0EYGTame`: the main theorem `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`.
+* `Tame/Tag0EYGTame`: the main theorem `abhyankarLemmaTameOfFinite`.
 -/
 
 @[expose] public section
@@ -178,15 +174,6 @@ def AbhyankarLemmaTameOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra
   IsTamelyRamifiedInCodimensionOneAlong R S a →
   ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
     HasAbhyankarStandardCoverAt R S a y
-
-/-- The finite-normalization forms: the tame statement implies the characteristic-zero one. -/
-theorem AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite {R S : Type u} [CommRing R]
-    [CommRing S] [Algebra R S]
-    {a : R} (h : AbhyankarLemmaTameOfFinite R S a) : AbhyankarLemmaOfFinite R S a := by
-  intro hR ha hreg hfin hetale hint hnat y hy
-  haveI := hfin
-  exact h hR ha hreg hfin hetale hint
-    (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 section ResidueField
 

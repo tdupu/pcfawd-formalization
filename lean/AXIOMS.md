@@ -6,7 +6,7 @@
 | Scope | `lean/` |
 | Status | Draft |
 | Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07`; purity and Abhyankar proved `2026-10-16` (see the first section); phase-2 Stacks-form statements `2026-10-17` |
-| Manuscript | `latex/paper.tex`, cited by `\label` (the file was `pcf.tex` with different numbering when this census was first written) |
+| Manuscript | *PCF all the way down*, cited by its LaTeX `\label`s (numbers change between versions of the manuscript) |
 | Toolchain | Lean `4.35.0`, Mathlib `v4.35.0` (`56a005855ea1`) since 2026-10-15 (was Lean `4.34.0`, Mathlib `5ed296525643`) |
 
 This is the *axiom census* of the formalization, in the sense used by the
@@ -23,14 +23,15 @@ inputs of `Pcf.PCFAllTheWayDownLocalTheorems` and of the compared Palomar statem
 
 | Input | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
-| Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Palomar.zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Palomar.abhyankarLemma` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tag0EYG.lean`, now `abhyankarLemmaOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
+| Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (derived from the tame theorem `Pcf.Stacks.abhyankarLemmaTame`) | `[propext, Classical.choice, Quot.sound]` |
 
 The headline theorems with these inputs discharged are in `Pcf/Palomar/Unconditional.lean`:
 
 * `Pcf.pcfAllTheWayDown_charZero_unconditional` (development statement);
-* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` (the compared statement of
-  `Pcf.Palomar.pcfAllTheWayDown_charZero` with its `purity` and `abhyankar` binders removed).
+* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` (the compared statement, in the vocabulary
+  of `Pcf/Palomar/Statement.lean`, derived from the development statement through the
+  equivalences of `Pcf/Palomar/Bridge.lean`).
 
 Both report `[propext, Classical.choice, Quot.sound]`. **For these theorems nothing is assumed
 beyond the standard axioms and the hypotheses printed in their statements** (characteristic-zero
@@ -41,8 +42,7 @@ space, finite dominant self-map, normalized PCF). The statements of `ZariskiNaga
 describe them correctly; they are now history for the headline. The modelling assumptions of §A
 and the abstract-layer fields of §B concern the legacy abstract interfaces, not the headline.
 
-The proofs were written in the run recorded in
-the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`FRAME.md`, `PLAN.md`, `STATUS.md`). Mathlib PR
+The proofs were written on 2026-10-16. Mathlib PR
 #29802 (Auslander--Buchsbaum--Serre, localization of regular local rings) is vendored, renamed,
 under `Pcf/Vendor/RegularLocalization/` and used through `Pcf/Stacks/Common/RegularLocalization.lean`
 (Stacks `0AFS`).
@@ -69,7 +69,7 @@ is recorded in the declaration's docstring.
   component of `Spec B` lies over the closed point), which is exactly what Stacks' proof uses.
   Proof fidelity: the phase-1 proof of `0BMA` does not follow the Stacks proof (see above); that of
   `0BMB` follows it only up to its `0BMA` input.
-  Erratum drafted in the authors' private research note `2026-10-16-purity-abhyankar-completion/ERRATUM-0BMA.md`.
+  Reported as Stacks comment #11774 on Tag `0BMA`.
 * `09ZL` (`HenselianFiniteEtaleLift.lean`): only essential surjectivity, for henselian local
   rings, by induction on the rank via idempotent lifting and characteristic polynomials, instead
   of lifting to an étale algebra and cutting out a direct factor.
@@ -84,7 +84,7 @@ is recorded in the declaration's docstring.
   identified with strict henselizations of themselves.
 * `04GW` (`StrictHenselizationLocalize.lean`): the comparison is between pcf's colimit models at
   `R → Ω` with kernel `p` and at `R_p`.
-* `0EYG`/`0EYH` (`Tag0EYG.lean`, `StrictGenericPresentation.lean`): the strict henselization of
+* `0EYG`/`0EYH` (`Tame/Tag0EYGTame.lean`, `StrictGenericPresentation.lean`): the strict henselization of
   `R` is compared with that of `R_y` (`04GW`), and the normalization step is done on integral
   models (both are the integral closure of `A` in `K(a^{1/n})`), giving the `0EYH` form
   directly. Any common multiple `E` of the ramification indices is used instead of their
@@ -101,8 +101,7 @@ is recorded in the declaration's docstring.
 
 Additional theorems; at the time of phase 2 nothing above was changed or re-proved (phase 3,
 below, later changed the statement `Pcf.Stacks.AbhyankarLemma` and merged the two `0EYG`
-proofs). Run record:
-the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`FRAME-PHASE2.md`, `STATUS.md`).
+proofs).
 
 | Claim | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
@@ -141,23 +140,19 @@ locally free") is proved:
 | The same, every positive integer invertible (no tameness hypothesis) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast` | same | `[propext, Classical.choice, Quot.sound]` |
 | `0EYG`/`0EYH` affine, normalization not assumed finite | `Pcf.Stacks.abhyankarLemma`, `Pcf.Stacks.abhyankarLemmaTame` | same | `[propext, Classical.choice, Quot.sound]` |
 
-The previous statements are kept as `Pcf.Stacks.AbhyankarLemmaOfFinite` and
-`Pcf.Stacks.AbhyankarLemmaTameOfFinite`, proved by `Pcf.Stacks.abhyankarLemmaOfFinite`
-(`Tag0EYG.lean`) and `Pcf.Stacks.abhyankarLemmaTameOfFinite` (`Tame/Tag0EYGTame.lean`); the
-scheme layer applies them at local rings.  The Palomar statement `Pcf.Palomar.AbhyankarLemma`
-still assumes the normalization finite (it is `AbhyankarLemmaOfFinite`); `Pcf.Palomar.abhyankarLemma_iff`
-now proves its equivalence with `Pcf.Stacks.AbhyankarLemma` using the finiteness theorem, and the
-headline statements are unchanged.
+The finite-normalization form is kept as `Pcf.Stacks.AbhyankarLemmaTameOfFinite`, proved by
+`Pcf.Stacks.abhyankarLemmaTameOfFinite` (`Tame/Tag0EYGTame.lean`); the scheme layer applies it at
+local rings.  (Phase 4 removed the characteristic-zero finite-normalization form
+`AbhyankarLemmaOfFinite` and the Palomar forms of the two local theorems; see below.)
 
-The two `0EYG` proofs are now one: `Pcf.Stacks.abhyankarLemmaOfFinite` supplies tameness from
+The two `0EYG` proofs are now one: `Pcf.Stacks.abhyankarLemma` supplies tameness from
 "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`)
-and applies `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`; each of the 16 former
+and applies the tame theorem (`Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame`); each of the 16 former
 characteristic-zero/tame lemma pairs has one proof (map in `Tame/Defs.lean`, "Shared lemmas"), and
 the six `Tame/` files that held the tame duplicates were deleted.  So the characteristic-zero
 results, including `finite_of_isIntegralClosure_away_of_isUnit_natCast` and the PCFAWD headline,
 now go through the tame proof; their statements are unchanged.  The former consistency check
-`Pcf.Stacks.abhyankarLemma_of_tame` (same statement and route as `abhyankarLemmaOfFinite`) was
-removed.
+`Pcf.Stacks.abhyankarLemma_of_tame` was removed.
 
 `Module.Finite R S` could not simply be dropped without keeping the tags' "`Y → X ∖ D` finite":
 Mathlib's `Algebra.IsEtaleAt` is formal étaleness of the local rings and does not give finite
@@ -172,6 +167,113 @@ chart `Spec S[1/a] → Spec R[1/a]` (`isTamelyRamifiedAlongDivisor_of_isTamelyRa
 localization invariance of tameness, `isTamelyRamifiedAt_map_of_isLocalization`); then the
 scheme layer's `hasLocalizedStandardCoverAt_of_tame` and `integralClosure_finite` give the
 normalization finite, as in the Stacks proof of `0EYH` (étale-local structure from `0EYG`).
+
+### Phase 4 (2026-10-17): no duplicate propositions
+
+Every declaration whose statement was the same proposition as another's (up to binder names,
+instance-argument order and unfolding of definitions), and every definition with the same body
+as another, was removed or merged; users were repointed to the kept declaration.  No surviving
+statement changed meaning, and every headline theorem still reports
+`[propext, Classical.choice, Quot.sound]`.  The removed declarations and their replacements are
+listed in the table below.  In particular:
+
+* the Palomar forms of the two local theorems (`Pcf/Palomar/LocalTheorems.lean`:
+  `PurityHypothesesAt`, `ZariskiNagataPurity`, `standardCoverPoly`,
+  `IsFiniteProductOfStandardTameCovers`, `AbhyankarLemma`) and their proofs and equivalences were
+  removed; they are not part of the Palomar Challenge.  `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`
+  is derived from `Pcf.pcfAllTheWayDown_charZero_unconditional`;
+* the characteristic-zero Abhyankar theorem is derived from the tame one
+  (`Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame`); `AbhyankarLemmaOfFinite` and its proof
+  (`Tag0EYG.lean`) were removed;
+* pcf's restatements of the vendored mathlib4 PR #29802 lemmas (Stacks `0AFS`, `00NP`) and of
+  Mathlib lemmas were removed in favour of those lemmas; the Stacks tags moved to the vendored
+  lemmas;
+* the normalization abbreviations `Pcf.schemeGlobalNormalization`, `…Map`,
+  `Pcf.schemeGenericToNormalization` were replaced by those of `Pcf/Palomar/Statement.lean`.
+
+| Removed | Use instead / reason |
+| --- | --- |
+| `Pcf.Stacks.standardCover_finite` | `Pcf.LocalModel.finite_adjoinRoot` |
+| `Pcf.Stacks.standardCover_free` | `Pcf.LocalModel.free_adjoinRoot` |
+| `Pcf.Stacks.standardCover_finrank` | `Pcf.LocalModel.finrank_adjoinRoot` |
+| `Pcf.Stacks.SchemeLevel.AffineTame.exists_stage_isUnit_natCast` | `Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_isUnit_natCast` |
+| `Pcf.Stacks.SchemeLevel.isUnit_natCast_residueField_iff` | `Pcf.Stacks.isUnit_natCast_residueField_iff` |
+| `Pcf.selectedDivisorFinitePreimageAlgebra` | `Pcf.finitePreimageAlgebra` (local instance) |
+| `Pcf.selectedDivisorTargetNoetherian` | `AlgebraicGeometry.IsLocallyNoetherian.component_noetherian` (local instance) |
+| `Pcf.selectedDivisorModuleFinite` | `Pcf.finitePreimageAffine_moduleFinite` (local instance) |
+| `Pcf.selectedDivisorSourceNoetherian` | `Pcf.finitePreimageSourceNoetherian` (local instance) |
+| `Pcf.selectedDivisorFaithfulSMul` | `Pcf.finitePreimageAffine_faithfulSMul` (local instance) |
+| `Pcf.invariantIterateTargetNoetherian` | `AlgebraicGeometry.IsLocallyNoetherian.component_noetherian` (local instance) |
+| `Pcf.affineCorrectionTargetNoetherian` | `AlgebraicGeometry.IsLocallyNoetherian.component_noetherian` (local instance) |
+| `Pcf.coveringCorrectionAlgebra` | `Pcf.invariantIterateFinitePreimageAlgebra` (local instance) |
+| `Pcf.invariantCorrectionFinitePreimageAlgebra` | `Pcf.invariantIterateFinitePreimageAlgebra` (local instance) |
+| `Pcf.finite_end_pow_instance` | `Pcf.isFinite_end_pow` (now `attribute [instance low]`) |
+| `Pcf.dominant_end_pow_instance` | `Pcf.isDominant_end_pow` (now `attribute [instance low]`) |
+| `Pcf.schemeEnd_pow_comm` | `Pcf.normalization_square_pow` |
+| `Pcf.isPCF_restriction_of_periodic` | `Pcf.PCFSetup.restriction_isPCF_of_iterate` |
+| `Pcf.pcfAllTheWayDown_divisorDynamics` | `Pcf.isPCF_of_isPCF_restriction` |
+| `Pcf.postcriticalSet_finite_allTheWayDown` | `Pcf.isPCF_of_isPCF_restriction` (`IsPCF` is `postcriticalSet.Finite` by definition) |
+| `Pcf.Palomar.PurityHypothesesAt` | `Pcf.Stacks.ZariskiNagataPurityHypothesesAt` (module Pcf.Palomar.LocalTheorems deleted) |
+| `Pcf.Palomar.ZariskiNagataPurity` | `Pcf.Stacks.ZariskiNagataPurity` |
+| `Pcf.Palomar.standardCoverPoly` | `Pcf.LocalModel.localPoly` |
+| `Pcf.Palomar.IsFiniteProductOfStandardTameCovers` | `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers` |
+| `Pcf.Palomar.AbhyankarLemma` | `Pcf.Stacks.AbhyankarLemma` (equivalent: the Palomar form assumed the normalization finite, which is proved) |
+| `Pcf.Palomar.primeSpectrum_isPrime` | (scoped instance of the deleted module; restated Mathlib's `PrimeSpectrum.isPrime`) |
+| `Pcf.Palomar.algebra_smulCommClass` | (scoped instance of the deleted module; restated Mathlib's `Algebra.to_smulCommClass`) |
+| `Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent` | `Pcf.Stacks.zariskiNagataPurity_of_etaleNormalAscent` |
+| `Pcf.Palomar.zariskiNagataPurity` | `Pcf.Stacks.zariskiNagataPurity` |
+| `Pcf.Palomar.abhyankarLemma` | `Pcf.Stacks.abhyankarLemma` |
+| `Pcf.Palomar.zariskiNagataPurity_iff` | (definitional restatement between the two deleted/kept purity statements; no longer needed) |
+| `Pcf.Palomar.abhyankarLemma_iff` | (equivalence of Palomar.AbhyankarLemma with Stacks.AbhyankarLemma; no longer needed) |
+| `Pcf.Palomar.pcfAllTheWayDown_charZero` | `Pcf.pcfAllTheWayDown_charZero` (conditional form; the Palomar unconditional theorem is now derived from Pcf.pcfAllTheWayDown_charZero_unconditional) |
+| `Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame` | `Pcf.Stacks.abhyankarLemmaTameOfFinite` (unbundled restatement; proof moved into it) |
+| `Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor` | `Pcf.Stacks.abhyankarLemma` / Pcf.Stacks.abhyankarLemmaTameOfFinite (module Pcf.Stacks.Abhyankar.Tag0EYG deleted) |
+| `Pcf.Stacks.AbhyankarLemmaOfFinite` | (char-0 finite-normalization form; superseded by Pcf.Stacks.AbhyankarLemma and Pcf.Stacks.AbhyankarLemmaTameOfFinite) |
+| `Pcf.Stacks.abhyankarLemmaOfFinite` | `Pcf.Stacks.abhyankarLemma` (now derived from Pcf.Stacks.abhyankarLemmaTame) |
+| `Pcf.Stacks.AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite` | `Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame` |
+| `Pcf.Stacks.abhyankarLemmaTameOfFinite_of_isUnit_natCast` | `Pcf.Stacks.abhyankarLemmaTameOfFinite` (weaker restatement with an unused hypothesis) |
+| `Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_isUnit_natCast` | `Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_forall` X Pcf.Stacks.abhyankarLemmaTameOfFinite |
+| `Pcf.Stacks.isRegularLocalRing_iff_globalDimension_lt_top` | `Pcf.Vendor.Auslander_Buchsbaum_Serre` (Stacks tag 0AFS now attached to the Vendor lemma) |
+| `Pcf.Stacks.isRegularLocalRing_localization_atPrime` | `Pcf.Vendor.isRegularLocalRing_localization` |
+| `Pcf.Stacks.IsRegularLocalRing.of_isLocalization_atPrime` | `Pcf.Vendor.IsRegularLocalRing.of_isLocalization` |
+| `Pcf.Stacks.isRegularRing_of_isRegularLocalRing` | `Pcf.Vendor.isRegularRing_of_isRegularLocalRing` |
+| `Pcf.Stacks.RegularLocalization.instIsRegularLocalRingLocalizationAtPrime` | (unused scoped instance; Pcf.Vendor.isRegularLocalRing_localization) |
+| `Pcf.Stacks.RegularLocalization.instIsRegularRingOfIsRegularLocalRing` | (unused scoped instance; Pcf.Vendor.isRegularRing_of_isRegularLocalRing) |
+| `Pcf.Stacks.divisorLocalization_isRegularLocalRing` | `Pcf.Vendor.isRegularLocalRing_localization` |
+| `Pcf.Stacks.isDomain_of_isRegularLocalRing` | `Pcf.Vendor.isDomain_of_isRegularLocalRing` (same proof route: cotangent/prime-avoidance induction; Stacks 00NP tag moved to the Vendor lemma) |
+| `Pcf.Stacks.regularLocal_isDomain` | `Pcf.Vendor.isDomain_of_isRegularLocalRing` (local instance; the vendored global instance applies) |
+| `Pcf.mem_basicOpen_iff_notMem_primeIdealOf` | `Pcf.Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf` (applied to U.2) |
+| `Pcf.schemeGlobalNormalization` | `Pcf.Palomar.normalization` (same abbreviation, Statement.lean) |
+| `Pcf.schemeGlobalNormalizationMap` | `Pcf.Palomar.normalizationMap` |
+| `Pcf.schemeGenericToNormalization` | `Pcf.Palomar.genericToNormalization` |
+| `Pcf.schemeGenericInclusion_quasiCompact` | `Pcf.Palomar.genericInclusion_quasiCompact` |
+| `Pcf.Palomar.genericToNormalization_comp` | `Pcf.schemeGenericToNormalization_comp` |
+| `Pcf.isReduced_vanishingIdeal_subscheme` | `Pcf.Palomar.isReduced_vanishingIdeal_subscheme` |
+| `Pcf.pointClosureSubscheme_integral` | `Pcf.pointClosureSubscheme_isIntegral` |
+| `Pcf.DivisorDynamics.branch_finite` | `Pcf.DivisorDynamics.step_image_ramified_finite` (structure field; `branch` is its set by definition) |
+| `Pcf.DivisorDynamics.branch_iterate` | `Pcf.DivisorDynamics.branchIterate_eq` (`(D.iterate m).branch` unfolds to its left side) |
+| `Pcf.Examples.Pinched.nodeUnnormalizedDynamics_isPCF` | `Pcf.Examples.Pinched.nodeDivisorDynamics_isPCF` (`(nodeUnnormalizedDynamics k).toDivisorDynamics` is `nodeDivisorDynamics k`) |
+| `Pcf.invariantDivisor_isNormalizedPCF_of_finiteType` | `Pcf.invariantDivisorNormalization_normalized_isPCF_of_finiteType` (`IsNormalizedPCFOfFiniteType` unfolds to its conclusion) |
+| `Pcf.Stacks.instIsSepClosedResidueField_pcf` | `Pcf.Stacks.StrictlyHenselianLocalRing.isSepClosed_residueField` (class field, now `attribute [instance]`) |
+| `Pcf.Stacks.PointedEtaleNeighborhood.instEtalePresentedEtaleAlgebraVarsRelsRelation` | `Pcf.Stacks.PointedEtaleNeighborhood.etale` (structure field, now `attribute [instance]`) |
+| `Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit_eq` | `Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit` (its Noetherian hypothesis is the instance `localColimit_isNoetherianRing`) |
+| `Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing` (copy in `StrictHenselizationCompletionFlat.lean`) | `Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing` (renamed from `localColimit_isRegularLocalRing_of_isNoetherianRing`; Noetherian hypothesis is an instance) |
+| `Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_completion_flat` | `Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing` (unused; its flatness hypothesis is the instance `localColimit_completion_flat`) |
+| `Pcf.Stacks.puncturedCover_genericPullback_sections_injective` | `Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_injective` (proof moved; `puncturedCoverGenericFiberSectionMap` unfolds to the map) |
+| `Pcf.Stacks.EtaleDescent.exists_factorization_of_finitePresentation` | `RingHom.EssFiniteType.exists_eq_comp_ι_app_of_isColimit` (Mathlib) |
+| `Pcf.Stacks.EtaleDescent.exists_eventual_eq_of_essFiniteType` | `RingHom.EssFiniteType.exists_comp_map_eq_of_isColimit` (Mathlib) |
+| `Pcf.Stacks.SchemeLevel.finite_app_of_isFinite` | `AlgebraicGeometry.Scheme.Hom.finite_app` (Mathlib) |
+| `Pcf.Stacks.exists_etale_finite_component_of_quasiFiniteAt` | `Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq` (Mathlib; module Pcf.Stacks.Purity.EtaleLocalization deleted) |
+| `Pcf.comap_surjective_of_isIntegral_of_injective` | `RingHom.IsIntegral.comap_surjective` (Mathlib) |
+| `Pcf.Stacks.Ideal.reesQuotient_isNoetherian` | isNoetherianRing_reesAlgebra_quotient (Mathlib) |
+| `Pcf.finitePreimageTargetNoetherian` | `AlgebraicGeometry.IsLocallyNoetherian.component_noetherian` (Mathlib class field, now `attribute [local instance]`) |
+| `Pcf.affineCorrectionIntegrallyClosed` | `Pcf.IsNormalScheme.component_integrallyClosed` (already a global instance) |
+| `Pcf.Stacks.isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one` | `Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one` (same route: maximal ideal principal + DVR TFAE; Stacks 00PD tag moved; module Pcf.Stacks.Common.RegularDimensionOne deleted) |
+| `Pcf.LocalModel.fromQuotient` | `Pcf.LocalModel.restrictionMap` (same body; restrictionMap now defined in its place) |
+| `Pcf.LocalModel.fromQuotient_mk` | `Pcf.LocalModel.restrictionMap_mk` |
+
+Renamed: `Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing`
+→ `…localColimit_isRegularLocalRing`.
 
 ## How to read `#print axioms` here
 
@@ -214,7 +316,7 @@ covering tree from those two fields.  Thus `Pcf.pcfAllTheWayDown_charZero` has n
 caller-supplied descendant PCF claim, local chart, or recursively prepared tree.
 
 The formerly adjoined local-domain clause is now derived from the proved theorem
-`Pcf.Stacks.isDomain_of_isRegularLocalRing` (Stacks Tag 00NP).
+`Pcf.Vendor.isDomain_of_isRegularLocalRing` (Stacks Tag 00NP; vendored from mathlib4 PR #29802).
 
 Everything else used by the proof is constructed: divisor pushforward and
 finite fibres, ramification indices and their tower law, critical-locus
@@ -319,7 +421,7 @@ So there are three routes to Theorem `thm:normal-invariant`:
 taken to be the identity map `ℤ → ℤ`, with no geometry in it at all. So that interface
 carried exactly the conclusion of Theorem `thm:bounding` (per-divisor form), and the step to `notMem_branch` was
 a one-line repackaging. The correction was produced by an adversarial review of the
-development, retained at the authors' private research note `2026-09-21-prop41-formalization/adversarial-review.md`.
+development (2026-09-21).
 
 **What has since changed, and what has not.** Abhyankar's lemma has two halves, and one
 of them is now machine-checked:
@@ -709,9 +811,9 @@ circular. The content that replaced `hbranch` is a Mathlib theorem, not a new fi
 
 ### Lying over, now restricted to divisors
 
-`Pcf.comap_surjective_of_isIntegral_of_injective` proves Stacks Tag 00HS: for an injective
+Mathlib's `RingHom.IsIntegral.comap_surjective` is Stacks Tag 00HS: for an injective
 integral ring map the induced map on prime spectra is surjective. That is the content of
-B1, from `Ideal.nonempty_primesOver`.
+B1.
 
 `Pcf.height_under_eq_of_finite_of_normal` supplies the missing dimension statement for a
 finite injective extension of Noetherian domains with normal base: every prime has the same
@@ -756,9 +858,9 @@ principalizes the divisor near its own generic point. The intermediate theorem
 arbitrary point from exactly a UFD instance on the local ring.  The full UFD theorem is no
 longer needed for the point occurring in Step 0.  The theorem
 `isDomain_of_isRegularLocalRing_of_ringKrullDim_eq_one` proves the dimension-one case of
-Stacks 00NP directly from Krull intersection.  The full tag is now proved as
-`Pcf.Stacks.isDomain_of_isRegularLocalRing`, by cotangent-space induction, prime avoidance,
-Krull intersection, and Nakayama.  In addition,
+Stacks 00NP directly from Krull intersection.  The full tag is
+`Pcf.Vendor.isDomain_of_isRegularLocalRing` (vendored from mathlib4 PR #29802), by
+cotangent-space induction, prime avoidance, and Nakayama.  In addition,
 `heightOne_isPrincipal_of_regularLocalRing_dim_two` proves that a height-one prime in a
 two-dimensional regular local domain is principal when its one-dimensional quotient is
 regular.  Finally,
@@ -1034,8 +1136,8 @@ Everything in `Pcf/Dynamics.lean` and `Pcf/Restriction.lean`:
 | uniformity of `Σ` in `m` (the crux) | `Pcf.PCFSetup.branch_iterate_subset_bound` |
 | Corollary `cor:normal-preperiodic` | `Pcf.PCFSetup.restriction_isPCF_of_iterate` |
 | Corollary `cor:pcfawd`, normalized form | `Pcf.PCFSetup.normalization_isPCF` |
-| Corollary `cor:pcfawd`, descent (**"PCF all the way down"**, Conjecture `conj:pcfawd` second paragraph) | `Pcf.isPCF_of_isPCF_restriction`, restated as `Pcf.pcfAllTheWayDown_divisorDynamics` |
-| Corollary `cor:normal-preperiodic` (Conjecture `conj:pcfawd` first paragraph) | `Pcf.PCFSetup.restriction_isPCF_of_iterate`, restated as `Pcf.isPCF_restriction_of_periodic` |
+| Corollary `cor:pcfawd`, descent (**"PCF all the way down"**, Conjecture `conj:pcfawd` second paragraph) | `Pcf.isPCF_of_isPCF_restriction` |
+| Corollary `cor:normal-preperiodic` (Conjecture `conj:pcfawd` first paragraph) | `Pcf.PCFSetup.restriction_isPCF_of_iterate` |
 
 And, in the geometric layer, all of §`sec:bounding` except P1–P6:
 
@@ -1115,8 +1217,8 @@ the restriction `R/(a) → S/𝔭` is étale at every prime of `S/𝔭` — is t
 hypotheses) and two classical theorems, stated as `Prop`s about rings in
 `Pcf/Stacks/Purity.lean` and `Pcf/Stacks/Abhyankar.lean`. Their interfaces were checked
 against the Stacks text on 2026-10-04 and their tag-by-tag proof spines were rechecked on
-2026-10-09; the authors' private research note `2026-10-09-pcfawd-completeness/stacks-tag-proof-spine.md` records the exact
-dependency map. The
+2026-10-09 (the module docstrings of `Pcf/Stacks/Abhyankar.lean` and the `Pcf/Stacks/Purity/`
+files record the dependency map). The
 three standard facts used by the derivation are proved. Nothing valued in `KummerWitness`
 or `UnramifiedWitness` survives as a field.
 
@@ -1257,8 +1359,8 @@ not the trust boundary of that abstraction. The actual invariant-divisor route i
 different: its carrier is `SchemeDivisorPoint`, `crit₁` is defined by the actual stalk
 map, the restriction and its iterates are identified as concrete scheme morphisms, and
 the chart is constructed from A6i. A6i contains G1/G2 and ordinary Step 0 facts, but no
-field from which formal étaleness or `notMem_nonEtaleBranch_iterate` follows without G1/G2. The adversarial record
-at the authors' private research note `2026-10-04-divisor-bridge/fidelity.md` checks these fields one by one.
+field from which formal étaleness or `notMem_nonEtaleBranch_iterate` follows without G1/G2; an
+adversarial review (2026-10-04) checked these fields one by one.
 
 ### G.5 Removed
 

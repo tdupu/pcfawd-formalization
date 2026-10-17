@@ -71,8 +71,12 @@ theorem localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
   IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
     R (LocalColimit R Ω) hmax hdim
 
-/-- The strict local colimit of a regular local ring is regular once its Noetherianity is known. -/
-theorem localColimit_isRegularLocalRing_of_isNoetherianRing
+/-- **Regularity ascends to the strict henselization** (the `R ⇒ Rˢʰ` direction of Stacks Tag
+`06LN`).  The Noetherianity of `LocalColimit R Ω` is an instance argument; it is supplied by the
+instance `localColimit_isNoetherianRing` (Stacks `06LJ`,
+`Pcf.Stacks.Abhyankar.StrictHenselizationCompletionFlat`), so the theorem is unconditional
+wherever that module is imported. -/
+theorem localColimit_isRegularLocalRing
     [IsRegularLocalRing R]
     [Algebra (IsLocalRing.ResidueField R) Ω]
     [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
@@ -83,27 +87,9 @@ theorem localColimit_isRegularLocalRing_of_isNoetherianRing
     (map_maximalIdeal_localColimit (R := R) (Ω := Ω))
     (ringKrullDim_localColimit (R := R) (Ω := Ω))
 
-/-- The `R → Rˢʰ` regularity endpoint of Stacks Tag `06LN` for the pointed-etale-colimit
-construction.  Flatness of the maximal-adic completion supplies Noetherianity through Tag `06LJ`;
-the extended-maximal-ideal and dimension comparisons then identify regularity. -/
-theorem localColimit_isRegularLocalRing_of_completion_flat
-    [IsRegularLocalRing R]
-    [Algebra (IsLocalRing.ResidueField R) Ω]
-    [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
-    [IsSepClosure (IsLocalRing.ResidueField R) Ω]
-    (hflat : Module.Flat (LocalColimit R Ω)
-      (AdicCompletion
-        (IsLocalRing.maximalIdeal (LocalColimit R Ω))
-        (LocalColimit R Ω))) :
-    IsRegularLocalRing (LocalColimit R Ω) := by
-  let _ : IsNoetherianRing (LocalColimit R Ω) :=
-    localColimit_isNoetherianRing_of_completion hflat
-  exact localColimit_isRegularLocalRing_of_isNoetherianRing
-
 #print axioms IsRegularLocalRing.of_map_maximalIdeal_eq_of_ringKrullDim_eq
 #print axioms localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
-#print axioms localColimit_isRegularLocalRing_of_isNoetherianRing
-#print axioms localColimit_isRegularLocalRing_of_completion_flat
+#print axioms localColimit_isRegularLocalRing
 
 end PointedEtaleNeighborhood
 

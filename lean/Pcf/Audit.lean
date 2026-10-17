@@ -90,7 +90,6 @@ public import Pcf.Stacks.Abhyankar.StrictNormalDecomposition
 public import Pcf.Stacks.Abhyankar.StrictNormalizationColimit
 public import Pcf.Stacks.Abhyankar.StrictRootComponent
 public import Pcf.Stacks.Abhyankar.StrictRootCover
-public import Pcf.Stacks.Abhyankar.Tag0EYG
 public import Pcf.Stacks.Abhyankar.Tame.Defs
 public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
@@ -220,9 +219,6 @@ ramification for preimage fields of post-critically finite morphisms*, Math. Res
 **24** (2017), 1633–1647, `arXiv:1511.00194`. Both paragraphs are proved here, in the
 abstract layer and conditionally; see `Pcf/AllTheWayDown.lean`. -/
 
-#print axioms Pcf.isPCF_restriction_of_periodic
-#print axioms Pcf.pcfAllTheWayDown_divisorDynamics
-#print axioms Pcf.postcriticalSet_finite_allTheWayDown
 
 /-! ## §`sec:defs`–§`sec:prelim`: divisorial dynamics -/
 
@@ -420,7 +416,6 @@ hypotheses. -/
 #print axioms Pcf.Stacks.formallyEtale_of_flat_of_formallyUnramified_of_isLocalization
 #print axioms Pcf.Stacks.isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
 #print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_height_eq_one
-#print axioms Pcf.Stacks.exists_etale_finite_component_of_quasiFiniteAt
 #print axioms Pcf.Stacks.mem_puncturedSpectrum_iff
 #print axioms Pcf.Stacks.closedPoint_notMem_puncturedSpectrum
 #print axioms Pcf.Stacks.puncturedFiniteEtaleRecovery
@@ -528,7 +523,6 @@ hypotheses. -/
 #print axioms Pcf.Stacks.genericPoint_toPuncturedSpectrum_quasiCompact
 #print axioms Pcf.Stacks.puncturedCover_genericBaseChange_isIso
 #print axioms Pcf.Stacks.puncturedCoverGenericFiberIsoBasePullback
-#print axioms Pcf.Stacks.puncturedCover_genericPullback_sections_injective
 #print axioms Pcf.Stacks.puncturedCoverGenericFiberSectionMap
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_injective
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_base
@@ -631,8 +625,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.toLocalColimitAlgHom_injective_of_isDomain
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isDomain
-#print axioms
-  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing
 #print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.exists_basis_of_flat_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.IsLocalRing.ResidueField.map_bijective_of_surjective
@@ -685,16 +678,11 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localCoconeIsColimit
 #print axioms Pcf.Stacks.isNoetherianRing_of_maximalAdicCompletion
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing_of_completion
-#print axioms
-  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_completion_flat
 #print axioms Pcf.Stacks.isTamelyRamifiedAt_of_isUnit_natCast
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
 #print axioms Pcf.Stacks.baseChange_isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
 #print axioms Pcf.Stacks.localizedStandardPoly_eq_kummerPoly
 #print axioms Pcf.Stacks.localizedStandardCover_etale
-#print axioms Pcf.Stacks.standardCover_finite
-#print axioms Pcf.Stacks.standardCover_free
-#print axioms Pcf.Stacks.standardCover_finrank
 #print axioms
   Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_natCast
 #print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers.finitePresentation
@@ -868,7 +856,6 @@ hypotheses. -/
 #print axioms Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers
 #print axioms Pcf.Stacks.HasAbhyankarStandardCoverAt
 #print axioms Pcf.BoundingChart.exists_standardPieces
-#print axioms Pcf.Stacks.isDomain_of_isRegularLocalRing
 #print axioms Pcf.BoundingChart.isEtaleAt_quot_of_pieces
 #print axioms Pcf.BoundingChart.isEtaleAt_restriction
 #print axioms Pcf.Stacks.etaleLocalOnSource
@@ -1082,7 +1069,6 @@ hypotheses. -/
 #print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_isClosed
 #print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_isClosed_of_exists_formallyEtale
 #print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale
-#print axioms Pcf.isReduced_vanishingIdeal_subscheme
 #print axioms Pcf.isIntegral_vanishingIdeal_subscheme
 #print axioms Pcf.pointClosureSubscheme_isIntegral
 #print axioms Pcf.pointClosureSubschemeι_genericPoint
@@ -1256,7 +1242,6 @@ are all theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input �
 #print axioms Pcf.primeSpectrumRamificationIdx_pos
 #print axioms Pcf.subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx
 #print axioms Pcf.finite_ramified
-#print axioms Pcf.comap_surjective_of_isIntegral_of_injective
 #print axioms Pcf.primeSpectrumSelfMap_surjective
 #print axioms Pcf.divisorDynamicsOfSpectrum
 
@@ -1485,7 +1470,6 @@ divisor. -/
 #print axioms Pcf.SchemeDivisorPoint.closureDivisor_coheight_of_finiteType
 #print axioms Pcf.pointClosureSubscheme_irreducible
 #print axioms Pcf.pointClosureSubscheme_reduced
-#print axioms Pcf.pointClosureSubscheme_integral
 #print axioms Pcf.pointClosureSubscheme_locallyNoetherian
 #print axioms Pcf.pointClosureSubscheme_noetherian
 #print axioms Pcf.pointClosureSubscheme_genericPoint
@@ -1529,7 +1513,6 @@ divisor. -/
 #print axioms Pcf.invariantDivisorNormalization_normalized_isPCF_of_closedSingularLoci
 #print axioms Pcf.exists_principalOpen_map_eq_span_of_isPrincipal_atPrime
 #print axioms Pcf.finite_schemeDivisorPoint_stalkSingularLocus_of_perfectField
-#print axioms Pcf.mem_basicOpen_iff_notMem_primeIdealOf
 #print axioms Pcf.exists_open_invariantDivisor_regularityCorrection
 #print axioms Pcf.invariantDivisorSing_finite_of_perfectField
 #print axioms Pcf.invariantDivisorSetupOfFiniteType
@@ -1542,12 +1525,10 @@ divisor. -/
 #print axioms Pcf.isNormalizedPCFOfFiniteType_pow_iff
 #print axioms Pcf.isNormalizedPCFOfFiniteType_of_cover
 #print axioms Pcf.pointClosureSubschemeMap_comm
-#print axioms Pcf.schemeEnd_pow_comm
 #print axioms Pcf.InvariantDivisorCoveringHypotheses
 #print axioms Pcf.schemeAffineAlgebraOfField
 #print axioms Pcf.schemeAffineAlgebraOfField_finiteType
 #print axioms Pcf.isNormalizedPCFOfFiniteType_iff
-#print axioms Pcf.invariantDivisor_isNormalizedPCF_of_finiteType
 #print axioms Pcf.periodicDivisor_isNormalizedPCFOfFiniteType
 #print axioms Pcf.schemeDivisorIterateOfFiniteType
 #print axioms Pcf.schemeDivisorIterateOfFiniteType_val
@@ -1582,16 +1563,14 @@ divisor. -/
 
 /-! ## Purity and Abhyankar run (2026-10-16)
 
-Every non-internal theorem of the modules added in the purity/Abhyankar run
-(`ai/2026-10-16-purity-abhyankar-completion/`), and of the formerly orphaned purity and
-Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
+Every non-internal theorem of the modules added in the purity/Abhyankar run of 2026-10-16
+(the proofs of Zariski--Nagata purity and Abhyankar's lemma), and of the formerly orphaned purity
+and Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 #print axioms Pcf.Stacks.zariskiNagataPurity
 #print axioms Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
-#print axioms Pcf.Palomar.zariskiNagataPurity
 #print axioms Pcf.Stacks.abhyankarLemma
-#print axioms Pcf.Palomar.abhyankarLemma
 #print axioms Pcf.Stacks.abhyankarLemmaTame
 #print axioms Pcf.Stacks.finite_of_isIntegralClosure_away
 #print axioms Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast
@@ -1599,7 +1578,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization
 #print axioms Pcf.pcfAllTheWayDownLocalTheorems
 #print axioms Pcf.pcfAllTheWayDown_charZero_unconditional
-#print axioms Pcf.Palomar.pcfAllTheWayDown_charZero
 #print axioms Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional
 
 -- Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
@@ -1645,9 +1623,7 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_completion_isNoetherianRing
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_flat_stage
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing
-#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_maximalIdeal_stageLocal
-#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit_eq
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.stageLocalToLocalColimit_algebraMap
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.stagePrime_isPrime
 #print axioms
@@ -1753,7 +1729,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.bijective_algebraMap_of_finite_etale_local_of_isSepClosed
 #print axioms Pcf.Stacks.divisorLocalization_irreducible
 #print axioms Pcf.Stacks.divisorLocalization_isDiscreteValuationRing
-#print axioms Pcf.Stacks.divisorLocalization_isRegularLocalRing
 #print axioms Pcf.Stacks.divisorPrime_height_eq_one
 #print axioms Pcf.Stacks.divisorPrime_isPrime
 #print axioms Pcf.Stacks.faithfulSMul_of_flat_of_isDomain
@@ -1789,7 +1764,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 -- Pcf.Stacks.Abhyankar.Tag0EYG
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.ker_geometricPointAtAlgebra
-#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor
 #print axioms Pcf.Stacks.henselianLocalRing_of_ringEquiv
 
 -- Pcf.Stacks.Common.EtaleNormal
@@ -1807,12 +1781,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.isStacksNormalRing_of_etale_of_isDomain
 
 -- Pcf.Stacks.Common.RegularLocalization
-#print axioms Pcf.Stacks.IsRegularLocalRing.of_isLocalization_atPrime
-#print axioms Pcf.Stacks.RegularLocalization.instIsRegularLocalRingLocalizationAtPrime
-#print axioms Pcf.Stacks.RegularLocalization.instIsRegularRingOfIsRegularLocalRing
-#print axioms Pcf.Stacks.isRegularLocalRing_iff_globalDimension_lt_top
-#print axioms Pcf.Stacks.isRegularLocalRing_localization_atPrime
-#print axioms Pcf.Stacks.isRegularRing_of_isRegularLocalRing
 
 -- Pcf.Stacks.Common.RegularNormal
 #print axioms Pcf.Stacks.exists_regular_pair_of_two_le_ringKrullDim
@@ -1926,7 +1894,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
 
 -- Pcf.Stacks.Purity.Tag0BMB
-#print axioms Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
 #print axioms Pcf.Stacks.zariskiNagataPurity_of_etaleNormalAscent
 
 -- Pcf.Stacks.Purity.Tag0BMBLocalModel
@@ -1952,7 +1919,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.formallyUnramified_stalkMap_of_isStacksUnramifiedAt
 #print axioms Pcf.Stacks.isRegularLocalRing_atPrime_of_eq
 #print axioms Pcf.Stacks.isStacksEtaleAt_of_isEtaleAt
-#print axioms Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity
 
 -- Pcf.Stacks.Purity.Tag0BMBSchemeAPI
 #print axioms Pcf.Stacks.HasRingHomProperty.resLE_iff_appLE
@@ -1988,7 +1954,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.IsStacksEtaleAt.isStacksQuasiFiniteAt
 #print axioms Pcf.Stacks.isOpen_setOf_isStacksQuasiFiniteAt
 #print axioms Pcf.Stacks.isStacksQuasiFiniteAt_comp_iff_of_isOpenImmersion
-#print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity_of_locallyOfFiniteType
 
 -- Pcf.Stacks.Purity.GabberPolynomialIdempotent
@@ -2062,7 +2027,6 @@ the fibre-length computation behind it is not formalized. -/
 #print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics
 #print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF
 #print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF
-#print axioms Pcf.Examples.Pinched.nodeUnnormalizedDynamics_isPCF
 
 
 -- shared lemmas (formerly Pcf.Stacks.Abhyankar.Tame.ComponentClassification), now in
@@ -2075,7 +2039,6 @@ the fibre-length computation behind it is not formalized. -/
 
 -- Pcf.Stacks.Abhyankar.Tame.Defs
 #print axioms Pcf.Stacks.AbhyankarLemma.of_abhyankarLemmaTame
-#print axioms Pcf.Stacks.AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite
 #print axioms Pcf.Stacks.isUnit_natCast_residueField_iff
 #print axioms Pcf.Stacks.mem_minimalPrimes_span_singleton_iff_height_eq_one
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_iff
@@ -2123,11 +2086,9 @@ the fibre-length computation behind it is not formalized. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.isTamelyRamifiedAt_strictBaseChangeFactor
 
 -- Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
-#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame
 #print axioms Pcf.Stacks.abhyankarLemmaTameOfFinite
 
 -- Pcf.Stacks.Abhyankar.Tag0EYG (finite-normalization form)
-#print axioms Pcf.Stacks.abhyankarLemmaOfFinite
 
 -- Pcf.Stacks.Abhyankar.FiniteNormalization (Stacks `0EYH`: the normalization is finite; the
 -- public theorems and the two finiteness theorems are in the headline block)
@@ -2172,7 +2133,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 #print axioms Pcf.Stacks.SchemeLevel.isRegularRing_reducedDivisor_of_standardCoverEquiv
 
 -- Pcf.Stacks.Abhyankar.Scheme.AffineTame
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.exists_stage_isUnit_natCast
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.exists_stage_localizedStandard
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.hasLocalizedStandardCoverAt_of_stage
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.ker_residueField_localizedStandardCoverProduct
@@ -2224,7 +2184,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 
 -- Pcf.Stacks.Abhyankar.Scheme.ChartData
 #print axioms Pcf.Stacks.SchemeLevel.etale_app_of_etale
-#print axioms Pcf.Stacks.SchemeLevel.finite_app_of_isFinite
 #print axioms Pcf.Stacks.SchemeLevel.inf_eq_basicOpen_of_ideal_eq
 #print axioms Pcf.Stacks.SchemeLevel.isAffineOpen_preimage_ι_of_ideal_eq
 #print axioms Pcf.Stacks.SchemeLevel.isLocalization_away_of_ideal_eq
@@ -2247,8 +2206,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 
 -- Pcf.Stacks.Abhyankar.Scheme.Defs
 #print axioms Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_forall
-#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemmaTameOver_of_isUnit_natCast
-#print axioms Pcf.Stacks.abhyankarLemmaTameOfFinite_of_isUnit_natCast
 
 -- Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 #print axioms Pcf.Stacks.SchemeLevel.ideal_eq_top_of_disjoint
@@ -2297,7 +2254,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 -- Pcf.Stacks.Abhyankar.Scheme.Tag0EYG
 #print axioms Pcf.Stacks.SchemeLevel.exists_standardTame_of_mem
 #print axioms Pcf.Stacks.SchemeLevel.exists_standardTame_of_notMem
-#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme
 #print axioms Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme_of_abhyankarLemmaTameOver
 
 -- Pcf.Stacks.Abhyankar.Scheme.Tag0EYH
@@ -2305,7 +2261,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 #print axioms Pcf.Stacks.SchemeLevel.exists_rootCover_of_notMem
 #print axioms Pcf.Stacks.SchemeLevel.isRegularRing_of_subsingleton
 #print axioms Pcf.Stacks.SchemeLevel.normalization_appTop_algEquiv_standardCovers_of_chart
-#print axioms Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization
 #print axioms Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization_of_abhyankarLemmaTameOver
 
 -- Pcf.Stacks.Abhyankar.Scheme.TameBridge
@@ -2315,7 +2270,6 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
   Pcf.Stacks.SchemeLevel.isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne
 #print axioms Pcf.Stacks.SchemeLevel.isIntegral_map_of_ringEquiv
 #print axioms Pcf.Stacks.SchemeLevel.length_quotient_map_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.isUnit_natCast_residueField_iff
 #print axioms Pcf.Stacks.SchemeLevel.ramificationIdx_eq_of_ringEquiv
 #print axioms Pcf.Stacks.SchemeLevel.residueField_algebraMap_algebraMap
 #print axioms Pcf.Stacks.SchemeLevel.residueField_map_localRingEquiv_algebraMap

@@ -119,7 +119,7 @@ theorem kummerUnit_localizationAtPrime_isDomain
   letI : IsRegularLocalRing (Localization.AtPrime q) :=
     kummerUnit_localizationAtPrime_isRegularLocalRing
       S unit exponent hexponent heUnit q hq
-  exact Pcf.Stacks.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
+  exact Pcf.Vendor.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
 
 /-- A closed local factor of the root-of-a-unit Kummer algebra over a DVR is again a
 DVR.  Regularity comes from the etale local map, while formal unramifiedness identifies

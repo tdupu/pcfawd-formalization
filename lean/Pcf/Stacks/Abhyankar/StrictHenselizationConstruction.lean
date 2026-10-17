@@ -65,7 +65,7 @@ variable (R Ω : Type u) [CommRing R] [CommRing Ω] [Algebra R Ω]
 instance : CoeSort (PointedEtaleNeighborhood R Ω) (Type u) where
   coe X := PresentedEtaleAlgebra R X.vars X.rels X.relation
 
-instance (X : PointedEtaleNeighborhood R Ω) : Algebra.Etale R X := X.etale
+attribute [instance] PointedEtaleNeighborhood.etale
 
 /-- A morphism of pointed etale neighbourhoods is an algebra map commuting with the points. -/
 @[ext]

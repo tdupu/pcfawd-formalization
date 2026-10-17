@@ -447,7 +447,7 @@ theorem localColimit_isStacksNormalRing_of_regular_divisor (a : R)
     IsStacksNormalRing (LocalColimit R Ω) := by
   have : IsRegularLocalRing R := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha hreg
   have : IsRegularLocalRing (LocalColimit R Ω) := localColimit_isRegularLocalRing
-  have : IsRegularRing (LocalColimit R Ω) := isRegularRing_of_isRegularLocalRing _
+  have : IsRegularRing (LocalColimit R Ω) := Pcf.Vendor.isRegularRing_of_isRegularLocalRing _
   exact isStacksNormalRing_of_isRegularRing _
 
 /-- **Normality of the generic part (Stacks `033C`).**  `(Rˢʰ ⊗[R] S)[1/a]` is a normal ring:

@@ -50,13 +50,13 @@ def schemeGlobalNormalizationUnnormalizedDynamics
     [∀ U : A.affineOpens, Algebra k Γ(A, U)]
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)] :
     SchemeNormalizationUnnormalizedDynamics A
-      (SchemeDivisorPoint (schemeGlobalNormalization A)) := by
-  letI : IsFinite (schemeGlobalNormalizationMap A) :=
+      (SchemeDivisorPoint (Palomar.normalization A)) := by
+  letI : IsFinite (Palomar.normalizationMap A) :=
     schemeGlobalNormalizationMap_isFinite_of_affineFiniteType A k
-  letI : IsLocallyNoetherian (schemeGlobalNormalization A) :=
-    LocallyOfFiniteType.isLocallyNoetherian (schemeGlobalNormalizationMap A)
+  letI : IsLocallyNoetherian (Palomar.normalization A) :=
+    LocallyOfFiniteType.isLocallyNoetherian (Palomar.normalizationMap A)
   exact schemeNormalizationUnnormalizedDynamicsOfFiniteBirational k g
-    (schemeGlobalNormalizationLift g) (schemeGlobalNormalizationMap A)
+    (schemeGlobalNormalizationLift g) (Palomar.normalizationMap A)
     (schemeGlobalNormalizationLift_comp g)
 
 /-- Assemble the same package directly from a locally finite-type structure morphism to
@@ -69,7 +69,7 @@ def schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType
     [IsIntegral A] [IsLocallyNoetherian A] [NoetherianSpace A]
     [CharZero (A.presheaf.stalk (genericPoint A))] :
     SchemeNormalizationUnnormalizedDynamics A
-      (SchemeDivisorPoint (schemeGlobalNormalization A)) := by
+      (SchemeDivisorPoint (Palomar.normalization A)) := by
   let φ (U : A.affineOpens) : k →+* Γ(A, U) :=
     (s.appLE ⊤ U (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom
   let (U : A.affineOpens) : Algebra k Γ(A, U) := (φ U).toAlgebra

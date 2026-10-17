@@ -243,8 +243,8 @@ theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
     Algebra.IsUnramifiedAt (StrictRootCover a E) w.asIdeal := by
   -- instances on `A`, `A'`, `N`, `N'`
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
-  haveI : IsRegularRing A := isRegularRing_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
+  haveI : IsRegularRing A := Pcf.Vendor.isRegularRing_of_isRegularLocalRing A
   haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularRing A
   haveI : IsNoetherianRing (StrictRootCover a E) := strictRootCover_isNoetherianRing a hE
   haveI : IsLocalRing (StrictRootCover a E) := strictRootCover_isLocalRing a ha hE

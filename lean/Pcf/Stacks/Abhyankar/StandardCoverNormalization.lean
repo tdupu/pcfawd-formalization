@@ -142,7 +142,7 @@ theorem isReduced_of_isRegularRing
   intro q hq
   letI : q.IsPrime := hq.isPrime
   letI : IsDomain (Localization.AtPrime q) :=
-    Pcf.Stacks.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
+    Pcf.Vendor.isDomain_of_isRegularLocalRing (Localization.AtPrime q)
   infer_instance
 
 /-- Inverting `a` in the standard root algebra also inverts the distinguished root `z`.

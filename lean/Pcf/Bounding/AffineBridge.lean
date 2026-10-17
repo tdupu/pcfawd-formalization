@@ -17,7 +17,8 @@ an abstract predicate supplied as a field of `Pcf.UnnormalizedDynamics`. The the
 the derived bounding theorem to this carrier: the restriction attached to a `BoundingChart` has no
 codimension-one critical points.
 
-This is the affine form of the identification requested in item 5 of `HANDOFF.md` §9.2.
+This is the affine form of the identification of the abstract non-étale locus with the
+codimension-one non-étale locus of a ring map.
 It deliberately does not construct the global Step 0 chart, nor the normalized dynamics of
 a possibly nonnormal divisor; those are the remaining scheme-level parts of A6.
 -/

@@ -140,7 +140,7 @@ noncomputable def strictRootCoverEquivOfFractionRingEquiv
   haveI : IsScalarTower A (FractionRing A) (FractionRing N) :=
     FractionRing.isScalarTower_liftAlgebra A (FractionRing N)
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   let C := StrictRootCover a n
   let L := rootFractionField a n
   letI : IsDomain C := strictRootCover_isDomain a ha hn ha0
@@ -211,7 +211,7 @@ theorem exists_strictRootCover_equiv_of_idempotent_factor
       Nonempty ((T ⧸ Ideal.span {1 - e}) ≃ₐ[A] StrictRootCover a n) := by
   let N := T ⧸ Ideal.span {1 - e}
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   haveI : FaithfulSMul A N :=
     faithfulSMul_quotient_idempotent (algebraMap A T a) he hcl.algebraMap_injective
   have hetN : ∀ w : PrimeSpectrum N, algebraMap A N a ∉ w.asIdeal →
@@ -259,9 +259,9 @@ theorem isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
     IsFiniteDisjointUnionOfStandardTameCovers A T a := by
   classical
   haveI : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have hA : IsStacksNormalRing A := by
-    haveI := isRegularRing_of_isRegularLocalRing A
+    haveI := Pcf.Vendor.isRegularRing_of_isRegularLocalRing A
     exact isStacksNormalRing_of_isRegularRing A
   have hTf : IsStacksNormalRing (Localization.Away (algebraMap A T a)) :=
     IsStacksNormalRing.of_etale _ hA

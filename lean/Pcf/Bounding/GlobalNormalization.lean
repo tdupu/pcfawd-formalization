@@ -7,6 +7,7 @@ module
 
 public import Pcf.Bounding.NormalizationSchemeBridge
 public import Mathlib.AlgebraicGeometry.Normalization
+public import Pcf.Palomar.Statement
 
 /-!
 # Normalization from the generic point
@@ -36,11 +37,6 @@ variable (A : Scheme.{u}) [IsIntegral A]
 abbrev schemeGenericInclusion : Spec A.functionField ⟶ A :=
   A.fromSpecStalk (genericPoint A)
 
-instance schemeGenericInclusion_quasiCompact : QuasiCompact (schemeGenericInclusion A) := by
-  constructor
-  intro U _ _
-  exact Set.toFinite _ |>.isCompact
-
 instance schemeGenericInclusion_isDominant : IsDominant (schemeGenericInclusion A) := by
   constructor
   apply Dense.mono (s₁ := {genericPoint A})
@@ -50,45 +46,37 @@ instance schemeGenericInclusion_isDominant : IsDominant (schemeGenericInclusion 
   · rw [dense_iff_closure_eq]
     exact genericPoint_spec A
 
-/-- Absolute normalization, constructed using Mathlib's relative normalization. -/
-abbrev schemeGlobalNormalization : Scheme.{u} :=
-  (schemeGenericInclusion A).normalization
+/-! The absolute normalization `Palomar.normalization A`, its map `Palomar.normalizationMap A`
+and the generic point `Palomar.genericToNormalization A` are the abbreviations of
+`Pcf.Palomar.Statement`: Mathlib's relative normalization of `schemeGenericInclusion A`. -/
 
-/-- The integral morphism from the constructed normalization to the original scheme. -/
-abbrev schemeGlobalNormalizationMap : schemeGlobalNormalization A ⟶ A :=
-  (schemeGenericInclusion A).fromNormalization
-
-/-- The inclusion of the function field into the constructed normalization. -/
-abbrev schemeGenericToNormalization : Spec A.functionField ⟶ schemeGlobalNormalization A :=
-  (schemeGenericInclusion A).toNormalization
-
-instance schemeGlobalNormalization_isIntegral : IsIntegral (schemeGlobalNormalization A) :=
+instance schemeGlobalNormalization_isIntegral : IsIntegral (Palomar.normalization A) :=
   inferInstanceAs (IsIntegral (schemeGenericInclusion A).normalization)
 
 instance schemeGlobalNormalizationMap_isIntegralHom :
-    IsIntegralHom (schemeGlobalNormalizationMap A) := inferInstance
+    IsIntegralHom (Palomar.normalizationMap A) := inferInstance
 
 @[reassoc (attr := simp)]
 theorem schemeGenericToNormalization_comp :
-    schemeGenericToNormalization A ≫ schemeGlobalNormalizationMap A =
+    Palomar.genericToNormalization A ≫ Palomar.normalizationMap A =
       schemeGenericInclusion A :=
   (schemeGenericInclusion A).toNormalization_fromNormalization
 
 instance schemeGlobalNormalizationMap_isDominant :
-    IsDominant (schemeGlobalNormalizationMap A) := by
-  have : IsDominant (schemeGenericToNormalization A ≫ schemeGlobalNormalizationMap A) := by
+    IsDominant (Palomar.normalizationMap A) := by
+  have : IsDominant (Palomar.genericToNormalization A ≫ Palomar.normalizationMap A) := by
     rw [schemeGenericToNormalization_comp]
     infer_instance
-  exact IsDominant.of_comp (schemeGenericToNormalization A) _
+  exact IsDominant.of_comp (Palomar.genericToNormalization A) _
 
 /-- The constructed normalization morphism is an isomorphism on generic stalks. -/
 instance schemeGlobalNormalizationMap_isIso_generic_stalkMap :
-    IsIso ((schemeGlobalNormalizationMap A).stalkMap
-      (genericPoint (schemeGlobalNormalization A))) := by
-  let t := schemeGenericToNormalization A
-  let n := schemeGlobalNormalizationMap A
+    IsIso ((Palomar.normalizationMap A).stalkMap
+      (genericPoint (Palomar.normalization A))) := by
+  let t := Palomar.genericToNormalization A
+  let n := Palomar.normalizationMap A
   let x := genericPoint (Spec A.functionField)
-  have ht : t x = genericPoint (schemeGlobalNormalization A) :=
+  have ht : t x = genericPoint (Palomar.normalization A) :=
     map_genericPoint_eq_of_isDominant t
   rw [← ht]
   apply (ConcreteCategory.isIso_iff_bijective _).mpr
@@ -96,7 +84,7 @@ instance schemeGlobalNormalizationMap_isIso_generic_stalkMap :
   have hsurj : Function.Surjective ((t ≫ n).stalkMap x) := by
     have : SurjectiveOnStalks (t ≫ n) := by
       change SurjectiveOnStalks
-        (schemeGenericToNormalization A ≫ schemeGlobalNormalizationMap A)
+        (Palomar.genericToNormalization A ≫ Palomar.normalizationMap A)
       rw [schemeGenericToNormalization_comp]
       infer_instance
     exact (t ≫ n).stalkMap_surjective x
@@ -106,13 +94,13 @@ instance schemeGlobalNormalizationMap_isIso_generic_stalkMap :
   exact ⟨a, stalkMap_injective_of_dominant_integral t x ha⟩
 
 /-- All actual stalk maps of the constructed normalization share its function field. -/
-theorem schemeGlobalNormalizationMap_stalkBirationalAt (x : schemeGlobalNormalization A) :
-    IsStalkBirationalAt (schemeGlobalNormalizationMap A) x :=
-  isStalkBirationalAt_of_isIso_generic_stalkMap (schemeGlobalNormalizationMap A) x
+theorem schemeGlobalNormalizationMap_stalkBirationalAt (x : Palomar.normalization A) :
+    IsStalkBirationalAt (Palomar.normalizationMap A) x :=
+  isStalkBirationalAt_of_isIso_generic_stalkMap (Palomar.normalizationMap A) x
 
-instance schemeGlobalNormalizationMap_surjective : Surjective (schemeGlobalNormalizationMap A) :=
+instance schemeGlobalNormalizationMap_surjective : Surjective (Palomar.normalizationMap A) :=
   surjective_of_isDominant_of_isClosed_range _
-    (schemeGlobalNormalizationMap A).isClosedMap.isClosed_range
+    (Palomar.normalizationMap A).isClosedMap.isClosed_range
 
 variable {A} (g : A ⟶ A) [IsDominant g]
 
@@ -135,29 +123,29 @@ variable [IsFinite g]
 /-- Compare the normalization of the composite with the original normalization,
 using the integral factorization through `g`. -/
 def schemeNormalizationComparison :
-    (schemeGenericInclusion A ≫ g).normalization ⟶ schemeGlobalNormalization A :=
+    (schemeGenericInclusion A ≫ g).normalization ⟶ Palomar.normalization A :=
   (schemeGenericInclusion A ≫ g).normalizationDesc
-    (schemeGenericToNormalization A) (schemeGlobalNormalizationMap A ≫ g) (by simp)
+    (Palomar.genericToNormalization A) (Palomar.normalizationMap A ≫ g) (by simp)
 
 omit [IsDominant g] in
 @[reassoc (attr := simp)]
 theorem schemeNormalizationComparison_comp :
-    schemeNormalizationComparison g ≫ schemeGlobalNormalizationMap A ≫ g =
+    schemeNormalizationComparison g ≫ Palomar.normalizationMap A ≫ g =
       (schemeGenericInclusion A ≫ g).fromNormalization :=
   (schemeGenericInclusion A ≫ g).normalizationDesc_comp _ _ _
 
 /-- The other comparison map uses the actual morphism of function fields. -/
 def schemeNormalizationGenericMap :
-    (schemeGenericInclusion A ≫ g).normalization ⟶ schemeGlobalNormalization A :=
+    (schemeGenericInclusion A ≫ g).normalization ⟶ Palomar.normalization A :=
   (schemeGenericInclusion A ≫ g).normalizationDesc
-    (schemeGenericEndomorphism g ≫ schemeGenericToNormalization A)
-    (schemeGlobalNormalizationMap A) (by
+    (schemeGenericEndomorphism g ≫ Palomar.genericToNormalization A)
+    (Palomar.normalizationMap A) (by
       rw [Category.assoc, schemeGenericToNormalization_comp,
         schemeGenericEndomorphism_comp])
 
 @[reassoc (attr := simp)]
 theorem schemeNormalizationGenericMap_comp :
-    schemeNormalizationGenericMap g ≫ schemeGlobalNormalizationMap A =
+    schemeNormalizationGenericMap g ≫ Palomar.normalizationMap A =
       (schemeGenericInclusion A ≫ g).fromNormalization :=
   (schemeGenericInclusion A ≫ g).normalizationDesc_comp _ _ _
 
@@ -191,13 +179,13 @@ variable [IsIso (schemeNormalizationComparison g)]
 /-- The lifted endomorphism obtained once integral postcomposition invariance
 of relative normalization is supplied. The additional assumption is explicitly
 an isomorphism of the constructed comparison map. -/
-def schemeGlobalNormalizationLift : schemeGlobalNormalization A ⟶ schemeGlobalNormalization A :=
+def schemeGlobalNormalizationLift : Palomar.normalization A ⟶ Palomar.normalization A :=
   inv (schemeNormalizationComparison g) ≫ schemeNormalizationGenericMap g
 
 @[reassoc]
 theorem schemeGlobalNormalizationLift_comp :
-    schemeGlobalNormalizationLift g ≫ schemeGlobalNormalizationMap A =
-      schemeGlobalNormalizationMap A ≫ g := by
+    schemeGlobalNormalizationLift g ≫ Palomar.normalizationMap A =
+      Palomar.normalizationMap A ≫ g := by
   rw [schemeGlobalNormalizationLift, Category.assoc,
     schemeNormalizationGenericMap_comp,
     ← schemeNormalizationComparison_comp g, IsIso.inv_hom_id_assoc]
@@ -215,12 +203,12 @@ instance schemeGlobalNormalizationLift_isDominant :
 /-- Finiteness of the normalization morphism implies finiteness of the
 constructed lift; no finiteness assumption about the lift itself is used. -/
 instance schemeGlobalNormalizationLift_isFinite
-    [IsFinite (schemeGlobalNormalizationMap A)] :
+    [IsFinite (Palomar.normalizationMap A)] :
     IsFinite (schemeGlobalNormalizationLift g) := by
-  have : IsFinite (schemeGlobalNormalizationLift g ≫ schemeGlobalNormalizationMap A) := by
+  have : IsFinite (schemeGlobalNormalizationLift g ≫ Palomar.normalizationMap A) := by
     rw [schemeGlobalNormalizationLift_comp]
     infer_instance
-  exact IsFinite.of_comp _ (schemeGlobalNormalizationMap A)
+  exact IsFinite.of_comp _ (Palomar.normalizationMap A)
 
 end Lift
 

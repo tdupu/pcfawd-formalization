@@ -39,7 +39,7 @@ theorem IsFiniteDisjointUnionOfStandardTameCovers.finitePresentation
   have he' : ∀ i, 1 ≤ e i := fun i ↦ Nat.one_le_iff_ne_zero.mpr (he i)
   letI (i : ι) : Module.Finite R
       (AdjoinRoot (Pcf.LocalModel.localPoly (unit i) a (e i))) :=
-    standardCover_finite (unit i) a (he' i)
+    Pcf.LocalModel.finite_adjoinRoot (unit i) a (he' i)
   have hFinite : Module.Finite R
       (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (unit i) a (e i))) := by
     infer_instance

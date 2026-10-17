@@ -178,26 +178,6 @@ noncomputable def puncturedCoverGenericFiberIsoBasePullback
   rw [← hg]
   exact h.isoPullback
 
-omit [IsNoetherianRing R] in
-/-- A section of a finite étale punctured cover is determined by its restriction to the
-generic fibre. This is the scheme-theoretic-dominance step in the normalization argument. -/
-theorem puncturedCover_genericPullback_sections_injective
-    (hdim : 1 ≤ ringKrullDim R)
-    (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    Function.Injective ((Limits.pullback.fst V.hom
-      ((puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
-        (genericPoint_mem_puncturedSpectrum R hdim))).appTop) := by
-  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
-    (genericPoint_mem_puncturedSpectrum R hdim)
-  letI : Etale V.hom := V.prop.2
-  letI : Flat V.hom := inferInstance
-  letI : IsSchemeTheoreticallyDominant g :=
-    genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant R hdim
-  letI : QuasiCompact g := genericPoint_toPuncturedSpectrum_quasiCompact R hdim
-  letI : IsSchemeTheoreticallyDominant (Limits.pullback.fst V.hom g) := inferInstance
-  letI : QuasiCompact (Limits.pullback.fst V.hom g) := inferInstance
-  exact (Limits.pullback.fst V.hom g).app_injective ⊤
-
 /-- Restriction of global functions on a punctured cover to its actual generic fibre. -/
 noncomputable def puncturedCoverGenericFiberSectionMap
     (hdim : 1 ≤ ringKrullDim R)
@@ -208,12 +188,23 @@ noncomputable def puncturedCoverGenericFiberSectionMap
   exact (Limits.pullback.fst V.hom g).appTop.hom
 
 omit [IsNoetherianRing R] in
-/-- The actual generic-fibre algebra contains the section ring of the punctured cover. -/
+/-- The actual generic-fibre algebra contains the section ring of the punctured cover: a section
+of a finite étale punctured cover is determined by its restriction to the generic fibre.  This is
+the scheme-theoretic-dominance step in the normalization argument. -/
 theorem puncturedCoverGenericFiber_sectionMap_injective
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     Function.Injective (puncturedCoverGenericFiberSectionMap R hdim V) := by
-  exact puncturedCover_genericPullback_sections_injective R hdim V
+  let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
+    (genericPoint_mem_puncturedSpectrum R hdim)
+  letI : Etale V.hom := V.prop.2
+  letI : Flat V.hom := inferInstance
+  letI : IsSchemeTheoreticallyDominant g :=
+    genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant R hdim
+  letI : QuasiCompact g := genericPoint_toPuncturedSpectrum_quasiCompact R hdim
+  letI : IsSchemeTheoreticallyDominant (Limits.pullback.fst V.hom g) := inferInstance
+  letI : QuasiCompact (Limits.pullback.fst V.hom g) := inferInstance
+  exact (Limits.pullback.fst V.hom g).app_injective ⊤
 
 omit [IsNoetherianRing R] in
 /-- The generic fibre of any finite étale punctured cover is affine. -/

@@ -15,8 +15,7 @@ public import Mathlib.RingTheory.Localization.Pi
 
 Main theorem: `Pcf.Stacks.SchemeLevel.hasLocalizedStandardCoverAt_of_tame`.  Given the affine
 hypothesis `AbhyankarLemmaTameOfFinite` at the local ring `R_y`
-(`Pcf.Stacks.abhyankarLemmaTameOfFinite`, or the characteristic-zero
-`Pcf.Stacks.abhyankarLemmaOfFinite`), a finite étale `R_a`-algebra `B` which is tame in
+(`Pcf.Stacks.abhyankarLemmaTameOfFinite`), a finite étale `R_a`-algebra `B` which is tame in
 codimension one along `V(a)` admits, at every `y ∈ V(a)`, a pointed étale
 neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 (`HasLocalizedStandardCoverAt`).
@@ -37,12 +36,13 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 * Strictly henselian case `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`: the affine hypothesis
   `AbhyankarLemmaTameOfFinite` (`Pcf.Stacks.abhyankarLemmaTameOfFinite`).
 * Descend the isomorphism to some `A_λ` (Algebra, Lemma 10.127.8, Tag `05N9`) and make the `e_i`
-  invertible: `exists_stage_localizedStandard`, `exists_stage_isUnit_natCast` (built on pcf's
+  invertible: `exists_stage_localizedStandard`,
+  `PointedEtaleNeighborhood.exists_stage_isUnit_natCast` (built on pcf's
   `exists_descendedAlgEquiv`).
 * `Spec(A_λ) → Spec(A)` is the required étale neighbourhood: `hasLocalizedStandardCoverAt_of_stage`.
 
-The differences in the second and third steps are forced by the shape of the affine hypothesis: like
-the characteristic-zero `Pcf.Stacks.AbhyankarLemmaOfFinite`, it is stated for the finite
+The differences in the second and third steps are forced by the shape of the affine hypothesis: it is
+stated for the finite
 normalization `S` of `R` in `S[1/a]`, whose finiteness over `R` is not available before this
 theorem; over the regular local ring `R_y` it is (Stacks Tag `032L`,
 `finite_localizedNormalization`). The finiteness over `R` itself (part of the first assertion of
@@ -178,42 +178,6 @@ theorem nonempty_localizedStandard_of_algHom [Module.Finite Ra B]
     (Algebra.TensorProduct.cancelBaseChange R Ry L L B).symm
   exact ⟨H3.trans (H1.trans H2)⟩
 
-open CategoryTheory Limits in
-/-- Finitely many positive integers invertible in the strict local colimit are already invertible
-at one pointed étale stage. -/
-theorem exists_stage_isUnit_natCast {R Ω : Type u} [CommRing R] [Field Ω] [Algebra R Ω]
-    (ι : Type) [Finite ι] (e : ι → ℕ) (he : ∀ j, IsUnit ((e j : ℕ) : LocalColimit R Ω)) :
-    ∃ X : PointedEtaleNeighborhood R Ω, ∀ j, IsUnit ((e j : ℕ) : X) := by
-  classical
-  letI := Fintype.ofFinite ι
-  let s : Set (LocalColimit R Ω) :=
-    Set.range (fun j : ι ↦ (((he j).unit⁻¹ : (LocalColimit R Ω)ˣ) : LocalColimit R Ω))
-  obtain ⟨X, hX⟩ := exists_stage_containing_finite_localColimit_set
-    (R := R) (Ω := Ω) s (Set.finite_range _)
-  choose y hy using fun j : ι ↦ hX (show (((he j).unit⁻¹ : (LocalColimit R Ω)ˣ) :
-    LocalColimit R Ω) ∈ s from ⟨j, rfl⟩)
-  let F := functor (R := R) (Ω := Ω)
-  let c := (Under.forget (CommRingCat.of R)).mapCocone (localCocone (R := R) (Ω := Ω))
-  have hc : IsColimit c :=
-    isColimitOfPreserves (Under.forget (CommRingCat.of R))
-      (localCoconeIsColimit (R := R) (Ω := Ω))
-  have hxy (j : ι) : (c.ι.app X).hom (((e j : ℕ) : X) * y j) = (c.ι.app X).hom 1 := by
-    change toLocalColimitAlgHom (R := R) (Ω := Ω) X (((e j : ℕ) : X) * y j) =
-      toLocalColimitAlgHom (R := R) (Ω := Ω) X 1
-    rw [map_mul, hy j, map_one, map_natCast]
-    exact (he j).mul_val_inv
-  choose Y f hunit using fun j : ι ↦ (hc.eq_iff' _ 1).mp (hxy j)
-  obtain ⟨Z, hZ⟩ := IsFiltered.sup_objs_exists (Finset.univ.image Y)
-  have hY (j : ι) : Y j ∈ Finset.univ.image Y :=
-    Finset.mem_image.mpr ⟨j, Finset.mem_univ _, rfl⟩
-  let g (j : ι) : Y j ⟶ Z := (hZ (hY j)).some
-  refine ⟨Z, fun j ↦ ?_⟩
-  have hunit' : (f j).hom (((e j : ℕ) : X) * y j) = (f j).hom 1 := hunit j
-  have h1 : (g j).hom ((f j).hom (((e j : ℕ) : X) * y j)) = 1 := by
-    rw [hunit', map_one, map_one]
-  rw [map_mul, map_mul, map_natCast, map_natCast] at h1
-  exact ⟨⟨_, _, h1, by rw [mul_comm]; exact h1⟩, rfl⟩
-
 /-- The localized standard covers are finitely presented over a Noetherian base. -/
 theorem localizedStandardCoverProduct_finitePresentation {T : Type u} [CommRing T]
     [IsNoetherianRing T]
@@ -245,7 +209,7 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
   classical
   let L := LocalColimit R Ω
   obtain ⟨X0, uX0, huX0⟩ := exists_stage_units ι v
-  obtain ⟨X1, hX1⟩ := exists_stage_isUnit_natCast ι e he
+  obtain ⟨X1, hX1⟩ := PointedEtaleNeighborhood.exists_stage_isUnit_natCast ι e he
   obtain ⟨X, ⟨f0⟩, ⟨f1⟩⟩ := exists_common_refinement X0 X1
   let unitX : ι → Xˣ := fun j ↦ Units.map f0.hom.toRingHom.toMonoidHom (uX0 j)
   have hunitX (j : ι) : Units.map (toLocalColimitAlgHom (R := R) (Ω := Ω) X).toRingHom.toMonoidHom

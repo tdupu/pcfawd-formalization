@@ -60,14 +60,14 @@ theorem schemeGenericMorphism_comp_morphism (ρ : Z ⟶ Y) (π : Y ⟶ X)
 
 /-- The comparison associated with finite postcomposition. -/
 def schemeNormalizationMorphismComparison (π : Y ⟶ X) [IsFinite π] :
-    (schemeGenericInclusion Y ≫ π).normalization ⟶ schemeGlobalNormalization Y :=
+    (schemeGenericInclusion Y ≫ π).normalization ⟶ Palomar.normalization Y :=
   (schemeGenericInclusion Y ≫ π).normalizationDesc
-    (schemeGenericToNormalization Y) (schemeGlobalNormalizationMap Y ≫ π) (by simp)
+    (Palomar.genericToNormalization Y) (Palomar.normalizationMap Y ≫ π) (by simp)
 
 omit [IsIntegral X] in
 @[reassoc (attr := simp)]
 theorem schemeNormalizationMorphismComparison_comp (π : Y ⟶ X) [IsFinite π] :
-    schemeNormalizationMorphismComparison π ≫ schemeGlobalNormalizationMap Y ≫ π =
+    schemeNormalizationMorphismComparison π ≫ Palomar.normalizationMap Y ≫ π =
       (schemeGenericInclusion Y ≫ π).fromNormalization :=
   (schemeGenericInclusion Y ≫ π).normalizationDesc_comp _ _ _
 
@@ -75,7 +75,7 @@ omit [IsIntegral X] in
 @[reassoc (attr := simp)]
 theorem schemeGenericToNormalization_morphismComparison (π : Y ⟶ X) [IsFinite π] :
     (schemeGenericInclusion Y ≫ π).toNormalization ≫
-      schemeNormalizationMorphismComparison π = schemeGenericToNormalization Y :=
+      schemeNormalizationMorphismComparison π = Palomar.genericToNormalization Y :=
   (schemeGenericInclusion Y ≫ π).toNormalization_normalizationDesc _ _ _
 
 instance schemeNormalizationMorphismComparison_isIntegralHom (π : Y ⟶ X) [IsFinite π] :
@@ -85,16 +85,16 @@ instance schemeNormalizationMorphismComparison_isIntegralHom (π : Y ⟶ X) [IsF
 
 /-- The inverse comparison follows from the same integral factorization. -/
 def schemeNormalizationMorphismComparisonInv (π : Y ⟶ X) [IsFinite π] :
-    schemeGlobalNormalization Y ⟶ (schemeGenericInclusion Y ≫ π).normalization :=
+    Palomar.normalization Y ⟶ (schemeGenericInclusion Y ≫ π).normalization :=
   (schemeGenericInclusion Y).normalizationDesc
     (schemeGenericInclusion Y ≫ π).toNormalization
-    (schemeNormalizationMorphismComparison π ≫ schemeGlobalNormalizationMap Y)
+    (schemeNormalizationMorphismComparison π ≫ Palomar.normalizationMap Y)
     (by simp [← Category.assoc])
 
 omit [IsIntegral X] in
 @[reassoc (attr := simp)]
 theorem schemeGenericToNormalization_morphismComparisonInv (π : Y ⟶ X) [IsFinite π] :
-    schemeGenericToNormalization Y ≫ schemeNormalizationMorphismComparisonInv π =
+    Palomar.genericToNormalization Y ≫ schemeNormalizationMorphismComparisonInv π =
       (schemeGenericInclusion Y ≫ π).toNormalization :=
   (schemeGenericInclusion Y).toNormalization_normalizationDesc _ _ _
 
@@ -102,16 +102,16 @@ omit [IsIntegral X] in
 @[reassoc (attr := simp)]
 theorem schemeNormalizationMorphismComparisonInv_comp_map (π : Y ⟶ X) [IsFinite π] :
     schemeNormalizationMorphismComparisonInv π ≫ schemeNormalizationMorphismComparison π ≫
-      schemeGlobalNormalizationMap Y = schemeGlobalNormalizationMap Y :=
+      Palomar.normalizationMap Y = Palomar.normalizationMap Y :=
   (schemeGenericInclusion Y).normalizationDesc_comp _ _ _
 
 omit [IsIntegral X] in
 @[reassoc (attr := simp)]
 theorem schemeNormalizationMorphismComparisonInv_comp (π : Y ⟶ X) [IsFinite π] :
     schemeNormalizationMorphismComparisonInv π ≫ schemeNormalizationMorphismComparison π =
-      𝟙 (schemeGlobalNormalization Y) := by
+      𝟙 (Palomar.normalization Y) := by
   apply Scheme.Hom.normalization.hom_ext (schemeGenericInclusion Y) _ _
-    (schemeGlobalNormalizationMap Y)
+    (Palomar.normalizationMap Y)
   · simp [← Category.assoc]
   · simp
   · simp
@@ -136,16 +136,16 @@ instance schemeNormalizationMorphismComparison_isIso (π : Y ⟶ X) [IsFinite π
 
 /-- The comparison towards the normalization of the target. -/
 def schemeNormalizationMorphismGenericMap (π : Y ⟶ X) [IsFinite π] [IsDominant π] :
-    (schemeGenericInclusion Y ≫ π).normalization ⟶ schemeGlobalNormalization X :=
+    (schemeGenericInclusion Y ≫ π).normalization ⟶ Palomar.normalization X :=
   (schemeGenericInclusion Y ≫ π).normalizationDesc
-    (schemeGenericMorphism π ≫ schemeGenericToNormalization X)
-    (schemeGlobalNormalizationMap X) (by
+    (schemeGenericMorphism π ≫ Palomar.genericToNormalization X)
+    (Palomar.normalizationMap X) (by
       rw [Category.assoc, schemeGenericToNormalization_comp, schemeGenericMorphism_comp])
 
 @[reassoc (attr := simp)]
 theorem schemeNormalizationMorphismGenericMap_comp (π : Y ⟶ X)
     [IsFinite π] [IsDominant π] :
-    schemeNormalizationMorphismGenericMap π ≫ schemeGlobalNormalizationMap X =
+    schemeNormalizationMorphismGenericMap π ≫ Palomar.normalizationMap X =
       (schemeGenericInclusion Y ≫ π).fromNormalization :=
   (schemeGenericInclusion Y ≫ π).normalizationDesc_comp _ _ _
 
@@ -154,7 +154,7 @@ theorem schemeGenericToNormalization_morphismGenericMap (π : Y ⟶ X)
     [IsFinite π] [IsDominant π] :
     (schemeGenericInclusion Y ≫ π).toNormalization ≫
       schemeNormalizationMorphismGenericMap π =
-        schemeGenericMorphism π ≫ schemeGenericToNormalization X :=
+        schemeGenericMorphism π ≫ Palomar.genericToNormalization X :=
   (schemeGenericInclusion Y ≫ π).toNormalization_normalizationDesc _ _ _
 
 instance schemeNormalizationMorphismGenericMap_isIntegralHom (π : Y ⟶ X)
@@ -178,21 +178,21 @@ instance schemeNormalizationMorphismGenericMap_isDominant (π : Y ⟶ X)
 
 /-- The actual canonical lift of a finite dominant morphism to normalization. -/
 def schemeGlobalNormalizationMorphism (π : Y ⟶ X) [IsFinite π] [IsDominant π] :
-    schemeGlobalNormalization Y ⟶ schemeGlobalNormalization X :=
+    Palomar.normalization Y ⟶ Palomar.normalization X :=
   inv (schemeNormalizationMorphismComparison π) ≫ schemeNormalizationMorphismGenericMap π
 
 @[reassoc]
 theorem schemeGlobalNormalizationMorphism_comp (π : Y ⟶ X) [IsFinite π] [IsDominant π] :
-    schemeGlobalNormalizationMorphism π ≫ schemeGlobalNormalizationMap X =
-      schemeGlobalNormalizationMap Y ≫ π := by
+    schemeGlobalNormalizationMorphism π ≫ Palomar.normalizationMap X =
+      Palomar.normalizationMap Y ≫ π := by
   rw [schemeGlobalNormalizationMorphism, Category.assoc,
     schemeNormalizationMorphismGenericMap_comp,
     ← schemeNormalizationMorphismComparison_comp π, IsIso.inv_hom_id_assoc]
 
 @[reassoc]
 theorem schemeGenericToNormalization_morphism (π : Y ⟶ X) [IsFinite π] [IsDominant π] :
-    schemeGenericToNormalization Y ≫ schemeGlobalNormalizationMorphism π =
-      schemeGenericMorphism π ≫ schemeGenericToNormalization X := by
+    Palomar.genericToNormalization Y ≫ schemeGlobalNormalizationMorphism π =
+      schemeGenericMorphism π ≫ Palomar.genericToNormalization X := by
   rw [schemeGlobalNormalizationMorphism,
     ← schemeGenericToNormalization_morphismComparison π]
   simp only [Category.assoc, IsIso.hom_inv_id_assoc,
@@ -209,24 +209,24 @@ instance schemeGlobalNormalizationMorphism_isDominant (π : Y ⟶ X)
   infer_instance
 
 instance schemeGlobalNormalizationMorphism_isFinite (π : Y ⟶ X)
-    [IsFinite π] [IsDominant π] [IsFinite (schemeGlobalNormalizationMap Y)] :
+    [IsFinite π] [IsDominant π] [IsFinite (Palomar.normalizationMap Y)] :
     IsFinite (schemeGlobalNormalizationMorphism π) := by
-  have : IsFinite (schemeGlobalNormalizationMorphism π ≫ schemeGlobalNormalizationMap X) := by
+  have : IsFinite (schemeGlobalNormalizationMorphism π ≫ Palomar.normalizationMap X) := by
     rw [schemeGlobalNormalizationMorphism_comp]
     infer_instance
-  exact IsFinite.of_comp _ (schemeGlobalNormalizationMap X)
+  exact IsFinite.of_comp _ (Palomar.normalizationMap X)
 
 /-- Uniqueness of the normalization lift from its two commuting squares. -/
 theorem schemeGlobalNormalizationMorphism_unique (π : Y ⟶ X)
     [IsFinite π] [IsDominant π]
-    (l : schemeGlobalNormalization Y ⟶ schemeGlobalNormalization X)
-    (hn : l ≫ schemeGlobalNormalizationMap X = schemeGlobalNormalizationMap Y ≫ π)
-    (hg : schemeGenericToNormalization Y ≫ l =
-      schemeGenericMorphism π ≫ schemeGenericToNormalization X) :
+    (l : Palomar.normalization Y ⟶ Palomar.normalization X)
+    (hn : l ≫ Palomar.normalizationMap X = Palomar.normalizationMap Y ≫ π)
+    (hg : Palomar.genericToNormalization Y ≫ l =
+      schemeGenericMorphism π ≫ Palomar.genericToNormalization X) :
     l = schemeGlobalNormalizationMorphism π := by
-  apply ext_of_isDominant_of_isSeparated (schemeGlobalNormalizationMap X)
+  apply ext_of_isDominant_of_isSeparated (Palomar.normalizationMap X)
     (hn.trans (schemeGlobalNormalizationMorphism_comp π).symm)
-    (schemeGenericToNormalization Y)
+    (Palomar.genericToNormalization Y)
   exact hg.trans (schemeGenericToNormalization_morphism π).symm
 
 /-- The canonical normalization lift respects composition. -/
@@ -269,67 +269,67 @@ theorem schemeGlobalNormalizationMorphism_isFinite_of_finiteType
   infer_instance
 
 instance schemeGlobalNormalization_isLocallyNoetherian
-    [IsLocallyNoetherian X] [IsFinite (schemeGlobalNormalizationMap X)] :
-    IsLocallyNoetherian (schemeGlobalNormalization X) :=
-  LocallyOfFiniteType.isLocallyNoetherian (schemeGlobalNormalizationMap X)
+    [IsLocallyNoetherian X] [IsFinite (Palomar.normalizationMap X)] :
+    IsLocallyNoetherian (Palomar.normalization X) :=
+  LocallyOfFiniteType.isLocallyNoetherian (Palomar.normalizationMap X)
 
 /-- The finite lift is locally finitely presented over the Noetherian normalization. -/
 theorem schemeGlobalNormalizationMorphism_locallyOfFinitePresentation (π : Y ⟶ X)
     [IsFinite π] [IsDominant π] [IsLocallyNoetherian X]
-    [IsFinite (schemeGlobalNormalizationMap X)] [IsFinite (schemeGlobalNormalizationMap Y)] :
+    [IsFinite (Palomar.normalizationMap X)] [IsFinite (Palomar.normalizationMap Y)] :
     LocallyOfFinitePresentation (schemeGlobalNormalizationMorphism π) := inferInstance
 
 instance schemeGlobalNormalization_noetherianSpace
-    [IsLocallyNoetherian X] [NoetherianSpace X] [IsFinite (schemeGlobalNormalizationMap X)] :
-    NoetherianSpace (schemeGlobalNormalization X) := by
-  let : CompactSpace (schemeGlobalNormalization X) :=
-    QuasiCompact.compactSpace_of_compactSpace (schemeGlobalNormalizationMap X)
-  let : IsNoetherian (schemeGlobalNormalization X) := {}
+    [IsLocallyNoetherian X] [NoetherianSpace X] [IsFinite (Palomar.normalizationMap X)] :
+    NoetherianSpace (Palomar.normalization X) := by
+  let : CompactSpace (Palomar.normalization X) :=
+    QuasiCompact.compactSpace_of_compactSpace (Palomar.normalizationMap X)
+  let : IsNoetherian (Palomar.normalization X) := {}
   infer_instance
 
 instance schemeGlobalNormalization_generic_charZero
     [CharZero (X.presheaf.stalk (genericPoint X))] :
-    CharZero ((schemeGlobalNormalization X).presheaf.stalk
-      (genericPoint (schemeGlobalNormalization X))) := by
-  let n := schemeGlobalNormalizationMap X
-  have hn : n (genericPoint (schemeGlobalNormalization X)) = genericPoint X :=
+    CharZero ((Palomar.normalization X).presheaf.stalk
+      (genericPoint (Palomar.normalization X))) := by
+  let n := Palomar.normalizationMap X
+  have hn : n (genericPoint (Palomar.normalization X)) = genericPoint X :=
     map_genericPoint_eq_of_isDominant n
   let e := (X.presheaf.stalkCongr (Inseparable.of_eq hn)).commRingCatIsoToRingEquiv
-  have hfield : IsField (X.presheaf.stalk (n (genericPoint (schemeGlobalNormalization X)))) :=
+  have hfield : IsField (X.presheaf.stalk (n (genericPoint (Palomar.normalization X)))) :=
     e.toMulEquiv.isField (Field.toIsField _)
-  let : Field (X.presheaf.stalk (n (genericPoint (schemeGlobalNormalization X)))) :=
+  let : Field (X.presheaf.stalk (n (genericPoint (Palomar.normalization X)))) :=
     hfield.toField
-  let : CharZero (X.presheaf.stalk (n (genericPoint (schemeGlobalNormalization X)))) :=
+  let : CharZero (X.presheaf.stalk (n (genericPoint (Palomar.normalization X)))) :=
     charZero_of_injective_ringHom e.symm.injective
   exact charZero_of_injective_ringHom
-    (n.stalkMap (genericPoint (schemeGlobalNormalization X))).hom.injective
+    (n.stalkMap (genericPoint (Palomar.normalization X))).hom.injective
 
 /-- Pushforward through the actual morphism between global normalizations. -/
 def schemeGlobalNormalizationDivisorMap (π : Y ⟶ X) [IsFinite π] [IsDominant π]
-    [IsLocallyNoetherian X] [IsFinite (schemeGlobalNormalizationMap X)]
-    [IsFinite (schemeGlobalNormalizationMap Y)] :
-    SchemeDivisorPoint (schemeGlobalNormalization Y) →
-      SchemeDivisorPoint (schemeGlobalNormalization X) :=
+    [IsLocallyNoetherian X] [IsFinite (Palomar.normalizationMap X)]
+    [IsFinite (Palomar.normalizationMap Y)] :
+    SchemeDivisorPoint (Palomar.normalization Y) →
+      SchemeDivisorPoint (Palomar.normalization X) :=
   fun Q ↦ Q.mapFiniteDominantNormal (schemeGlobalNormalizationMorphism π)
 
 @[simp]
 theorem schemeGlobalNormalizationDivisorMap_val (π : Y ⟶ X) [IsFinite π] [IsDominant π]
-    [IsLocallyNoetherian X] [IsFinite (schemeGlobalNormalizationMap X)]
-    [IsFinite (schemeGlobalNormalizationMap Y)]
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization Y)) :
+    [IsLocallyNoetherian X] [IsFinite (Palomar.normalizationMap X)]
+    [IsFinite (Palomar.normalizationMap Y)]
+    (Q : SchemeDivisorPoint (Palomar.normalization Y)) :
     (schemeGlobalNormalizationDivisorMap π Q).1 =
       schemeGlobalNormalizationMorphism π Q.1 := rfl
 
 theorem schemeGlobalNormalizationDivisorMap_surjective (π : Y ⟶ X)
     [IsFinite π] [IsDominant π] [IsLocallyNoetherian X]
-    [IsFinite (schemeGlobalNormalizationMap X)] [IsFinite (schemeGlobalNormalizationMap Y)] :
+    [IsFinite (Palomar.normalizationMap X)] [IsFinite (Palomar.normalizationMap Y)] :
     Function.Surjective (schemeGlobalNormalizationDivisorMap π) :=
   SchemeDivisorPoint.mapFiniteDominantNormal_surjective (schemeGlobalNormalizationMorphism π)
 
 theorem schemeGlobalNormalizationDivisorMap_finite_fiber (π : Y ⟶ X)
     [IsFinite π] [IsDominant π] [IsLocallyNoetherian X]
-    [IsFinite (schemeGlobalNormalizationMap X)] [IsFinite (schemeGlobalNormalizationMap Y)]
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization X)) :
+    [IsFinite (Palomar.normalizationMap X)] [IsFinite (Palomar.normalizationMap Y)]
+    (Q : SchemeDivisorPoint (Palomar.normalization X)) :
     (schemeGlobalNormalizationDivisorMap π ⁻¹' {Q}).Finite :=
   SchemeDivisorPoint.mapFiniteDominantNormal_finite_fiber (schemeGlobalNormalizationMorphism π) Q
 
@@ -365,7 +365,7 @@ theorem schemeGlobalNormalizationRamifiedCover_map_val
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f)
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization Y)) :
+    (Q : SchemeDivisorPoint (Palomar.normalization Y)) :
     ((schemeGlobalNormalizationRamifiedCover k f g π hcomm).map Q).1 =
       schemeGlobalNormalizationMorphism π Q.1 := rfl
 
@@ -375,7 +375,7 @@ theorem schemeGlobalNormalizationRamifiedCover_ramificationIdx
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f)
-    (Q : SchemeDivisorPoint (schemeGlobalNormalization Y)) :
+    (Q : SchemeDivisorPoint (Palomar.normalization Y)) :
     (schemeGlobalNormalizationRamifiedCover k f g π hcomm).ramificationIdx Q =
       schemeDivisorRamificationIdx (schemeGlobalNormalizationMorphism π) Q := rfl
 

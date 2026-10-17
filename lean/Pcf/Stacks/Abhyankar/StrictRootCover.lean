@@ -12,7 +12,8 @@ public import Pcf.Stacks.Abhyankar.KummerIntermediate
 public import Pcf.Stacks.Abhyankar.StandardCoverAddendum
 public import Pcf.Stacks.Abhyankar.StandardCoverNormalization
 public import Pcf.Stacks.Abhyankar.StrictHenselization
-public import Pcf.Stacks.Common.RegularDimensionOne
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Pcf.Bounding.RegularLocalDomain
 public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Common.RegularNormal
 public import Pcf.Stacks.Purity.HenselianFiniteEtaleLift
@@ -80,29 +81,24 @@ omit [IsRegularLocalRing A] in
 regular local ring, hence a domain (Stacks `00NP`). -/
 theorem divisorPrime_isPrime (a : A) [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
     (Ideal.span ({a} : Set A)).IsPrime := by
-  have : IsDomain (A ⧸ Ideal.span ({a} : Set A)) := isDomain_of_isRegularLocalRing _
+  have : IsDomain (A ⧸ Ideal.span ({a} : Set A)) := Pcf.Vendor.isDomain_of_isRegularLocalRing _
   exact span_singleton_isPrime_of_quotient_isDomain a
 
 /-- A nonzero element of the maximal ideal of a regular local ring generates a height-one ideal
 (Krull's principal ideal theorem). -/
 theorem divisorPrime_height_eq_one (a : A) (ha : a ∈ maximalIdeal A) (ha0 : a ≠ 0) :
     (Ideal.span ({a} : Set A)).height = 1 := by
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   exact Ideal.height_span_singleton_eq_one_of_mem_nonZeroDivisors
     (mem_nonZeroDivisors_iff_ne_zero.mpr ha0) ((IsLocalRing.mem_maximalIdeal a).mp ha)
-
-/-- The localization of a regular local ring at a prime is regular local (Stacks `0AFS`). -/
-theorem divisorLocalization_isRegularLocalRing (p : Ideal A) [p.IsPrime] :
-    IsRegularLocalRing (Localization.AtPrime p) :=
-  isRegularLocalRing_localization_atPrime A p
 
 /-- The localization of a regular local ring at a height-one prime is a discrete valuation
 ring. -/
 theorem isDiscreteValuationRing_localization_atPrime_of_height_eq_one
     (p : Ideal A) [p.IsPrime] (hp : p.height = 1) :
     IsDiscreteValuationRing (Localization.AtPrime p) := by
-  have := divisorLocalization_isRegularLocalRing p
-  apply isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one
+  have := Pcf.Vendor.isRegularLocalRing_localization A p
+  apply Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height p (Localization.AtPrime p), hp]
   rfl
 
@@ -118,7 +114,7 @@ theorem divisorLocalization_isDiscreteValuationRing (a : A) (ha : a ∈ maximalI
 theorem divisorLocalization_irreducible (a : A) (ha : a ∈ maximalIdeal A) (ha0 : a ≠ 0)
     [(Ideal.span ({a} : Set A)).IsPrime] :
     Irreducible (algebraMap A (Localization.AtPrime (Ideal.span ({a} : Set A))) a) := by
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have := divisorLocalization_isDiscreteValuationRing a ha ha0
   rw [IsDiscreteValuationRing.irreducible_iff_uniformizer,
     ← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_span, Set.image_singleton]
@@ -526,13 +522,13 @@ theorem strictRootCover_isDomain (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E)
     (ha0 : a ∈ nonZeroDivisors A) [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
     IsDomain (StrictRootCover a E) :=
   have := strictRootCover_isRegularLocalRing a ha hE ha0
-  isDomain_of_isRegularLocalRing _
+  Pcf.Vendor.isDomain_of_isRegularLocalRing _
 
 theorem strictRootCover_isIntegrallyClosed (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E)
     (ha0 : a ∈ nonZeroDivisors A) [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
     IsIntegrallyClosed (StrictRootCover a E) :=
   have := strictRootCover_isRegularLocalRing a ha hE ha0
-  have := isRegularRing_of_isRegularLocalRing (StrictRootCover a E)
+  have := Pcf.Vendor.isRegularRing_of_isRegularLocalRing (StrictRootCover a E)
   have := strictRootCover_isDomain a ha hE ha0
   isIntegrallyClosed_of_isRegularRing (StrictRootCover a E)
 
@@ -544,7 +540,7 @@ theorem strictRootCover_span_root_isPrime (hE : 1 ≤ E)
   have := strictRootCover_quotient_isRegularLocalRing a hE
   have : IsDomain (StrictRootCover a E ⧸
       Ideal.span ({strictRoot a E} : Set (StrictRootCover a E))) :=
-    isDomain_of_isRegularLocalRing _
+    Pcf.Vendor.isDomain_of_isRegularLocalRing _
   exact Ideal.Quotient.isDomain_iff_prime _ |>.mp inferInstance
 
 omit [IsNoetherianRing A] [IsLocalRing A] in

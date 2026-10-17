@@ -114,7 +114,7 @@ unit tests. -/
 theorem exists_prime_height_one_of_isRegularLocalRing_dimension_two
     (R : Type u) [CommRing R] [IsRegularLocalRing R] (hdim : ringKrullDim R = 2) :
     ∃ p : Ideal R, p.IsPrime ∧ p.height = 1 := by
-  letI : IsDomain R := isDomain_of_isRegularLocalRing R
+  letI : IsDomain R := Pcf.Vendor.isDomain_of_isRegularLocalRing R
   obtain ⟨x, y, hspan, hx, _⟩ :=
     exists_regular_pair_span_maximalIdeal_of_dimension_two hdim
   have hx0 : x ≠ 0 := by
@@ -171,7 +171,7 @@ theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyCl
   letI : Module.IsTorsionFree R S := hB.2.1
   letI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
   have hnormal : IsStacksNormalRing S := hB.2.2.1
-  letI : IsDomain R := isDomain_of_isRegularLocalRing R
+  letI : IsDomain R := Pcf.Vendor.isDomain_of_isRegularLocalRing R
   letI : Module.Free R S :=
     Module.free_of_finite_torsionFree_stacksNormal_dimension_two hnormal hdim
   letI : Module.FinitePresentation R S :=

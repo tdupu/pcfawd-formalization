@@ -63,7 +63,7 @@ theorem hasLocalizedStandardCoverAt_chart [IsLocallyNoetherian X] (hA : Abhyanka
   have : IsLocalization.Away a Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1) :=
     isLocalization_away_of_ideal_eq hDa
   have : Module.Finite Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1)
-      Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := finite_app_of_isFinite f hW
+      Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := f.finite_app _ hW
   have : Algebra.Etale Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1)
       Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := etale_app_of_etale f hW hZV
   exact hasLocalizedStandardCoverAt_of_tame a ha
@@ -112,7 +112,7 @@ theorem finite_etale_of_le (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
   refine ⟨hZV, ?_, ?_⟩
   · change ((f ≫ (complementOpen D).ι).app V.1).hom.Finite
     rw [hcomp]
-    exact (finite_app_of_isFinite f hW).comp
+    exact (f.finite_app _ hW).comp
       (RingHom.Finite.of_surjective _ (bijective_ι_app_of_le hV).2)
   · change ((f ≫ (complementOpen D).ι).app V.1).hom.Etale
     rw [hcomp]

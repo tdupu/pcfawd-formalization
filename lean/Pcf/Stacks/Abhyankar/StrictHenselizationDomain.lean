@@ -112,7 +112,7 @@ theorem localColimit_isDomain [IsRegularLocalRing R]
       exact hr
     let _ : IsRegularLocalRing L :=
       Pcf.Stacks.isRegularLocalRing_of_flat_of_formallyUnramified R L
-    let _ : IsDomain L := Pcf.Stacks.isDomain_of_isRegularLocalRing L
+    let _ : IsDomain L := Pcf.Vendor.isDomain_of_isRegularLocalRing L
     let g : L →ₐ[R] T := Localization.localAlgHom QX QY f.hom hQ
     let _ : Algebra L T := g.toAlgebra
     let _ : IsScalarTower R L T :=

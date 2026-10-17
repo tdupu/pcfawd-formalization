@@ -8,6 +8,7 @@ module
 public import Pcf.Bounding.SchemeExtraction
 public import Mathlib.AlgebraicGeometry.FunctionField
 public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
+public import Pcf.Palomar.Statement
 
 /-!
 # Generic regularity and normal codimension-one stalks
@@ -30,26 +31,12 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 namespace Pcf
 
-/-- A closed subset with its reduced induced subscheme structure is reduced. -/
-theorem isReduced_vanishingIdeal_subscheme {X : Scheme.{u}} (Z : Closeds X) :
-    IsReduced (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := by
-  let I := Scheme.IdealSheafData.vanishingIdeal Z
-  have (U : X.affineOpens) : _root_.IsReduced (Γ(X, U) ⧸ I.ideal U) := by
-    apply (Ideal.isRadical_iff_quotient_reduced _).mp
-    change (PrimeSpectrum.vanishingIdeal (U.2.fromSpec ⁻¹' (Z : Set X))).IsRadical
-    exact PrimeSpectrum.isRadical_vanishingIdeal _
-  have (U : X.affineOpens) :
-      IsReduced (I.subschemeCover.openCover.X U) := by
-    change IsReduced (Spec (.of (Γ(X, U) ⧸ I.ideal U)))
-    infer_instance
-  exact @IsReduced.of_openCover I.subscheme I.subschemeCover.openCover this
-
 /-- An irreducible closed subset with its reduced induced scheme structure is integral. -/
 theorem isIntegral_vanishingIdeal_subscheme {X : Scheme.{u}} (Z : Closeds X)
     (hZ : IsIrreducible (Z : Set X)) :
     IsIntegral (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := by
   let : IsReduced (Scheme.IdealSheafData.vanishingIdeal Z).subscheme :=
-    isReduced_vanishingIdeal_subscheme Z
+    Palomar.isReduced_vanishingIdeal_subscheme Z
   let : IrreducibleSpace (Scheme.IdealSheafData.vanishingIdeal Z).subscheme :=
     Subtype.irreducibleSpace hZ
   exact isIntegral_of_irreducibleSpace_of_isReduced _

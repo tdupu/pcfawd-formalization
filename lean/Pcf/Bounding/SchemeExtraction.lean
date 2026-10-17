@@ -269,15 +269,7 @@ theorem isDominant_end_pow {X : Scheme.{u}} (f : X ⟶ X) [IsDominant f]
       change IsDominant (f ≫ (CategoryTheory.End.of f ^ m).asHom)
       infer_instance
 
-instance (priority := low) finite_end_pow_instance {X : Scheme.{u}}
-    (f : X ⟶ X) [IsFinite f] (m : ℕ) :
-    IsFinite (CategoryTheory.End.of f ^ m).asHom :=
-  isFinite_end_pow f m
-
-instance (priority := low) dominant_end_pow_instance {X : Scheme.{u}}
-    (f : X ⟶ X) [IsDominant f] (m : ℕ) :
-    IsDominant (CategoryTheory.End.of f ^ m).asHom :=
-  isDominant_end_pow f m
+attribute [instance low] isFinite_end_pow isDominant_end_pow
 
 /-- The height-one prime on an affine neighborhood canonically represented by a
 scheme divisor point. -/
@@ -960,8 +952,7 @@ local instance finitePreimageAlgebra :
     Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
   (f.app U).hom.toAlgebra
 
-local instance finitePreimageTargetNoetherian : IsNoetherianRing Γ(Y, U) :=
-  IsLocallyNoetherian.component_noetherian U
+attribute [local instance] IsLocallyNoetherian.component_noetherian
 
 local instance finitePreimageAffine_moduleFinite :
     Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
@@ -1724,25 +1715,9 @@ variable (f : X ⟶ Y) [IsFinite f] [IsDominant f]
   [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian Y]
   [IsNormalScheme X] [IsNormalScheme Y]
 
-local instance selectedDivisorFinitePreimageAlgebra (U : Y.affineOpens) :
-    Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  (f.app U).hom.toAlgebra
-
-local instance selectedDivisorTargetNoetherian (U : Y.affineOpens) :
-    IsNoetherianRing Γ(Y, U) :=
-  IsLocallyNoetherian.component_noetherian U
-
-local instance selectedDivisorModuleFinite (U : Y.affineOpens) :
-    Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  moduleFinite_finitePreimageAffine f U
-
-local instance selectedDivisorSourceNoetherian (U : Y.affineOpens) :
-    IsNoetherianRing Γ(X, finitePreimageAffine f U) :=
-  IsNoetherianRing.of_finite Γ(Y, U) Γ(X, finitePreimageAffine f U)
-
-local instance selectedDivisorFaithfulSMul (U : Y.affineOpens) :
-    FaithfulSMul Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  faithfulSMul_finitePreimageAffine f U
+attribute [local instance] finitePreimageAlgebra IsLocallyNoetherian.component_noetherian
+  finitePreimageAffine_moduleFinite finitePreimageSourceNoetherian
+  finitePreimageAffine_faithfulSMul
 
 /-- The union, expressed pointwise on an affine chart, of all height-one branch
 components other than the distinguished divisor `D`. -/
@@ -2917,9 +2892,7 @@ local instance invariantIterateFinitePreimageAlgebra
       Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
   ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
 
-local instance invariantIterateTargetNoetherian (U : X.affineOpens) :
-    IsNoetherianRing Γ(X, U) :=
-  IsLocallyNoetherian.component_noetherian U
+attribute [local instance] IsLocallyNoetherian.component_noetherian
 
 local instance invariantIterateModuleFinite (m : ℕ) (U : X.affineOpens) :
     Module.Finite Γ(X, U)

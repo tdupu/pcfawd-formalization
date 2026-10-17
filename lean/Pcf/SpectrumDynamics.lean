@@ -97,25 +97,8 @@ theorem subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx [Algebra.Ess
 
 `Pcf.DivisorDynamics.step_surjective` is census entry **B1** — "every prime is the image of a
 prime", the lying-over/going-down step isolated inside the proof of Lemma `lem:lift`, and cited to
-Stacks Tags 00HS / 00H8. Mathlib proves it, for an injective integral ring map. -/
-
-omit [Algebra R S] in
-/-- **Lying over** (Stacks Tag 00HS). For an injective integral ring map, the induced map
-on prime spectra is surjective.
-
-This is the mathematical content of `Pcf.DivisorDynamics.step_surjective`, which is assumed on every
-route in this development. See the caveat on `Pcf.primeSpectrumSelfMap_surjective` for why proving
-it here does not yet remove the field. -/
-theorem comap_surjective_of_isIntegral_of_injective {φ : R →+* S}
-    (hint : φ.IsIntegral) (hinj : Function.Injective φ) :
-    Function.Surjective (PrimeSpectrum.comap φ) := by
-  let := φ.toAlgebra
-  have : Algebra.IsIntegral R S := ⟨fun x => hint x⟩
-  have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective R S).mpr hinj
-  intro p
-  have := p.isPrime
-  obtain ⟨⟨Q, hQp, hQl⟩⟩ := (inferInstance : Nonempty (Ideal.primesOver p.asIdeal S))
-  exact ⟨⟨Q, hQp⟩, PrimeSpectrum.ext hQl.over.symm⟩
+Stacks Tags 00HS / 00H8. Mathlib proves it, for an injective integral ring map
+(`RingHom.IsIntegral.comap_surjective`, lying over, Stacks Tag 00HS). -/
 
 /-- The pushforward of points of `Spec S` along a ring endomorphism — the manuscript's
 `P' ↦ g(P')` on points. -/
@@ -135,7 +118,7 @@ content now identified and proved at the level where Mathlib can express it. -/
 theorem primeSpectrumSelfMap_surjective (φ : S →+* S) (hint : φ.IsIntegral)
     (hinj : Function.Injective φ) :
     Function.Surjective (primeSpectrumSelfMap φ) :=
-  comap_surjective_of_isIntegral_of_injective hint hinj
+  hint.comap_surjective hinj
 
 /-! ### The system -/
 

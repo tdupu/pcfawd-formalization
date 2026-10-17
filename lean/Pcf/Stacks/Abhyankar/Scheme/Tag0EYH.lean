@@ -130,7 +130,7 @@ theorem normalization_appTop_algEquiv_standardCovers_of_chart [IsLocallyNoetheri
   have : IsLocalization.Away a Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1) :=
     isLocalization_away_of_ideal_eq hDa
   have : Module.Finite Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1)
-      Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := finite_app_of_isFinite f hW
+      Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := f.finite_app _ hW
   have : Algebra.Etale Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1)
       Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := etale_app_of_etale f hW hZV
   let E := normalizationAppAlgEquiv (f ≫ (complementOpen D).ι) V.2

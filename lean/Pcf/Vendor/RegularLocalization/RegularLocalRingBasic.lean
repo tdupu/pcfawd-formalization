@@ -167,7 +167,9 @@ theorem Ideal.span_singleton_mul_eq_self_of_isPrime {p : Ideal R} [p.IsPrime]
   exact Ideal.mul_mem_mul (Ideal.mem_span_singleton_self _)
     ((Ideal.IsPrime.mul_mem_left_iff hx).mp hyp)
 
+-- pcf: Stacks tag attribute
 open Pointwise in
+@[stacks 00NP]
 theorem isDomain_of_isRegularLocalRing [IsRegularLocalRing R] : IsDomain R := by
   obtain ⟨n, hn⟩ := FiniteRingKrullDim.ringKrullDim_eq_nat R
   induction n generalizing R with
@@ -203,6 +205,8 @@ instance (priority := low) [IsRegularLocalRing R] : IsDomain R := isDomain_of_is
 
 /-- Regular local ring of dimension one is discrete valuation ring.
 For iff version, should exist after making `IsDiscreteValuationRing` extend `IsDomain`. -/
+-- pcf: Stacks tag attribute
+@[stacks 00PD "(3) => (1)"]
 lemma IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one [IsRegularLocalRing R]
     (dim : ringKrullDim R = 1) : IsDiscreteValuationRing R := by
   have nisf : ¬ IsField R := (mt ringKrullDim_eq_zero_of_isField (by simp [dim]))

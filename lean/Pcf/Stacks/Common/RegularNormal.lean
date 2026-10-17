@@ -8,7 +8,8 @@ module
 public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 public import Mathlib.RingTheory.Localization.AsSubring
 public import Mathlib.RingTheory.Localization.LocalizationLocalization
-public import Pcf.Stacks.Common.RegularDimensionOne
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Pcf.Bounding.RegularLocalDomain
 public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Purity.NormalRing
 
@@ -109,7 +110,7 @@ theorem exists_regular_pair_of_two_le_ringKrullDim [IsRegularLocalRing A]
   have hdimB : ringKrullDim B = (n - 1 : ℕ) :=
     ringKrullDim_quotient_minimalGenerator_eq hxm hx2 (n - 1)
       (by rw [hnA]; norm_cast; omega)
-  let _ : IsDomain B := isDomain_of_isRegularLocalRing B
+  let _ : IsDomain B := Pcf.Vendor.isDomain_of_isRegularLocalRing B
   have hmB : maximalIdeal B ≠ ⊥ := by
     intro h
     have hfield : IsField B := (IsLocalRing.isField_iff_maximalIdeal_eq).mpr h
@@ -134,7 +135,7 @@ statement behind the `(S₂)` part of Stacks Tag `0567`. -/
 theorem mem_span_singleton_of_maximalIdeal_mul_le [IsRegularLocalRing A]
     (hdim : 2 ≤ ringKrullDim A) {b c : A} (hb : b ≠ 0)
     (hc : ∀ z ∈ maximalIdeal A, z * c ∈ Ideal.span {b}) : c ∈ Ideal.span {b} := by
-  let _ : IsDomain A := isDomain_of_isRegularLocalRing A
+  let _ : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   obtain ⟨x, y, hx, hy, hx0, hreg⟩ := exists_regular_pair_of_two_le_ringKrullDim hdim
   exact mem_span_singleton_of_regular_pair hx0 hb hreg (hc x hx) (hc y hy)
 
@@ -159,7 +160,7 @@ private theorem isIntegrallyClosed_atPrime_of_colon {b c : R} (hb : b ≠ 0) (P 
   let A := Localization.AtPrime P
   have hinj : Function.Injective (algebraMap R A) :=
     IsLocalization.injective A P.primeCompl_le_nonZeroDivisors
-  let _ : IsDomain A := isDomain_of_isRegularLocalRing A
+  let _ : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   -- `dim A ≠ 0`, since `P ≠ ⊥`
   have hP0 : P.height ≠ 0 := by
     intro h
@@ -203,7 +204,7 @@ private theorem isIntegrallyClosed_atPrime_of_colon {b c : R} (hb : b ≠ 0) (P 
     rw [this]
     rfl
   let _ : IsDiscreteValuationRing A :=
-    isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one A hone
+    Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one A hone
   infer_instance
 
 /-- **Stacks Project Tag 0567, domain case.** A regular Noetherian domain is integrally closed.
@@ -286,22 +287,22 @@ theorem isStacksNormalRing_of_isRegularRing (R : Type u) [CommRing R] [IsRegular
     IsStacksNormalRing R := by
   intro p
   let A := Localization.AtPrime p.asIdeal
-  let _ : IsDomain A := isDomain_of_isRegularLocalRing A
+  let _ : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   let _ : IsRegularRing A := isRegularRing_localization_atPrime R p.asIdeal
   exact ⟨inferInstance, isIntegrallyClosed_of_isRegularRing A⟩
 
 /-- **Stacks Project Tag 0567, regular local case.** A regular local ring is integrally closed.
 
 Tag `0567` is stated for regular rings (Tag `00OD`); a regular local ring is a regular ring by
-Tag `0AFS` (`isRegularRing_of_isRegularLocalRing`).
+Tag `0AFS` (`Pcf.Vendor.isRegularRing_of_isRegularLocalRing`).
 
 The proof route differs from Stacks (which uses Serre's criterion `031S`); see
 `isIntegrallyClosed_of_isRegularRing`. -/
 @[stacks 0567 "regular local case"]
 theorem isIntegrallyClosed_of_isRegularLocalRing (R : Type u) [CommRing R] [IsRegularLocalRing R] :
     IsIntegrallyClosed R := by
-  let _ : IsRegularRing R := isRegularRing_of_isRegularLocalRing R
-  let _ : IsDomain R := isDomain_of_isRegularLocalRing R
+  let _ : IsRegularRing R := Pcf.Vendor.isRegularRing_of_isRegularLocalRing R
+  let _ : IsDomain R := Pcf.Vendor.isDomain_of_isRegularLocalRing R
   exact isIntegrallyClosed_of_isRegularRing R
 
 /-- **Stacks Project Tag 0567, regular local case**, in the Stacks normal-ring form.
@@ -311,7 +312,7 @@ The proof route differs from Stacks (which uses Serre's criterion `031S`); see
 @[stacks 0567 "regular local case"]
 theorem isStacksNormalRing_of_isRegularLocalRing (R : Type u) [CommRing R]
     [IsRegularLocalRing R] : IsStacksNormalRing R := by
-  let _ : IsRegularRing R := isRegularRing_of_isRegularLocalRing R
+  let _ : IsRegularRing R := Pcf.Vendor.isRegularRing_of_isRegularLocalRing R
   exact isStacksNormalRing_of_isRegularRing R
 
 end Regular

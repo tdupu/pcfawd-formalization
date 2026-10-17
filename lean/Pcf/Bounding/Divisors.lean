@@ -24,7 +24,8 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 /-!
 # Codimension-one points under a finite normal map
 
-This file supplies the affine divisor part of the bridge requested in `HANDOFF.md` §9.
+This file supplies the affine divisor part of the bridge from the abstract divisor dynamics to
+schemes.
 For a finite injective map `R → S`, with `R` normal and `S` a domain, contraction
 preserves the height of prime ideals.  It therefore gives a surjective map on height-one
 primes.  Their local rings are proved to be DVRs, and Mathlib's length-theoretic
@@ -194,9 +195,7 @@ theorem heightOneUnderOfCodim_surjective
     (hcodim : ∀ Q : HeightOnePrime S, (Q.1.asIdeal.under R).height = 1) :
     Function.Surjective (heightOneUnderOfCodim (R := R) (S := S) hcodim) := by
   intro p
-  obtain ⟨Q, hQ⟩ := comap_surjective_of_isIntegral_of_injective
-    (fun x => Algebra.IsIntegral.isIntegral (R := R) x)
-    (FaithfulSMul.algebraMap_injective R S) p.1
+  obtain ⟨Q, hQ⟩ := Algebra.IsIntegral.comap_surjective (R := R) (S := S) p.1
   have hQover : Q.asIdeal.LiesOver p.1.asIdeal :=
     ⟨(congr_arg PrimeSpectrum.asIdeal hQ).symm⟩
   have hQheight : Q.asIdeal.height = 1 :=
@@ -281,9 +280,7 @@ of `DivisorDynamics.step_surjective`. -/
 theorem heightOneUnder_surjective :
     Function.Surjective (heightOneUnder (R := R) (S := S)) := by
   intro p
-  obtain ⟨Q, hQ⟩ := comap_surjective_of_isIntegral_of_injective
-    (fun x => Algebra.IsIntegral.isIntegral (R := R) x)
-    (FaithfulSMul.algebraMap_injective R S) p.1
+  obtain ⟨Q, hQ⟩ := Algebra.IsIntegral.comap_surjective (R := R) (S := S) p.1
   have hQheight : Q.asIdeal.height = 1 := by
     rw [← height_under_eq_of_finite_of_normal (R := R) Q.asIdeal]
     have hunder : Q.asIdeal.under R = p.1.asIdeal := by

@@ -136,7 +136,7 @@ theorem standardCovers_finite
     Module.Finite R (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) := by
   let _ (i : ι) : Module.Finite R
       (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) :=
-    standardCover_finite (u i) a (he i)
+    Pcf.LocalModel.finite_adjoinRoot (u i) a (he i)
   exact Module.Finite.pi
 
 /-- A finite union of standard root covers is free over the base, hence finite locally
@@ -147,7 +147,7 @@ theorem standardCovers_free
     Module.Free R (∀ i, AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) := by
   let _ (i : ι) : Module.Free R
       (AdjoinRoot (Pcf.LocalModel.localPoly (u i) a (e i))) :=
-    standardCover_free (u i) a (he i)
+    Pcf.LocalModel.free_adjoinRoot (u i) a (he i)
   exact Module.Free.pi R _
 
 /-- The reduced divisor in a finite union of standard covers is a finite product of

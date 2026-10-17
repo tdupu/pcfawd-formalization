@@ -22,7 +22,7 @@ applying this map. Consequently finiteness of the unnormalized postcritical set 
 of the normalized postcritical set by finite fibers; no identification or injectivity of the two
 divisor carriers is used.
 
-This is the corrected abstract target for the normalization part of `HANDOFF.md` §9.  Constructing
+This is the abstract target for the normalization part of the scheme-level bridge.  Constructing
 the normalization map from a finite morphism still requires proving that the image of a
 codimension-one point is codimension one on the nonnormal finite-type target.  Once that geometric
 theorem is available, `Pcf.finite_heightOne_comap_fiber` and

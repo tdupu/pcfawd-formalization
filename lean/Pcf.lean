@@ -75,7 +75,6 @@ public import Pcf.Stacks.Abhyankar.Tag0EYE
 public import Pcf.Stacks.Abhyankar.StrictNormalizationEmbedding
 public import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
 public import Pcf.Stacks.Abhyankar.DivisorRootLocalization
-public import Pcf.Stacks.Common.RegularDimensionOne
 public import Pcf.Bounding.RegularLocalDomain
 public import Pcf.Bounding.Stacks
 public import Pcf.Bounding.StandardPiece
@@ -163,7 +162,6 @@ public import Pcf.Stacks.Abhyankar.StrictRootComponent
 public import Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
 public import Pcf.Stacks.Abhyankar.StrictHeightOneUnramified
 public import Pcf.Stacks.Abhyankar.StrictGenericPresentation
-public import Pcf.Stacks.Abhyankar.Tag0EYG
 public import Pcf.Stacks.Abhyankar.Tame.Defs
 public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
@@ -173,7 +171,6 @@ public import Pcf.Stacks.Abhyankar.FiniteNormalization
 public import Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 public import Pcf.Audit
 public import Pcf.Palomar.Bridge
-public import Pcf.Palomar.LocalTheorems
 public import Pcf.Palomar.Statement
 public import Pcf.Palomar.Unconditional
 

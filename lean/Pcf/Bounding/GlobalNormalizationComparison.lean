@@ -33,36 +33,36 @@ variable {A : Scheme.{u}} [IsIntegral A] (g : A ⟶ A) [IsFinite g]
 @[reassoc (attr := simp)]
 theorem schemeGenericToNormalization_comparison :
     (schemeGenericInclusion A ≫ g).toNormalization ≫
-      schemeNormalizationComparison g = schemeGenericToNormalization A := by
+      schemeNormalizationComparison g = Palomar.genericToNormalization A := by
   exact (schemeGenericInclusion A ≫ g).toNormalization_normalizationDesc _ _ _
 
 /-- The inverse comparison is supplied by the integral factorization through
 the comparison and the original normalization morphism. -/
 def schemeNormalizationComparisonInv :
-    schemeGlobalNormalization A ⟶ (schemeGenericInclusion A ≫ g).normalization :=
+    Palomar.normalization A ⟶ (schemeGenericInclusion A ≫ g).normalization :=
   (schemeGenericInclusion A).normalizationDesc
     (schemeGenericInclusion A ≫ g).toNormalization
-    (schemeNormalizationComparison g ≫ schemeGlobalNormalizationMap A)
+    (schemeNormalizationComparison g ≫ Palomar.normalizationMap A)
     (by simp [← Category.assoc])
 
 @[reassoc (attr := simp)]
 theorem schemeGenericToNormalization_comparisonInv :
-    schemeGenericToNormalization A ≫ schemeNormalizationComparisonInv g =
+    Palomar.genericToNormalization A ≫ schemeNormalizationComparisonInv g =
       (schemeGenericInclusion A ≫ g).toNormalization :=
   (schemeGenericInclusion A).toNormalization_normalizationDesc _ _ _
 
 @[reassoc (attr := simp)]
 theorem schemeNormalizationComparisonInv_comp_comparison_map :
     schemeNormalizationComparisonInv g ≫ schemeNormalizationComparison g ≫
-      schemeGlobalNormalizationMap A = schemeGlobalNormalizationMap A :=
+      Palomar.normalizationMap A = Palomar.normalizationMap A :=
   (schemeGenericInclusion A).normalizationDesc_comp _ _ _
 
 @[reassoc (attr := simp)]
 theorem schemeNormalizationComparisonInv_comp_comparison :
     schemeNormalizationComparisonInv g ≫ schemeNormalizationComparison g =
-      𝟙 (schemeGlobalNormalization A) := by
+      𝟙 (Palomar.normalization A) := by
   apply Scheme.Hom.normalization.hom_ext (schemeGenericInclusion A) _ _
-    (schemeGlobalNormalizationMap A)
+    (Palomar.normalizationMap A)
   · simp [← Category.assoc]
   · simp
   · simp
@@ -81,7 +81,7 @@ theorem schemeNormalizationComparison_comp_comparisonInv :
 
 /-- Finite postcomposition preserves the constructed absolute normalization. -/
 def schemeNormalizationComparisonIso :
-    (schemeGenericInclusion A ≫ g).normalization ≅ schemeGlobalNormalization A where
+    (schemeGenericInclusion A ≫ g).normalization ≅ Palomar.normalization A where
   hom := schemeNormalizationComparison g
   inv := schemeNormalizationComparisonInv g
   hom_inv_id := schemeNormalizationComparison_comp_comparisonInv g

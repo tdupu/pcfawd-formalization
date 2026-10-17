@@ -12,15 +12,19 @@ public import Mathlib.RingTheory.KrullDimension.Field
 public import Mathlib.RingTheory.LocalRing.Quotient
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+public import Pcf.Vendor.RegularLocalization.RegularLocalRingBasic
 
 /-!
-# Regular local rings are domains
+# Quotients of regular local rings by a minimal generator
 
-This file proves Stacks Project Tag 00NP: every regular local ring is a domain.
+Quotienting a regular local ring by an element of `𝔪 ∖ 𝔪²` gives a regular local ring of one less
+dimension (`isRegularLocalRing_quotient_minimalGenerator`,
+`ringKrullDim_quotient_minimalGenerator_eq`).
 
-The proof follows the cotangent-space and prime-avoidance induction formalized by Brian Nugent
-and Jarod Alper in `JarodAlper/RegularLocalRings`, adapted here to Mathlib's
-`IsRegularLocalRing` and its Krull-height theorem.
+The proof follows the cotangent-space argument formalized by Brian Nugent and Jarod Alper in
+`JarodAlper/RegularLocalRings`, adapted here to Mathlib's `IsRegularLocalRing` and its
+Krull-height theorem.  That a regular local ring is a domain (Stacks Tag 00NP) is the vendored
+`Pcf.Vendor.isDomain_of_isRegularLocalRing`, re-exported by this file.
 -/
 
 @[expose] public section
@@ -224,169 +228,5 @@ theorem ringKrullDim_quotient_minimalGenerator_eq
         rw [IsRegularLocalRing.spanFinrank_maximalIdeal]
 
 end Cotangent
-
-section Domain
-
-variable {R : Type*} [CommRing R]
-
-/-- A zero-dimensional regular local ring is a field. -/
-private theorem isField_of_ringKrullDim_eq_zero
-    [IsRegularLocalRing R] (hdim : ringKrullDim R = 0) : IsField R := by
-  rw [← IsRegularLocalRing.spanFinrank_maximalIdeal] at hdim
-  have hm : (maxl R).spanFinrank = 0 := by
-    exact_mod_cast hdim
-  have hm0 : (maxl R) = ⊥ :=
-    (Submodule.spanFinrank_eq_zero_iff_eq_bot
-      (maxl R).fg_of_isNoetherianRing).mp hm
-  exact IsLocalRing.isField_iff_maximalIdeal_eq.mpr hm0
-
-/-- A prime ideal below a minimal prime is that minimal prime. -/
-private theorem eq_minimalPrime_of_le
-    {I P : Ideal R} [I.IsPrime] (hP : P ∈ minimalPrimes R) (hI : I ≤ P) : I = P := by
-  rw [minimalPrimes_eq_minimals] at hP
-  exact le_antisymm hI (hP.2 inferInstance hI)
-
-/-- If `(x)` is prime but is not a minimal prime, Krull intersection forces the minimal prime
-below `(x)` to be zero. -/
-private theorem isDomain_of_span_singleton_prime_not_minimal
-    [IsLocalRing R] [IsNoetherianRing R]
-    (x : R) [(Ideal.span {x}).IsPrime]
-    (hnotMin : Ideal.span {x} ∉ minimalPrimes R) : IsDomain R := by
-  obtain ⟨q, hqMin, hqle⟩ := Ideal.exists_minimalPrimes_le (I := ⊥) (J := Ideal.span {x}) bot_le
-  have hxq : x ∉ q := by
-    intro hxq
-    have hxle : Ideal.span {x} ≤ q := (Ideal.span_singleton_le_iff_mem q).mpr hxq
-    have heq : Ideal.span {x} = q := le_antisymm hxle hqle
-    exact hnotMin (heq ▸ hqMin)
-  have hqpow : ∀ n : ℕ, q ≤ Ideal.span {x} ^ n := by
-    intro n
-    induction n with
-    | zero => simp
-    | succ n ih =>
-        intro y hy
-        rw [Ideal.span_singleton_pow] at ih ⊢
-        obtain ⟨r, hr⟩ := Ideal.mem_span_singleton'.mp (ih hy)
-        have hqPrime : q.IsPrime := hqMin.isPrime
-        have hxpow : x ^ n ∉ q := by
-          intro h
-          exact hxq (Ideal.IsPrime.mem_of_pow_mem hqPrime n h)
-        rw [← hr] at hy
-        have hrq : r ∈ q := (Ideal.IsPrime.mem_or_mem hqPrime hy).resolve_right hxpow
-        obtain ⟨a, ha⟩ := Ideal.mem_span_singleton'.mp (hqle hrq)
-        apply Ideal.mem_span_singleton'.mpr
-        refine ⟨a, ?_⟩
-        rw [← ha] at hr
-        rw [← hr]
-        ring
-  have hinter := Ideal.iInf_pow_eq_bot_of_isLocalRing (Ideal.span {x})
-    ((inferInstance : (Ideal.span {x}).IsPrime).ne_top)
-  have hqbot : q ≤ ⊥ := by
-    intro y hy
-    have hyinf : y ∈ ⨅ n : ℕ, Ideal.span {x} ^ n :=
-      Ideal.mem_iInf.mpr fun n ↦ hqpow n hy
-    rwa [hinter] at hyinf
-  have hqeq : q = ⊥ := eq_bot_iff.mpr hqbot
-  have hqPrime : q.IsPrime := hqMin.isPrime
-  rw [hqeq] at hqPrime
-  exact IsDomain.of_bot_isPrime R
-
-/-- Induction on the minimal number of generators of the maximal ideal. -/
-private theorem isDomain_induction :
-    ∀ n : ℕ, ∀ (A : Type*) [CommRing A] [IsRegularLocalRing A],
-      (maxl A).spanFinrank = n → IsDomain A := by
-  intro n
-  induction n with
-  | zero =>
-      intro A _ hreg hm
-      have hdim : ringKrullDim A = 0 := by
-        rw [← IsRegularLocalRing.spanFinrank_maximalIdeal]
-        exact_mod_cast hm
-      let _ : Field A := IsField.toField (isField_of_ringKrullDim_eq_zero hdim)
-      exact Field.isDomain
-  | succ n ih =>
-      intro A _ hreg hn
-      by_contra hnotDomain
-      have hmin : ∀ x : A, x ∈ (maxl A) → x ∉ (maxl A) ^ 2 →
-          Ideal.span {x} ∈ minimalPrimes A := by
-        intro x hx hx2
-        have hxPrime : (Ideal.span {x}).IsPrime := by
-          apply (Ideal.Quotient.isDomain_iff_prime (Ideal.span {x})).mp
-          let _ : Nontrivial (A ⧸ Ideal.span {x}) :=
-            Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hx)
-          have hquot : (maxl (A ⧸ Ideal.span {x})).spanFinrank = n := by
-            have hdrop := quotient_spanRank_add_one_le hx hx2
-            rw [Submodule.fg_iff_spanRank_eq_spanFinrank.mpr
-                (maxl A).fg_of_isNoetherianRing,
-              Submodule.fg_iff_spanRank_eq_spanFinrank.mpr
-                (maxl (A ⧸ Ideal.span {x})).fg_of_isNoetherianRing] at hdrop
-            have hdrop' : (maxl (A ⧸ Ideal.span {x})).spanFinrank + 1 ≤ n + 1 := by
-              exact_mod_cast hn ▸ hdrop
-            have hdimquot :=
-              (isRegularLocalRing_quotient_minimalGenerator hx hx2).spanFinrank_maximalIdeal
-            have hdimle : ringKrullDim A ≤ ringKrullDim (A ⧸ Ideal.span {x}) + 1 := by
-              simpa only [IsLocalRing.maximalIdeal_height_eq_ringKrullDim] using
-                (Ideal.height_le_ringKrullDim_quotient_add_one (p := maxl A) hx)
-            rw [← IsRegularLocalRing.spanFinrank_maximalIdeal,
-              hn, ← hdimquot] at hdimle
-            have hreverse : n + 1 ≤ (maxl (A ⧸ Ideal.span {x})).spanFinrank + 1 := by
-              exact_mod_cast hdimle
-            omega
-          let _ : IsRegularLocalRing (A ⧸ Ideal.span {x}) :=
-            isRegularLocalRing_quotient_minimalGenerator hx hx2
-          exact ih (A ⧸ Ideal.span {x}) hquot
-        by_contra hnotMin
-        exact hnotDomain (isDomain_of_span_singleton_prime_not_minimal x hnotMin)
-      let T : Set (Ideal A) := minimalPrimes A ∪ {(maxl A) ^ 2}
-      have hTfin : T.Finite :=
-        (minimalPrimes.finite_of_isNoetherianRing A).union (Set.finite_singleton _)
-      let F := hTfin.toFinset
-      have hprime : ∀ I ∈ F, I ≠ (maxl A) ^ 2 → I ≠ (maxl A) ^ 2 → I.IsPrime := by
-        intro I hI hne _
-        have hIT : I ∈ T := hTfin.mem_toFinset.mp hI
-        rcases hIT with hminI | hsquare
-        · exact hminI.isPrime
-        · exact (hne hsquare).elim
-      have hcontained : ∃ I ∈ F, (maxl A) ≤ I := by
-        apply (@Ideal.subset_union_prime (Ideal A) A _ F id ((maxl A) ^ 2) ((maxl A) ^ 2)
-          hprime (maxl A)).mp
-        intro x hx
-        by_cases hx2 : x ∈ (maxl A) ^ 2
-        · refine Set.mem_iUnion₂.mpr ⟨(maxl A) ^ 2, ?_, hx2⟩
-          exact hTfin.mem_toFinset.mpr (Set.mem_union_right _ rfl)
-        · refine Set.mem_iUnion₂.mpr ⟨Ideal.span {x}, ?_, Ideal.mem_span_singleton_self x⟩
-          exact hTfin.mem_toFinset.mpr (Set.mem_union_left _ (hmin x hx hx2))
-      obtain ⟨P, hPF, hmP⟩ := hcontained
-      have hdimne : ringKrullDim A ≠ 0 := by
-        rw [← IsRegularLocalRing.spanFinrank_maximalIdeal, hn]
-        exact_mod_cast Nat.succ_ne_zero n
-      apply hdimne
-      rcases hTfin.mem_toFinset.mp hPF with hPmin | hPsquare
-      · rw [← ringKrullDimZero_iff_ringKrullDim_eq_zero]
-        refine Ring.KrullDimLE.mk₀ ?_
-        intro I hI
-        have hIm : I ≤ (maxl A) := IsLocalRing.le_maximalIdeal hI.ne_top
-        have hIP : I ≤ P := hIm.trans hmP
-        have hIPeq : I = P := eq_minimalPrime_of_le hPmin hIP
-        have hmPeq : (maxl A) = P := eq_minimalPrime_of_le hPmin hmP
-        rw [hIPeq, ← hmPeq]
-        exact IsLocalRing.maximalIdeal.isMaximal A
-      · have hm2 : (maxl A) ≤ (maxl A) ^ 2 := hPsquare ▸ hmP
-        have hmfg := (maxl A).fg_of_isNoetherianRing
-        have hmsmul : (maxl A) ≤ (maxl A) • (maxl A) := by
-          simpa [pow_two] using hm2
-        have hmjac : (maxl A) ≤ Ideal.jacobson (⊥ : Ideal A) := by
-          rw [IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top]
-        have hmbot := Submodule.eq_bot_of_le_smul_of_le_jacobson_bot
-          (maxl A) (maxl A) hmfg hmsmul hmjac
-        exact ringKrullDim_eq_zero_of_isField
-          (IsLocalRing.isField_iff_maximalIdeal_eq.mpr hmbot)
-
-/-- **Stacks Project Tag 00NP.** Every regular local ring is a domain. -/
-@[stacks 00NP]
-theorem isDomain_of_isRegularLocalRing
-    (R : Type*) [CommRing R] [IsRegularLocalRing R] : IsDomain R :=
-  isDomain_induction (maxl R).spanFinrank R rfl
-
-end Domain
 
 end Pcf.Stacks

@@ -24,8 +24,7 @@ ramified in codimension one along `V(a)`, then `S` is finite over `R`
 With this, the public affine theorems are stated without assuming the normalization finite:
 `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` and
 `Pcf.Stacks.abhyankarLemmaTame : ∀ R S a, AbhyankarLemmaTame R S a`, deduced from the
-finite-normalization forms `Pcf.Stacks.abhyankarLemmaOfFinite` and
-`Pcf.Stacks.abhyankarLemmaTameOfFinite`.
+finite-normalization form `Pcf.Stacks.abhyankarLemmaTameOfFinite`.
 
 ## Route (Stacks proof of `0EYH` → Lean)
 
@@ -205,9 +204,9 @@ theorem isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong [IsNoether
   haveI : IsRegularLocalRing (Localization.AtPrime (contraction y p')) :=
     Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha (contraction y p') hap'
   haveI : IsDomain (Localization.AtPrime (contraction y p')) :=
-    Pcf.Stacks.isDomain_of_isRegularLocalRing _
+    Pcf.Vendor.isDomain_of_isRegularLocalRing _
   haveI : IsDiscreteValuationRing (Localization.AtPrime (contraction y p')) :=
-    Pcf.Stacks.isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim'
+    Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim'
   haveI := isLocalization_genericFiberAtContraction a Ra B y ha p' hap'
   haveI := isScalarTower_localizationAtContraction y p'
   haveI := isLocalization_localizationAtContraction y p'
@@ -328,7 +327,7 @@ theorem isTamelyRamifiedAlongDivisor_of_isUnit_natCast [IsNoetherianRing R]
   set Rp := Localization.AtPrime p
   haveI : IsRegularLocalRing Rp :=
     Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha p hap
-  haveI : IsDomain Rp := Pcf.Stacks.isDomain_of_isRegularLocalRing _
+  haveI : IsDomain Rp := Pcf.Vendor.isDomain_of_isRegularLocalRing _
   haveI : IsIntegrallyClosed Rp := Pcf.Stacks.isIntegrallyClosed_of_isRegularLocalRing _
   set K := FractionRing Rp
   set L := K ⊗[R] B
@@ -491,9 +490,8 @@ theorem finite_of_isIntegralClosure_away [IsNoetherianRing R] {a : R}
 
 /-- **The normalization is finite, characteristic zero** (Stacks Tag `0EYH`, finiteness part of the
 first assertion, affine form, every positive integer invertible in `R`; no tameness hypothesis is
-needed).  The local input is the characteristic-zero theorem `abhyankarLemmaOfFinite` (through
-`abhyankarLemmaTameOfFinite_of_isUnit_natCast`), whose proof is the shared tame proof with
-tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`. -/
+needed).  The local input is the tame theorem `abhyankarLemmaTameOfFinite` at the local rings
+`R_y`. -/
 @[stacks 0EYH "finiteness part of the first assertion, affine form; every positive \
   integer invertible"]
 theorem finite_of_isIntegralClosure_away_of_isUnit_natCast [IsNoetherianRing R] {a : R}
@@ -507,8 +505,7 @@ theorem finite_of_isIntegralClosure_away_of_isUnit_natCast [IsNoetherianRing R] 
   haveI := etale_away hfin hetale
   exact finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor ha hfin hetale
     (isTamelyRamifiedAlongDivisor_of_isUnit_natCast a (Localization.Away a) _ ha hnat)
-    fun y S' _ _ b ↦ abhyankarLemmaTameOfFinite_of_isUnit_natCast _ S' b fun n hn ↦ by
-      simpa only [map_natCast] using (hnat n hn).map (algebraMap R (Localization.AtPrime y.asIdeal))
+    fun _ S' _ _ b ↦ abhyankarLemmaTameOfFinite _ S' b
 
 end Finite
 
@@ -543,29 +540,6 @@ theorem abhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S
   exact abhyankarLemmaTameOfFinite R S a hR ha hreg
     (finite_of_isIntegralClosure_away ha hfin hetale htame) hetale hint htame y hy
 
-/-- **Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG` and `0EYH`)**, in pcf's affine
-characteristic-zero form `Pcf.Stacks.AbhyankarLemma`: every positive integer invertible in `R`
-(stronger than the tags' "tamely ramified in codimension one"), `Y = Spec S[1/a] → X ∖ D` finite
-étale, `S` the normalization of `R` in `S[1/a]`; the conclusion is the `0EYH` local-structure form
-at the points of `D`, as for `abhyankarLemmaTame`.
-
-The normalization `S` is not assumed finite over `R`: its finiteness is
-`finite_of_isIntegralClosure_away_of_isUnit_natCast`, and the theorem is then the
-characteristic-zero proof `abhyankarLemmaOfFinite`. -/
-@[stacks 0EYG "affine; all positive integers invertible; Y -> X \\ D finite etale as: \
-    R[1/a] ⊗ S finite over R[1/a] and S etale at primes not containing a; normalization (0EYH) \
-    form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
-  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \
-    normalization proved finite; Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and \
-    S etale at primes not containing a; pieces R'[x]/(x^e - f), f = u_i a"]
-theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
-    AbhyankarLemma R S a := by
-  intro hR ha hreg hfin hetale hint hnat y hy
-  haveI := hreg
-  haveI := hint
-  exact abhyankarLemmaOfFinite R S a hR ha hreg
-    (finite_of_isIntegralClosure_away_of_isUnit_natCast ha hfin hetale hnat) hetale hint hnat y hy
-
 /-- The tame statement implies the characteristic-zero statement `Pcf.Stacks.AbhyankarLemma`: if
 every positive integer is a unit, the normalization `S` is finite over `R`
 (`finite_of_isIntegralClosure_away_of_isUnit_natCast`) and then tamely ramified in codimension one
@@ -578,5 +552,27 @@ theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRi
   haveI := finite_of_isIntegralClosure_away_of_isUnit_natCast ha hfinA hetale hnat
   exact h hR ha hreg hfinA hetale hint
     (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
+
+/-- **Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG` and `0EYH`)**, in pcf's affine
+characteristic-zero form `Pcf.Stacks.AbhyankarLemma`: every positive integer invertible in `R`
+(stronger than the tags' "tamely ramified in codimension one"), `Y = Spec S[1/a] → X ∖ D` finite
+étale, `S` the normalization of `R` in `S[1/a]`; the conclusion is the `0EYH` local-structure form
+at the points of `D`, as for `abhyankarLemmaTame`.
+
+The normalization `S` is not assumed finite over `R`: its finiteness is
+`finite_of_isIntegralClosure_away_of_isUnit_natCast`.  Every positive integer being a unit, `S` is
+then tamely ramified in codimension one (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`:
+the ramification indices are units and the residue extensions are separable in characteristic
+zero), and the theorem is the tame case `abhyankarLemmaTame`
+(`AbhyankarLemma.of_abhyankarLemmaTame`). -/
+@[stacks 0EYG "affine; all positive integers invertible; Y -> X \\ D finite etale as: \
+    R[1/a] ⊗ S finite over R[1/a] and S etale at primes not containing a; normalization (0EYH) \
+    form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
+  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \
+    normalization proved finite; Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and \
+    S etale at primes not containing a; pieces R'[x]/(x^e - f), f = u_i a"]
+theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+    AbhyankarLemma R S a :=
+  AbhyankarLemma.of_abhyankarLemmaTame (abhyankarLemmaTame R S a)
 
 end Pcf.Stacks

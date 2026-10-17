@@ -57,7 +57,7 @@ theorem standardCover_finite_free_cartier_regular
         (AdjoinRoot (Pcf.LocalModel.localPoly u a e) ⧸
           Ideal.span ({AdjoinRoot.root (Pcf.LocalModel.localPoly u a e)} :
             Set (AdjoinRoot (Pcf.LocalModel.localPoly u a e)))) := by
-  exact ⟨standardCover_finite u a he, standardCover_free u a he,
+  exact ⟨Pcf.LocalModel.finite_adjoinRoot u a he, Pcf.LocalModel.free_adjoinRoot u a he,
     Pcf.LocalModel.root_mem_nonZeroDivisors u a he ha,
     standardCover_rootQuotient_isRegularRing u a he⟩
 

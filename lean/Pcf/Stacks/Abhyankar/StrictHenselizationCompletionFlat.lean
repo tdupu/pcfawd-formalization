@@ -604,12 +604,6 @@ Lemma 10.164.1). -/
 instance localColimit_isNoetherianRing : IsNoetherianRing (LocalColimit R Ω) :=
   localColimit_isNoetherianRing_of_completion localColimit_completion_flat
 
-/-- The strict henselization of a Noetherian local ring has the same Krull dimension as the
-base (unconditional form of `ringKrullDim_localColimit`). -/
-theorem ringKrullDim_localColimit_eq :
-    ringKrullDim R = ringKrullDim (LocalColimit R Ω) :=
-  ringKrullDim_localColimit (R := R) (Ω := Ω)
-
 /-- The completion of the strict henselization of a Noetherian local ring is Noetherian
 (Stacks Tag `06LJ` part (a), strict case).  Here it is read off from Noetherianity of `Rˢʰ`;
 Stacks' argument for (a) (the maximal ideal `𝔪 Rˢʰ` is finitely generated, Algebra 10.160.3) is
@@ -623,16 +617,6 @@ theorem localColimit_completion_isNoetherianRing :
     (IsLocalRing.maximalIdeal (LocalColimit R Ω)).fg_of_isNoetherianRing
 
 end Main
-
-/-- **Regularity ascends to the strict henselization** (the `R ⇒ Rˢʰ` direction of Stacks Tag
-`06LN`), now unconditional. -/
-theorem localColimit_isRegularLocalRing
-    {R Ω : Type u} [CommRing R] [IsRegularLocalRing R] [Field Ω]
-    [Algebra R Ω] [Algebra (IsLocalRing.ResidueField R) Ω]
-    [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
-    [IsSepClosure (IsLocalRing.ResidueField R) Ω] :
-    IsRegularLocalRing (LocalColimit R Ω) :=
-  localColimit_isRegularLocalRing_of_isNoetherianRing
 
 end PointedEtaleNeighborhood
 
@@ -662,8 +646,6 @@ end PointedEtaleNeighborhood
 #print axioms PointedEtaleNeighborhood.localColimit_completion_flat_stageLocal
 #print axioms PointedEtaleNeighborhood.localColimit_completion_flat
 #print axioms PointedEtaleNeighborhood.localColimit_isNoetherianRing
-#print axioms PointedEtaleNeighborhood.ringKrullDim_localColimit_eq
 #print axioms PointedEtaleNeighborhood.localColimit_completion_isNoetherianRing
-#print axioms PointedEtaleNeighborhood.localColimit_isRegularLocalRing
 
 end Pcf.Stacks

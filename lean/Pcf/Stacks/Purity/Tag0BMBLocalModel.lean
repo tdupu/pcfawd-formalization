@@ -559,8 +559,8 @@ theorem hasZariskiNagataPurityAt_of_lowerHeight
   have : Algebra.EssFiniteType (Localization.AtPrime p) A := .of_comp R _ A
   haveI : IsRegularLocalRing A :=
     isRegularLocalRing_of_flat_of_formallyUnramified (Localization.AtPrime p) A
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
-  haveI : IsRegularRing A := isRegularRing_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
+  haveI : IsRegularRing A := Pcf.Vendor.isRegularRing_of_isRegularLocalRing A
   haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularRing A
   -- `B` is a normal domain
   haveI : IsDomain (Localization.AtPrime q) := h.source_isDomain
@@ -628,7 +628,7 @@ theorem hasZariskiNagataPurityAt_of_lowerHeight
     refine IH A B inferInstance inferInstance inferInstance ⟨Q, inferInstance⟩ hlt
       { source_isDomain := hBn.isDomain_atPrime ⟨Q, inferInstance⟩
         source_isIntegrallyClosed := hBn.isIntegrallyClosed_atPrime ⟨Q, inferInstance⟩
-        target_isRegular := isRegularLocalRing_localization_atPrime A (Q.under A)
+        target_isRegular := Pcf.Vendor.isRegularLocalRing_localization A (Q.under A)
         quasiFinite := inferInstance
         equalDimension := height_eq_height_under_of_finite_of_isIntegrallyClosed Q
         positiveDimension := hQ1

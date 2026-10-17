@@ -99,8 +99,6 @@ def branch : Set P := {Q | ∃ Q', D.step Q' = Q ∧ 1 < D.ramificationIdx Q'}
 theorem mem_branch_iff {Q : P} : Q ∈ D.branch ↔ ∃ Q', D.step Q' = Q ∧ 1 < D.ramificationIdx Q' :=
     Iff.rfl
 
-theorem branch_finite : D.branch.Finite := D.step_image_ramified_finite
-
 /-! ### Chains and padding (Lemma `lem:lift`) -/
 
 /-- `D.IsChain P₀ m c` says that `c 0, c 1, …, c m` is a *chain over `P₀` of length `m`*
@@ -232,23 +230,20 @@ def iterate (m : ℕ) : DivisorDynamics P where
   step_surjective := D.step_surjective.iterate m
   step_image_ramified_finite := by
     rw [D.branchIterate_eq m]
-    exact Set.Finite.biUnion (Set.finite_Iio m) fun _ _ => D.branch_finite.image _
+    exact Set.Finite.biUnion (Set.finite_Iio m) fun _ _ => D.step_image_ramified_finite.image _
 
 @[simp] theorem iterate_step (m : ℕ) : (D.iterate m).step = D.step^[m] := rfl
 
 @[simp] theorem iterate_ramificationIdx (m : ℕ) : (D.iterate m).ramificationIdx =
     D.iterateRamificationIdx m := rfl
 
-theorem branch_iterate (m : ℕ) :
-    (D.iterate m).branch = ⋃ n ∈ Set.Iio m, D.step^[n] '' D.branch :=
-  D.branchIterate_eq m
-
 /-- **Proposition `prop:iterates`(1)** (Ramification under iterates). A prime `Q` is a branch prime
 of
 `gᵐ` if and only if `Q = gⁿ(R)` for some branch prime `R` of `g` and some `0 ≤ n < m`. -/
 theorem mem_branch_iterate_iff (m : ℕ) (Q : P) :
     Q ∈ (D.iterate m).branch ↔ ∃ n < m, ∃ R ∈ D.branch, D.step^[n] R = Q := by
-  rw [branch_iterate]
+  change Q ∈ {Q | ∃ Q', D.step^[m] Q' = Q ∧ 1 < D.iterateRamificationIdx m Q'} ↔ _
+  rw [branchIterate_eq]
   simp only [Set.mem_iUnion, Set.mem_Iio, Set.mem_image, exists_prop]
 
 /-- **Proposition `prop:iterates`(2)** (Orbit propagation). If `Q` is a branch prime of `g`, then
@@ -342,7 +337,7 @@ theorem isPCF_iff_forall_orbit_finite :
     exact Set.subset_biUnion_of_mem hQ
   · intro h
     rw [IsPCF, postcriticalSet_eq_biUnion_orbit]
-    exact D.branch_finite.biUnion h
+    exact D.step_image_ramified_finite.biUnion h
 
 /-- If every branch orbit lands in one finite set of primes, `g` is PCF.
 This is the shape in which Theorem `thm:normal-invariant` concludes. -/

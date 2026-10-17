@@ -5,7 +5,6 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Palomar.LocalTheorems
 public import Pcf.Stacks.Purity.DimensionOne
 public import Pcf.Stacks.Purity.Tag0BMBLocalModel
 
@@ -81,18 +80,5 @@ theorem zariskiNagataPurity_of_etaleNormalAscent
         rw [← ENat.natCast_lt_natCast, ENat.natCast_toNat hne]
         exact hlt
       exact ih _ hlt' R₁ S₁ hR₁ hS₁ hft₁ w₁ (ENat.natCast_toNat hne).symm
-
-/-- The Palomar-facing form of `zariskiNagataPurity_of_etaleNormalAscent`: the compact statement
-`Pcf.Palomar.ZariskiNagataPurity`, under the same upstream hypotheses `h033C` and `h0BMA`. -/
-theorem _root_.Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
-    (h033C : EtaleNormalAscent.{u})
-    (h0BMA : ∀ (A : Type u) [CommRing A] [IsRegularLocalRing A],
-      2 ≤ ringKrullDim A → FiniteNormalPuncturedEtalePurity A)
-    (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
-    Pcf.Palomar.ZariskiNagataPurity R S := by
-  intro hR hS hft w hw
-  exact Pcf.Stacks.zariskiNagataPurity_of_etaleNormalAscent h033C h0BMA R S hR hS hft w
-    ⟨hw.source_isDomain, hw.source_isIntegrallyClosed, hw.target_isRegular, hw.quasiFinite,
-      hw.equalDimension, hw.positiveDimension, hw.unramifiedCodimensionOne⟩
 
 end Pcf.Stacks

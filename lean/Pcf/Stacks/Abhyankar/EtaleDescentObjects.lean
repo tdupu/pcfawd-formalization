@@ -103,9 +103,9 @@ theorem exists_common_factorizations_of_finitePresentation
       f ≫ aₖ = α.app k ∧ a = aₖ ≫ c.ι.app k ∧
       g ≫ bₖ = β.app k ∧ b = bₖ ≫ d.ι.app k := by
   obtain ⟨i, aᵢ, hfaᵢ, haᵢ⟩ :=
-    exists_factorization_of_finitePresentation R F α f c hc hf a ha
+    RingHom.EssFiniteType.exists_eq_comp_ι_app_of_isColimit R F α f c hc hf a ha
   obtain ⟨j, bⱼ, hgbⱼ, hbⱼ⟩ :=
-    exists_factorization_of_finitePresentation R G β g d hd hg b hb
+    RingHom.EssFiniteType.exists_eq_comp_ι_app_of_isColimit R G β g d hd hg b hb
   let k := IsFiltered.max i j
   let hik : i ⟶ k := IsFiltered.leftToMax i j
   let hjk : j ⟶ k := IsFiltered.rightToMax i j

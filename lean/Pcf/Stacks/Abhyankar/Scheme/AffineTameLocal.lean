@@ -34,8 +34,7 @@ Setting: `R` Noetherian, `a ∈ R` a nonzerodivisor with `R/(a)` regular, `B` fi
 ## Relation to the Stacks proof of Tag `0EYG`
 
 Stacks reduces to the strict henselization and works with `B` itself.  Here the affine
-hypothesis (`Pcf.Stacks.AbhyankarLemmaTameOfFinite`) is stated, like the characteristic-zero
-`Pcf.Stacks.AbhyankarLemmaOfFinite`, for the
+hypothesis (`Pcf.Stacks.AbhyankarLemmaTameOfFinite`) is stated for the
 *normalization* `S` of `R` in `S[1/a]` and requires `S` finite.  The normalization of `R` in `B`
 need not be known to be finite a priori, so the route differs from Stacks: we apply the hypothesis
 at the regular local ring `R_y`, where finiteness of the normalization is the classical fact

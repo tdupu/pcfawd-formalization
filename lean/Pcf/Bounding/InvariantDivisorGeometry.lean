@@ -7,6 +7,7 @@ module
 
 public import Pcf.Bounding.GlobalNormalizationDynamics
 public import Pcf.Bounding.DivisorFlagCodimension
+public import Pcf.Bounding.RegularLocus
 public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 /-!
@@ -45,22 +46,8 @@ instance pointClosureSubscheme_irreducible {X : Scheme.{u}} (x : X) :
 
 /-- The point-closure construction uses a radical ideal on every affine chart. -/
 instance pointClosureSubscheme_reduced {X : Scheme.{u}} (x : X) :
-    AlgebraicGeometry.IsReduced (pointClosureIdealSheaf x).subscheme := by
-  let I := pointClosureIdealSheaf x
-  let (U : X.affineOpens) : _root_.IsReduced (Γ(X, U) ⧸ I.ideal U) := by
-    apply (Ideal.isRadical_iff_quotient_reduced _).mp
-    exact PrimeSpectrum.isRadical_vanishingIdeal _
-  apply (AlgebraicGeometry.IsReduced.iff_of_openCover I.subscheme
-    I.subschemeCover.openCover).mpr
-  intro U
-  let V : X.affineOpens := U
-  exact inferInstanceAs
-    (AlgebraicGeometry.IsReduced (Spec (.of (Γ(X, V) ⧸ I.ideal V))))
-
-/-- A reduced point closure is an integral scheme, including in a nonnormal ambient. -/
-instance pointClosureSubscheme_integral {X : Scheme.{u}} (x : X) :
-    IsIntegral (pointClosureIdealSheaf x).subscheme :=
-  isIntegral_of_irreducibleSpace_of_isReduced _
+    AlgebraicGeometry.IsReduced (pointClosureIdealSheaf x).subscheme :=
+  Palomar.isReduced_vanishingIdeal_subscheme _
 
 /-- The point closure inherits local Noetherianity from the ambient scheme. -/
 instance pointClosureSubscheme_locallyNoetherian {X : Scheme.{u}}
@@ -292,7 +279,7 @@ def invariantDivisorNormalization (k : Type u) [Field k] [CharZero k]
     (f : X ⟶ X) [IsFinite f] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) :
     SchemeNormalizationUnnormalizedDynamics (pointClosureIdealSheaf A.1).subscheme
-      (SchemeDivisorPoint (schemeGlobalNormalization
+      (SchemeDivisorPoint (Palomar.normalization
         (pointClosureIdealSheaf A.1).subscheme)) := by
   let sA := (pointClosureIdealSheaf A.1).subschemeι ≫ s
   let : LocallyOfFiniteType sA := inferInstance
@@ -347,7 +334,6 @@ theorem SchemeDivisorPoint.invariantClosureIterate_source_mem
 
 #print axioms pointClosureSubscheme_irreducible
 #print axioms pointClosureSubscheme_reduced
-#print axioms pointClosureSubscheme_integral
 #print axioms pointClosureSubscheme_locallyNoetherian
 #print axioms pointClosureSubscheme_noetherian
 #print axioms pointClosureSubscheme_genericPoint

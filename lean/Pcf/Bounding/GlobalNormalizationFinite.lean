@@ -18,7 +18,7 @@ Noether normalization reduces finiteness of integral closure for a finite-type
 domain over a characteristic-zero field to the finite separable extension
 theorem over a polynomial ring. Applying this to the coordinate rings in
 Mathlib's relative-normalization construction proves that
-`schemeGlobalNormalizationMap A` is finite whenever `A` is integral and locally
+`Palomar.normalizationMap A` is finite whenever `A` is integral and locally
 of finite type over a characteristic-zero field.
 -/
 
@@ -106,7 +106,7 @@ theorem schemeGlobalNormalizationMap_isFinite_of_affineFiniteType
     (k : Type u) [Field k] [CharZero k]
     [∀ U : A.affineOpens, Algebra k Γ(A, U)]
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)] :
-    IsFinite (schemeGlobalNormalizationMap A) := by
+    IsFinite (Palomar.normalizationMap A) := by
   constructor
   intro U hU
   by_cases hne : Nonempty U
@@ -123,10 +123,10 @@ theorem schemeGlobalNormalizationMap_isFinite_of_affineFiniteType
       ext x
       exact ⟨fun hx ↦ (hne ⟨⟨x, hx⟩⟩).elim, fun hx ↦ hx.elim⟩
     subst U
-    have : Subsingleton Γ(schemeGlobalNormalization A,
-        schemeGlobalNormalizationMap A ⁻¹ᵁ ⊥) := by
+    have : Subsingleton Γ(Palomar.normalization A,
+        Palomar.normalizationMap A ⁻¹ᵁ ⊥) := by
       simpa only [Scheme.Hom.preimage_bot] using
-        (inferInstance : Subsingleton Γ(schemeGlobalNormalization A, ⊥))
+        (inferInstance : Subsingleton Γ(Palomar.normalization A, ⊥))
     exact RingHom.Finite.of_surjective _ (Function.surjective_to_subsingleton _)
 
 /-- The absolute normalization map of an integral scheme locally of finite type
@@ -136,7 +136,7 @@ theorem schemeGlobalNormalizationMap_isFinite
     (A : Scheme.{u}) [IsIntegral A]
     (k : Type u) [Field k] [CharZero k]
     (s : A ⟶ Spec (.of k)) [LocallyOfFiniteType s] :
-    IsFinite (schemeGlobalNormalizationMap A) := by
+    IsFinite (Palomar.normalizationMap A) := by
   let φ (U : A.affineOpens) : k →+* Γ(A, U) :=
     (s.appLE ⊤ U (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom
   let (U : A.affineOpens) : Algebra k Γ(A, U) := (φ U).toAlgebra

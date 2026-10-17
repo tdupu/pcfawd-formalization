@@ -52,8 +52,8 @@ def schemeGenericInclusionSectionsIso (U : A.Opens) [Nonempty U] :
 /-- The coordinate rings on inverse images of nonempty affine opens are normal. -/
 theorem schemeGlobalNormalization_preimage_integrallyClosed
     (U : A.Opens) (hU : IsAffineOpen U) [Nonempty U] :
-    IsIntegrallyClosed Γ(schemeGlobalNormalization A,
-      schemeGlobalNormalizationMap A ⁻¹ᵁ U) := by
+    IsIntegrallyClosed Γ(Palomar.normalization A,
+      Palomar.normalizationMap A ⁻¹ᵁ U) := by
   let R := Γ(A, U)
   let S := Γ(Spec A.functionField, schemeGenericInclusion A ⁻¹ᵁ U)
   let : Algebra R S := ((schemeGenericInclusion A).app U).hom.toAlgebra
@@ -69,21 +69,21 @@ theorem schemeGlobalNormalization_preimage_integrallyClosed
 
 /-- Every local ring of the canonical normalization is integrally closed. -/
 theorem schemeGlobalNormalization_stalk_integrallyClosed
-    (x : schemeGlobalNormalization A) :
-    IsIntegrallyClosed ((schemeGlobalNormalization A).presheaf.stalk x) := by
+    (x : Palomar.normalization A) :
+    IsIntegrallyClosed ((Palomar.normalization A).presheaf.stalk x) := by
   obtain ⟨U, hU, hxU, _⟩ := exists_isAffineOpen_mem_and_subset
-    (show schemeGlobalNormalizationMap A x ∈ (⊤ : A.Opens) from trivial)
+    (show Palomar.normalizationMap A x ∈ (⊤ : A.Opens) from trivial)
   let : Nonempty U := ⟨⟨_, hxU⟩⟩
-  let V := schemeGlobalNormalizationMap A ⁻¹ᵁ U
+  let V := Palomar.normalizationMap A ⁻¹ᵁ U
   let xV : V := ⟨x, hxU⟩
-  have hV : IsAffineOpen V := hU.preimage (schemeGlobalNormalizationMap A)
+  have hV : IsAffineOpen V := hU.preimage (Palomar.normalizationMap A)
   let : Nonempty V := ⟨xV⟩
-  let : IsIntegrallyClosed Γ(schemeGlobalNormalization A, V) :=
+  let : IsIntegrallyClosed Γ(Palomar.normalization A, V) :=
     schemeGlobalNormalization_preimage_integrallyClosed A U hU
-  let : Algebra Γ(schemeGlobalNormalization A, V)
-      ((schemeGlobalNormalization A).presheaf.stalk x) :=
+  let : Algebra Γ(Palomar.normalization A, V)
+      ((Palomar.normalization A).presheaf.stalk x) :=
     TopCat.Presheaf.algebra_section_stalk _ xV
-  let : IsLocalization.AtPrime ((schemeGlobalNormalization A).presheaf.stalk x)
+  let : IsLocalization.AtPrime ((Palomar.normalization A).presheaf.stalk x)
       (hV.primeIdealOf xV).asIdeal := hV.isLocalization_stalk xV
   exact isIntegrallyClosed_of_isLocalization _ _
     (hV.primeIdealOf xV).asIdeal.primeCompl_le_nonZeroDivisors
@@ -115,8 +115,8 @@ theorem isNormalScheme_of_stalk_integrallyClosed (X : Scheme.{u}) [IsIntegral X]
 
 /-- The canonical global normalization is normal in the affine-coordinate
 sense used by the divisor bridge. -/
-instance schemeGlobalNormalization_isNormal : IsNormalScheme (schemeGlobalNormalization A) :=
-  isNormalScheme_of_stalk_integrallyClosed (schemeGlobalNormalization A)
+instance schemeGlobalNormalization_isNormal : IsNormalScheme (Palomar.normalization A) :=
+  isNormalScheme_of_stalk_integrallyClosed (Palomar.normalization A)
     (schemeGlobalNormalization_stalk_integrallyClosed A)
 
 #print axioms schemeGenericInclusion_preimage_eq_top

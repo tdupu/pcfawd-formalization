@@ -12,26 +12,24 @@ public import Pcf.Stacks.Abhyankar.FiniteNormalization
 /-!
 # PCF all the way down in characteristic zero, unconditionally
 
-The two local theorems that `Pcf.pcfAllTheWayDown_charZero` and
-`Pcf.Palomar.pcfAllTheWayDown_charZero` take as inputs are now proved in this repository:
+The two local theorems that `Pcf.pcfAllTheWayDown_charZero` takes as inputs (the structure
+`Pcf.PCFAllTheWayDownLocalTheorems`) are proved in this repository:
 
 * Zariski--Nagata purity (Stacks `0BMB`, affine pointwise form):
-  `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`, with Palomar form
-  `Pcf.Palomar.zariskiNagataPurity` (`Pcf/Stacks/Purity/Tag0BMA.lean`);
+  `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`
+  (`Pcf/Stacks/Purity/Tag0BMA.lean`);
 * Abhyankar's lemma for a regular divisor (Stacks `0EYG`/`0EYH`, all positive integers
   invertible): `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`
-  (`Pcf/Stacks/Abhyankar/FiniteNormalization.lean`; the normalization is proved finite), with
-  Palomar form `Pcf.Palomar.abhyankarLemma` (`Pcf/Stacks/Abhyankar/Tag0EYG.lean`; the
-  Palomar statement assumes the normalization finite).
+  (`Pcf/Stacks/Abhyankar/FiniteNormalization.lean`; the normalization is proved finite).
 
 This file discharges those inputs:
 
 * `Pcf.pcfAllTheWayDownLocalTheorems`: the structure `Pcf.PCFAllTheWayDownLocalTheorems`, built
   from the two theorems;
 * `Pcf.pcfAllTheWayDown_charZero_unconditional`: the development-side statement with no inputs;
-* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the Palomar statement
-  `Pcf.Palomar.pcfAllTheWayDown_charZero` with the `purity` and `abhyankar` binders removed and
-  nothing else changed.  This is the theorem compared by the Palomar Challenge
+* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the same theorem in the compact
+  vocabulary of `Pcf.Palomar.Statement`, transported along the equivalences of
+  `Pcf.Palomar.Bridge`.  This is the theorem compared by the Palomar Challenge
   (`palomar/PcfChallenge.lean`).
 -/
 
@@ -68,13 +66,9 @@ end Pcf
 
 namespace Pcf.Palomar
 
-/-- **PCF all the way down in characteristic zero**, unconditionally.
-
-The statement is that of the conditional theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its
-`purity` and `abhyankar` binders removed. Those two inputs are supplied by
-`Pcf.Palomar.zariskiNagataPurity` (Zariski--Nagata purity, Stacks `0BMB`) and
-`Pcf.Palomar.abhyankarLemma` (Abhyankar's lemma, Stacks `0EYG`/`0EYH`), both proved in
-this repository. -/
+/-- **PCF all the way down in characteristic zero**, unconditionally, in the compact vocabulary
+of `Pcf.Palomar.Statement`.  This is `Pcf.pcfAllTheWayDown_charZero_unconditional` transported
+along `isNormalizedPCF_iff_scheme` and `pcfAllTheWayDown_iff_scheme`. -/
 theorem pcfAllTheWayDown_charZero_unconditional
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -82,14 +76,13 @@ theorem pcfAllTheWayDown_charZero_unconditional
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (hpcf : IsNormalizedPCF f) :
     PCFAllTheWayDown f :=
-  pcfAllTheWayDown_charZero (fun R S _ _ _ ↦ Pcf.Palomar.zariskiNagataPurity R S)
-    (fun R S _ _ _ a ↦ Pcf.Palomar.abhyankarLemma R S a) k s f hpcf
+  (pcfAllTheWayDown_iff_scheme k s f).mpr <|
+    Pcf.pcfAllTheWayDown_charZero_unconditional k s f ((isNormalizedPCF_iff_scheme k s f).mp hpcf)
 
 end Pcf.Palomar
 
 #print axioms Pcf.pcfAllTheWayDownLocalTheorems
 #print axioms Pcf.pcfAllTheWayDown_charZero_unconditional
 #print axioms Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional
-#check @Pcf.Palomar.pcfAllTheWayDown_charZero
 #check @Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional
 #check @Pcf.pcfAllTheWayDown_charZero_unconditional

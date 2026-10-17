@@ -29,12 +29,16 @@ universe u v
 
 variable (R : Type u) [CommRing R]
 
+-- pcf: Stacks tag attributes (the PR has none)
+@[stacks 0AFS "first sentence"]
 theorem Auslander_Buchsbaum_Serre [IsLocalRing R] [IsNoetherianRing R] [Small.{v} R] :
     IsRegularLocalRing R ↔ globalDimension.{v} R < ⊤ := by
   refine ⟨fun h ↦ ?_, fun h ↦ IsRegularLocalRing.of_globalDimension_lt_top h⟩
   rw [IsRegularLocalRing.globalDimension_eq_ringKrullDim]
   exact ringKrullDim_lt_top
 
+-- pcf: Stacks tag attribute
+@[stacks 0AFS "second sentence"]
 lemma isRegularLocalRing_localization [IsRegularLocalRing R] (p : Ideal R) [p.IsPrime] :
     IsRegularLocalRing (Localization.AtPrime p) := by
   apply IsRegularLocalRing.of_globalDimension_lt_top.{u, u}
@@ -42,6 +46,8 @@ lemma isRegularLocalRing_localization [IsRegularLocalRing R] (p : Ideal R) [p.Is
   rw [IsRegularLocalRing.globalDimension_eq_ringKrullDim]
   exact ringKrullDim_lt_top
 
+-- pcf: Stacks tag attribute
+@[stacks 0AFS "second sentence, any `IsLocalization.AtPrime`"]
 lemma IsRegularLocalRing.of_isLocalization [IsRegularLocalRing R] (p : Ideal R) [p.IsPrime]
     (S : Type*) [CommRing S] [Algebra R S] [IsLocalization.AtPrime S p] : IsRegularLocalRing S :=
   have := isRegularLocalRing_localization R p
@@ -55,6 +61,8 @@ lemma isRegularRing_of_globalDimension_lt_top [IsNoetherianRing R] [Small.{v} R]
   exact IsRegularLocalRing.of_globalDimension_lt_top.{u, v}
     (lt_of_le_of_lt (globalDimension_localization_le p.primeCompl) h)
 
+-- pcf: Stacks tag attribute
+@[stacks 0AFS "second sentence, as `IsRegularRing`"]
 lemma isRegularRing_of_isRegularLocalRing [IsRegularLocalRing R] : IsRegularRing R := by
   apply isRegularRing_of_globalDimension_lt_top.{u, u}
   rw [IsRegularLocalRing.globalDimension_eq_ringKrullDim]

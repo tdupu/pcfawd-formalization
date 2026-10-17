@@ -49,12 +49,6 @@ theorem length_quotient_map_ringEquiv {A A' : Type*} [CommRing A] [CommRing A'] 
   rw [(AlgEquiv.ofRingEquiv (f := ψ) (fun _ ↦ rfl)).toLinearEquiv.length_eq,
     Module.length_eq_of_surjective (S := A ⧸ I) (R := A' ⧸ I.map φ) ψ.surjective]
 
-/-- A natural number is invertible in `κ(𝔭)` iff it does not lie in `𝔭`. -/
-theorem isUnit_natCast_residueField_iff {R : Type*} [CommRing R] (p : Ideal R) [p.IsPrime]
-    (n : ℕ) : IsUnit ((n : p.ResidueField)) ↔ (n : R) ∉ p := by
-  rw [isUnit_iff_ne_zero, ← map_natCast (algebraMap R p.ResidueField), ne_eq,
-    Ideal.algebraMap_residueField_eq_zero]
-
 /-- The residue field map `κ(q ∩ R) → κ(q)` is compatible with `R → S`. -/
 theorem residueField_algebraMap_algebraMap {R S : Type*} [CommRing R] [CommRing S]
     [Algebra R S]
@@ -127,8 +121,8 @@ theorem _root_.Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv {q : PrimeSpectrum S}
   dsimp only [IsTamelyRamifiedAt] at H ⊢
   obtain ⟨H1, H2⟩ := H
   refine ⟨?_, ?_⟩
-  · rw [ramificationIdx_eq_of_ringEquiv e1 e2 h hq, isUnit_natCast_residueField_iff]
-    rw [isUnit_natCast_residueField_iff, hp, Ideal.mem_comap, map_natCast] at H1
+  · rw [ramificationIdx_eq_of_ringEquiv e1 e2 h hq, Pcf.Stacks.isUnit_natCast_residueField_iff]
+    rw [Pcf.Stacks.isUnit_natCast_residueField_iff, hp, Ideal.mem_comap, map_natCast] at H1
     exact H1
   · let _ : Algebra (Localization.AtPrime (q.asIdeal.under R))
         (Localization.AtPrime q.asIdeal) := Localization.AtPrime.algebraOfLiesOver _ _

@@ -212,7 +212,10 @@ theorem eq_zeroPrime_of_one_lt_restrictionRamificationIdx
 
 /-- The restricted system `g = f|_A`: identity step on the primes of `CofiniteNat`, with
 ramification index `2` at `{0}`. The branch set is the singleton `{{0}}`, so
-`step_image_ramified_finite` holds. -/
+`step_image_ramified_finite` holds; here it is proved by hand.  A second construction of the same
+system, with `step_image_ramified_finite` derived from a purity datum, is
+`restrictionDynamicsOfPurity`; the two are kept because the second one exercises the purity
+wiring of `Pcf/Wiring.lean`. -/
 noncomputable def restrictionDynamics : DivisorDynamics
     {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} where
   step := id
@@ -304,7 +307,7 @@ reproving it.
 Together with `Pcf.Examples.restrictionDynamics_branch_nonempty` this says: `Pcf.PCFGeometry` is
 inhabited, the inhabitant has a nonempty restricted branch divisor, and Theorem
 `thm:normal-invariant` fires on
-it. -/
+it.  A second proof, through the purity wiring, is `restrictionDynamicsOfPurity_isPCF`. -/
 theorem restrictionDynamics_isPCF : restrictionDynamics.IsPCF :=
   cofiniteGeometry.restriction_isPCF
       (fun m Q hs _ => notMem_branch_iterate_restrictionDynamics m Q fun h => hs (Or.inl h))
@@ -353,7 +356,9 @@ theorem restrictionRamificationIdx_branch_subset
   rw [cofinitePurityData_nonEtale, id_eq, eq_zeroPrime_of_one_lt_restrictionRamificationIdx h]
   exact le_of_eq zeroPrime_coe
 
-/-- The restricted system with `step_image_ramified_finite` **proved** from the purity datum. -/
+/-- The restricted system with `step_image_ramified_finite` **proved** from the purity datum: a
+second construction of `restrictionDynamics` (same data; the proof field comes from
+`Pcf.restrictionDivisorDynamicsOfPurity` instead of being supplied by hand). -/
 noncomputable def restrictionDynamicsOfPurity : DivisorDynamics
     {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} :=
   restrictionDivisorDynamicsOfPurity id restrictionRamificationIdx restrictionRamificationIdx_pos
@@ -372,7 +377,8 @@ theorem restrictionDynamicsOfPurity_branch : restrictionDynamicsOfPurity.branch 
   rw [show restrictionDynamicsOfPurity.branch = restrictionDynamics.branch from rfl]
   exact restrictionDynamics_branch
 
-/-- **The payoff.** The restricted system is post-critically finite, obtained by applying
+/-- **The payoff.** The restricted system is post-critically finite: a second proof of
+`restrictionDynamics_isPCF`, obtained by applying
 `Pcf.PCFGeometry.restriction_isPCF` to a `Pcf.PCFGeometry` whose restricted system's
 branch-finiteness was derived from purity rather than assumed. -/
 theorem restrictionDynamicsOfPurity_isPCF : restrictionDynamicsOfPurity.IsPCF := by

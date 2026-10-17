@@ -5,10 +5,8 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Palomar.LocalTheorems
 public import Pcf.Palomar.Statement
 public import Pcf.Bounding.PcfAllTheWayDownCharZero
-public import Pcf.Stacks.Abhyankar.FiniteNormalization
 
 /-!
 # Bridge from the Palomar statement surface to the development
@@ -25,10 +23,9 @@ The compact notions of `Pcf.Palomar.Statement` agree with the development's:
 * `pcfAllTheWayDownAtDepth_of_scheme`: the development's recursive predicate implies the
   compact one.
 
-The conditional theorem `Pcf.Palomar.pcfAllTheWayDown_charZero`, whose inputs are the Palomar
-forms of purity and Abhyankar's lemma (`Pcf.Palomar.LocalTheorems`), is then derived from
-`Pcf.pcfAllTheWayDown_charZero`.  The compared theorem is its unconditional form
-`Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` (`Pcf.Palomar.Unconditional`).
+The compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`
+(`Pcf.Palomar.Unconditional`) is derived through these equivalences from
+`Pcf.pcfAllTheWayDown_charZero_unconditional`.
 -/
 
 @[expose] public section
@@ -99,10 +96,6 @@ theorem isPCF_iff_divisorDynamics_isPCF {X : Scheme.{u}} (f : X ⟶ X) [IsFinite
 
 /-! ## Normalization lifts -/
 
-theorem genericToNormalization_comp (X : Scheme.{u}) [IsIntegral X] :
-    genericToNormalization X ≫ normalizationMap X = X.fromSpecStalk (genericPoint X) :=
-  (X.fromSpecStalk (genericPoint X)).toNormalization_fromNormalization
-
 /-- There is at most one lift of `f` to the normalization. -/
 theorem isNormalizationLift_unique {X : Scheme.{u}} [IsIntegral X] (f : X ⟶ X)
     {g₁ g₂ : normalization X ⟶ normalization X}
@@ -113,8 +106,9 @@ theorem isNormalizationLift_unique {X : Scheme.{u}} [IsIntegral X] (f : X ⟶ X)
       (hn : g ≫ normalizationMap X = normalizationMap X ≫ f)
       (hv : genericToNormalization X ≫ g = v ≫ genericToNormalization X) :
       v ≫ X.fromSpecStalk (genericPoint X) = X.fromSpecStalk (genericPoint X) ≫ f := by
-    rw [← genericToNormalization_comp, ← Category.assoc, ← hv, Category.assoc, hn,
-      ← Category.assoc, genericToNormalization_comp]
+    have hc : genericToNormalization X ≫ normalizationMap X = X.fromSpecStalk (genericPoint X) :=
+      schemeGenericToNormalization_comp X
+    rw [← hc, ← Category.assoc, ← hv, Category.assoc, hn, ← Category.assoc, hc]
   have hvv : v₁ = v₂ := (cancel_mono (X.fromSpecStalk (genericPoint X))).mp
     ((hv g₁ v₁ hn₁ hv₁).trans (hv g₂ v₂ hn₂ hv₂).symm)
   subst hvv
@@ -235,59 +229,6 @@ theorem pcfAllTheWayDown_iff_scheme (k : Type u) [Field k] [CharZero k]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X] :
     PCFAllTheWayDown f ↔ SchemePCFAllTheWayDown k s f :=
   forall_congr' fun d ↦ pcfAllTheWayDownAtDepth_iff_scheme k d s f
-
-/-- The compact purity statement is the development's. -/
-theorem zariskiNagataPurity_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
-    ZariskiNagataPurity R S ↔ Stacks.ZariskiNagataPurity R S := by
-  constructor
-  · intro h hR hS hft w hw
-    exact h hR hS hft w ⟨hw.source_isDomain, hw.source_isIntegrallyClosed,
-      hw.target_isRegular, hw.quasiFinite, hw.equalDimension, hw.positiveDimension,
-      hw.unramifiedCodimensionOne⟩
-  · intro h hR hS hft w hw
-    exact h hR hS hft w ⟨hw.source_isDomain, hw.source_isIntegrallyClosed,
-      hw.target_isRegular, hw.quasiFinite, hw.equalDimension, hw.positiveDimension,
-      hw.unramifiedCodimensionOne⟩
-
-/-- The compact Abhyankar statement is equivalent to the development's.  The compact one assumes
-the normalization `S` finite over `R`; the development's assumes only `S[1/a]` finite over
-`R[1/a]` and the two agree because the normalization is then finite
-(`Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast`, Stacks `0EYH`). -/
-theorem abhyankarLemma_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
-    AbhyankarLemma R S a ↔ Stacks.AbhyankarLemma R S a := by
-  constructor
-  · intro h hR ha hreg hfin hetale hint hnat y hy
-    haveI := hR
-    haveI := hreg
-    haveI := hint
-    exact h hR ha hreg
-      (Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast ha hfin hetale hnat)
-      hetale hint hnat y hy
-  · intro h hR ha hreg hfin hetale hint hnat y hy
-    haveI := hfin
-    exact h hR ha hreg (Module.Finite.base_change R (Localization.Away a) S) hetale hint hnat
-      y hy
-
-/-! ## The conditional theorem -/
-
-/-- **PCF all the way down in characteristic zero**, conditional on Zariski–Nagata purity
-and Abhyankar's lemma. -/
-theorem pcfAllTheWayDown_charZero
-    (purity : ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S],
-      ZariskiNagataPurity R S)
-    (abhyankar : ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R),
-      AbhyankarLemma R S a)
-    (k : Type u) [Field k] [CharZero k]
-    {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
-    (f : X ⟶ X) [IsFinite f] [IsDominant f]
-    [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (hpcf : IsNormalizedPCF f) :
-    PCFAllTheWayDown f := by
-  have inputs : PCFAllTheWayDownLocalTheorems.{u} :=
-    { purity := fun R S _ _ _ ↦ (zariskiNagataPurity_iff R S).mp (purity R S)
-      abhyankar := fun R S _ _ _ a ↦ (abhyankarLemma_iff R S a).mp (abhyankar R S a) }
-  exact (pcfAllTheWayDown_iff_scheme k s f).mpr
-    (Pcf.pcfAllTheWayDown_charZero inputs k s f ((isNormalizedPCF_iff_scheme k s f).mp hpcf))
 
 end
 

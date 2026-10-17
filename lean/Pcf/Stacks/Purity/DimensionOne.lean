@@ -10,7 +10,8 @@ public import Mathlib.RingTheory.Etale.QuasiFinite
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.FinitePresentation
 public import Mathlib.RingTheory.KrullDimension.LocalRing
-public import Pcf.Stacks.Common.RegularDimensionOne
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
+public import Pcf.Bounding.RegularLocalDomain
 public import Pcf.Stacks.Purity.Defs
 public import Pcf.Stacks.Purity.LocalEtale
 
@@ -33,7 +34,7 @@ open IsLocalRing
 /-- A one-dimensional Noetherian normal local domain is a discrete valuation ring.
 
 This is the normal-local half of Stacks Tag `00PD`.  The regular-local half used below is
-`isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one`. -/
+`Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one`. -/
 theorem isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one
     (R : Type*) [CommRing R] [IsNoetherianRing R] [IsLocalRing R] [IsDomain R]
     [IsIntegrallyClosed R] (hdim : ringKrullDim R = 1) : IsDiscreteValuationRing R := by
@@ -67,7 +68,7 @@ theorem hasZariskiNagataPurityAt_of_height_eq_one
   let _ : IsScalarTower R Rp Sq := by infer_instance
   let _ : IsLocalHom (algebraMap Rp Sq) := by infer_instance
   let _ : IsRegularLocalRing Rp := h.target_isRegular
-  let _ : IsDomain Rp := isDomain_of_isRegularLocalRing Rp
+  let _ : IsDomain Rp := Pcf.Vendor.isDomain_of_isRegularLocalRing Rp
   let _ : IsDomain Sq := h.source_isDomain
   let _ : IsIntegrallyClosed Sq := h.source_isIntegrallyClosed
   have hpHeight : p.height = 1 := h.equalDimension.symm.trans hw
@@ -78,7 +79,7 @@ theorem hasZariskiNagataPurityAt_of_height_eq_one
     simpa only [hqHeight, WithBot.coe_one] using
       IsLocalization.AtPrime.ringKrullDim_eq_height q Sq
   let _ : IsDiscreteValuationRing Rp :=
-    isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one Rp hRpDim
+    Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one Rp hRpDim
   let _ : IsDiscreteValuationRing Sq :=
     isDiscreteValuationRing_of_isIntegrallyClosed_of_ringKrullDim_eq_one Sq hSqDim
   let _ : Algebra.QuasiFinite R Sq := h.quasiFinite

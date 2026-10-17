@@ -42,7 +42,7 @@ def invariantDivisorSetupOfFiniteType
           (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
       InvariantDivisorLocalCoveringHypotheses f A m U Q' hx) :
     InvariantDivisorSchemeNormalizationPCFSetup X f A hA (SchemeDivisorPoint X)
-      (SchemeDivisorPoint (schemeGlobalNormalization
+      (SchemeDivisorPoint (Palomar.normalization
         (pointClosureIdealSheaf A.1).subscheme)) :=
   invariantDivisorSetupOfFiniteRegularityCorrection k s f A hA
     (invariantDivisorSing A) (invariantDivisorSing_finite_of_perfectField k s A)

@@ -119,12 +119,12 @@ theorem exists_isRegular_triple (d : ℕ) (hd : 2 ≤ d) (hdim : ringKrullDim A 
     (f : A) (hf : f ∈ maximalIdeal A) (hf2 : f ∉ maximalIdeal A ^ 2) :
     ∃ x y : A, x ∈ maximalIdeal A ∧ y ∈ maximalIdeal A ∧ x ∉ Ideal.span {f} ∧
       IsRegular A [f, x, y] := by
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   -- the hypersurface `A₀ = A/(f)`
   let A₀ := A ⧸ Ideal.span {f}
   haveI : Nontrivial A₀ := Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hf)
   haveI hA₀ : IsRegularLocalRing A₀ := isRegularLocalRing_quotient_minimalGenerator hf hf2
-  haveI : IsDomain A₀ := isDomain_of_isRegularLocalRing A₀
+  haveI : IsDomain A₀ := Pcf.Vendor.isDomain_of_isRegularLocalRing A₀
   have hdim₀ : ringKrullDim A₀ = d := ringKrullDim_quotient_minimalGenerator_eq hf hf2 d hdim
   have hdim₀ne : ringKrullDim A₀ ≠ 0 := by
     rw [hdim₀]
@@ -136,7 +136,7 @@ theorem exists_isRegular_triple (d : ℕ) (hd : 2 ≤ d) (hdim : ringKrullDim A 
   let A₁ := A₀ ⧸ Ideal.span {xq}
   haveI : Nontrivial A₁ := Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hxq)
   haveI : IsRegularLocalRing A₁ := hA₁
-  haveI : IsDomain A₁ := isDomain_of_isRegularLocalRing A₁
+  haveI : IsDomain A₁ := Pcf.Vendor.isDomain_of_isRegularLocalRing A₁
   have hdim₁ : ringKrullDim A₁ = ((d - 1 : ℕ) : WithBot ℕ∞) := by
     apply ringKrullDim_quotient_minimalGenerator_eq hxq hxq2 (d - 1)
     rw [hdim₀]
@@ -565,7 +565,7 @@ theorem exists_algHom_bijective_of_hypersurface_lift
       ∃ (k : ℕ) (b : B), x ^ k • c = φ₀ b) :
     ∃ φ : B →ₐ[A] C, Function.Bijective φ ∧
       (Ideal.Quotient.mkₐ A (Ideal.span {algebraMap A C f})).comp φ = φ₀ := by
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   obtain ⟨x, y, hxm, hym, hxf, hreg⟩ := exists_isRegular_triple d hd hdim f hf hf2
   -- regular sequences on the flat algebra `C`
   have hweak : ∀ rs : List A, IsRegular A rs → IsWeaklyRegular C rs := fun rs h ↦ by
@@ -610,7 +610,7 @@ theorem exists_algHom_bijective_of_hypersurface_lift
     haveI : Nontrivial (A ⧸ p) :=
       Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hf)
     haveI : IsRegularLocalRing (A ⧸ p) := isRegularLocalRing_quotient_minimalGenerator hf hf2
-    haveI : IsDomain (A ⧸ p) := isDomain_of_isRegularLocalRing _
+    haveI : IsDomain (A ⧸ p) := Pcf.Vendor.isDomain_of_isRegularLocalRing _
     exact (Ideal.Quotient.isDomain_iff_prime p).mp inferInstance
   have hxp : ∀ k : ℕ, x ^ k ∉ p := fun k hk ↦ hxf (hp.mem_of_pow_mem k hk)
   -- Nakayama at `p`
@@ -979,12 +979,12 @@ theorem hypersurfaceFiniteEtaleLifting_of_isAdicComplete
   -- the base rings
   let I : Ideal A := Ideal.span (Set.singleton f)
   have hI : I = Ideal.span {f} := rfl
-  haveI : IsDomain A := isDomain_of_isRegularLocalRing A
+  haveI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   haveI hA : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   haveI : HenselianLocalRing A := henselianLocalRing_of_isAdicComplete A
   haveI : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hf)
   haveI hA₀reg : IsRegularLocalRing (A ⧸ I) := isRegularLocalRing_quotient_minimalGenerator hf hf2
-  haveI : IsDomain (A ⧸ I) := isDomain_of_isRegularLocalRing _
+  haveI : IsDomain (A ⧸ I) := Pcf.Vendor.isDomain_of_isRegularLocalRing _
   haveI hA₀ : IsIntegrallyClosed (A ⧸ I) := isIntegrallyClosed_of_isRegularLocalRing _
   have hdim₀ : ringKrullDim (A ⧸ I) = d := ringKrullDim_quotient_minimalGenerator_eq hf hf2 d hdim
   have hdim₀' : 2 ≤ ringKrullDim (A ⧸ I) := by

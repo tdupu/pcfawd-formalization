@@ -179,33 +179,6 @@ theorem coeff_mem_pow_succ_of_mem_rees_map
     simpa only [Subalgebra.coe_add, Polynomial.coeff_add] using
       (I ^ (n + 1)).add_mem hp hq
 
-/-- The quotient of the Rees algebra by the extension of `I` is Noetherian whenever
-`R ⧸ I` is Noetherian and `I` is finitely generated.  This is the associated-graded
-Noetherianity input in Stacks Tag `05GH`. -/
-theorem reesQuotient_isNoetherian
-    {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG)
-    (hquot : IsNoetherianRing (R ⧸ I)) :
-    IsNoetherianRing
-      ((reesAlgebra I) ⧸ I.map (algebraMap R (reesAlgebra I))) := by
-  let K : Ideal (reesAlgebra I) := I.map (algebraMap R (reesAlgebra I))
-  let _ : Algebra.FiniteType R (reesAlgebra I) :=
-    ⟨(reesAlgebra I).fg_top.mpr (reesAlgebra.fg hI)⟩
-  let _ : IsNoetherianRing (R ⧸ I) := hquot
-  have hIK : I ≤ K.comap (algebraMap R (reesAlgebra I)) :=
-    Ideal.le_comap_map
-  let _ : IsNoetherianRing
-      (R ⧸ K.comap (algebraMap R (reesAlgebra I))) :=
-    isNoetherianRing_of_surjective (R ⧸ I)
-      (R ⧸ K.comap (algebraMap R (reesAlgebra I)))
-      (Ideal.Quotient.factor hIK) (Ideal.Quotient.factor_surjective hIK)
-  let _ : Algebra.FiniteType R ((reesAlgebra I) ⧸ K) := inferInstance
-  let _ : Algebra.FiniteType
-      (R ⧸ K.comap (algebraMap R (reesAlgebra I)))
-      ((reesAlgebra I) ⧸ K) :=
-    Algebra.FiniteType.of_restrictScalars_finiteType R _ _
-  exact Algebra.FiniteType.isNoetherianRing
-    (R ⧸ K.comap (algebraMap R (reesAlgebra I))) ((reesAlgebra I) ⧸ K)
-
 /-- A coefficient formula for a product in which the sum is extended to any fixed bound for
 the degree of the right factor. -/
 theorem _root_.Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
@@ -360,8 +333,8 @@ theorem fg_of_fg_quotient_of_isAdicComplete
   let q : reesAlgebra I →+* (reesAlgebra I ⧸ K) := Ideal.Quotient.mk K
   let F : Ideal (reesAlgebra I) := adicReesIdeal I J
   let L : Ideal (reesAlgebra I ⧸ K) := F.map q
-  let _ : IsNoetherianRing (reesAlgebra I ⧸ K) :=
-    reesQuotient_isNoetherian I hI hquot
+  let _ : IsNoetherianRing (R ⧸ I) := hquot
+  let _ : IsNoetherianRing (reesAlgebra I ⧸ K) := isNoetherianRing_reesAlgebra_quotient hI
   obtain ⟨k, b, hb⟩ :=
     Submodule.fg_iff_exists_fin_generating_family.mp L.fg_of_isNoetherianRing
   have hbL (i : Fin k) : b i ∈ L := by
@@ -1890,7 +1863,6 @@ end PointedEtaleNeighborhood
 #print axioms Module.Flat.lTensor_ideal_injective_of_injective
 #print axioms Ideal.adicReesIdeal
 #print axioms Ideal.coeff_mem_pow_succ_of_mem_rees_map
-#print axioms Ideal.reesQuotient_isNoetherian
 #print axioms Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
 #print axioms Ideal.fg_of_adic_approximation
 #print axioms Ideal.fg_of_fg_quotient_of_isAdicComplete

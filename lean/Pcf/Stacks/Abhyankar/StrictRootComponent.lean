@@ -384,7 +384,7 @@ theorem exists_strictRootComponentPreData (ha : a ∈ maximalIdeal A)
   haveI : Nontrivial B := strictRootCover_tensor_away_nontrivial hE (nonZeroDivisors.ne_zero ha0)
   haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing A' B
   have hA'n : IsStacksNormalRing A' := by
-    haveI := isRegularRing_of_isRegularLocalRing A'
+    haveI := Pcf.Vendor.isRegularRing_of_isRegularLocalRing A'
     exact isStacksNormalRing_of_isRegularRing A'
   have hBn : IsStacksNormalRing B := IsStacksNormalRing.of_etale B hA'n
   obtain ⟨ι, _, ε, hε, hεi⟩ := hBn.exists_completeOrthogonalIdempotents
@@ -499,7 +499,7 @@ theorem strictBaseChangeFactor_faithfulSMul (a : R) (ha : a ∈ maximalIdeal R)
     FaithfulSMul (LocalColimit R Ω) (StrictBaseChangeFactor R Ω S e) := by
   haveI : IsRegularLocalRing R := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha hreg
   haveI : IsRegularLocalRing (LocalColimit R Ω) := localColimit_isRegularLocalRing
-  haveI : IsDomain (LocalColimit R Ω) := isDomain_of_isRegularLocalRing _
+  haveI : IsDomain (LocalColimit R Ω) := Pcf.Vendor.isDomain_of_isRegularLocalRing _
   haveI := etale_localizationAway_baseChange (S := S) (LocalColimit R Ω) a hetale
   exact faithfulSMul_quotient_idempotent _ he hic.algebraMap_injective
 

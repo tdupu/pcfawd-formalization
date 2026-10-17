@@ -44,9 +44,6 @@ class StrictlyHenselianLocalRing (R : Type u) [CommRing R] : Prop
   isSepClosed_residueField : IsSepClosed (IsLocalRing.ResidueField R)
 
 attribute [instance] StrictlyHenselianLocalRing.toHenselianLocalRing
-
-instance (R : Type u) [CommRing R] [StrictlyHenselianLocalRing R] :
-    IsSepClosed (IsLocalRing.ResidueField R) :=
   StrictlyHenselianLocalRing.isSepClosed_residueField
 
 /-- The closed fiber of a finite etale algebra over a strictly henselian local ring is a finite

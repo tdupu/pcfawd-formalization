@@ -20,9 +20,6 @@ Every definition here is written so that its body contains no nested proof term 
 would abstract into an auxiliary `_proof_n` theorem: each proof obligation is a separately
 named lemma applied to variables only.  `Pcf.Palomar.Bridge` proves that these notions agree
 with the development's and derives the theorem.
-
-The Palomar forms of the two local theorems (Zariski–Nagata purity and Abhyankar's lemma) are
-in `Pcf.Palomar.LocalTheorems`; they are not part of the compared statement.
 -/
 
 @[expose] public section

@@ -40,7 +40,7 @@ theorem schemeGenericMorphism_id :
 /-- The canonical global-normalization lift preserves the identity. -/
 @[simp]
 theorem schemeGlobalNormalizationMorphism_id :
-    schemeGlobalNormalizationMorphism (𝟙 X) = 𝟙 (schemeGlobalNormalization X) := by
+    schemeGlobalNormalizationMorphism (𝟙 X) = 𝟙 (Palomar.normalization X) := by
   symm
   apply schemeGlobalNormalizationMorphism_unique
   · simp
@@ -49,7 +49,7 @@ theorem schemeGlobalNormalizationMorphism_id :
 /-- The endomorphism form of the canonical lift preserves the identity. -/
 @[simp]
 theorem schemeGlobalNormalizationLift_id :
-    schemeGlobalNormalizationLift (𝟙 X) = 𝟙 (schemeGlobalNormalization X) :=
+    schemeGlobalNormalizationLift (𝟙 X) = 𝟙 (Palomar.normalization X) :=
   schemeGlobalNormalizationMorphism_id
 
 /-- The endomorphism form of the canonical lift preserves composition. -/
@@ -90,7 +90,7 @@ variable (k : Type u) [Field k] [CharZero k]
 /-- The upstairs dynamics in the canonical normalization package is the actual
 characteristic-zero divisor dynamics of its lifted morphism. -/
 theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq
-    [IsFinite (schemeGlobalNormalizationMap X)] :
+    [IsFinite (Palomar.normalizationMap X)] :
     (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized =
       divisorDynamicsOfFiniteDominantNormalCharZero (schemeGlobalNormalizationLift f) := rfl
 

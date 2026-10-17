@@ -156,7 +156,7 @@ theorem quotient_span_localColimit_isRegularRing (a : R)
   have : IsRegularLocalRing (R ⧸ Ideal.span {a}) :=
     IsRegularLocalRing.of_isRegularRing_of_isLocalRing _
   have := quotient_span_localColimit_isRegularLocalRing (Ω := Ω) a
-  exact isRegularRing_of_isRegularLocalRing _
+  exact Pcf.Vendor.isRegularRing_of_isRegularLocalRing _
 
 end Divisor
 

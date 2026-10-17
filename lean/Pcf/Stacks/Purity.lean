@@ -11,7 +11,7 @@ public import Pcf.Stacks.Purity.LocalFlatness
 public import Pcf.Stacks.Purity.RegularHypersurface
 public import Pcf.Stacks.Purity.FpqcEtaleDescent
 public import Pcf.Stacks.Purity.DimensionOne
-public import Pcf.Stacks.Purity.EtaleLocalization
+public import Mathlib.RingTheory.Etale.QuasiFinite
 public import Pcf.Stacks.Purity.NormalRing
 public import Pcf.Stacks.Purity.IntegralClosure
 public import Pcf.Stacks.Purity.PuncturedSpectrum

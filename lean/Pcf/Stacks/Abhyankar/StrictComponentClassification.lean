@@ -167,7 +167,7 @@ theorem rootPoly_fractionRing_irreducible (ha : a ∈ maximalIdeal A) (ha0 : a �
     (hE : 1 ≤ E) :
     Irreducible (dvrRootPoly (algebraMap A (FractionRing A) a) E) := by
   have hreg : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have ha0' : a ≠ 0 := nonZeroDivisors.ne_zero ha0
   haveI hp : (Ideal.span ({a} : Set A)).IsPrime := divisorPrime_isPrime a
   let Ap := Localization.AtPrime (Ideal.span ({a} : Set A))
@@ -223,7 +223,7 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictComponent
   have hE1 : 1 ≤ E := hE
   -- the base and the root cover
   have hreg : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have ha0' : a ≠ 0 := nonZeroDivisors.ne_zero ha0
   let A' := StrictRootCover a E
   let x : A' := strictRoot a E
@@ -233,7 +233,7 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictComponent
   letI : IsDomain A' := strictRootCover_isDomain a ha hE1 ha0
   letI : IsIntegrallyClosed A' := strictRootCover_isIntegrallyClosed a ha hE1 ha0
   letI : IsSepClosed (ResidueField A') := strictRootCover_residueField_isSepClosed a ha hE1
-  letI : IsRegularRing (A ⧸ Ideal.span ({a} : Set A)) := isRegularRing_of_isRegularLocalRing _
+  letI : IsRegularRing (A ⧸ Ideal.span ({a} : Set A)) := Pcf.Vendor.isRegularRing_of_isRegularLocalRing _
   letI : IsRegularRing (A' ⧸ Ideal.span ({x} : Set A')) :=
     strictRootCover_quotient_isRegularRing a hE1
   letI : Module.Finite A A' := strictRootCover_finite a hE1

@@ -278,7 +278,7 @@ theorem exists_regular_pair_span_maximalIdeal_of_dimension_two
       norm_num)
   let I : Ideal A := Ideal.span ({x} : Set A)
   let Q := A ⧸ I
-  letI : IsDomain A := isDomain_of_isRegularLocalRing A
+  letI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have hx : x ≠ 0 := by
     intro hx0
     apply hx2
@@ -292,7 +292,7 @@ theorem exists_regular_pair_span_maximalIdeal_of_dimension_two
   letI : IsLocalHom (Ideal.Quotient.mk I) :=
     IsLocalHom.of_surjective (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   letI : IsRegularLocalRing Q := hregQ
-  letI : IsDomain Q := isDomain_of_isRegularLocalRing Q
+  letI : IsDomain Q := Pcf.Vendor.isDomain_of_isRegularLocalRing Q
   have hfinQ : Module.finrank (IsLocalRing.ResidueField Q)
       (IsLocalRing.CotangentSpace Q) = 1 := by
     have hreg := (IsRegularLocalRing.iff_finrank_cotangentSpace Q).mp inferInstance
@@ -544,7 +544,7 @@ theorem Module.free_of_finite_torsionFree_stacksNormal_dimension_two
     [Module.IsTorsionFree R B] [Module.Finite R B]
     (hB : IsStacksNormalRing B) (hdim : ringKrullDim R = 2) :
     Module.Free R B := by
-  letI : IsDomain R := isDomain_of_isRegularLocalRing R
+  letI : IsDomain R := Pcf.Vendor.isDomain_of_isRegularLocalRing R
   letI : Module.FinitePresentation R B := Module.finitePresentation_of_finite R B
   obtain ⟨x, y, hspan, hxR, hyR⟩ :=
     exists_regular_pair_span_maximalIdeal_of_dimension_two hdim

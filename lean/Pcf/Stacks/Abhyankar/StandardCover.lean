@@ -13,7 +13,8 @@ public import Pcf.Stacks.Abhyankar.TameRamification
 # The standard root cover
 
 This file packages proved affine leaves of Stacks Project Example `0EYF` for
-`C = R[z]/(z^e-u*a)`.  It proves finite freeness, gives the literal base-changed polynomial
+`C = R[z]/(z^e-u*a)`.  Finite freeness is `Pcf.LocalModel.free_adjoinRoot` / `finite_adjoinRoot` /
+`finrank_adjoinRoot`.  This file gives the literal base-changed polynomial
 after inverting `a`, proves that base change étale, and proves the codimension-one tame
 clause under the characteristic-zero hypothesis used by PCFAWD.
 
@@ -68,21 +69,6 @@ theorem localizedStandardCover_etale (u : Rˣ) (a : R) {e : ℕ}
       heUnit.map (algebraMap R (Localization.Away a))
   exact Pcf.Kummer.etale_adjoinRoot_kummerPoly (localizedStandardUnit u a) he heUnit'
 
-/-- The standard cover is finite over its base. -/
-theorem standardCover_finite (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
-    Module.Finite R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
-  Pcf.LocalModel.finite_adjoinRoot u a he
-
-/-- The standard cover is free over its base. -/
-theorem standardCover_free (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
-    Module.Free R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
-  Pcf.LocalModel.free_adjoinRoot u a he
-
-/-- The standard cover is free of rank `e` over a nontrivial base. -/
-theorem standardCover_finrank [Nontrivial R] (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e) :
-    Module.finrank R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) = e :=
-  Pcf.LocalModel.finrank_adjoinRoot u a he
-
 /-- Characteristic-zero form of the tame codimension-one clause of Example `0EYF`.
 
 This does not compute the ramification index as `e`; it proves the exact tameness predicate
@@ -99,7 +85,6 @@ theorem isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_nat
     R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) hunit a
 
 #print axioms localizedStandardCover_etale
-#print axioms standardCover_free
 #print axioms isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_natCast
 
 end Pcf.Stacks

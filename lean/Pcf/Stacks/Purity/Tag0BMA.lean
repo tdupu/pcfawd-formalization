@@ -38,7 +38,7 @@ The assembly here:
 * `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`: clause (2) in general, by descent
   from the completion (`CompletionDescent`).
 * `puncturedSpectrumPurity_of_isRegularLocalRing`: clause (1) in general.
-* `zariskiNagataPurity`, `Pcf.Palomar.zariskiNagataPurity`: Stacks Tag `0BMB` with no hypotheses.
+* `zariskiNagataPurity`: Stacks Tag `0BMB` with no hypotheses.
 
 Proof route diverges from Stacks: the induction runs over complete rings and replaces the
 local-cohomology argument of `0BM6`/`0EKS` (behind `0BLM`) by an elementary formal lifting, and
@@ -84,7 +84,7 @@ theorem puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
 theorem puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : ringKrullDim A = 2) :
     PuncturedSpectrumPurity A := by
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
     (by rw [hdim]; norm_num)
@@ -151,8 +151,8 @@ the punctured spectrum `U` is `U → U`, which is étale.  But `κ(𝔪)` is not
 `dim A ≥ 2`), so `B` is not flat, hence not étale.  The Lean statement therefore adds the
 hypothesis "`B` is torsion-free over `A`" (equivalently, no irreducible component of `Spec B` lies
 over the closed point), which is exactly what the Stacks proof uses (it takes `B` to be the global
-sections `Γ(V, 𝒪_V)` of a cover of `U`, as in Tag `0BM9`).  See `ERRATUM-0BMA.md` in the run
-directory.
+sections `Γ(V, 𝒪_V)` of a cover of `U`, as in Tag `0BM9`).  The counterexample `B = A × κ(𝔪)` is
+reported in Stacks comment #11774 on Tag `0BMA`.
 
 Concretely, "finite `A → B`, `B` normal" is made precise as `FiniteNormalPuncturedEtalePurity`
 (finite, torsion-free, Stacks-normal), the target category of Tag `0BM9`.
@@ -182,7 +182,7 @@ two clauses.  The proof route diverges from Stacks only inside clause (2); see t
 theorem puncturedSpectrumPurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
     PuncturedSpectrumPurity A := by
-  have : IsDomain A := isDomain_of_isRegularLocalRing A
+  have : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
     (le_trans (by norm_num) hdim) (finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A hdim)
@@ -205,21 +205,11 @@ theorem zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R 
   zariskiNagataPurity_of_etaleNormalAscent (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
     (fun A _ _ h ↦ finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A h) R S
 
-/-- The Palomar-facing form of `zariskiNagataPurity`: the compact statement
-`Pcf.Palomar.ZariskiNagataPurity`, with no hypotheses. -/
-theorem _root_.Pcf.Palomar.zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S]
-    [Algebra R S] :
-    Pcf.Palomar.ZariskiNagataPurity R S :=
-  Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
-      (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
-    (fun A _ _ h ↦ finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A h) R S
-
 #print axioms puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
 #print axioms puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
 #print axioms finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
 #print axioms puncturedSpectrumPurity_of_isRegularLocalRing
 #print axioms zariskiNagataPurity
-#print axioms Pcf.Palomar.zariskiNagataPurity
 
 #check @puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
 #check @puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
@@ -227,6 +217,5 @@ theorem _root_.Pcf.Palomar.zariskiNagataPurity (R S : Type u) [CommRing R] [Comm
 #check @finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
 #check @puncturedSpectrumPurity_of_isRegularLocalRing
 #check @zariskiNagataPurity
-#check @Pcf.Palomar.zariskiNagataPurity
 
 end Pcf.Stacks

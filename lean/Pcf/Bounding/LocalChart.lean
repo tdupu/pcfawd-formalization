@@ -41,6 +41,11 @@ below and the identification with the divisor dynamics; no field here asserts th
 
 @[expose] public section
 
+/- The vendored low-priority instance `IsRegularLocalRing R → IsDomain R` (mathlib4 PR #29802) is
+not used in this file, and it makes instance search for `FaithfulSMul` between localizations time
+out here. -/
+attribute [-instance] Pcf.Vendor.instIsDomainOfIsRegularLocalRing_pcf
+
 universe u
 
 set_option linter.style.haveILetI false

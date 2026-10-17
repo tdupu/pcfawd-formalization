@@ -263,10 +263,10 @@ theorem finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity
     (hdim : 2 ≤ ringKrullDim A)
     (hpurity : PuncturedSpectrumPurity (AdicCompletion (maximalIdeal A) A)) :
     FiniteNormalPuncturedEtalePurity A := by
-  letI : IsDomain A := isDomain_of_isRegularLocalRing A
+  letI : IsDomain A := Pcf.Vendor.isDomain_of_isRegularLocalRing A
   letI : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   letI : IsDomain (AdicCompletion (maximalIdeal A) A) :=
-    isDomain_of_isRegularLocalRing _
+    Pcf.Vendor.isDomain_of_isRegularLocalRing _
   letI : IsIntegrallyClosed (AdicCompletion (maximalIdeal A) A) :=
     isIntegrallyClosed_of_isRegularLocalRing _
   letI : Module.FaithfullyFlat A (AdicCompletion (maximalIdeal A) A) :=

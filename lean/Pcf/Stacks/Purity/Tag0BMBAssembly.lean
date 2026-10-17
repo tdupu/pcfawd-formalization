@@ -6,7 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Stacks.Purity.DimensionOne
-public import Pcf.Stacks.Purity.EtaleLocalization
+public import Mathlib.RingTheory.Etale.QuasiFinite
 public import Pcf.Stacks.Purity.FiniteNormalAlgebra
 
 /-!
@@ -104,7 +104,7 @@ theorem exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt
   let q := w.asIdeal
   letI : Algebra.QuasiFiniteAt R q := h.quasiFinite
   letI : q.LiesOver p := ⟨rfl⟩
-  exact exists_etale_finite_component_of_quasiFiniteAt p q
+  exact Algebra.exists_etale_isIdempotentElem_forall_liesOver_eq p q
 
 /-- Once the finite local model has been produced, clause (2) of Tag `0BMA` gives the desired
 etaleness at the original point.

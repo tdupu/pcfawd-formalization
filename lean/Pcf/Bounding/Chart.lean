@@ -528,7 +528,7 @@ theorem isEtaleAt_restriction (hF3 : Stacks.ExistsPrimeOverBoth.{u}) :
       IsDomain (Localization.AtPrime q.asIdeal) := by
     letI : IsRegularRing (R' ⧸ Ideal.span {algebraMap R R' a}) := hreg
     intro q
-    exact Stacks.isDomain_of_isRegularLocalRing _
+    exact Pcf.Vendor.isDomain_of_isRegularLocalRing _
   have := hEt
   letI : Algebra S (R' ⊗[R] S) := Algebra.TensorProduct.rightAlgebra
   have : Algebra.Etale S (R' ⊗[R] S) := etale_tensor R'

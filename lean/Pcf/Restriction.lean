@@ -154,9 +154,14 @@ P. Ingram, R. Jones, J. Juul, A. Levy, M. Manes, S. Rubinstein-Salzedo and
 J. H. Silverman, *Finite ramification for preimage fields of post-critically finite
 morphisms*, Math. Res. Lett. **24** (2017), no. 6, 1633–1647, `arXiv:1511.00194`.
 
-See `Pcf/AllTheWayDown.lean` for the conjecture stated in full, under conjecture-facing
-names, together with an explicit account of what the formalization does and does not
-establish. `Pcf.pcfAllTheWayDown_divisorDynamics` is this theorem.
+See `Pcf/AllTheWayDown.lean` for the conjecture stated in full, together with an explicit
+account of what the formalization does and does not establish.
+
+The proof is an induction on `i`, so the "all the way down" is genuine recursion rather
+than a finite schema. This abstract theorem does not stop because its abstraction carries
+no dimension; the actual-scheme companion recursion is separately proved to terminate
+after at most `topologicalKrullDim X` restriction steps
+(`Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le`).
 
 Along any chain of periodic-prime restrictions — at each stage `i` one chooses a prime
 that is periodic with some return time `n ≥ 1`, and passes to the induced system on it —

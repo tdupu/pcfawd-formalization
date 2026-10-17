@@ -111,14 +111,6 @@ theorem finite_schemeDivisorPoint_stalkSingularLocus_of_perfectField
   exact hfin.subset fun Q hQ ↦
     stalkSingularLocus_subset_compl_smoothLocus (.of k) s hQ
 
-/-- Membership in an affine basic open is nonmembership in the corresponding
-prime ideal. -/
-theorem mem_basicOpen_iff_notMem_primeIdealOf
-    {X : Scheme.{u}} (U : X.affineOpens) (f : Γ(X, U))
-    (x : (U : X.Opens)) :
-    x.1 ∈ X.basicOpen f ↔ f ∉ (U.2.primeIdealOf x).asIdeal :=
-  Pcf.Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf U.2 f x
-
 /-- Along an ambient divisor, generic principal generation and generic smoothness
 of the divisor give a neighborhood with regular ambient and divisor stalks at every
 codimension-one point of the divisor. -/
@@ -152,7 +144,7 @@ theorem exists_open_invariantDivisor_regularityCorrection
     exists_principalOpen_map_eq_span_of_isPrincipal_atPrime p
       (Ideal.fg_of_isNoetherianRing p) p
   have hAf : A.1 ∈ X.basicOpen f := by
-    apply (mem_basicOpen_iff_notMem_primeIdealOf W f ⟨A.1, hAU⟩).mpr
+    apply (Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf W.2 f ⟨A.1, hAU⟩).mpr
     simpa only [p, I, pointClosureIdealSheaf_ideal A.1 W hAU] using hfp
   let sA := I.subschemeι ≫ s
   have : LocallyOfFiniteType sA := inferInstance
@@ -172,7 +164,7 @@ theorem exists_open_invariantDivisor_regularityCorrection
     have hfq : f ∉ q := by
       rw [show q = (W.2.primeIdealOf ⟨I.subschemeι Q.1, hQU⟩).asIdeal from
         ambientPrimeOfQuotientPoint_eq_primeIdealOf I W Q.1 hQU]
-      exact (mem_basicOpen_iff_notMem_primeIdealOf W f _).mp hQf
+      exact (Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf W.2 f _).mp hQf
     let P : Ideal (Localization.AtPrime q) := p.map (algebraMap R _)
     have hP : P = Ideal.span {algebraMap R (Localization.AtPrime q) a} := hf q hfq
     let : P.IsPrincipal := ⟨algebraMap R (Localization.AtPrime q) a, hP⟩
@@ -210,7 +202,6 @@ theorem invariantDivisorSing_finite_of_perfectField
 
 #print axioms exists_principalOpen_map_eq_span_of_isPrincipal_atPrime
 #print axioms finite_schemeDivisorPoint_stalkSingularLocus_of_perfectField
-#print axioms mem_basicOpen_iff_notMem_primeIdealOf
 #print axioms exists_open_invariantDivisor_regularityCorrection
 #print axioms invariantDivisorSing_finite_of_perfectField
 

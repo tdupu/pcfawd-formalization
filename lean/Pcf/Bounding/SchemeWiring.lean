@@ -339,12 +339,7 @@ structure SchemeNormalizationPCFSetupChart (A : AlgebraicGeometry.Scheme.{u})
       SchemeStalkBoundingLocalizationPresentation
         (CategoryTheory.End.of restriction.selfMap ^ m).asHom Q'.1
 
-local instance invariantCorrectionFinitePreimageAlgebra
-    {X : AlgebraicGeometry.Scheme.{u}} (f : X ⟶ X) [AlgebraicGeometry.IsFinite f]
-    (m : ℕ) (U : X.affineOpens) :
-    Algebra Γ(X, U)
-      Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
-  ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
+attribute [local instance] invariantIterateFinitePreimageAlgebra
 
 /-- Literal geometric Step-0 data at one divisor flag of an invariant reduced divisor.
 

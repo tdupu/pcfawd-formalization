@@ -569,15 +569,13 @@ theorem nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF : ¬
   nonUnramifiedPostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k)
       (node_mem_nonUnramifiedLocus k)
 
-/-- …nor `1`-PCF… -/
+/-- …nor `1`-PCF, although it is PCF: the underlying divisor dynamics of
+`nodeUnnormalizedDynamics k` is `nodeDivisorDynamics k`, which is PCF
+(`nodeDivisorDynamics_isPCF`: `PC(g) = {0}` while `PC₀(g) ⊇ {4, 16, 256, …}`). -/
 theorem nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF : ¬
     (nodeUnnormalizedDynamics k).IsNonEtaleBranchPCF :=
   nonEtalePostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k)
       (node_mem_nonUnramifiedLocus k)
-
-/-- …although it is PCF: `PC(g) = {0}` while `PC₀(g) ⊇ {4, 16, 256, …}`. -/
-theorem nodeUnnormalizedDynamics_isPCF : (nodeUnnormalizedDynamics k).toDivisorDynamics.IsPCF :=
-    nodeDivisorDynamics_isPCF k
 
 end Dynamics
 

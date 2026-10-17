@@ -67,7 +67,7 @@ def SchemePCFCoveringAtDepth
   | 0 => True
   | d + 1 =>
       (letI := schemeGlobalNormalizationMap_isFinite X k s
-       ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
+       ∀ (n : ℕ) (B : SchemeDivisorPoint (Palomar.normalization X)),
          InvariantDivisorCoveringHypotheses
            (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B) ∧
         ∀ (A : SchemeDivisorPoint X) (r p : ℕ) (_hp : 1 ≤ p)
@@ -101,7 +101,7 @@ theorem schemePCFAllTheWayDownAtDepth_of_cover
         let hB := schemeDivisorIterateOfFiniteType_periodic k s f r p A hA
         have hcover :
             letI := schemeGlobalNormalizationMap_isFinite X k s
-            ∀ (n : ℕ) (C : SchemeDivisorPoint (schemeGlobalNormalization X)),
+            ∀ (n : ℕ) (C : SchemeDivisorPoint (Palomar.normalization X)),
               InvariantDivisorCoveringHypotheses
                 (End.of (schemeGlobalNormalizationLift f) ^ n).asHom C := by
           exact cover.1

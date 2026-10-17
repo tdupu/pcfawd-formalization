@@ -434,10 +434,10 @@ theorem isTamelyRamifiedInCodimensionOneAlong_localizedNormalization [IsNoetheri
   haveI : IsRegularLocalRing (Localization.AtPrime (contraction y p')) :=
     Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha (contraction y p') hap
   haveI : IsDomain (Localization.AtPrime (contraction y p')) :=
-    Pcf.Stacks.isDomain_of_isRegularLocalRing _
+    Pcf.Vendor.isDomain_of_isRegularLocalRing _
   have hdim := ringKrullDim_localizationAtContraction a y ha p' hq
   haveI : IsDiscreteValuationRing (Localization.AtPrime (contraction y p')) :=
-    Pcf.Stacks.isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim
+    Pcf.Vendor.IsDiscreteValuationRing.of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim
   have ht := htame (contraction y p') inferInstance hap hdim
   haveI := isLocalization_genericFiberAtContraction a Ra B y ha p' hap
   haveI := isScalarTower_localizationAtContraction y p'
@@ -470,7 +470,7 @@ theorem hasAbhyankarStandardCoverAt_localizedNormalization [IsNoetherianRing R]
       ⟨maximalIdeal (Localization.AtPrime y), inferInstance⟩ := by
   haveI : IsRegularLocalRing (Localization.AtPrime y) :=
     Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha y hy
-  haveI : IsDomain (Localization.AtPrime y) := Pcf.Stacks.isDomain_of_isRegularLocalRing _
+  haveI : IsDomain (Localization.AtPrime y) := Pcf.Vendor.isDomain_of_isRegularLocalRing _
   haveI : IsIntegrallyClosed (Localization.AtPrime y) :=
     Pcf.Stacks.isIntegrallyClosed_of_isRegularLocalRing _
   have hnzd : localizedEquation a y ∈ nonZeroDivisors (Localization.AtPrime y) :=
@@ -483,7 +483,7 @@ theorem hasAbhyankarStandardCoverAt_localizedNormalization [IsNoetherianRing R]
       rw [Ideal.map_span, Set.image_singleton]
     haveI : IsRegularLocalRing (Localization.AtPrime y ⧸ Ideal.span {localizedEquation a y}) :=
       IsRegularLocalRing.of_ringEquiv (Ideal.quotientEquivAlgOfEq ℤ hJ).toRingEquiv
-    exact Pcf.Stacks.isRegularRing_of_isRegularLocalRing _
+    exact Pcf.Vendor.isRegularRing_of_isRegularLocalRing _
   have hmem : localizedEquation a y ∈ maximalIdeal (Localization.AtPrime y) :=
     (IsLocalization.AtPrime.to_map_mem_maximal_iff _ y a).mpr hy
   exact hA (LocalizedNormalization B y) (localizedEquation a y) inferInstance hnzd hreg
