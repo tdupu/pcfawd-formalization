@@ -27,9 +27,9 @@ strict henselization:
 ## Mathematical route
 
 Let `A` be a Noetherian henselian local ring with separably closed residue field, `a ∈ 𝔪_A` a
-nonzerodivisor with `A ⧸ (a)` regular local (so `A` is regular local by `00NU`), and assume every
-positive integer is a unit in `A` (the characteristic-zero form of tameness used by the
-manuscript).  Let `K = Frac(A)`, let `A' = A[x]/(x^E − a)` be the root cover of
+nonzerodivisor with `A ⧸ (a)` regular local (so `A` is regular local by `00NU`), and let `E ≥ 1`
+be invertible in `κ((a))` (Stacks: "`e` is invertible in `κ(𝔭)`"; in characteristic zero this
+always holds).  Let `K = Frac(A)`, let `A' = A[x]/(x^E − a)` be the root cover of
 `StrictRootCover.lean`, and let `N` be a finite normal domain over `A` (a component of the
 normalization).  Suppose `N'` is a component of the normalization of `A'` in `(A' ⊗_A N)[1/x]`,
 given with its map `N → N'`, and suppose `N'` is unramified over `A'` at every height-one prime
@@ -46,8 +46,8 @@ given with its map `N → N'`, and suppose `N'` is unramified over `A'` at every
    `Frac(N) → K(a^{1/E})`.
 4. `K(a^{1/E})` is the `09EV` root field of the DVR `A_(a)`, whose fraction field is `K`
    (`divisorLocalization_isDiscreteValuationRing`, `divisorLocalization_irreducible`), so
-   `09EV` (`exists_dvrRootFractionPowerEquiv_of_embedding`, transported to the fraction field
-   `K` of `A` in `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing`) gives
+   `09EV` (`exists_dvrRootFractionPowerEquiv_of_embedding_tame`, transported to the fraction
+   field `K` of `A` in `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`) gives
    `Frac(N) ≅ K(a^{1/n})` for a divisor `n` of `E`.
 
 The conclusion is the field-level statement `Frac(N) ≃ₐ[K] K[y]/(y^n − a)`, `n ∣ E`, which is
@@ -60,8 +60,8 @@ the input of the last paragraph of `0EYG` (normalization uniqueness identifies `
   separably closed and that finite domains over the henselian `A` are local (see
   `StrictRootCover.lean`).
 * Stacks takes `e` to be the product of the ramification indices of `L` over `A_𝔭`; here `E` is
-  any exponent `≥ 2` for which the codimension-one unramifiedness input holds.  The hypothesis
-  `2 ≤ E` is harmless: any multiple of a valid exponent is valid.
+  any exponent `≥ 1`, invertible in `κ((a))`, for which the codimension-one unramifiedness input
+  holds.
 -/
 
 @[expose] public section
@@ -118,19 +118,18 @@ noncomputable def rootAlgebraFractionEquiv {B K₁ K₂ : Type*} [CommRing B] [F
     simp [dvrRootPoly]
   rw [this]
 
-/-- **Stacks Tag `09EV`, clause (6), over an arbitrary fraction field of the DVR.**  If `M` is a
-field embedded over `K = Frac(B)` in `K(π^{1/n})`, with `B` a DVR of characteristic zero and `n`
-a unit in its residue field, then `M ≅ K(π^{1/d})` for a divisor `d` of `n`.
+/-- **Stacks Tag `09EV`, clause (6), over an arbitrary fraction field of the DVR, tame case.**
+If `M` is a field embedded over `K = Frac(B)` in `K(π^{1/n})`, with `B` a DVR and `n ≥ 1` a
+unit in its residue field, then `M ≅ K(π^{1/d})` for a divisor `d` of `n`.
 
-This is `exists_dvrRootFractionPowerEquiv_of_embedding` transported from `FractionRing B` to any
-field `K` with `IsFractionRing B K`. -/
-@[stacks 09EV "clause (6), intermediate fields of the tame radical extension, \
-  B of characteristic zero"]
-theorem exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
-    {B : Type u} [CommRing B] [IsDomain B] [IsDiscreteValuationRing B] [CharZero B]
+This is `exists_dvrRootFractionPowerEquiv_of_embedding_tame` transported from `FractionRing B`
+to any field `K` with `IsFractionRing B K`. -/
+@[stacks 09EV "clause (6), tame case, any characteristic; n = 1 added; arbitrary fraction field"]
+theorem exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame
+    {B : Type u} [CommRing B] [IsDomain B] [IsDiscreteValuationRing B]
     (K : Type u) [Field K] [Algebra B K] [IsFractionRing B K]
     {M : Type u} [Field M] [Algebra B M] [Algebra K M] [IsScalarTower B K M]
-    (π : B) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
+    (π : B) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π)
     (hunit : IsUnit ((n : ℕ) : ResidueField B))
     (f : M →ₐ[K] AdjoinRoot (dvrRootPoly (algebraMap B K π) n)) :
     ∃ d : ℕ, d ∣ n ∧ 1 ≤ d ∧
@@ -146,7 +145,8 @@ theorem exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
     ψ.symm.toAlgHom.comp (f.restrictScalars B)
   let f₀' : M →ₐ[K₀] AdjoinRoot (dvrRootPoly (algebraMap B K₀ π) n) :=
     AlgHom.extendScalarsOfIsFractionRing (A := B) (K := K₀) f₀
-  obtain ⟨d, hd, hd1, ⟨g⟩⟩ := exists_dvrRootFractionPowerEquiv_of_embedding π hn hπ hunit f₀'
+  obtain ⟨d, hd, hd1, ⟨g⟩⟩ :=
+    exists_dvrRootFractionPowerEquiv_of_embedding_tame π hn hπ hunit f₀'
   refine ⟨d, hd, hd1, ⟨?_⟩⟩
   let g' : M ≃ₐ[B] AdjoinRoot (dvrRootPoly (algebraMap B K π) d) :=
     (g.restrictScalars B).trans (rootAlgebraFractionEquiv e π d)
@@ -195,21 +195,26 @@ theorem rootPoly_fractionRing_irreducible (ha : a ∈ maximalIdeal A) (ha0 : a �
 -- `[IsLocalRing A]` is a section variable (needed for `ResidueField A` in the lemmas above that
 -- omit `[HenselianLocalRing A]`), so the overlap with `[HenselianLocalRing A]` is intended.
 set_option linter.overlappingInstances false in
-/-- **Per-component classification in the strictly henselian case of Stacks Tag `0EYG`.**
+/-- **Per-component classification in the strictly henselian case of Stacks Tag `0EYG`, tame
+form.**
 
 Let `A` be a Noetherian henselian local ring with separably closed residue field, `a ∈ 𝔪_A` a
-nonzerodivisor with `A ⧸ (a)` regular local, in which every positive integer is a unit.  Let
-`N` be a finite domain over `A`, let `A' = A[x]/(x^E − a)` (`E ≥ 2`), and let `N'` be a finite
-normal domain over `A'` receiving a compatible map from `N`, étale over `A'` away from `x` and
+nonzerodivisor with `A ⧸ (a)` regular local.  Let `N` be a finite domain over `A`, let
+`A' = A[x]/(x^E − a)` with `E ≥ 1` a unit in `κ((a))` (`hEa`), and let `N'` be a finite normal
+domain over `A'` receiving a compatible map from `N`, étale over `A'` away from `x` and
 unramified over `A'` at every height-one prime.  Then, assuming Zariski–Nagata purity for
 `A' → N'`, the fraction field of `N` is `K(a^{1/n})` for a divisor `n` of `E`, where
 `K = Frac(A)`.
 
+The tameness input is Stacks' "`e` is invertible in `κ(𝔭)`" (here `(E : A) ∉ (a)`, i.e.
+`E ∈ κ((a))^×`); in characteristic zero (every positive integer a unit of `A`) it always holds.
+
 The hypotheses `hetaleAway`, `hunramified` are the `0EYE` inputs for the normalization component
-`N'`; `hunramified` is the codimension-one `0BRM` conclusion.  `hpurity` is Tag `0BMB`. -/
-theorem exists_rootExponent_fractionRing_equiv_of_strictComponent
+`N'`; `hunramified` is the codimension-one `0BRM` conclusion.  `hpurity` is Tag `0BMB`.  The `09EV`
+step is `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`. -/
+theorem exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 2 ≤ E)
+    (hE : 1 ≤ E) (hEa : ((E : ℕ) : A) ∉ Ideal.span ({a} : Set A))
     [Algebra A N] [IsDomain N] [FaithfulSMul A N] [Module.Finite A N]
     [Algebra (StrictRootCover a E) N'] [Algebra A N'] [IsScalarTower A (StrictRootCover a E) N']
     [Algebra N N'] [IsScalarTower A N N']
@@ -226,7 +231,7 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictComponent
       Nonempty (FractionRing N ≃ₐ[FractionRing A]
         AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) a) n)) := by
   letI : Algebra (FractionRing A) (FractionRing N) := FractionRing.liftAlgebra A (FractionRing N)
-  have hE1 : 1 ≤ E := by omega
+  have hE1 : 1 ≤ E := hE
   -- the base and the root cover
   have hreg : IsRegularLocalRing A := Pcf.isRegularLocalRing_of_quotient_nonZeroDivisor a ha ha0
   have : IsDomain A := isDomain_of_isRegularLocalRing A
@@ -318,16 +323,19 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictComponent
   have hιφ : Function.Injective (ι.comp φ) := hι.comp hφ
   let f : FractionRing N →ₐ[A] L := IsFractionRing.liftAlgHom hιφ
   let fK : FractionRing N →ₐ[K] L := AlgHom.extendScalarsOfIsFractionRing (A := A) (K := K) f
-  -- Step 4: `09EV` over the DVR `A_(a)` with fraction field `K`.
-  haveI : CharZero Ap := charZero_of_forall_nat_isUnit fun n hn ↦ by
-    simpa only [map_natCast] using (hnat n hn).map (algebraMap A Ap)
+  -- Step 4: `09EV` over the DVR `A_(a)` with fraction field `K`; tameness: `E ∈ κ((a))^×`.
   have hunit : IsUnit ((E : ℕ) : ResidueField Ap) := by
-    simpa only [map_natCast] using ((hnat E (by omega)).map (algebraMap A Ap)).map (residue Ap)
+    have hne : ((E : ℕ) : ResidueField Ap) ≠ 0 := by
+      intro h0
+      apply hEa
+      rw [← Ideal.algebraMap_residueField_eq_zero (I := p), map_natCast]
+      exact h0
+    exact hne.isUnit
   letI : Algebra Ap (FractionRing N) :=
     ((algebraMap K (FractionRing N)).comp (algebraMap Ap K)).toAlgebra
   haveI : IsScalarTower Ap K (FractionRing N) := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
   obtain ⟨d, hd, hd1, ⟨g⟩⟩ :=
-    exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing K π hE hπ hunit fK
+    exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame K π hE hπ hunit fK
   refine ⟨d, hd, hd1, ⟨g.trans (AdjoinRoot.algEquivOfEq K _ _ ?_)⟩⟩
   rw [hπK]
 
@@ -336,8 +344,8 @@ end Classification
 #print axioms AlgHom.extendScalarsOfIsFractionRing
 #print axioms AlgEquiv.extendScalarsOfIsFractionRing
 #print axioms rootAlgebraFractionEquiv
-#print axioms exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
+#print axioms exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame
 #print axioms rootPoly_fractionRing_irreducible
-#print axioms exists_rootExponent_fractionRing_equiv_of_strictComponent
+#print axioms exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
 
 end Pcf.Stacks

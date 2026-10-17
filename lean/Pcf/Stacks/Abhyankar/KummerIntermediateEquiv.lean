@@ -57,39 +57,59 @@ noncomputable def dvrRootFractionPowerEquiv
   exact (AdjoinRoot.algEquivOfEq K _ _ hmin.symm).trans
     (IntermediateField.adjoinRootEquivAdjoin K hβ)
 
-/-- An arbitrary field embedded over `Frac(A)` in the full tame radical field is isomorphic
-to a smaller radical field whose exponent divides the original exponent.
+/-- **Stacks Tag `09EV`, clause (6), embedding form, tame case.**  A field `M` embedded over
+`K = Frac(A)` in the tame root field `K(π^{1/n})` is isomorphic to `K(π^{1/d})` for a divisor
+`d` of `n`.
 
-Unlike a conclusion-shaped hypothesis, the input is only the actual field embedding produced
-in the strict-henselian step of Tag `0EYG`.  The exponent and equivalence are constructed by
-the unconditional `09EV` intermediate-field classification. -/
-theorem exists_dvrRootFractionPowerEquiv_of_embedding
-    {A M : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [CharZero A]
+Any characteristic; the exponent `n = 1` is allowed (then `K(π^{1/1}) = K`, `M = K`, `d = 1`;
+Stacks states `09EV` for `n ≥ 2` only, and this case is not part of the tag). The tameness
+hypothesis is exactly Stacks' "`n` is prime to the residue characteristic", i.e. `n ∈ κ_A^×`. -/
+@[stacks 09EV "clause (6), tame case, any characteristic; n = 1 added"]
+theorem exists_dvrRootFractionPowerEquiv_of_embedding_tame
+    {A M : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
     [Field M] [Algebra (FractionRing A) M]
-    (π : A) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
+    (π : A) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π)
     (hunit : IsUnit ((n : ℕ) : IsLocalRing.ResidueField A))
     (f : M →ₐ[FractionRing A]
       AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) n)) :
     ∃ d : ℕ, d ∣ n ∧ 1 ≤ d ∧
       Nonempty (M ≃ₐ[FractionRing A]
         AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) d)) := by
-  let hn1 : 1 ≤ n := by omega
-  let L := AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) π) n)
-  letI : Field L := (dvrRootFractionAlgebra_isField π hn1 hπ).toField
-  obtain ⟨d, hdvd, hd, hfield⟩ :=
-    dvrRootFraction_intermediate_eq_power π hn hπ hunit f.fieldRange
-  refine ⟨d, hdvd, hd, ?_⟩
-  let toRange : M ≃ₐ[FractionRing A] f.fieldRange :=
-    AlgEquiv.ofInjective f f.injective
-  let identifyRange : f.fieldRange ≃ₐ[FractionRing A]
-      IntermediateField.adjoin (FractionRing A)
-        {(AdjoinRoot.root
-          (dvrRootPoly (algebraMap A (FractionRing A) π) n) ^ (n / d))} :=
-    IntermediateField.equivOfEq hfield
-  exact ⟨(toRange.trans identifyRange).trans
-    (dvrRootFractionPowerEquiv π hn1 hd hdvd hπ).symm⟩
+  let K := FractionRing A
+  let L := AdjoinRoot (dvrRootPoly (algebraMap A K π) n)
+  letI : Field L := (dvrRootFractionAlgebra_isField π hn hπ).toField
+  rcases Nat.lt_or_ge n 2 with hn1 | hn2
+  · -- `n = 1`: the root field is `K` itself and `M = K`.
+    have hn1' : n = 1 := by omega
+    refine ⟨n, dvd_rfl, hn, ⟨?_⟩⟩
+    have hL : Module.finrank K L = 1 := by
+      rw [dvrRootFractionAlgebra_finrank π hn, hn1']
+    haveI : FiniteDimensional K L := Module.finite_of_finrank_eq_succ hL
+    have hinj : Function.Injective f := f.toRingHom.injective
+    have hinj' : Function.Injective (f.toLinearMap : M →ₗ[K] L) := hinj
+    haveI : FiniteDimensional K M :=
+      Module.Finite.of_injective f.toLinearMap hinj'
+    have hM : Module.finrank K M = 1 := by
+      have hle : Module.finrank K M ≤ Module.finrank K L :=
+        LinearMap.finrank_le_finrank_of_injective hinj'
+      have hpos : 0 < Module.finrank K M := Module.finrank_pos
+      omega
+    have hbij : Function.Bijective f :=
+      ⟨hinj, (LinearMap.injective_iff_surjective_of_finrank_eq_finrank
+        (f := f.toLinearMap) (hM.trans hL.symm)).mp hinj⟩
+    exact AlgEquiv.ofBijective f hbij
+  · obtain ⟨d, hdvd, hd, hfield⟩ :=
+      dvrRootFraction_intermediate_eq_power_tame π hn2 hπ hunit f.fieldRange
+    refine ⟨d, hdvd, hd, ?_⟩
+    let toRange : M ≃ₐ[K] f.fieldRange := AlgEquiv.ofInjective f f.injective
+    let identifyRange : f.fieldRange ≃ₐ[K]
+        IntermediateField.adjoin K
+          {(AdjoinRoot.root (dvrRootPoly (algebraMap A K π) n) ^ (n / d))} :=
+      IntermediateField.equivOfEq hfield
+    exact ⟨(toRange.trans identifyRange).trans
+      (dvrRootFractionPowerEquiv π hn hd hdvd hπ).symm⟩
 
 #print axioms dvrRootFractionPowerEquiv
-#print axioms exists_dvrRootFractionPowerEquiv_of_embedding
+#print axioms exists_dvrRootFractionPowerEquiv_of_embedding_tame
 
 end Pcf.Stacks

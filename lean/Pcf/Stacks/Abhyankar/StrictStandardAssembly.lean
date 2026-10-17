@@ -145,8 +145,8 @@ theorem PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_localized
       (∀ i, AdjoinRoot (localizedStandardPoly (unit i)
         (algebraMap R (PointedEtaleNeighborhood.LocalColimit R Ω) a) (exponent i)))) :
     HasAbhyankarStandardCoverAt R S a y := by
-  apply PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict
-    a y hΩ ha hnat
+  apply PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_tame
+    a y hΩ ha
   exact strictStandardPresentation_of_localizedPresentation
     a haStrict hnat unit exponent hexponent hnormalization g
 

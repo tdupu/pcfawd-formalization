@@ -7,6 +7,7 @@ module
 
 public import Pcf.Stacks.Abhyankar.DVRKummerBaseChange
 public import Pcf.Stacks.Abhyankar.HeightOneKummerTransport
+public import Mathlib.RingTheory.Unramified.LocalRing
 
 /-!
 # Abhyankar's lemma for discrete valuation rings, divisibility form (Stacks Tag `0BRM`)
@@ -57,9 +58,14 @@ made by the dominance argument of step 4 instead of multiplicativity of ramifica
 
 * `surjective_of_isLocalHom_of_dvr` — the dominance lemma (step 4).
 * `exists_unit_pow_eq_of_pow_mul_eq` — step 1.
-* `maximalIdeal_eq_span_root_of_dvd` — **Tag `0BRM`, divisibility form, uniformizer clause**:
-  under the hypotheses above, `𝔪_T = (x)`, i.e. the ramification index of `T` over the
-  `09EV` DVR `A₁ = A[π^{1/E}]` is one.
+* `maximalIdeal_eq_span_root_of_dvd_and_isSeparable` — **Tag `0BRM`, divisibility form**, the
+  two facts of the last paragraph of Stacks' proof: under the hypotheses above, `𝔪_T = (x)`,
+  i.e. the ramification index of `T` over the `09EV` DVR `A₁ = A[π^{1/E}]` is one, and the
+  residue extension `κ(T)/κ(S)` is separable.  For the second fact, `κ(T)` is the image of the
+  residue field of `U_𝔪` (every element of `T` is congruent mod `(x)` to one of `U_𝔪`), which is
+  separable over `κ(S)` because `S → U_𝔪` is formally unramified (Stacks `00UW`).  In
+  characteristic zero the second fact is automatic; the tame proof of `0EYG` needs it.
+* `maximalIdeal_eq_span_root_of_dvd` — the uniformizer clause alone.
 * `formallyUnramified_dvrRoot_of_dvd` — **Tag `0BRM`, divisibility form**: with `A ⊂ S` the
   original DVR extension, `a` a uniformizer of `A`, `A₁ = A[x]/(xᴱ − a)`, and `T` as above
   essentially of finite type over `A₁` with separable residue extension, `A₁ → T` is formally
@@ -175,25 +181,31 @@ variable (S : Type u) (T : Type v) [CommRing S] [IsDomain S] [IsDiscreteValuatio
   [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Algebra S T]
   [IsLocalHom (algebraMap S T)]
 
-/-- **Abhyankar's lemma for DVRs, divisibility form, uniformizer clause (Stacks Tag `0BRM`).**
+/-- **Abhyankar's lemma for DVRs, divisibility form, with the residue-field clause (Stacks Tag
+`0BRM`).**
 
-Let `S` be a DVR with uniformizer `π`, `u ∈ Sˣ`, `e ≥ 1` invertible in `S`, `d ≥ 1`, and let `T`
-be a DVR with a local `S`-algebra structure not killing `π`.  Let `x ∈ T` satisfy
-`x ^ (d·e) = u·πᵉ` and suppose every element of `T` is a quotient of polynomials in `x` over `S`
-(the fraction field of `T` is `Frac(S)(x)`).  Then `x` is a uniformizer of `T`.
+Let `S` be a DVR with uniformizer `π`, `u ∈ Sˣ`, `e ≥ 1` invertible in `S`, `d ≥ 1`, `T` a DVR
+with a local `S`-algebra structure not killing `π`, and `x ∈ T` with `x ^ (d·e) = u·πᵉ` generating
+the fraction field of `T` over `Frac(S)`.  Conclusion: `x` is a uniformizer of `T` **and** the
+residue field extension `κ(T)/κ(S)` is separable.
 
-In the notation of Tag `0BRM`: `S = B`, `πᵉu = π_A` is a uniformizer of `A`, `e ∣ E = d·e` is the
-ramification index of `A ⊂ A₁ = A[π_A^{1/E}]`, and `T = (B₁)_𝔪`; the conclusion says that
-`A₁ → T` has ramification index one.  See the module docstring for the proof route. -/
-@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}); conclusion: the root is a \
-  uniformizer of (B₁)_𝔪 (ramification index one); tame case e ∈ Sˣ"]
-theorem maximalIdeal_eq_span_root_of_dvd
+This is the content of the last paragraph of Stacks' proof of `0BRM` (`B ⊂ (B₁)_𝔪` has
+ramification index one and `κ(𝔪)/κ_B` is separable).  Route: steps 1–4 of the module docstring
+exhibit `T` as the image of `V = U_𝔪[z]/(z^d − π y)`, which gives `𝔪_T = (x)`.  For the second
+clause, `U = S[y]/(yᵉ − u)` is the étale Kummer algebra; modulo `𝔪_T = (x)` every element of `T` is
+congruent to an element of `U_𝔪`, so `κ(U_𝔪) → κ(T)` is surjective, and `κ(U_𝔪)/κ(S)` is separable
+because `S → U_𝔪` is formally unramified and essentially of finite type (Stacks `00UW`). -/
+@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}), tame case e ∈ Sˣ; (B₁)_𝔪 \
+  replaced by any DVR dominating B with fraction field L(π^{1/E}); conclusions: the root is a \
+  uniformizer and the residue extension is separable"]
+theorem maximalIdeal_eq_span_root_of_dvd_and_isSeparable
     (π : S) (hπ : Irreducible π) (u : Sˣ) (e : ℕ) (he : 1 ≤ e) (heUnit : IsUnit (e : S))
     (d : ℕ) (hd : 1 ≤ d) (x : T)
     (hx : x ^ (d * e) = algebraMap S T ((u : S) * π ^ e))
     (hπ0 : algebraMap S T π ≠ 0)
     (hgen : ∀ t : T, ∃ p q : S[X], aeval x q ≠ 0 ∧ aeval x q * t = aeval x p) :
-    maximalIdeal T = Ideal.span {x} := by
+    maximalIdeal T = Ideal.span {x} ∧
+      Algebra.IsSeparable (ResidueField S) (ResidueField T) := by
   have he0 : e ≠ 0 := by omega
   -- `x ≠ 0` and `x ∈ 𝔪_T`.
   have hx0 : x ≠ 0 := by
@@ -243,11 +255,14 @@ theorem maximalIdeal_eq_span_root_of_dvd
     kummerUnit_localizationAtPrime_isDiscreteValuationRing S π hπ u e he heUnit m hm
   letI : IsLocalHom (algebraMap S Um) :=
     isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal S U m hm
-  -- `π` is a uniformizer of `U_𝔪` because `U_𝔪` is formally unramified over `S`.
+  -- `S → U_𝔪` is formally unramified and essentially of finite type, so `κ(U_𝔪)/κ(S)` is
+  -- separable (Stacks `00UW`).
   letI : Algebra.FormallyUnramified S U := inferInstance
   letI : Algebra.FormallyUnramified U Um :=
     Algebra.FormallyUnramified.of_isLocalization m.primeCompl
   letI : Algebra.FormallyUnramified S Um := Algebra.FormallyUnramified.comp S U Um
+  letI : Algebra.EssFiniteType S Um := inferInstance
+  haveI hsepUm : Algebra.IsSeparable (ResidueField S) (ResidueField Um) := inferInstance
   have hπUm : Irreducible (algebraMap S Um π) := by
     rw [IsDiscreteValuationRing.irreducible_iff_uniformizer,
       ← Algebra.FormallyUnramified.map_maximalIdeal (R := S) (S := Um),
@@ -271,6 +286,19 @@ theorem maximalIdeal_eq_span_root_of_dvd
     rw [hϖdef, map_mul, hψ'S, hψ'U, hψroot]
   letI : Algebra Um T := ψ'.toAlgebra
   haveI : IsScalarTower S Um T := IsScalarTower.of_algebraMap_eq fun s ↦ (hψ'S s).symm
+  -- (a) `ψ'` is a local homomorphism: `ϖ ↦ π y ∈ 𝔪_T`.
+  have hϖT : ψ' ϖ ∈ maximalIdeal T := by
+    rw [hψ'ϖ]
+    exact Ideal.mul_mem_right _ _ hπ_mem
+  haveI hψ'local : IsLocalHom ψ' := by
+    constructor
+    intro v hv
+    by_contra hvu
+    have hvm : v ∈ maximalIdeal Um := (mem_maximalIdeal v).mpr hvu
+    rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton'] at hvm
+    obtain ⟨c, rfl⟩ := hvm
+    rw [map_mul] at hv
+    exact ((mem_maximalIdeal _).mp (Ideal.mul_mem_left _ _ hϖT)) hv
   -- Step 3: the `09EV` DVR `V = U_𝔪[z]/(zᵈ − ϖ)` and the local map `φ : V → T`, `z ↦ x`.
   let V := AdjoinRoot (dvrRootPoly ϖ d)
   letI : IsDomain V := dvrRootAlgebra_isDomain ϖ hd hϖ
@@ -308,20 +336,85 @@ theorem maximalIdeal_eq_span_root_of_dvd
     · change φ (aeval _ _) * t = φ (aeval _ _)
       rwa [← Polynomial.aeval_algHom_apply, ← Polynomial.aeval_algHom_apply, hφroot,
         Polynomial.aeval_map_algebraMap, Polynomial.aeval_map_algebraMap]
-  -- Conclusion: `𝔪_T = φ(𝔪_V) = (x)`.
-  apply le_antisymm
-  · intro t ht
+  -- Uniformizer clause: `𝔪_T = φ(𝔪_V) = (x)`.
+  have hmax : maximalIdeal T = Ideal.span {x} := by
+    apply le_antisymm
+    · intro t ht
+      obtain ⟨v, rfl⟩ := hsurj t
+      have hv : v ∈ maximalIdeal V := by
+        rw [mem_maximalIdeal, mem_nonunits_iff]
+        intro hvu
+        exact ((mem_maximalIdeal _).mp ht) (hvu.map φ.toRingHom)
+      rw [hVmax, Ideal.mem_span_singleton'] at hv
+      obtain ⟨c, rfl⟩ := hv
+      rw [Ideal.mem_span_singleton']
+      exact ⟨φ c, by rw [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_mul, hφroot]⟩
+    · rw [Ideal.span_le, Set.singleton_subset_iff]
+      exact hx_mem
+  refine ⟨hmax, ?_⟩
+  -- Residue clause.
+  -- (b) The induced `κ(S)`-algebra map `ψ̄ : κ(U_𝔪) → κ(T)`.
+  let ψbar : ResidueField Um →ₐ[ResidueField S] ResidueField T :=
+    { IsLocalRing.ResidueField.map ψ' with
+      commutes' := fun k ↦ by
+        obtain ⟨s, rfl⟩ := IsLocalRing.residue_surjective k
+        change IsLocalRing.ResidueField.map ψ'
+          (algebraMap (ResidueField S) (ResidueField Um) (residue S s)) =
+          algebraMap (ResidueField S) (ResidueField T) (residue S s)
+        rw [IsLocalRing.ResidueField.algebraMap_residue, IsLocalRing.ResidueField.map_residue,
+          hψ'S, IsLocalRing.ResidueField.algebraMap_residue] }
+  have hψbar : ∀ z : Um, ψbar (residue Um z) = residue T (ψ' z) := fun z ↦
+    IsLocalRing.ResidueField.map_residue ψ' z
+  -- (c) `ψ̄` is surjective: modulo `𝔪_T = (x)`, a polynomial in `x` over `U_𝔪` is its constant
+  -- term.
+  have hψbar_surj : Function.Surjective ψbar := by
+    intro z
+    obtain ⟨t, rfl⟩ := IsLocalRing.residue_surjective z
     obtain ⟨v, rfl⟩ := hsurj t
-    have hv : v ∈ maximalIdeal V := by
-      rw [mem_maximalIdeal, mem_nonunits_iff]
-      intro hvu
-      exact ((mem_maximalIdeal _).mp ht) (hvu.map φ.toRingHom)
-    rw [hVmax, Ideal.mem_span_singleton'] at hv
-    obtain ⟨c, rfl⟩ := hv
-    rw [Ideal.mem_span_singleton']
-    exact ⟨φ c, by rw [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, map_mul, hφroot]⟩
-  · rw [Ideal.span_le, Set.singleton_subset_iff]
-    exact hx_mem
+    obtain ⟨g, rfl⟩ := AdjoinRoot.mk_surjective v
+    refine ⟨residue Um (g.coeff 0), ?_⟩
+    rw [hψbar]
+    change residue T (ψ' (g.coeff 0)) = residue T (φ (AdjoinRoot.mk _ g))
+    have hφg : φ (AdjoinRoot.mk _ g) = aeval x g := by
+      rw [← AdjoinRoot.aeval_eq, ← Polynomial.aeval_algHom_apply, hφroot]
+    rw [hφg]
+    have hsub : aeval x g - ψ' (g.coeff 0) ∈ maximalIdeal T := by
+      obtain ⟨h, hh⟩ := Polynomial.X_dvd_sub_C (p := g)
+      have : aeval x g - ψ' (g.coeff 0) = x * aeval x h := by
+        have h1 : aeval x (g - C (g.coeff 0)) = aeval x (X * h) := by rw [hh]
+        rw [map_sub, Polynomial.aeval_C, map_mul, Polynomial.aeval_X] at h1
+        exact h1
+      rw [this]
+      exact Ideal.mul_mem_right _ _ hx_mem
+    have := (IsLocalRing.residue_eq_zero_iff (aeval x g - ψ' (g.coeff 0))).mpr hsub
+    rw [map_sub, sub_eq_zero] at this
+    exact this.symm
+  -- (e) Every element of `κ(T)` is the image of a separable element of `κ(U_𝔪)`.
+  refine ⟨fun z ↦ ?_⟩
+  obtain ⟨w, rfl⟩ := hψbar_surj z
+  exact IsSeparable.map ψbar ψbar.toRingHom.injective (Algebra.IsSeparable.isSeparable _ w)
+
+/-- **Abhyankar's lemma for DVRs, divisibility form, uniformizer clause (Stacks Tag `0BRM`).**
+
+Let `S` be a DVR with uniformizer `π`, `u ∈ Sˣ`, `e ≥ 1` invertible in `S`, `d ≥ 1`, and let `T`
+be a DVR with a local `S`-algebra structure not killing `π`.  Let `x ∈ T` satisfy
+`x ^ (d·e) = u·πᵉ` and suppose every element of `T` is a quotient of polynomials in `x` over `S`
+(the fraction field of `T` is `Frac(S)(x)`).  Then `x` is a uniformizer of `T`.
+
+In the notation of Tag `0BRM`: `S = B`, `πᵉu = π_A` is a uniformizer of `A`, `e ∣ E = d·e` is the
+ramification index of `A ⊂ A₁ = A[π_A^{1/E}]`, and `T = (B₁)_𝔪`; the conclusion says that
+`A₁ → T` has ramification index one.  This is the first clause of
+`maximalIdeal_eq_span_root_of_dvd_and_isSeparable`. -/
+@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}); conclusion: the root is a \
+  uniformizer of (B₁)_𝔪 (ramification index one); tame case e ∈ Sˣ"]
+theorem maximalIdeal_eq_span_root_of_dvd
+    (π : S) (hπ : Irreducible π) (u : Sˣ) (e : ℕ) (he : 1 ≤ e) (heUnit : IsUnit (e : S))
+    (d : ℕ) (hd : 1 ≤ d) (x : T)
+    (hx : x ^ (d * e) = algebraMap S T ((u : S) * π ^ e))
+    (hπ0 : algebraMap S T π ≠ 0)
+    (hgen : ∀ t : T, ∃ p q : S[X], aeval x q ≠ 0 ∧ aeval x q * t = aeval x p) :
+    maximalIdeal T = Ideal.span {x} :=
+  (maximalIdeal_eq_span_root_of_dvd_and_isSeparable S T π hπ u e he heUnit d hd x hx hπ0 hgen).1
 
 /-- **Abhyankar's lemma for DVRs, divisibility form (Stacks Tag `0BRM`).**
 
@@ -394,5 +487,6 @@ end Pcf.Stacks
 
 #print axioms Pcf.Stacks.surjective_of_isLocalHom_of_dvr
 #print axioms Pcf.Stacks.exists_unit_pow_eq_of_pow_mul_eq
+#print axioms Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd_and_isSeparable
 #print axioms Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd
 #print axioms Pcf.Stacks.formallyUnramified_dvrRoot_of_dvd

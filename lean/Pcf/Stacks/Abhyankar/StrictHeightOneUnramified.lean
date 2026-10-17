@@ -24,10 +24,10 @@ normalization of `A' = A[x]/(x^E − a)` in `(A' ⊗_A N)[1/x]`), using the divi
 ## Mathematical route
 
 Let `A` be a regular local ring, `a ∈ 𝔪_A` a nonzerodivisor with `A ⧸ (a)` regular (so `(a)` is a
-height-one prime with `A_(a)` a DVR, uniformizer `a`), all positive integers units in `A`, `N` a
-finite normal domain over `A`, and `E ≥ 1` a common multiple of the ramification indices
-`e_q = q.ramificationIdx A` of the height-one primes `q` of `N` containing `a`.  Let `N'` be the
-component (pre-)data and `Q'` a height-one prime of `N'` containing `x`.
+height-one prime with `A_(a)` a DVR, uniformizer `a`), `N` a finite normal domain over `A` which is
+tamely ramified (`IsTamelyRamifiedAt`, Stacks `09E9`) at the height-one primes `q ∋ a`, and `E ≥ 1`
+a common multiple of the ramification indices `e_q = q.ramificationIdx A` of these primes.  Let
+`N'` be the component (pre-)data and `Q'` a height-one prime of `N'` containing `x`.
 
 1. `Q' ∩ A' = (x)` (`under_eq_of_height_eq_one_of_mem`), and `q := Q' ∩ N` is a height-one prime
    of `N` containing `a` (`height_under_eq_of_finite_of_normal` for the finite extension
@@ -35,31 +35,38 @@ component (pre-)data and `Q'` a height-one prime of `N'` containing `x`.
 2. `S := N_q` and `T := N'_{Q'}` are DVRs
    (`isDiscreteValuationRing_localizationAtPrime_of_heightOne`),
    `S → T` is local, and `a = u·πᵉ` in `S` with `e = e_q` (the ramification index is the length of
-   `S ⧸ aS`, `length_quotient_pow_maximalIdeal`), `E = d·e`.
+   `S ⧸ aS`, `length_quotient_pow_maximalIdeal`), `E = d·e`; tameness gives `e ∉ q`, so `e` is a
+   unit of `S`.
 3. The `generic` field of the pre-data says that every element of `N'` is `p(x)/xᵏ` with
    `p ∈ N[X]`; hence every element of `T` is a quotient of polynomials in `x` over `S`
    (`exists_aeval_eq_of_mem_adjoin`, `exists_aeval_mul_eq_aeval_of_generic`).
-4. `maximalIdeal_eq_span_root_of_dvd` (Tag `0BRM`, divisibility form) gives `𝔪_T = (x)`.
-5. Since `A'` is a `ℚ`-algebra the residue field extension `κ(Q')/κ((x))` is separable
-   (perfect base field), so `Algebra.isUnramifiedAt_iff_map_eq` gives `N'` unramified over `A'`
-   at `Q'`.
+4. `maximalIdeal_eq_span_root_of_dvd_and_isSeparable` (Tag `0BRM`, divisibility form) gives
+   `𝔪_T = (x)` and `κ(Q')/κ(q)` separable.
+5. `κ(q)/κ((a))` is separable (tameness), hence so is `κ(Q')/κ((x))`, and
+   `Algebra.isUnramifiedAt_iff_map_eq` gives `N'` unramified over `A'` at `Q'`.
 
 Combined with `forall_height_one_isUnramifiedAt_of_root_mem` (étale away from `x`) this yields
 `StrictRootComponentData` (`StrictRootComponentPreData.toDataOfRootMem`).
 
+In characteristic zero (every positive integer a unit of `A`) the tameness hypothesis always holds
+(`isTamelyRamifiedAt_of_all_nat_isUnit`), so these lemmas serve both proofs of `0EYG` in pcf.
+
 ## Main statements
 
-* `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem` — the `hroot` input
-  of `StrictRootComponentPreData.toDataOfRootMem`.
-* `StrictRootComponentPreData.toDataOfDvd` — the completed `StrictRootComponentData`.
-* `exists_strictRootComponentData` — existence of `StrictRootComponentData A N a E` for a common
-  multiple `E` of the ramification indices (combining `exists_strictRootComponentPreData`).
+* `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame` — the `hroot`
+  input of `StrictRootComponentPreData.toDataOfRootMem`.
+* `StrictRootComponentPreData.toDataOfDvd_tame` — the completed `StrictRootComponentData`.
+* `exists_strictRootComponentData_tame` — existence of `StrictRootComponentData A N a E` for `E`
+  the product of the ramification indices (`exists_common_multiple_ramificationIdx_tame`, a unit
+  in `κ((a))`), combining `exists_strictRootComponentPreData`.
 
-Divergence from Stacks: Stacks takes `e` to be the product of the ramification indices and phrases
-the conclusion as "the ramification indices have all become equal to 1"; here any common multiple
-`E` works and the conclusion is `Algebra.IsUnramifiedAt`, which is the same statement at
-height-one primes (`Ideal.ramificationIdx_eq_one_iff`).  Tameness is "all positive integers are
-units", pcf's characteristic-zero form.
+Divergence from Stacks: Stacks takes `e` to be the product of the ramification indices over all
+maximal ideals of the integral closure of `A_𝔭` in `L` (these are the height-one minimal primes of
+`aN` used here) and phrases the conclusion as "the ramification indices have all become equal to
+1"; here the conclusion is `Algebra.IsUnramifiedAt`, which is the same statement at height-one
+primes (`Ideal.ramificationIdx_eq_one_iff`).  Tameness is consumed as `IsTamelyRamifiedAt A N q`
+on the component `N`, not as a statement about `L/K` with respect to `A_𝔭`; the two are the same
+data (`N_q` is the local ring of the integral closure of `A_𝔭` in `L` at `q`).
 -/
 
 @[expose] public section
@@ -205,24 +212,30 @@ section Main
 variable {A N : Type u} [CommRing A] [CommRing N] [Algebra A N] [IsNoetherianRing A]
   [IsLocalRing A] {a : A} {E : ℕ}
 
-/-- **Codimension-one unramifiedness of the root-cover component (Stacks Tag `0EYG`,
+/-- **Codimension-one unramifiedness of the root-cover component, tame case (Stacks Tag `0EYG`,
 paragraph 4, from Tag `0BRM`).**
 
 Let `A` be a Noetherian local ring, `a ∈ 𝔪_A` a nonzerodivisor with `A ⧸ (a)` regular local (so `A`
-is regular local), all positive integers units in `A`, `N` a finite normal domain over `A`, and
-`E ≥ 1` a common multiple of the ramification indices over `A` of the height-one primes of `N`
-containing `a` (`exists_common_multiple_ramificationIdx`).  Then every root-cover component
+is regular local), `N` a finite normal domain over `A` which is tamely ramified over `A` at every
+height-one prime containing `a` (`htame`), and `E ≥ 1` a common multiple of the ramification
+indices over `A` of the height-one primes of `N` containing `a`.  Then every root-cover component
 pre-datum `N'` is unramified over `A' = A[x]/(x^E − a)` at each height-one prime containing `x`.
 
 This is the `hroot` input of `StrictRootComponentPreData.toDataOfRootMem`; see the module
-docstring for the route. -/
-theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
+docstring for the route.  Tameness enters twice: the ramification index `e` of `q = Q' ∩ N` is a
+unit in `N_q` because tameness says `e ∈ κ(q ∩ A)ˣ`, i.e. `e ∉ q ∩ A`, hence `e ∉ q`; and the
+separability of `κ(Q')/κ((x))` comes from `κ(Q')/κ(q)` separable (the residue clause of `0BRM`,
+`maximalIdeal_eq_span_root_of_dvd_and_isSeparable`) and `κ(q)/κ((a))` separable (tameness), by
+transitivity (Stacks `0BRM`: "κ(𝔪) is separable over κ_A"). -/
+theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 1 ≤ E)
+    (hE : 1 ≤ E)
     [IsDomain N] [IsIntegrallyClosed N] [Module.Finite A N] [FaithfulSMul A N]
     (hdiv : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
       q.asIdeal.ramificationIdx A ∣ E)
+    (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      IsTamelyRamifiedAt A N q)
     (C : StrictRootComponentPreData A N a E)
     (w : PrimeSpectrum C.carrier) (hw : w.asIdeal.height = 1)
     (hx : algebraMap (StrictRootCover a E) C.carrier (strictRoot a E) ∈ w.asIdeal) :
@@ -264,66 +277,77 @@ theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
       IsScalarTower.algebraMap_apply A (StrictRootCover a E) C.carrier, ← strictRoot_pow a,
       map_pow]
     exact Ideal.pow_mem_of_mem _ hx E (by omega)
+  -- The tameness of `N` over `A` at `q = w ∩ N`.
+  set q : Ideal N := w.asIdeal.under N with hqdef
+  set pA : Ideal A := q.under A with hpAdef
+  letI : Algebra (Localization.AtPrime pA) (Localization.AtPrime q) :=
+    Localization.AtPrime.algebraOfLiesOver pA q
+  have htq : IsUnit ((q.ramificationIdx A : ℕ) : pA.ResidueField) ∧
+      Algebra.IsSeparable pA.ResidueField q.ResidueField :=
+    htame ⟨q, inferInstance⟩ hq_height hqa
+  obtain ⟨hunit, hsepA⟩ := htq
   -- Step 2: the ramification index `e` and `E = e * d`.
-  obtain ⟨d, hd⟩ := hdiv ⟨w.asIdeal.under N, inferInstance⟩ hq_height hqa
-  have he : 1 ≤ (w.asIdeal.under N).ramificationIdx A := by
-    haveI : IsNoetherianRing (Localization.AtPrime (w.asIdeal.under N)) :=
-      IsLocalization.isNoetherianRing (w.asIdeal.under N).primeCompl
-        (Localization.AtPrime (w.asIdeal.under N)) inferInstance
-    exact Ideal.ramificationIdx_pos (R := A) (w.asIdeal.under N)
+  obtain ⟨d, hd⟩ := hdiv ⟨q, inferInstance⟩ hq_height hqa
+  have he : 1 ≤ q.ramificationIdx A := by
+    haveI : IsNoetherianRing (Localization.AtPrime q) :=
+      IsLocalization.isNoetherianRing q.primeCompl (Localization.AtPrime q) inferInstance
+    exact Ideal.ramificationIdx_pos (R := A) q
   have hd1 : 1 ≤ d := by
     rcases Nat.eq_zero_or_pos d with h | h
     · rw [h, mul_zero] at hd; omega
     · exact h
   -- Step 3: the DVRs `S = N_q`, `T = N'_w`, and `a = u * π ^ e` in `S`.
-  haveI : IsDomain (Localization.AtPrime (w.asIdeal.under N)) :=
-    IsLocalization.isDomain_localization (w.asIdeal.under N).primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing (Localization.AtPrime (w.asIdeal.under N)) :=
+  haveI : IsDomain (Localization.AtPrime q) :=
+    IsLocalization.isDomain_localization q.primeCompl_le_nonZeroDivisors
+  haveI : IsDiscreteValuationRing (Localization.AtPrime q) :=
     isDiscreteValuationRing_localizationAtPrime_of_heightOne _ hq_height
   haveI : IsDomain (Localization.AtPrime w.asIdeal) :=
     IsLocalization.isDomain_localization w.asIdeal.primeCompl_le_nonZeroDivisors
   haveI : IsDiscreteValuationRing (Localization.AtPrime w.asIdeal) :=
     isDiscreteValuationRing_localizationAtPrime_of_heightOne _ hw
-  haveI : w.asIdeal.LiesOver (w.asIdeal.under N) := ⟨rfl⟩
-  letI : Algebra (Localization.AtPrime (w.asIdeal.under N)) (Localization.AtPrime w.asIdeal) :=
+  haveI : w.asIdeal.LiesOver q := ⟨rfl⟩
+  letI : Algebra (Localization.AtPrime q) (Localization.AtPrime w.asIdeal) :=
     Localization.AtPrime.algebraOfLiesOver _ w.asIdeal
-  haveI : IsLocalHom (algebraMap (Localization.AtPrime (w.asIdeal.under N))
-      (Localization.AtPrime w.asIdeal)) :=
-    Localization.isLocalHom_localRingHom (w.asIdeal.under N) w.asIdeal (algebraMap N C.carrier)
+  haveI : IsLocalHom (algebraMap (Localization.AtPrime q) (Localization.AtPrime w.asIdeal)) :=
+    Localization.isLocalHom_localRingHom q w.asIdeal (algebraMap N C.carrier)
       Ideal.LiesOver.over
-  obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible
-    (Localization.AtPrime (w.asIdeal.under N))
-  have haS0 : algebraMap N (Localization.AtPrime (w.asIdeal.under N)) (algebraMap A N a) ≠ 0 := by
+  obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible (Localization.AtPrime q)
+  have haS0 : algebraMap N (Localization.AtPrime q) (algebraMap A N a) ≠ 0 := by
     intro h
     have h1 : algebraMap A N a = 0 :=
-      IsLocalization.injective (Localization.AtPrime (w.asIdeal.under N))
-        (w.asIdeal.under N).primeCompl_le_nonZeroDivisors (by rw [map_zero]; exact h)
+      IsLocalization.injective (Localization.AtPrime q)
+        q.primeCompl_le_nonZeroDivisors (by rw [map_zero]; exact h)
     exact nonZeroDivisors.ne_zero ha0
       (FaithfulSMul.algebraMap_injective A N (by rw [map_zero]; exact h1))
   obtain ⟨n, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible haS0 hπ
-  have hne : (w.asIdeal.under N).ramificationIdx A = n := by
-    rw [Ideal.ramificationIdx_def, hqA, Ideal.map_span, Set.image_singleton,
+  have hne : q.ramificationIdx A = n := by
+    rw [Ideal.ramificationIdx_def, ← hpAdef, hqA, Ideal.map_span, Set.image_singleton,
       IsScalarTower.algebraMap_apply A N, hu, Ideal.span_singleton_mul_left_unit u.isUnit,
       ← Ideal.span_singleton_pow, ← hπ.maximalIdeal_eq,
       IsDiscreteValuationRing.length_quotient_pow_maximalIdeal, ENat.toNat_natCast]
-  rw [hne] at hd he
-  have heUnit : IsUnit ((n : ℕ) : Localization.AtPrime (w.asIdeal.under N)) := by
-    simpa only [map_natCast] using
-      (hnat n (by omega)).map (algebraMap A (Localization.AtPrime (w.asIdeal.under N)))
-  -- Step 4: `0BRM` in divisibility form: `x` is a uniformizer of `T`.
+  rw [hne] at hd he hunit
+  -- Tameness: `n ∉ pA`, hence `n ∉ q`, hence `n` is a unit in `N_q`.
+  have hnA : ((n : ℕ) : A) ∉ pA := fun h ↦ by
+    apply hunit.ne_zero
+    rw [← map_natCast (algebraMap A pA.ResidueField), Ideal.algebraMap_residueField_eq_zero]
+    exact h
+  have hnN : ((n : ℕ) : N) ∉ q := fun h ↦
+    hnA (by rw [hpAdef, Ideal.mem_under, map_natCast]; exact h)
+  have heUnit : IsUnit ((n : ℕ) : Localization.AtPrime q) := by
+    rw [← map_natCast (algebraMap N (Localization.AtPrime q))]
+    exact (IsLocalization.AtPrime.isUnit_to_map_iff (Localization.AtPrime q) q _).mpr hnN
+  -- Step 4: `0BRM` in divisibility form (with the residue clause): `x` is a uniformizer of `T`
+  -- and `κ(w)/κ(q)` is separable.
   have hxT : algebraMap (StrictRootCover a E) (Localization.AtPrime w.asIdeal) (strictRoot a E) ^
-      (d * n) = algebraMap (Localization.AtPrime (w.asIdeal.under N))
-        (Localization.AtPrime w.asIdeal)
-        ((u : Localization.AtPrime (w.asIdeal.under N)) * π ^ n) := by
+      (d * n) = algebraMap (Localization.AtPrime q) (Localization.AtPrime w.asIdeal)
+        ((u : Localization.AtPrime q) * π ^ n) := by
     rw [← hu, ← map_pow, Nat.mul_comm d n, ← hd, strictRoot_pow,
       IsScalarTower.algebraMap_apply (StrictRootCover a E) C.carrier,
       ← IsScalarTower.algebraMap_apply A (StrictRootCover a E) C.carrier,
       IsScalarTower.algebraMap_apply A N C.carrier,
       ← IsScalarTower.algebraMap_apply N C.carrier (Localization.AtPrime w.asIdeal),
-      IsScalarTower.algebraMap_apply N (Localization.AtPrime (w.asIdeal.under N))
-        (Localization.AtPrime w.asIdeal)]
-  have hπ0 : algebraMap (Localization.AtPrime (w.asIdeal.under N)) (Localization.AtPrime w.asIdeal)
-      π ≠ 0 := by
+      IsScalarTower.algebraMap_apply N (Localization.AtPrime q) (Localization.AtPrime w.asIdeal)]
+  have hπ0 : algebraMap (Localization.AtPrime q) (Localization.AtPrime w.asIdeal) π ≠ 0 := by
     intro h
     have h1 : algebraMap (StrictRootCover a E) (Localization.AtPrime w.asIdeal) (strictRoot a E) ^
         (d * n) = 0 := by
@@ -337,86 +361,110 @@ theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
       FaithfulSMul.algebraMap_injective (StrictRootCover a E) C.carrier (by rw [map_zero]; exact h3)
     exact nonZeroDivisors.ne_zero (strictRoot_mem_nonZeroDivisors a hE ha0) h4
   have hgen : ∀ t : Localization.AtPrime w.asIdeal,
-      ∃ p q : (Localization.AtPrime (w.asIdeal.under N))[X],
+      ∃ p q' : (Localization.AtPrime q)[X],
         aeval (algebraMap (StrictRootCover a E) (Localization.AtPrime w.asIdeal) (strictRoot a E))
-          q ≠ 0 ∧
+          q' ≠ 0 ∧
         aeval (algebraMap (StrictRootCover a E) (Localization.AtPrime w.asIdeal) (strictRoot a E))
-          q * t =
+          q' * t =
         aeval (algebraMap (StrictRootCover a E) (Localization.AtPrime w.asIdeal) (strictRoot a E))
           p := by
     intro t
-    obtain ⟨p, q, hq, hpq⟩ := C.exists_aeval_mul_eq_aeval_of_generic hE ha0 w.asIdeal t
-    exact ⟨p.map (algebraMap N _), q.map (algebraMap N _), by rwa [aeval_map_algebraMap],
+    obtain ⟨p, q', hq, hpq⟩ := C.exists_aeval_mul_eq_aeval_of_generic hE ha0 w.asIdeal t
+    exact ⟨p.map (algebraMap N _), q'.map (algebraMap N _), by rwa [aeval_map_algebraMap],
       by rwa [aeval_map_algebraMap, aeval_map_algebraMap]⟩
-  have hmax := maximalIdeal_eq_span_root_of_dvd (Localization.AtPrime (w.asIdeal.under N))
-    (Localization.AtPrime w.asIdeal) π hπ u n he heUnit d hd1 _ hxT hπ0 hgen
-  -- Step 5: unramified at `w` (separable residue extension in characteristic zero).
-  haveI : w.asIdeal.LiesOver (Ideal.span {strictRoot a E}) := ⟨hunder'.symm⟩
-  letI : Algebra (Localization.AtPrime (Ideal.span ({strictRoot a E} : Set (StrictRootCover a E))))
-      (Localization.AtPrime w.asIdeal) :=
+  obtain ⟨hmax, hsepT⟩ := maximalIdeal_eq_span_root_of_dvd_and_isSeparable
+    (Localization.AtPrime q) (Localization.AtPrime w.asIdeal) π hπ u n he heUnit d hd1 _ hxT
+    hπ0 hgen
+  -- Step 5: unramified at `w`.  The residue extension `κ(w)/κ((x))` is separable: `κ(w)/κ(q)` is
+  -- (Step 4), `κ(q)/κ(pA)` is (tameness), and `κ((x)) = κ(pA)` is an intermediate field.
+  set px : Ideal (StrictRootCover a E) := Ideal.span {strictRoot a E} with hpxdef
+  haveI : w.asIdeal.LiesOver px := ⟨hunder'.symm⟩
+  haveI : w.asIdeal.LiesOver pA := ⟨by rw [hpAdef, hqdef, Ideal.under_under]⟩
+  haveI : px.LiesOver pA := ⟨by
+    show pA = px.under A
+    rw [hqA, hpxdef, strictRootCover_span_root_under a hE]⟩
+  letI : Algebra (Localization.AtPrime px) (Localization.AtPrime w.asIdeal) :=
     Localization.AtPrime.algebraOfLiesOver _ w.asIdeal
-  haveI : CharZero (Ideal.span ({strictRoot a E} : Set (StrictRootCover a E))).ResidueField :=
-    charZero_of_forall_nat_isUnit fun m hm ↦ by
-      simpa only [map_natCast] using (hnat m hm).map
-        (algebraMap A (Ideal.span ({strictRoot a E} : Set (StrictRootCover a E))).ResidueField)
-  rw [Algebra.isUnramifiedAt_iff_map_eq (StrictRootCover a E) (Ideal.span {strictRoot a E})
-    w.asIdeal]
-  refine ⟨Algebra.HasSeparableResidueFieldsAt.isSeparable w.asIdeal, ?_⟩
-  rw [Ideal.map_span, Set.image_singleton]
+  letI : Algebra (Localization.AtPrime pA) (Localization.AtPrime w.asIdeal) :=
+    Localization.AtPrime.algebraOfLiesOver pA w.asIdeal
+  letI : Algebra (Localization.AtPrime pA) (Localization.AtPrime px) :=
+    Localization.AtPrime.algebraOfLiesOver pA px
+  haveI : Algebra.IsSeparable pA.ResidueField w.asIdeal.ResidueField :=
+    Algebra.IsSeparable.trans pA.ResidueField q.ResidueField w.asIdeal.ResidueField
+  haveI : Algebra.IsSeparable px.ResidueField w.asIdeal.ResidueField :=
+    Algebra.isSeparable_tower_top_of_isSeparable pA.ResidueField px.ResidueField
+      w.asIdeal.ResidueField
+  rw [Algebra.isUnramifiedAt_iff_map_eq (StrictRootCover a E) px w.asIdeal]
+  refine ⟨inferInstance, ?_⟩
+  rw [hpxdef, Ideal.map_span, Set.image_singleton]
   exact hmax.symm
 
-/-- **The completed root-cover component data** (Stacks `0EYG`, paragraph 4): the pre-data of
-`StrictRootComponent.lean` together with the codimension-one `0BRM` conclusion. -/
-def StrictRootComponentPreData.toDataOfDvd
+/-- **The completed root-cover component data, tame case** (Stacks `0EYG`, paragraph 4): the
+pre-data of `StrictRootComponent.lean` together with the codimension-one `0BRM` conclusion, with
+tameness of `N` over `A` at the height-one primes containing `a`. -/
+def StrictRootComponentPreData.toDataOfDvd_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 1 ≤ E)
+    (hE : 1 ≤ E)
     [IsDomain N] [IsIntegrallyClosed N] [Module.Finite A N] [FaithfulSMul A N]
     (hdiv : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
       q.asIdeal.ramificationIdx A ∣ E)
+    (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      IsTamelyRamifiedAt A N q)
     (C : StrictRootComponentPreData A N a E) : StrictRootComponentData A N a E :=
   C.toDataOfRootMem fun w hw hx ↦
-    C.isUnramifiedAt_of_height_eq_one_of_root_mem ha ha0 hnat hE hdiv w hw hx
+    C.isUnramifiedAt_of_height_eq_one_of_root_mem_tame ha ha0 hE hdiv htame w hw hx
 
+/-- `toDataOfDvd_tame` does not change the carrier of the pre-data. -/
 @[simp]
-theorem StrictRootComponentPreData.toDataOfDvd_carrier
+theorem StrictRootComponentPreData.toDataOfDvd_tame_carrier
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 1 ≤ E)
+    (hE : 1 ≤ E)
     [IsDomain N] [IsIntegrallyClosed N] [Module.Finite A N] [FaithfulSMul A N]
     (hdiv : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
       q.asIdeal.ramificationIdx A ∣ E)
+    (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      IsTamelyRamifiedAt A N q)
     (C : StrictRootComponentPreData A N a E) :
-    (C.toDataOfDvd ha ha0 hnat hE hdiv).carrier = C.carrier :=
+    (C.toDataOfDvd_tame ha ha0 hE hdiv htame).carrier = C.carrier :=
   rfl
 
-/-- **Existence of the root-cover component data (Stacks `0EYG`, paragraph 4).**  For a finite
-normal domain `N` over `A`, étale over `A` away from `a`, there is an exponent `E ≥ 2` (a common
-multiple of the ramification indices of `N` over `(a)`) and a component datum
-`StrictRootComponentData A N a E`. -/
-theorem exists_strictRootComponentData
+/-- **Existence of the root-cover component data, tame case (Stacks `0EYG`, paragraph 4).**  For a
+finite normal domain `N` over `A`, étale over `A` away from `a` and tamely ramified over `A` at
+every height-one prime containing `a`, there is an exponent `E ≥ 1`, the product of the
+ramification indices of `N` over `(a)`, which is a unit in `κ((a))` (`(E : A) ∉ (a)`; Stacks: "at
+this point we do not know that `e` is invertible in `A/fA` or in `A`"), together with a component
+datum `StrictRootComponentData A N a E` (the `0BRM` codimension-one conclusion). -/
+theorem exists_strictRootComponentData_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A))
     [IsDomain N] [IsIntegrallyClosed N] [Module.Finite A N] [FaithfulSMul A N]
     (hetale : ∀ w : PrimeSpectrum N, algebraMap A N a ∉ w.asIdeal →
-      Algebra.IsEtaleAt A w.asIdeal) :
-    ∃ E : ℕ, 2 ≤ E ∧ Nonempty (StrictRootComponentData A N a E) := by
+      Algebra.IsEtaleAt A w.asIdeal)
+    (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      IsTamelyRamifiedAt A N q) :
+    ∃ E : ℕ, 1 ≤ E ∧ ((E : ℕ) : A) ∉ Ideal.span ({a} : Set A) ∧
+      Nonempty (StrictRootComponentData A N a E) := by
   haveI : IsNoetherianRing N := IsNoetherianRing.of_finite A N
   haveI : Algebra.IsIntegral A N := Algebra.IsIntegral.of_finite A N
+  haveI : (Ideal.span ({a} : Set A)).IsPrime := divisorPrime_isPrime a
   have ha0' : algebraMap A N a ≠ 0 := fun h ↦
     nonZeroDivisors.ne_zero ha0 (FaithfulSMul.algebraMap_injective A N (by rw [map_zero]; exact h))
-  obtain ⟨E, hE, hdiv⟩ := exists_common_multiple_ramificationIdx (A := A) a ha0'
-  obtain ⟨C⟩ := exists_strictRootComponentPreData (N := N) (E := E) ha ha0 (by omega) hetale
-  exact ⟨E, hE, ⟨C.toDataOfDvd ha ha0 hnat (by omega) hdiv⟩⟩
+  obtain ⟨E, hE, hEa, hdiv⟩ := exists_common_multiple_ramificationIdx_tame (A := A) a ha0' htame
+    (Ideal.span {a}) (fun q _ hqa ↦ by
+      rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_under]
+      exact hqa)
+  obtain ⟨C⟩ := exists_strictRootComponentPreData (N := N) (E := E) ha ha0 hE hetale
+  exact ⟨E, hE, hEa, ⟨C.toDataOfDvd_tame ha ha0 hE hdiv htame⟩⟩
 
 end Main
 
 #print axioms exists_aeval_eq_of_mem_adjoin
 #print axioms StrictRootComponentPreData.faithfulSMul_component
 #print axioms StrictRootComponentPreData.exists_aeval_mul_eq_aeval_of_generic
-#print axioms StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
-#print axioms StrictRootComponentPreData.toDataOfDvd
-#print axioms exists_strictRootComponentData
+#print axioms StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
+#print axioms StrictRootComponentPreData.toDataOfDvd_tame
+#print axioms exists_strictRootComponentData_tame
 
 end Pcf.Stacks

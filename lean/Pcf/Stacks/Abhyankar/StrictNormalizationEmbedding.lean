@@ -262,8 +262,8 @@ theorem exists_dvrRootFractionPowerEquiv_of_strict_local_normalization
   let froot : M →ₐ[FractionRing A]
       AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) pi) n) :=
     (dvrRootFractionEquiv pi hn1 hpi).toAlgHom.comp f
-  exact exists_dvrRootFractionPowerEquiv_of_embedding
-    pi hn hpi hunit froot
+  exact exists_dvrRootFractionPowerEquiv_of_embedding_tame
+    pi hn1 hpi hunit froot
 
 #print axioms fractionRingAlgEquivOfFiniteEtaleLocal
 #print axioms fractionRingAlgEquivOfFiniteEtaleLocalOverFraction

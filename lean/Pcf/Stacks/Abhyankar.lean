@@ -45,12 +45,14 @@ module is imported by the root module `Pcf`.
 
 * **Characteristic zero, affine** (phase 1): `Pcf.Stacks.abhyankarLemma` in
   `Pcf.Stacks.Abhyankar.Tag0EYG`, for this statement `AbhyankarLemma`, which assumes every
-  positive integer invertible in `R`.  It is the input of the PCFAWD headline and is unchanged.
+  positive integer invertible in `R`.  It is the input of the PCFAWD headline.
 * **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemma_tame` in
   `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame` (directory `Abhyankar/Tame/`), for
   `Pcf.Stacks.AbhyankarLemmaTame`, whose hypothesis is the tag's "tamely ramified in
-  codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  It is a
-  second, independent proof; the characteristic-zero theorem is not derived from it.
+  codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  The
+  two affine theorems share one proof: the characteristic-zero theorem supplies tameness from
+  "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`)
+  and then uses the same lemmas (see `Tame/Defs.lean`, "Shared lemmas").
 * **Scheme level** (phase 2): `Pcf.Stacks.SchemeLevel.tag0EYG` and
   `Pcf.Stacks.SchemeLevel.tag0EYH` (directory `Abhyankar/Scheme/`), the statements of Stacks
   Lemmas 58.31.5 and 58.31.6 for a locally Noetherian scheme, an effective Cartier divisor that

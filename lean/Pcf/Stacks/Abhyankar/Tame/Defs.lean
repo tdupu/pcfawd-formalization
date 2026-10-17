@@ -18,10 +18,10 @@ This directory (`Pcf.Stacks.Abhyankar.Tame`) contains the second, general proof 
 for a regular divisor: the hypothesis "every positive integer is invertible" of
 `Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by the hypothesis of Stacks Tag `0EYG`
 itself, "`Y` is tamely ramified over `X` in codimension `1`" (Stacks `0BSE`, Section 58.31, with
-More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic. Nothing of the
-characteristic-zero development is removed or re-proved; the characteristic-zero theorems are reused
-where they do not depend on characteristic zero, and the steps that did are given new general
-versions in this directory.
+More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic.  There is one proof:
+the characteristic-zero theorem `Pcf.Stacks.abhyankarLemma` derives tameness from "every positive
+integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`) and then runs
+through the same lemmas as `Pcf.Stacks.abhyankarLemma_tame` (see "Shared lemmas" below).
 
 ## The statement
 
@@ -56,9 +56,16 @@ lying over a height-one prime `p ∋ a`.  These agree: `isTamelyRamifiedInCodime
 below proves it (Krull's principal ideal theorem and incomparability), so the predicate is used
 unchanged and no new definition is needed.
 
-## Dependency map: characteristic-zero declarations reused versus re-generalized
+## Shared lemmas
 
-Reused as they are (no characteristic hypothesis):
+Every step of the proof of `0EYG` is proved once, in any characteristic, and used by both
+`Pcf.Stacks.abhyankarLemma` (characteristic zero) and `Pcf.Stacks.abhyankarLemma_tame`.  The
+characteristic-zero theorem enters the shared route at the top:
+`hasAbhyankarStandardCoverAt_of_mem_divisor` (`Tag0EYG.lean`) is
+`hasAbhyankarStandardCoverAt_of_mem_divisor_tame` with tameness from
+`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`.
+
+Steps that never used characteristic zero:
 * the strict henselization `LocalColimit R Ω` and its structure: Noetherian (`06LJ`,
   `StrictHenselizationCompletionFlat`, `StrictHenselizationNoetherian`), strictly henselian
   (`StrictHenselizationHenselian`), flat (`localColimit_flat`), the regular quotient `Rˢʰ ⧸ (a)`
@@ -74,8 +81,7 @@ Reused as they are (no characteristic hypothesis):
   (`StrictRootCover`), the component pre-data (`exists_strictRootComponentPreData`), the
   going-down bookkeeping (`under_eq_of_height_eq_one_of_mem`,
   `mem_minimalPrimes_span_of_height_eq_one`), `StrictRootComponentData`;
-* the uniformizer clause of `0BRM` in divisibility form (`maximalIdeal_eq_span_root_of_dvd`),
-  `0EYE` with purity (`Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain`,
+* `0EYE` with purity (`Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain`,
   `zariskiNagataPurity`), the strict splitting (`finiteEtaleLocalAlgEquivOfIsSepClosed`), the
   root-of-unity descent of `09EV` (`dvrRootFraction_rootOfUnity_mem_base`,
   `dvrRootFraction_intermediate_eq_power_of_rootOfUnity_descent`), the fraction-field transport
@@ -83,34 +89,36 @@ Reused as they are (no characteristic hypothesis):
 * the integral root model (`strictRootCoverEquivOfFractionRingEquiv`) and the `05N9` descent
   machinery (`exists_stage_units`, `exists_stage_standardTameCover_of_limit_equiv`).
 
-Re-generalized in this directory (characteristic-zero version used `∀ n ≠ 0, IsUnit (n : R)` or
-`CharZero`):
-* `StrictBaseChangeTame`: new, the affine `0EYD` (58.31.1) transport of tameness from `S/R` to the
-  components of `Rˢʰ ⊗_R S` over `Rˢʰ` (the characteristic-zero proof had nothing to transport);
-* `DVRAbhyankarResidue`: `maximalIdeal_eq_span_root_of_dvd` plus the residue clause of `0BRM`
-  (`κ(𝔪)/κ_B` separable), replacing the characteristic-zero separability;
-* `HeightOneUnramified`: `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`,
-  `toDataOfDvd`, `exists_strictRootComponentData` with `IsTamelyRamifiedAt` in place of `hnat`,
-  and the exponent `E` the product of the ramification indices (not `2 ×` the product);
-* `KummerClassification`, `ComponentClassification`: `09EV` clause (6)
-  (`exists_dvrRootFractionPowerEquiv_of_embedding`, which assumed `CharZero`) and the component
-  classification `exists_rootExponent_fractionRing_equiv_of_strictComponent`, with `E`
-  invertible in `κ((a))` from tameness and `E ≥ 1` instead of `E ≥ 2`;
-* `RootExponentUnit`: new, the last paragraph of `0EYG` (`n` is a unit of `A`), which the
-  characteristic-zero proof obtained from `hnat`;
-* `StandardDescent`: `exists_pointedEtale_standardTameCover_of_strict` and
-  `hasAbhyankarStandardCoverAt_of_strict` without `hnat` ("after increasing `λ` a bit more we
-  may assume `e_i` is invertible in `A_λ`");
-* `GenericPresentation`, `Tag0EYGTame`: the strictly henselian case and the main theorem.
+Steps stated with the tame hypothesis (Stacks' own; in characteristic zero it always holds):
+* `DVRAbhyankarDivisible`: `0BRM` in divisibility form with the residue clause,
+  `maximalIdeal_eq_span_root_of_dvd_and_isSeparable` (`κ(𝔪)/κ_B` separable; the uniformizer clause
+  alone is `maximalIdeal_eq_span_root_of_dvd`);
+* `KummerNormDescent`, `KummerIntermediateEquiv`, `StrictComponentClassification`: `09EV`
+  clause (6) without `CharZero` and with `n ≥ 1` (`dvrRootFraction_intermediate_eq_power_tame`,
+  `exists_dvrRootFractionPowerEquiv_of_embedding_tame`,
+  `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`) and the component
+  classification `exists_rootExponent_fractionRing_equiv_of_strictComponent_tame`, with `E`
+  invertible in `κ((a))`;
+* `StrictHeightOneTransport`, `StrictHeightOneUnramified`: the exponent `E`, the product of the
+  ramification indices (`exists_common_multiple_ramificationIdx_tame`),
+  `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame`,
+  `StrictRootComponentPreData.toDataOfDvd_tame`, `exists_strictRootComponentData_tame`,
+  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`, with
+  `IsTamelyRamifiedAt` on the component;
+* `Tame/RootExponentUnit`: the last paragraph of `0EYG` (`n` is a unit of `A`);
+* `StrictGenericPresentation`: the strictly henselian case
+  (`exists_strictRootCover_equiv_of_idempotent_factor_tame`,
+  `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`);
+* `StrictStandardConclusion`: the descent (`exists_stage_natCast_isUnit`,
+  `exists_pointedEtale_standardTameCover_of_strict_tame`,
+  `hasAbhyankarStandardCoverAt_of_strict_tame`; "after increasing `λ` a bit more we may assume
+  `e_i` is invertible in `A_λ`");
+* `Tame/StrictBaseChangeTame`: the affine `0EYD` (58.31.1) transport of tameness from `S/R` to
+  the components of `Rˢʰ ⊗_R S` over `Rˢʰ`;
+* `Tame/Tag0EYGTame`: the main theorem `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`.
 
-## Deliberate duplication
-
-Several `_tame` lemmas in this directory restate a characteristic-zero lemma without the
-hypothesis `∀ n ≠ 0, IsUnit (n : R)`, with essentially the same proof, so each characteristic-zero
-lemma is a special case of its `_tame` version.  This duplication is intentional: pcf keeps two
-independent proofs of Stacks `0EYG`.  The characteristic-zero proof (`Pcf.Stacks.abhyankarLemma`)
-is left untouched and must not be derived from the tame one, so its intermediate lemmas are not
-rewritten as corollaries of the `_tame` lemmas.
+(The `_tame` suffixes record the history: these lemmas replaced characteristic-zero versions that
+assumed `∀ n ≠ 0, IsUnit (n : R)` or `CharZero`.)
 -/
 
 @[expose] public section

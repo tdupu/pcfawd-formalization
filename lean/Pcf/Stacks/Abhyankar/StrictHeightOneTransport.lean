@@ -30,15 +30,16 @@ the classification of `StrictComponentClassification.lean`:
 * `isUnramifiedAt_of_isEtaleAt`, `forall_height_one_isUnramifiedAt_of_root_mem`: away from `x`
   the component is étale, so codimension-one unramifiedness only needs to be checked at the
   height-one primes containing `x`, i.e. over the divisor prime `(x)`;
-* `exists_common_multiple_ramificationIdx`: the finitely many height-one primes of `N` over `(a)`
-  (minimal primes of `aN`, Noetherian) have a common multiple `E ≥ 2` of their ramification
-  indices.  Stacks takes `e` to be their product; any common multiple works.
+* `exists_common_multiple_ramificationIdx_tame`: the product `E` of the ramification indices of
+  the finitely many height-one primes of `N` over `(a)` (minimal primes of `aN`, Noetherian); when
+  `N` is tamely ramified at these primes, `E` is a unit in `κ((a))`.
 * `StrictRootComponentData`: a normal-domain component `N'` of the normalization of `A'` in
   `(A' ⊗_A N)[1/x]`, together with the structure maps `A → A' → N'`, `N → N'`, étaleness away
   from `x`, and the codimension-one `0BRM` conclusion.
-* `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData` and its specialization to
-  the strict henselization `LocalColimit R Ω`: given such data and Zariski–Nagata purity, the
-  fraction field of the component `N` is `K(a^{1/n})` with `n ∣ E`.
+* `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame` (and a
+  characteristic-zero specialization to the strict henselization `LocalColimit R Ω`): given such
+  data with `E` a unit in `κ((a))`, and Zariski–Nagata purity, the fraction field of the component
+  `N` is `K(a^{1/n})` with `n ∣ E`.
 
 ## Where `StrictRootComponentData` is constructed
 
@@ -53,9 +54,9 @@ This file only states `StrictRootComponentData`; its construction is carried out
    `StrictHeightOneUnramified.lean`): the divisibility form of Stacks `0BRM` (ramification index
    `e_q` dividing `E`, with no finiteness of the upper DVR over the lower one) is
    `formallyUnramified_dvrRoot_of_dvd`; it is transported to the component by
-   `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`, which completes the
-   data in `StrictRootComponentPreData.toDataOfDvd`. `exists_strictRootComponentData` combines
-   this with `exists_common_multiple_ramificationIdx` above.
+   `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame`, which completes
+   the data in `StrictRootComponentPreData.toDataOfDvd_tame`. `exists_strictRootComponentData_tame`
+   combines this with `exists_common_multiple_ramificationIdx_tame` above.
 -/
 
 @[expose] public section
@@ -139,32 +140,54 @@ theorem mem_minimalPrimes_span_of_height_eq_one [IsNoetherianRing N] [IsDomain N
     exact absurd (Nat.cast_le.mp h3) (by norm_num)
   · exact heq ▸ hq₀
 
-/-- **The common exponent.**  For a Noetherian domain `N` over `A` and a nonzero image of `a`,
-there is an integer `E ≥ 2` divisible by the ramification index over `A` of every height-one
-prime of `N` containing `a`.  Stacks takes the product of the ramification indices; here `E` is
-twice that product, so that `E ≥ 2`. -/
-theorem exists_common_multiple_ramificationIdx [IsNoetherianRing N] [IsDomain N]
-    [Algebra.IsIntegral A N] (a : A) (ha : algebraMap A N a ≠ 0) :
-    ∃ E : ℕ, 2 ≤ E ∧ ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 →
+/-- **The tame common exponent (Stacks `0EYG`, paragraph 4).**  "Let `e ≥ 1` be the product of the
+ramification indices [...]. Then `e` is invertible in `κ(𝔭)` but at this point we do not know
+that `e` is invertible in `A/fA` or in `A`."  For a Noetherian domain `N` over `A`, tamely ramified
+(`IsTamelyRamifiedAt`, Stacks `09E9`) at every height-one prime containing `a`, the product `E` of
+the ramification indices of the height-one primes of `N` containing `a` satisfies `E ≥ 1`, `e_q ∣ E`
+for each such `q`, and `(E : A) ∉ p` for every prime `p` of `A` with `a ∈ p` and `p ≤ q ∩ A` for all
+such `q` (in the application `p = (a)`, so `E ∈ κ((a))ˣ`).
+
+Divergence from Stacks: the product is taken over the height-one minimal primes of `aN` (these
+are the maximal ideals of the integral closure of `A_𝔭` in `L` in Stacks' notation). -/
+theorem exists_common_multiple_ramificationIdx_tame [IsNoetherianRing N] [IsDomain N]
+    [Algebra.IsIntegral A N] (a : A) (ha : algebraMap A N a ≠ 0)
+    (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      IsTamelyRamifiedAt A N q)
+    (p : Ideal A) [p.IsPrime]
+    (hp : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
+      p ≤ q.asIdeal.under A) :
+    ∃ E : ℕ, 1 ≤ E ∧ ((E : ℕ) : A) ∉ p ∧ ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 →
       algebraMap A N a ∈ q.asIdeal → q.asIdeal.ramificationIdx A ∣ E := by
   classical
   let I : Ideal N := Ideal.span {algebraMap A N a}
   have hfin : I.minimalPrimes.Finite := Ideal.finite_minimalPrimes_of_isNoetherianRing N I
-  refine ⟨2 * ∏ q ∈ hfin.toFinset, q.ramificationIdx A, ?_, ?_⟩
-  · have hpos : 0 < ∏ q ∈ hfin.toFinset, q.ramificationIdx A := by
+  let s : Finset (Ideal N) := hfin.toFinset.filter (fun q ↦ q.height = 1)
+  have hmem : ∀ q ∈ s, q.IsPrime ∧ q.height = 1 ∧ algebraMap A N a ∈ q := by
+    intro q hq
+    rw [Finset.mem_filter, Set.Finite.mem_toFinset] at hq
+    exact ⟨hq.1.1.1, hq.2, hq.1.1.2 (Ideal.subset_span (Set.mem_singleton _))⟩
+  refine ⟨∏ q ∈ s, q.ramificationIdx A, ?_, ?_, ?_⟩
+  · have hpos : 0 < ∏ q ∈ s, q.ramificationIdx A := by
       apply Finset.prod_pos
       intro q hq
-      rw [Set.Finite.mem_toFinset] at hq
-      haveI : q.IsPrime := hq.1.1
+      haveI : q.IsPrime := (hmem q hq).1
       haveI : IsNoetherianRing (Localization.AtPrime q) :=
         IsLocalization.isNoetherianRing q.primeCompl (Localization.AtPrime q) inferInstance
       exact Ideal.ramificationIdx_pos (R := A) q
     omega
+  · rw [Nat.cast_prod, Ideal.IsPrime.prod_mem_iff]
+    rintro ⟨q, hq, hqp⟩
+    obtain ⟨hqprime, hqh, hqa⟩ := hmem q hq
+    have ht := (htame ⟨q, hqprime⟩ hqh hqa).1
+    apply ht.ne_zero
+    rw [← map_natCast (algebraMap A _), Ideal.algebraMap_residueField_eq_zero]
+    exact hp ⟨q, hqprime⟩ hqh hqa hqp
   · intro q hq hqa
-    have hmem : q.asIdeal ∈ hfin.toFinset := by
-      rw [Set.Finite.mem_toFinset]
-      exact mem_minimalPrimes_span_of_height_eq_one ha q.asIdeal hq hqa
-    exact Dvd.dvd.mul_left (Finset.dvd_prod_of_mem _ hmem) 2
+    have hmem' : q.asIdeal ∈ s := by
+      rw [Finset.mem_filter, Set.Finite.mem_toFinset]
+      exact ⟨mem_minimalPrimes_span_of_height_eq_one ha q.asIdeal hq hqa, hq⟩
+    exact Finset.dvd_prod_of_mem _ hmem'
 
 end CommonMultiple
 
@@ -209,14 +232,15 @@ attribute [instance] StrictRootComponentData.commRing StrictRootComponentData.al
 
 variable {A N a E}
 
-/-- **Per-component classification from the root-cover data (Stacks `0EYG`, paragraphs 4–5).**
-Given the normalization component data over the root cover and Zariski–Nagata purity for it,
-the fraction field of the component `N` is `K(a^{1/n})` for a divisor `n` of `E`. -/
-theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
+/-- **Per-component classification from the root-cover data (Stacks `0EYG`, paragraphs 4–5),
+tame form.**  Given the normalization component data over the root cover `A[x]/(x^E − a)`, with
+`E ≥ 1` a unit in `κ((a))`, and Zariski–Nagata purity for it, the fraction field of the component
+`N` is `K(a^{1/n})` for a divisor `n` of `E`. -/
+theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
     [IsNoetherianRing A] [HenselianLocalRing A] [IsSepClosed (ResidueField A)]
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 2 ≤ E)
+    (hE : 1 ≤ E) (hEa : ((E : ℕ) : A) ∉ Ideal.span ({a} : Set A))
     [IsDomain N] [FaithfulSMul A N] [Module.Finite A N]
     (C : StrictRootComponentData A N a E)
     (hpurity : ZariskiNagataPurity (StrictRootCover a E) C.carrier) :
@@ -224,7 +248,7 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
     ∃ n : ℕ, n ∣ E ∧ 1 ≤ n ∧
       Nonempty (FractionRing N ≃ₐ[FractionRing A]
         AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) a) n)) :=
-  exists_rootExponent_fractionRing_equiv_of_strictComponent A N C.carrier a E ha ha0 hnat hE
+  exists_rootExponent_fractionRing_equiv_of_strictComponent_tame A N C.carrier a E ha ha0 hE hEa
     C.etaleAway C.unramified hpurity
 
 end ComponentData
@@ -269,18 +293,23 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
       (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_singleton a)))
   have ha0' : algebraMap R (LocalColimit R Ω) a ∈ nonZeroDivisors (LocalColimit R Ω) :=
     algebraMap_mem_nonZeroDivisors_localColimit ha0
-  have hnat' : ∀ n : ℕ, n ≠ 0 → IsUnit (n : LocalColimit R Ω) := fun n hn ↦ by
-    simpa only [map_natCast] using (hnat n hn).map (algebraMap R (LocalColimit R Ω))
-  exact Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
-    ha' ha0' hnat' hE C hpurity
+  -- `E` is a unit, hence not in the proper ideal `(a)`: the tameness input of the general lemma.
+  have hEa : ((E : ℕ) : LocalColimit R Ω) ∉
+      Ideal.span ({algebraMap R (LocalColimit R Ω) a} : Set (LocalColimit R Ω)) := fun h ↦ by
+    have hu : IsUnit ((E : ℕ) : LocalColimit R Ω) := by
+      simpa only [map_natCast] using (hnat E (by omega)).map (algebraMap R (LocalColimit R Ω))
+    exact (maximalIdeal.isMaximal _).ne_top (Ideal.eq_top_of_isUnit_mem _
+      (Ideal.span_le.mpr (Set.singleton_subset_iff.mpr ha') h) hu)
+  exact Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
+    ha' ha0' (by omega) hEa C hpurity
 
 end PointedEtaleNeighborhood
 
 #print axioms under_eq_of_height_eq_one_of_mem
 #print axioms forall_height_one_isUnramifiedAt_of_root_mem
 #print axioms mem_minimalPrimes_span_of_height_eq_one
-#print axioms exists_common_multiple_ramificationIdx
-#print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
+#print axioms exists_common_multiple_ramificationIdx_tame
+#print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
 #print axioms
   PointedEtaleNeighborhood.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 
