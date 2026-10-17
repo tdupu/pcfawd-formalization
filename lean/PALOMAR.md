@@ -24,19 +24,21 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
-All values re-derived 2026-10-17 at `tdupu/pcf` commit `cfcdac4` ("Compare the unconditional
-theorem in the Palomar Challenge"), before this file was edited.
+All values re-derived 2026-10-17 at `tdupu/pcf` commit `8455068` ("Remove duplicate propositions
+from the Lean development"), before this file was edited. The Challenge and the dependencies of
+the three compared statements are unchanged from `cfcdac4`, where they were first derived (same
+structural hashes for all 4976 constants; see Entry 0).
 
 | Field | Value |
 | --- | --- |
 | Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which carries `lean/` and `palomar/` with private files removed (`PUBLIC-RELEASE.md`). |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
-| `lean/` subtree | `56e8e5d1a2c0935606fe0aa73efbc69ee4c3ea4d` at `cfcdac4` (`lean/Pcf` alone: `fca7d1d254b142fe9c3ba6577ef5e8fa601144b8`; `palomar/`: `655ba995ea055da5af32ee5e8e3676aa11b3aa74`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes, and the public repository's `lean/` hash differs because private files are left out; recompute with `git rev-parse HEAD:lean` |
+| `lean/` subtree | `0be84ea7bb849e466d0db799ec77a42e7b3d51a8` at `8455068` (`lean/Pcf` alone: `b958c48da7f9b7a10ea467e21973a18d395f9edf`; `palomar/`: `208ed3185fa3cdf094e87c164f4649a5bf792d5e`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes, and the public repository's `lean/` hash differs because private files are left out; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
-| Module system | all 242 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
-| Build | `lake build Pcf Pcf.Audit` in `lean/`: `Build completed successfully (3730 jobs)`, 0 errors, 212 linter and deprecation warnings. `lake build` in `palomar/`: `Build completed successfully (3703 jobs)`; the only `sorry` warnings are the three Challenge theorems in `PcfChallenge.lean` |
-| Audit | `lean/Pcf/Audit.lean`: the build log has 1783 `#print axioms` results for 1779 distinct declarations. 1754 report `[propext, Classical.choice, Quot.sound]`, 27 report `[propext, Quot.sound]`, 2 report `[propext]`, and none report `sorryAx` |
+| Module system | all 238 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
+| Build | `lake build Pcf Pcf.Audit` in `lean/`: `Build completed successfully (3726 jobs)`, 0 errors, 215 linter and deprecation warnings. `lake build` in `palomar/`: `Build completed successfully (3699 jobs)`; the only `sorry` warnings are the three Challenge theorems in `PcfChallenge.lean` |
+| Audit | `lean/Pcf/Audit.lean`: the build log has 1740 `#print axioms` results for 1740 distinct declarations. 1711 report `[propext, Classical.choice, Quot.sound]`, 27 report `[propext, Quot.sound]`, 2 report `[propext]`, and none report `sorryAx` |
 | Forbidden tokens | no `sorry`, `axiom`, `admit` or `native_decide` as Lean tokens in tracked `lean/Pcf/**/*.lean`. A whole-word grep has five hits, all in prose (docstrings of `Bounding/FiniteTypeSingularLocusClosed.lean`, `Bounding/SchemeBridge.lean`, `Noetherian.lean`, `Stacks/Abhyankar/StrictHenselizationQuotientStandard.lean`, `ZariskiNagata.lean`) |
 
 The Mathlib revision was confirmed two ways: the `rev` field of the `mathlib` package in
@@ -106,8 +108,10 @@ This is the entry the Comparator configuration `palomar/comparator.json` compare
 the module docstring differs, and the Challenge adds the three theorems with `sorry`.
 `lean/Pcf/Palomar/Bridge.lean` proves each Challenge notion equivalent to the
 development's (`isNormalizedPCF_iff_scheme`, `pcfAllTheWayDown_iff_scheme`), and
-`lean/Pcf/Palomar/Unconditional.lean` derives the theorem from `Pcf.pcfAllTheWayDown_charZero`
-with Zariski–Nagata purity and Abhyankar's lemma supplied as proved theorems.
+`lean/Pcf/Palomar/Unconditional.lean` derives the theorem through those two equivalences from
+the development's `Pcf.pcfAllTheWayDown_charZero_unconditional`, which is
+`Pcf.pcfAllTheWayDown_charZero` with Zariski–Nagata purity and Abhyankar's lemma supplied as
+proved theorems.
 
 *History.* Until 2026-10-17 this entry compared `Pcf.Palomar.pcfAllTheWayDown_charZero`,
 which takes purity and Abhyankar's lemma as its first two arguments (`purity`, `abhyankar`).
