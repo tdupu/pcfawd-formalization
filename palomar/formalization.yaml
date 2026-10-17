@@ -52,8 +52,8 @@ project:
     - Taylor Dupuy
 
 classification:
-  arxiv: [math.DS, math.AG, math.NT]
-  msc2020: [37P05, 37P15, 14E22]
+  arxiv: ["math.DS", "math.AG", "math.NT"]
+  msc2020: ["37P05", "37P15", "14E22"]  # quoted: YAML 1.2 reads 14E22 as a float
 
 sources:
   - title: "PCF all the way down"
