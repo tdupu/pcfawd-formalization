@@ -78,6 +78,39 @@ public import Pcf.Stacks.Purity.FiniteNormalHartogs
 public import Pcf.Stacks.Purity.FiniteNormalAlgebraRecovery
 public import Pcf.Stacks.Purity.DiscriminantFiber
 public import Pcf.Stacks.Purity.HeightOneEtaleBridge
+public import Pcf.Palomar.Unconditional
+public import Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
+public import Pcf.Stacks.Abhyankar.StrictComponentClassification
+public import Pcf.Stacks.Abhyankar.StrictGenericPresentation
+public import Pcf.Stacks.Abhyankar.StrictHeightOneTransport
+public import Pcf.Stacks.Abhyankar.StrictHeightOneUnramified
+public import Pcf.Stacks.Abhyankar.StrictHenselizationCompletionFlat
+public import Pcf.Stacks.Abhyankar.StrictHenselizationLocalize
+public import Pcf.Stacks.Abhyankar.StrictNormalDecomposition
+public import Pcf.Stacks.Abhyankar.StrictNormalizationColimit
+public import Pcf.Stacks.Abhyankar.StrictRootComponent
+public import Pcf.Stacks.Abhyankar.StrictRootCover
+public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Common.EtaleNormal
+public import Pcf.Stacks.Common.RegularLocalization
+public import Pcf.Stacks.Common.RegularNormal
+public import Pcf.Stacks.Purity.Completion
+public import Pcf.Stacks.Purity.CompletionDescent
+public import Pcf.Stacks.Purity.FormalEtaleLift
+public import Pcf.Stacks.Purity.HenselianFiniteEtaleLift
+public import Pcf.Stacks.Purity.HypersurfaceLiftingComplete
+public import Pcf.Stacks.Purity.PuncturedEtaleOfPointwise
+public import Pcf.Stacks.Purity.Tag0BMA
+public import Pcf.Stacks.Purity.Tag0BMB
+public import Pcf.Stacks.Purity.Tag0BMBLocalModel
+public import Pcf.Stacks.Purity.GabberPolynomialIdempotent
+public import Pcf.Stacks.Abhyankar.DivisorNormalizationTransport
+public import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
+public import Pcf.Stacks.Purity.DiscriminantGlobal
+public import Pcf.Stacks.Purity.StandardEtaleSectionLifting
+public import Pcf.Stacks.Purity.DimensionTwo
+public import Pcf.Stacks.Purity.LocalEtaleSectionLifting
+public import Pcf.Stacks.Purity.IntegralIdempotentPolynomial
 public import Pcf.Stacks.Purity.OuterInduction
 public import Pcf.Stacks.Purity.HypersurfaceLifting
 public import Pcf.Stacks.Purity.HenselianIdempotents
@@ -1534,6 +1567,425 @@ divisor. -/
 #print axioms Pcf.SchemePCFAllTheWayDown
 #print axioms Pcf.schemePcfCoveringAtDepthOfLocalTheorems
 #print axioms Pcf.pcfAllTheWayDown_charZero
+
+/-! ## Purity and Abhyankar run (2026-10-16)
+
+Every non-internal theorem of the modules added in the purity/Abhyankar run
+(`ai/2026-10-16-purity-abhyankar-completion/`), and of the formerly orphaned purity and
+Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
+
+#print axioms Pcf.Stacks.zariskiNagataPurity
+#print axioms Pcf.Stacks.palomar_zariskiNagataPurity
+#print axioms Pcf.Stacks.abhyankarLemma
+#print axioms Pcf.Stacks.palomar_abhyankarLemma
+#print axioms Pcf.pcfAllTheWayDownLocalTheorems
+#print axioms Pcf.pcfAllTheWayDown_charZero_unconditional
+#print axioms Pcf.Palomar.pcfAllTheWayDown_charZero
+#print axioms Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional
+
+-- Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
+#print axioms Pcf.Stacks.exists_unit_pow_eq_of_pow_mul_eq
+#print axioms Pcf.Stacks.formallyUnramified_dvrRoot_of_dvd
+#print axioms Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd
+#print axioms Pcf.Stacks.surjective_of_isLocalHom_of_dvr
+
+-- Pcf.Stacks.Abhyankar.StrictComponentClassification
+#print axioms Pcf.Stacks.AlgHom.extendScalarsOfIsFractionRing_apply
+#print axioms Pcf.Stacks.charZero_of_forall_nat_isUnit
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictComponent
+#print axioms Pcf.Stacks.rootPoly_fractionRing_irreducible
+
+-- Pcf.Stacks.Abhyankar.StrictGenericPresentation
+#print axioms Pcf.Stacks.exists_mul_eq_strictRootCoverToRootFractionField
+#print axioms Pcf.Stacks.exists_strictRootCover_equiv_of_idempotent_factor
+#print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
+#print axioms Pcf.Stacks.strictRootCoverToRootFractionField_root
+
+-- Pcf.Stacks.Abhyankar.StrictHeightOneTransport
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
+#print axioms Pcf.Stacks.StrictRootComponentData.etaleAway
+#print axioms Pcf.Stacks.StrictRootComponentData.faithfulSMul
+#print axioms Pcf.Stacks.StrictRootComponentData.finite
+#print axioms Pcf.Stacks.StrictRootComponentData.isDomain
+#print axioms Pcf.Stacks.StrictRootComponentData.isIntegrallyClosed
+#print axioms Pcf.Stacks.StrictRootComponentData.mk.sizeOf_spec
+#print axioms Pcf.Stacks.StrictRootComponentData.towerComponent
+#print axioms Pcf.Stacks.StrictRootComponentData.towerRoot
+#print axioms Pcf.Stacks.StrictRootComponentData.unramified
+#print axioms Pcf.Stacks.StrictRootComponentData.unramified_of_root_mem
+#print axioms Pcf.Stacks.exists_common_multiple_ramificationIdx
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
+#print axioms Pcf.Stacks.forall_height_one_isUnramifiedAt_of_root_mem
+#print axioms Pcf.Stacks.isUnramifiedAt_of_isEtaleAt
+#print axioms Pcf.Stacks.mem_minimalPrimes_span_of_height_eq_one
+#print axioms Pcf.Stacks.under_eq_of_height_eq_one_of_mem
+
+-- Pcf.Stacks.Abhyankar.StrictHeightOneUnramified
+#print axioms Pcf.Stacks.StrictRootComponentPreData.exists_aeval_eq
+#print axioms Pcf.Stacks.StrictRootComponentPreData.exists_aeval_mul_eq_aeval_of_generic
+#print axioms Pcf.Stacks.StrictRootComponentPreData.faithfulSMul_component
+#print axioms Pcf.Stacks.StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
+#print axioms Pcf.Stacks.StrictRootComponentPreData.toDataOfDvd_carrier
+#print axioms Pcf.Stacks.exists_aeval_eq_of_mem_adjoin
+#print axioms Pcf.Stacks.exists_strictRootComponentData
+
+-- Pcf.Stacks.Abhyankar.StrictHenselizationCompletionFlat
+#print axioms Pcf.Stacks.Module.Flat.of_forall_exists_flat_algebra
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.isUnit_toLocalColimitAlgHom_of_point_ne_zero
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_completion_flat
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_completion_flat_stageLocal
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_completion_isNoetherianRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_flat_stage
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isNoetherianRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_maximalIdeal_stageLocal
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit_eq
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.stageLocalToLocalColimit_algebraMap
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.stagePrime_isPrime
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.toLocalColimitAlgHom_mem_maximalIdeal_of_point_eq_zero
+#print axioms Pcf.Stacks.adicCompletion_flat_of_flat_of_map_maximalIdeal
+#print axioms Pcf.Stacks.exists_basis_quotient_maximalIdeal_powers_of_flat
+#print axioms Pcf.Stacks.exists_linearCombination_reduceModIdeal_bijective_of_flat
+#print axioms Pcf.Stacks.maximalAdicCompletion_flat_of_flat_of_map_maximalIdeal
+#print axioms Pcf.Stacks.quotientPowSMulTopEquivMap_mk
+#print axioms Pcf.Stacks.quotientPowSMulTopEquivMap_symm_mk
+#print axioms Pcf.Stacks.quotientPowSMulTopEquivMap_symm_transitionMap
+#print axioms Pcf.Stacks.quotientPowSMulTopEquivMap_transitionMap
+#print axioms Pcf.Stacks.quotientSMulTopEquivQuotientMap_mk
+#print axioms Pcf.Stacks.smul_top_eq_restrictScalars_map_pow_smul_top
+
+-- Pcf.Stacks.Abhyankar.StrictHenselizationLocalize
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.aeval_smul_derivative_scaleRoots
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.algebraMap_ne_zero_of_mem
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.atPrimeAlgebra_isScalarTower
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_bijective_of_isLocalization
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_injective_of_isLocalization
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.colimitBaseChangeRingHom_surjective_of_isLocalization
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.colimitLocalizationRingEquiv_apply
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_localizationBaseChange_equalizing_refinement
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_localizationBaseChange_refinement
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_localizationBaseChange_refinement_of_toColimit_eq
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_mem_mul_eq_one_tmul
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_mem_mul_eq_zero_of_one_tmul_eq_zero
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.isUnit_algebraMap_colimit_of_mem
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.isUnit_of_mul_isUnit_right_of_commRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitAtPrimeRingEquiv_algebraMap
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimitBaseChangeRingHom_bijective_of_isLocalization
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitLocalizationRingEquiv_algebraMap
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitLocalizationRingEquiv_apply
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localPoint_comp_localColimitLocalizationRingEquiv
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localizationBaseChange_final
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.scaleRoots_comp_C_mul_X
+
+-- Pcf.Stacks.Abhyankar.StrictNormalDecomposition
+#print axioms Pcf.Stacks.IsIdempotentElem.isIntegral
+#print axioms Pcf.Stacks.IsIdempotentElem.mul_aeval_mul
+#print axioms Pcf.Stacks.IsStacksNormalRing.exists_completeOrthogonalIdempotents
+#print axioms Pcf.Stacks.IsStacksNormalRing.isCoprime_of_mem_minimalPrimes
+#print axioms Pcf.Stacks.IsStacksNormalRing.of_isLocalization
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.etale_localizationAway_baseChange
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isStacksNormalRing_of_regular_divisor
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_tensor_exists_normalDomain_decomposition
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_tensor_localizationAway_isStacksNormalRing
+#print axioms Pcf.Stacks.exists_completeOrthogonalIdempotents_of_isIntegralClosure_localizationAway
+
+-- Pcf.Stacks.Abhyankar.StrictNormalizationColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.algebraMap_mem_nonZeroDivisors_localColimit
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_refinement_forall_eq_zero
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_refinement_map_eq_zero_of_map_eq_zero
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ker_algebraMap_eq_maximalIdeal
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitIntegralClosureEquiv.congr_simp
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitIntegralClosureEquiv_val
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isIntegralClosure
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isIntegralClosure_localizationAway
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_toIntegralClosure_bijective
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotient_localColimit_isRegularLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotient_span_localColimit_isRegularLocalRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.quotient_span_localColimit_isRegularRing
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.toIntegralClosure_map_val
+
+-- Pcf.Stacks.Abhyankar.StrictRootComponent
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_strictRootComponentPreData_strictBaseChangeFactor
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.strictBaseChangeFactor_faithfulSMul
+#print axioms Pcf.Stacks.StrictRootComponentPreData.etaleAway
+#print axioms Pcf.Stacks.StrictRootComponentPreData.faithfulSMul
+#print axioms Pcf.Stacks.StrictRootComponentPreData.finite
+#print axioms Pcf.Stacks.StrictRootComponentPreData.generic
+#print axioms Pcf.Stacks.StrictRootComponentPreData.isDomain
+#print axioms Pcf.Stacks.StrictRootComponentPreData.isIntegrallyClosed
+#print axioms Pcf.Stacks.StrictRootComponentPreData.mk.sizeOf_spec
+#print axioms Pcf.Stacks.StrictRootComponentPreData.toData_carrier
+#print axioms Pcf.Stacks.StrictRootComponentPreData.towerComponent
+#print axioms Pcf.Stacks.StrictRootComponentPreData.towerRoot
+#print axioms Pcf.Stacks.etale_localizationAway_quotient_idempotent
+#print axioms Pcf.Stacks.exists_strictRootComponentPreData
+#print axioms Pcf.Stacks.faithfulSMul_quotient_idempotent
+#print axioms Pcf.Stacks.injective_includeRight_fractionRing
+#print axioms Pcf.Stacks.integralClosure_faithfulSMul
+#print axioms Pcf.Stacks.integralClosure_finite_of_etale_of_isDomain
+#print axioms Pcf.Stacks.integralClosure_isIntegrallyClosed
+#print axioms Pcf.Stacks.integralClosure_isLocalization_away
+#print axioms Pcf.Stacks.isEtaleAt_of_isLocalization_away
+#print axioms Pcf.Stacks.isEtaleAt_quotient_idempotent
+#print axioms Pcf.Stacks.nonempty_strictRootComponentPreData_of_factor
+#print axioms Pcf.Stacks.strictRootCover_tensor_away_nontrivial
+
+-- Pcf.Stacks.Abhyankar.StrictRootCover
+#print axioms Pcf.Stacks.IsIdempotentElem.eq_zero_or_eq_one_of_isDomain
+#print axioms Pcf.Stacks.IsSepClosed.of_ringEquiv
+#print axioms Pcf.Stacks.bijective_algebraMap_of_finite_etale_local_of_isSepClosed
+#print axioms Pcf.Stacks.divisorLocalization_irreducible
+#print axioms Pcf.Stacks.divisorLocalization_isDiscreteValuationRing
+#print axioms Pcf.Stacks.divisorLocalization_isRegularLocalRing
+#print axioms Pcf.Stacks.divisorPrime_height_eq_one
+#print axioms Pcf.Stacks.divisorPrime_isPrime
+#print axioms Pcf.Stacks.faithfulSMul_of_flat_of_isDomain
+#print axioms Pcf.Stacks.isDiscreteValuationRing_localization_atPrime_of_height_eq_one
+#print axioms Pcf.Stacks.isLocalRing_of_isDomain_of_finite_of_henselian
+#print axioms Pcf.Stacks.isLocalRing_of_quotient_of_le_jacobson
+#print axioms Pcf.Stacks.map_maximalIdeal_le_jacobson_of_isIntegral
+#print axioms Pcf.Stacks.map_maximalIdeal_le_of_isMaximal_of_isIntegral
+#print axioms Pcf.Stacks.span_singleton_isPrime_of_quotient_isDomain
+#print axioms Pcf.Stacks.strictRootCover_degree_pos
+#print axioms Pcf.Stacks.strictRootCover_faithfulSMul
+#print axioms Pcf.Stacks.strictRootCover_finite
+#print axioms Pcf.Stacks.strictRootCover_isDomain
+#print axioms Pcf.Stacks.strictRootCover_isIntegral
+#print axioms Pcf.Stacks.strictRootCover_isIntegrallyClosed
+#print axioms Pcf.Stacks.strictRootCover_isLocalHom
+#print axioms Pcf.Stacks.strictRootCover_isLocalRing
+#print axioms Pcf.Stacks.strictRootCover_isNoetherianRing
+#print axioms Pcf.Stacks.strictRootCover_isRegularLocalRing
+#print axioms Pcf.Stacks.strictRootCover_localization_span_root_isDiscreteValuationRing
+#print axioms Pcf.Stacks.strictRootCover_quotient_isRegularLocalRing
+#print axioms Pcf.Stacks.strictRootCover_quotient_isRegularRing
+#print axioms Pcf.Stacks.strictRootCover_residueField_bijective
+#print axioms Pcf.Stacks.strictRootCover_residueField_isSepClosed
+#print axioms Pcf.Stacks.strictRootCover_span_root_height_eq_one
+#print axioms Pcf.Stacks.strictRootCover_span_root_isPrime
+#print axioms Pcf.Stacks.strictRootCover_span_root_under
+#print axioms Pcf.Stacks.strictRoot_mem_jacobson
+#print axioms Pcf.Stacks.strictRoot_mem_maximalIdeal
+#print axioms Pcf.Stacks.strictRoot_mem_nonZeroDivisors
+#print axioms Pcf.Stacks.strictRoot_mem_of_isMaximal
+#print axioms Pcf.Stacks.strictRoot_pow
+
+-- Pcf.Stacks.Abhyankar.Tag0EYG
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.ker_geometricPointAtAlgebra
+#print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor
+#print axioms Pcf.Stacks.henselianLocalRing_of_ringEquiv
+
+-- Pcf.Stacks.Common.EtaleNormal
+#print axioms Pcf.Stacks.IsStacksNormalRing.of_etale
+#print axioms Pcf.Stacks.eq_of_comap_le_of_etale
+#print axioms Pcf.Stacks.height_eq_height_under_of_etale
+#print axioms Pcf.Stacks.height_eq_height_under_of_flat_of_quasiFiniteAt
+#print axioms Pcf.Stacks.isArtinianRing_isReduced_tensor_fractionRing_of_etale
+#print axioms Pcf.Stacks.isDomain_isIntegrallyClosed_atPrime_of_etale
+#print axioms Pcf.Stacks.isDomain_isIntegrallyClosed_atPrime_of_etale_of_isDomain
+#print axioms Pcf.Stacks.isField_localization_tensor_fractionRing_of_etale
+#print axioms Pcf.Stacks.isIntegrallyClosedIn_of_isLocalization
+#print axioms Pcf.Stacks.isIntegrallyClosedIn_tensor_fractionRing_of_smooth
+#print axioms Pcf.Stacks.isIntegrallyClosed_of_etale
+#print axioms Pcf.Stacks.isStacksNormalRing_of_etale_of_isDomain
+
+-- Pcf.Stacks.Common.RegularLocalization
+#print axioms Pcf.Stacks.IsRegularLocalRing.of_isLocalization_atPrime
+#print axioms Pcf.Stacks.RegularLocalization.instIsRegularLocalRingLocalizationAtPrime
+#print axioms Pcf.Stacks.RegularLocalization.instIsRegularRingOfIsRegularLocalRing
+#print axioms Pcf.Stacks.isRegularLocalRing_iff_globalDimension_lt_top
+#print axioms Pcf.Stacks.isRegularLocalRing_localization_atPrime
+#print axioms Pcf.Stacks.isRegularRing_of_isRegularLocalRing
+
+-- Pcf.Stacks.Common.RegularNormal
+#print axioms Pcf.Stacks.exists_regular_pair_of_two_le_ringKrullDim
+#print axioms Pcf.Stacks.isIntegrallyClosed_of_isRegularLocalRing
+#print axioms Pcf.Stacks.isIntegrallyClosed_of_isRegularRing
+#print axioms Pcf.Stacks.isRegularRing_localization_atPrime
+#print axioms Pcf.Stacks.isStacksNormalRing_of_isRegularLocalRing
+#print axioms Pcf.Stacks.isStacksNormalRing_of_isRegularRing
+#print axioms Pcf.Stacks.mem_span_singleton_of_maximalIdeal_mul_le
+#print axioms Pcf.Stacks.mem_span_singleton_of_regular_pair
+
+-- Pcf.Stacks.Purity.Completion
+#print axioms Pcf.Stacks.IsAdicComplete.of_le
+#print axioms Pcf.Stacks.exists_sum_smul_of_mem_span_smul
+#print axioms Pcf.Stacks.faithfullyFlat_adicCompletion
+#print axioms Pcf.Stacks.isAdicComplete_map_of_finite
+#print axioms Pcf.Stacks.isAdicComplete_map_self_of_finite
+#print axioms Pcf.Stacks.isAdicComplete_map_span_singleton_of_finite
+#print axioms Pcf.Stacks.isAdicComplete_maximalIdeal_quotient
+#print axioms Pcf.Stacks.isAdicComplete_of_finite
+#print axioms Pcf.Stacks.isAdicComplete_quotient
+#print axioms Pcf.Stacks.isAdicComplete_span_singleton_of_finite
+#print axioms Pcf.Stacks.isNoetherianRing_adicCompletion
+#print axioms Pcf.Stacks.isRegularLocalRing_adicCompletion
+#print axioms Pcf.Stacks.map_maximalIdeal_adicCompletion
+#print axioms Pcf.Stacks.mem_smul_top_of_sub_mem_smul_of_smodEq
+#print axioms Pcf.Stacks.ringKrullDim_adicCompletion
+
+-- Pcf.Stacks.Purity.CompletionDescent
+#print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity
+#print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_faithfullyFlat_puncturedSpectrumPurity
+#print axioms Pcf.Stacks.openSections_bijective_of_regularPair_of_puncturedEtale
+#print axioms Pcf.Stacks.preimage_puncturedSpectrum_eq_of_map_maximalIdeal_eq
+#print axioms Pcf.Stacks.pullbackSections_bijective_of_regularPair_of_puncturedEtale
+#print axioms Pcf.Stacks.puncturedEtale_tensorProduct_of_map_maximalIdeal_eq
+
+-- Pcf.Stacks.Purity.FormalEtaleLift
+#print axioms Pcf.Stacks.Ideal.Quotient.mk_smul_base
+#print axioms Pcf.Stacks.algHom_lift_unique_of_formallyUnramified
+#print axioms Pcf.Stacks.algebraMap_localization_away_injective
+#print axioms Pcf.Stacks.algebraMap_mem_nonZeroDivisors_of_isSMulRegular
+#print axioms Pcf.Stacks.awayToAwayLeftₐ_algebraMap
+#print axioms Pcf.Stacks.awayToAwayRightₐ_algebraMap
+#print axioms Pcf.Stacks.away_algHom_ext
+#print axioms Pcf.Stacks.away_mapₐ_algebraMap
+#print axioms Pcf.Stacks.exists_algHom_lift_of_isAdicComplete
+#print axioms Pcf.Stacks.exists_algHom_lift_of_regular_pair
+#print axioms Pcf.Stacks.exists_algHom_of_compatible_of_isAdicComplete
+#print axioms Pcf.Stacks.exists_algHom_of_regular_pair_of_agree
+#print axioms Pcf.Stacks.forall_of_isSMulRegular_quotient
+#print axioms Pcf.Stacks.isNilpotent_ker_away_mapₐ
+#print axioms Pcf.Stacks.isNilpotent_ker_quotFactorₐ_span_pow
+#print axioms Pcf.Stacks.isSMulRegular_quotSMulTop_quotient_of_forall
+#print axioms Pcf.Stacks.isSMulRegular_quotient_of_forall
+#print axioms Pcf.Stacks.ker_away_mapₐ_le
+#print axioms Pcf.Stacks.mem_smul_top_iff_exists
+#print axioms Pcf.Stacks.mem_span_pow_smul_top_iff
+#print axioms Pcf.Stacks.quotFactorₐ.congr_simp
+#print axioms Pcf.Stacks.quotFactorₐ_comp_quotFactorₐ
+#print axioms Pcf.Stacks.quotFactorₐ_mk
+#print axioms Pcf.Stacks.quotFactorₐ_self
+#print axioms Pcf.Stacks.quotFactorₐ_surjective
+#print axioms Pcf.Stacks.span_pow_succ_le
+#print axioms Pcf.Stacks.span_pow_succ_le_of_le
+#print axioms Pcf.Stacks.span_pow_succ_succ_le
+
+-- Pcf.Stacks.Purity.HenselianFiniteEtaleLift
+#print axioms Pcf.Stacks.BoolFamily.etale
+#print axioms Pcf.Stacks.HasFiniteEtaleLift.of_adjoinRoot
+#print axioms Pcf.Stacks.HasFiniteEtaleLift.of_algEquiv
+#print axioms Pcf.Stacks.HasFiniteEtaleLift.prod
+#print axioms Pcf.Stacks.etale_adjoinRoot_of_isCoprime_derivative
+#print axioms Pcf.Stacks.etale_prod
+#print axioms Pcf.Stacks.etale_quotient_map
+#print axioms Pcf.Stacks.exists_adjoinRoot_algEquiv_of_closedFibre_field
+#print axioms Pcf.Stacks.exists_finite_etale_lift_of_henselianLocalRing
+#print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_isIntegral_of_henselian
+#print axioms Pcf.Stacks.exists_monic_factorization_lift_of_henselian
+#print axioms Pcf.Stacks.hasFiniteEtaleLift_of_finrank_eq
+#print axioms Pcf.Stacks.hypersurfaceFiniteEtaleLifting_of_henselian_of_fullyFaithful
+#print axioms Pcf.Stacks.isCoprime_of_isCoprime_map_of_le_jacobson
+#print axioms Pcf.Stacks.restrictFiniteEtaleToHypersurface_essSurj
+#print axioms Pcf.Stacks.subsingleton_of_subsingleton_closedFibre
+#print axioms Polynomial.MonicDegreeEq.mk.congr_simp
+
+-- Pcf.Stacks.Purity.HypersurfaceLiftingComplete
+#print axioms Pcf.Stacks.etale_localization_away_of_isEtaleAt
+#print axioms Pcf.Stacks.etale_of_hypersurface_lift
+#print axioms Pcf.Stacks.exists_algHom_bijective_of_hypersurface_lift
+#print axioms Pcf.Stacks.exists_algHom_of_pullback_iso
+#print axioms Pcf.Stacks.exists_isRegular_triple
+#print axioms Pcf.Stacks.henselianLocalRing_of_isAdicComplete
+#print axioms Pcf.Stacks.hypersurfaceFiniteEtaleLifting_of_isAdicComplete
+#print axioms Pcf.Stacks.isSMulRegular_quotSMulTop_congr
+#print axioms Pcf.Stacks.isSMulRegular_quotSMulTop_quotient_span_pow_of_isWeaklyRegular
+#print axioms Pcf.Stacks.isSMulRegular_quotSMulTop_self_iff
+#print axioms Pcf.Stacks.isSMulRegular_quotient_span_pow_of_isWeaklyRegular
+#print axioms Pcf.Stacks.isWeaklyRegular_pair_of_triple
+#print axioms Pcf.Stacks.localized_bijective_of_mod_isSMulRegular
+#print axioms Pcf.Stacks.mem_smul_top_iff_mem_span
+#print axioms Pcf.Stacks.mem_span_of_scaleRoots_aeval_eq_zero_of_isStacksNormalRing
+#print axioms Pcf.Stacks.puncturedSpectrumScheme.congr_simp
+#print axioms Pcf.Stacks.regularLocal_puncturedSpectrumPurity_induction_step_of_isAdicComplete
+
+-- Pcf.Stacks.Purity.PuncturedEtaleOfPointwise
+#print axioms Pcf.Stacks.etale_opens_ι_comp_of_forall_isEtaleAt
+#print axioms Pcf.Stacks.etale_puncturedSpectrum_pullback_of_forall_isEtaleAt
+#print axioms Pcf.Stacks.etale_respectsIso
+
+-- Pcf.Stacks.Purity.Tag0BMA
+#print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
+#print axioms Pcf.Stacks.isIntegrallyClosed_of_isRegularLocalRing'
+#print axioms Pcf.Stacks.puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
+#print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing
+#print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
+#print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
+
+-- Pcf.Stacks.Purity.Tag0BMB
+#print axioms Pcf.Stacks.palomar_zariskiNagataPurity_of_inputs
+#print axioms Pcf.Stacks.zariskiNagataPurity_of_inputs
+
+-- Pcf.Stacks.Purity.Tag0BMBLocalModel
+#print axioms Pcf.Stacks.faithfullyFlat_localization_atPrime
+#print axioms Pcf.Stacks.flat_of_faithfullyFlat_of_flat
+#print axioms Pcf.Stacks.formallyEtale_localization_atPrime
+#print axioms Pcf.Stacks.formallyUnramified_of_faithfullyFlat_of_formallyEtale
+#print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_lowerHeight
+#print axioms Pcf.Stacks.height_eq_height_under_of_finite_of_isIntegrallyClosed
+#print axioms Pcf.Stacks.height_eq_height_under_of_mem_minimalPrimes
+#print axioms Pcf.Stacks.height_le_height_under_of_mem_minimalPrimes
+#print axioms Pcf.Stacks.height_map_fiber_eq_zero_of_mem_minimalPrimes
+#print axioms Pcf.Stacks.injective_algebraMap_of_finite_of_ringKrullDim_le
+#print axioms Pcf.Stacks.isDomain_isIntegrallyClosed_localization_of_etale
+#print axioms Pcf.Stacks.isEtaleAt_of_flat_of_formallyUnramified
+#print axioms Pcf.Stacks.isEtaleAt_of_le
+#print axioms Pcf.Stacks.mem_minimalPrimes_of_quasiFiniteAt
+#print axioms Pcf.Stacks.module_finite_localization_atPrime_of_unique
+
+-- Pcf.Stacks.Purity.GabberPolynomialIdempotent
+#print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_aeval_eq_zero_of_gabberPolynomial
+
+-- Pcf.Stacks.Abhyankar.DivisorNormalizationTransport
+#print axioms Pcf.Stacks.isUnramifiedAt_localizedNormalization_of_dvrRootPuncturedGenericEquiv
+#print axioms Pcf.Stacks.isUnramifiedAt_of_localizedNormalizationAtPrime
+#print axioms Pcf.Stacks.localizedDVRRootNormalizationRingHom_comp_algebraMap
+#print axioms Pcf.Stacks.localizedNormalizationEquivDVRRootPuncturedNormalization_algebraMap
+
+-- Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
+#print axioms Pcf.Stacks.isIntegralClosure_of_modelEquiv
+#print axioms Pcf.Stacks.localizationBaseChangeIntegralClosureEquiv.congr_simp
+#print axioms Pcf.Stacks.localizationBaseChangeIntegralClosureEquiv_val
+#print axioms Pcf.Stacks.localizationBaseChange_isIntegralClosure
+#print axioms Pcf.Stacks.localizedNormalizationAlgebra_algebraMap
+#print axioms Pcf.Stacks.localizedNormalizationEquivIntegralClosure_algebraMap
+#print axioms Pcf.Stacks.localizedNormalization_isIntegralClosure
+#print axioms Pcf.Stacks.localizedNormalization_isScalarTower
+
+-- Pcf.Stacks.Purity.DiscriminantGlobal
+#print axioms Pcf.Stacks.Algebra.etale_of_isUnit_discr_of_basis_global
+#print axioms Pcf.Stacks.Algebra.formallyEtale_of_discr_ne_zero_of_basis_global
+#print axioms Pcf.Stacks.Algebra.isUnramifiedAt_of_formallyEtale_fiber
+#print axioms Pcf.Stacks.Algebra.traceForm_pi_nondegenerate_factors
+#print axioms Pcf.Stacks.Algebra.traceForm_prod_nondegenerate_factors
+
+-- Pcf.Stacks.Purity.StandardEtaleSectionLifting
+#print axioms Pcf.Stacks.exists_algHom_lift_of_isStandardEtale
+
+-- Pcf.Stacks.Purity.DimensionTwo
+#print axioms Pcf.Stacks.Algebra.isEtaleAt_of_puncturedSpectrum_pullback_etale
+#print axioms Pcf.Stacks.exists_prime_height_one_of_isRegularLocalRing_dimension_two
+#print axioms
+  Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
+
+-- Pcf.Stacks.Purity.LocalEtaleSectionLifting
+#print axioms Pcf.Stacks.exists_algHom_lift_of_etale_of_isLocalRing
+
+-- Pcf.Stacks.Purity.IntegralIdempotentPolynomial
+#print axioms Pcf.Stacks.exists_monic_aeval_eq_zero_map_eq_X_pow_mul_X_sub_one_pow
 
 /-! ## Example `ex:pinched`: the pinched plane
 
