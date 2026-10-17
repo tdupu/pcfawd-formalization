@@ -26,7 +26,7 @@ The two local theorems that `Pcf.pcfAllTheWayDown_charZero` and
 
 This file discharges those inputs:
 
-* `Pcf.pcfAllTheWayDownLocalTheorems`: the structure `Pcf.PcfAllTheWayDownLocalTheorems`, built
+* `Pcf.pcfAllTheWayDownLocalTheorems`: the structure `Pcf.PCFAllTheWayDownLocalTheorems`, built
   from the two theorems;
 * `Pcf.pcfAllTheWayDown_charZero_unconditional`: the development-side statement with no inputs;
 * `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the compared Palomar statement with the
@@ -41,10 +41,10 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 namespace Pcf
 
-/-- The two local literature theorems of `PcfAllTheWayDownLocalTheorems`, proved:
+/-- The two local literature theorems of `PCFAllTheWayDownLocalTheorems`, proved:
 purity by `Pcf.Stacks.zariskiNagataPurity` (Stacks `0BMB`) and Abhyankar's lemma by
 `Pcf.Stacks.abhyankarLemma` (Stacks `0EYG`/`0EYH`). -/
-theorem pcfAllTheWayDownLocalTheorems : PcfAllTheWayDownLocalTheorems.{u} where
+theorem pcfAllTheWayDownLocalTheorems : PCFAllTheWayDownLocalTheorems.{u} where
   purity R S _ _ _ := Stacks.zariskiNagataPurity R S
   abhyankar R S _ _ _ a := Stacks.abhyankarLemma R S a
 
@@ -58,7 +58,7 @@ theorem pcfAllTheWayDown_charZero_unconditional
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
+    (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     SchemePCFAllTheWayDown k s f :=
   pcfAllTheWayDown_charZero pcfAllTheWayDownLocalTheorems k s f hpcf
 

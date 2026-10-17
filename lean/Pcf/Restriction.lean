@@ -20,7 +20,7 @@ of a restriction. Theorem `thm:bounding` is proved in the manuscript by Zariski�
 (Stacks Tag 0BMB) followed by Abhyankar's lemma for a regular divisor (Stacks Tag 0EYG);
 neither is available in Mathlib. It enters here as the field `PCFSetup.notMem_branch_iterate`, together
 with the finiteness statements of Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` as
-`sing_finite` and `meets_finite`.
+`singularPrimes_finite` and `meets_finite`.
 See `lean/AXIOMS.md` for the full census of assumed inputs, and
 `Pcf.Examples.DiagonalSquaring` for a witness showing that `PCFSetup` is inhabited.
 
@@ -46,15 +46,15 @@ namespace Pcf
 /-- The data of Theorem `thm:normal-invariant` together with the conclusion of Theorem
 `thm:bounding`.
 
-Here `amb` is the divisorial dynamical system of a finite surjective PCF morphism
+Here `ambient` is the divisorial dynamical system of a finite surjective PCF morphism
 `f : X → X` of a normal variety in characteristic zero, `fixedPrime` is a prime `A`
-of `X` with `f(A) = A`, and `res` is the divisorial dynamical system of the
+of `X` with `f(A) = A`, and `restriction` is the divisorial dynamical system of the
 restriction `g = f|_A : A → A`.
 
-* `sing` is the set of primes `Q'` of `A` with `Q' ⊆ Sing(X)` or `Q' ⊆ Sing(A)`;
+* `singularPrimes` is the set of primes `Q'` of `A` with `Q' ⊆ Sing(X)` or `Q' ⊆ Sing(A)`;
   by Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` these are the codimension-one
   components of two proper closed
-  subsets of `A`, hence `sing_finite`.
+  subsets of `A`, hence `singularPrimes_finite`.
 * `meets E` is the set of primes of `A` contained in `A ∩ E`; again by
   Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` this is finite whenever `E ≠ A`.
 * `key` is Theorem `thm:bounding` (per-divisor form) applied to the iterate `f^m`, for every `m`:
@@ -62,7 +62,7 @@ restriction `g = f|_A : A → A`.
   `Sing(X)`, `Sing(A)` and the other components of `Branch(f^m)`, the restriction
   `g^m` is unramified in codimension one.
 
-The decisive feature, and the reason the argument works, is that `sing` and `meets`
+The decisive feature, and the reason the argument works, is that `singularPrimes` and `meets`
 do **not** depend on `m`. -/
 structure PCFSetup (PX : Type u) (PA : Type v) where
   /-- The ambient system, i.e. `f` acting on the primes of `X`. -/

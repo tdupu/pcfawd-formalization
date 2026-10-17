@@ -107,8 +107,8 @@ instance schemeGlobalNormalizationMap_isIso_generic_stalkMap :
 
 /-- All actual stalk maps of the constructed normalization share its function field. -/
 theorem schemeGlobalNormalizationMap_stalkBirationalAt (x : schemeGlobalNormalization A) :
-    SchemeStalkBirationalAt (schemeGlobalNormalizationMap A) x :=
-  schemeStalkBirationalAt_of_isIso_generic_stalkMap (schemeGlobalNormalizationMap A) x
+    IsStalkBirationalAt (schemeGlobalNormalizationMap A) x :=
+  isStalkBirationalAt_of_isIso_generic_stalkMap (schemeGlobalNormalizationMap A) x
 
 instance schemeGlobalNormalizationMap_surjective : Surjective (schemeGlobalNormalizationMap A) :=
   surjective_of_isDominant_of_isClosed_range _

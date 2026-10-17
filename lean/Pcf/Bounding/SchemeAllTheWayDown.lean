@@ -15,7 +15,7 @@ This file recursively assembles the one-divisor theorem
 of an eventually periodic divisor, equips that closure with its actual return
 map, and continues the construction there.
 
-The companion predicate `SchemePcfCoveringAtDepth` contains only the local
+The companion predicate `SchemePCFCoveringAtDepth` contains only the local
 purity and Abhyankar inputs needed at each node of this geometric tree.  It
 does not contain a PCF assertion or any restatement of the conclusion.
 
@@ -44,9 +44,9 @@ def SchemePCFAllTheWayDownAtDepth
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X] : Prop :=
   match d with
-  | 0 => SchemeNormalizedPCFOfFiniteType k s f
+  | 0 => IsNormalizedPCFOfFiniteType k s f
   | d + 1 =>
-      SchemeNormalizedPCFOfFiniteType k s f ∧
+      IsNormalizedPCFOfFiniteType k s f ∧
         ∀ (A : SchemeDivisorPoint X) (r p : ℕ) (_hp : 1 ≤ p)
           (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1),
           let B := schemeDivisorIterateOfFiniteType k s f r A
@@ -57,7 +57,7 @@ def SchemePCFAllTheWayDownAtDepth
 
 /-- The tree of local covering inputs needed to apply the one-divisor theorem
 recursively through `d` actual divisor restrictions. -/
-def SchemePcfCoveringAtDepth
+def SchemePCFCoveringAtDepth
     (k : Type u) [Field k] [CharZero k]
     (d : ℕ) {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -68,12 +68,12 @@ def SchemePcfCoveringAtDepth
   | d + 1 =>
       (letI := schemeGlobalNormalizationMap_isFinite X k s
        ∀ (n : ℕ) (B : SchemeDivisorPoint (schemeGlobalNormalization X)),
-         InvariantDivisorCoveringInputs
+         InvariantDivisorCoveringHypotheses
            (End.of (schemeGlobalNormalizationLift f) ^ n).asHom B) ∧
         ∀ (A : SchemeDivisorPoint X) (r p : ℕ) (_hp : 1 ≤ p)
           (hA : (End.of f ^ (r + p)).asHom.base A.1 = (End.of f ^ r).asHom.base A.1),
           let B := schemeDivisorIterateOfFiniteType k s f r A
-          SchemePcfCoveringAtDepth k d
+          SchemePCFCoveringAtDepth k d
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
             (B.invariantClosureMap (End.of f ^ p).asHom
               (schemeDivisorIterateOfFiniteType_periodic k s f r p A hA))
@@ -87,13 +87,13 @@ theorem schemePCFAllTheWayDownAtDepth_of_cover
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (cover : SchemePcfCoveringAtDepth k d s f)
-    (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
+    (cover : SchemePCFCoveringAtDepth k d s f)
+    (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     SchemePCFAllTheWayDownAtDepth k d s f := by
   induction d generalizing X with
   | zero => exact hpcf
   | succ d ih =>
-      change SchemeNormalizedPCFOfFiniteType k s f ∧ _
+      change IsNormalizedPCFOfFiniteType k s f ∧ _
       constructor
       · exact hpcf
       · intro A r p hp hA
@@ -102,10 +102,10 @@ theorem schemePCFAllTheWayDownAtDepth_of_cover
         have hcover :
             letI := schemeGlobalNormalizationMap_isFinite X k s
             ∀ (n : ℕ) (C : SchemeDivisorPoint (schemeGlobalNormalization X)),
-              InvariantDivisorCoveringInputs
+              InvariantDivisorCoveringHypotheses
                 (End.of (schemeGlobalNormalizationLift f) ^ n).asHom C := by
           exact cover.1
-        have hpcfB : SchemeNormalizedPCFOfFiniteType k
+        have hpcfB : IsNormalizedPCFOfFiniteType k
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
             (B.invariantClosureMap (End.of f ^ p).asHom hB) := by
           exact pcfAllTheWayDown_scheme k s f A r p hp hA hcover hpcf
@@ -122,14 +122,14 @@ theorem schemePCFAllTheWayDown_of_cover
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (cover : ∀ d, SchemePcfCoveringAtDepth k d s f)
-    (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
+    (cover : ∀ d, SchemePCFCoveringAtDepth k d s f)
+    (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     ∀ d, SchemePCFAllTheWayDownAtDepth k d s f := by
   intro d
   exact schemePCFAllTheWayDownAtDepth_of_cover k d s f (cover d) hpcf
 
 #print axioms SchemePCFAllTheWayDownAtDepth
-#print axioms SchemePcfCoveringAtDepth
+#print axioms SchemePCFCoveringAtDepth
 #print axioms schemePCFAllTheWayDownAtDepth_of_cover
 #print axioms schemePCFAllTheWayDown_of_cover
 

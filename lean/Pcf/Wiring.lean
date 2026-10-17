@@ -113,7 +113,7 @@ noncomputable def restrictionDivisorDynamicsOfPurity [NoetherianSpace B]
 branch-finiteness
 derived from purity instead of assumed.**
 
-Every field of the resulting `Pcf.PCFGeometry` is as before except `res`, which is now
+Every field of the resulting `Pcf.PCFGeometry` is as before except `restriction`, which is now
 `Pcf.restrictionDivisorDynamicsOfPurity` rather than an arbitrary `Pcf.DivisorDynamics` handed over by the caller.
 The caller no longer supplies `step_image_ramified_finite` for the restricted system. -/
 noncomputable def PCFGeometry.ofPurityData [NoetherianSpace B]

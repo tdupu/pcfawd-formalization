@@ -428,7 +428,7 @@ formally étale.
 
 This is the ring-theoretic input used below to pass from an étale morphism of schemes to
 formal étaleness of its stalk maps. -/
-theorem RingHom.Etale.localRingHom_formallyEtale
+theorem _root_.RingHom.Etale.localRingHom_formallyEtale
     {R S : Type u} [CommRing R] [CommRing S]
     (f : R →+* S) (hf : f.Etale) (q : Ideal S) [q.IsPrime] :
     (Localization.localRingHom (q.comap f) q f rfl).FormallyEtale := by
@@ -450,7 +450,7 @@ theorem RingHom.Etale.localRingHom_formallyEtale
   exact hlocal
 
 /-- Every stalk map of an étale morphism of schemes is formally étale. -/
-theorem AlgebraicGeometry.Etale.stalkMap_formallyEtale
+theorem _root_.AlgebraicGeometry.Etale.stalkMap_formallyEtale
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     (hg : AlgebraicGeometry.Etale g) (x : X) :
     (g.stalkMap x).hom.FormallyEtale := by
@@ -983,7 +983,7 @@ principal-ideal equality for the pullback ideal sheaf on the corresponding open 
 
 This removes the coordinate mismatch between an affine open `V` of `X` and the affine
 scheme `V.toScheme` used as a target chart. -/
-theorem IdealSheafData.exists_generator_comap_top_of_ideal_eq_span
+theorem _root_.AlgebraicGeometry.Scheme.IdealSheafData.exists_generator_comap_top_of_ideal_eq_span
     {X : Scheme.{u}} (J : X.IdealSheafData) (V : X.affineOpens)
     (b : Γ(X, V)) (h : J.ideal V = Ideal.span {b}) :
     ∃ c : Γ(V.1.toScheme, ⊤),
@@ -1038,7 +1038,7 @@ theorem exists_principal_comap_affineBasicOpen_of_atPrime_regular_dim_two
     exists_principal_affineBasicOpen_of_atPrime_regular_dim_two
       J U p q hJ hpq hp hdim hquotdim
   obtain ⟨c, hc⟩ :=
-    IdealSheafData.exists_generator_comap_top_of_ideal_eq_span J
+    AlgebraicGeometry.Scheme.IdealSheafData.exists_generator_comap_top_of_ideal_eq_span J
       (X.affineBasicOpen f)
       (X.presheaf.map (homOfLE (X.basicOpen_le f)).op a)
       hprincipal
@@ -1118,42 +1118,42 @@ noncomputable def affineIdealSheafStalkBoundingLocalizationPresentation
   simp [V]
 
 /-- Failure of formal unramifiedness at a point, defined from the actual stalk map. -/
-def schemeCrit0At {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
+def SchemeStalkNotFormallyUnramifiedAt {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
   ¬ (g.stalkMap x).hom.FormallyUnramified
 
 /-- The codimension-one stalk-formal-non-unramified locus of an actual scheme morphism. -/
-def schemeDivisorCrit0 {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) :
+def schemeDivisorNonUnramifiedLocus {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) :
     Set (SchemeDivisorPoint X) :=
-  {x | schemeCrit0At g x.1}
+  {x | SchemeStalkNotFormallyUnramifiedAt g x.1}
 
 @[simp]
-theorem mem_schemeDivisorCrit0_iff {X Y : AlgebraicGeometry.Scheme.{u}}
+theorem mem_schemeDivisorNonUnramifiedLocus_iff {X Y : AlgebraicGeometry.Scheme.{u}}
     (g : X ⟶ Y) (x : SchemeDivisorPoint X) :
-    x ∈ schemeDivisorCrit0 g ↔ ¬ (g.stalkMap x.1).hom.FormallyUnramified :=
+    x ∈ schemeDivisorNonUnramifiedLocus g ↔ ¬ (g.stalkMap x.1).hom.FormallyUnramified :=
   Iff.rfl
 
 /-- Failure of formal étaleness at a point, defined from the actual stalk map.
 
-For the locally finitely presented morphisms used in `SchemeNormalizationUnnormDyn`, this
+For the locally finitely presented morphisms used in `SchemeNormalizationUnnormalizedDynamics`, this
 is the stalk criterion underlying the manuscript's pointwise non-étale locus. -/
-def schemeCrit1At {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
+def SchemeStalkNotFormallyEtaleAt {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
   ¬ (g.stalkMap x).hom.FormallyEtale
 
 /-- The codimension-one stalk-formal-non-étale locus of an actual scheme morphism. -/
-def schemeDivisorCrit1 {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) :
+def schemeDivisorNonEtaleLocus {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) :
     Set (SchemeDivisorPoint X) :=
-  {x | schemeCrit1At g x.1}
+  {x | SchemeStalkNotFormallyEtaleAt g x.1}
 
 @[simp]
-theorem mem_schemeDivisorCrit1_iff {X Y : AlgebraicGeometry.Scheme.{u}}
+theorem mem_schemeDivisorNonEtaleLocus_iff {X Y : AlgebraicGeometry.Scheme.{u}}
     (g : X ⟶ Y) (x : SchemeDivisorPoint X) :
-    x ∈ schemeDivisorCrit1 g ↔ ¬ (g.stalkMap x.1).hom.FormallyEtale :=
+    x ∈ schemeDivisorNonEtaleLocus g ↔ ¬ (g.stalkMap x.1).hom.FormallyEtale :=
   Iff.rfl
 
 /-- Formal étaleness implies formal unramifiedness, so the actual non-unramified
 divisor locus is contained in the actual non-étale divisor locus (U2). -/
-theorem schemeDivisorCrit0_subset_crit1 {X Y : AlgebraicGeometry.Scheme.{u}}
-    (g : X ⟶ Y) : schemeDivisorCrit0 g ⊆ schemeDivisorCrit1 g := by
+theorem schemeDivisorNonUnramifiedLocus_subset_nonEtaleLocus {X Y : AlgebraicGeometry.Scheme.{u}}
+    (g : X ⟶ Y) : schemeDivisorNonUnramifiedLocus g ⊆ schemeDivisorNonEtaleLocus g := by
   intro x hx he
   apply hx
   letI := (g.stalkMap x.1).hom.toAlgebra
@@ -1164,30 +1164,30 @@ theorem schemeDivisorCrit0_subset_crit1 {X Y : AlgebraicGeometry.Scheme.{u}}
 
 /-- A divisor point represented by a local bounding chart is not in the actual
 codimension-one non-étale locus. -/
-theorem SchemeStalkBoundingChart.not_mem_schemeDivisorCrit1
+theorem SchemeStalkBoundingChart.notMem_schemeDivisorNonEtaleLocus
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     {x : SchemeDivisorPoint X} (h : SchemeStalkBoundingChart g x.1) :
-    x ∉ schemeDivisorCrit1 g := by
-  rw [mem_schemeDivisorCrit1_iff]
+    x ∉ schemeDivisorNonEtaleLocus g := by
+  rw [mem_schemeDivisorNonEtaleLocus_iff]
   exact not_not_intro h.formallyEtale
 
 /-- A divisor point with structural local-ring coordinates is not in the actual
 codimension-one non-étale locus. -/
-theorem SchemeStalkBoundingPresentation.not_mem_schemeDivisorCrit1
+theorem SchemeStalkBoundingPresentation.notMem_schemeDivisorNonEtaleLocus
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     {x : SchemeDivisorPoint X} (h : SchemeStalkBoundingPresentation g x.1) :
-    x ∉ schemeDivisorCrit1 g := by
-  rw [mem_schemeDivisorCrit1_iff]
+    x ∉ schemeDivisorNonEtaleLocus g := by
+  rw [mem_schemeDivisorNonEtaleLocus_iff]
   exact not_not_intro h.formallyEtale
 
 /-- A divisor point whose quotient rings localize to its actual stalks is not in the
 actual codimension-one non-étale locus. -/
-theorem SchemeStalkBoundingLocalizationPresentation.not_mem_schemeDivisorCrit1
+theorem SchemeStalkBoundingLocalizationPresentation.notMem_schemeDivisorNonEtaleLocus
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     {x : SchemeDivisorPoint X}
     (h : SchemeStalkBoundingLocalizationPresentation g x.1) :
-    x ∉ schemeDivisorCrit1 g := by
-  rw [mem_schemeDivisorCrit1_iff]
+    x ∉ schemeDivisorNonEtaleLocus g := by
+  rw [mem_schemeDivisorNonEtaleLocus_iff]
   exact not_not_intro h.formallyEtale
 
 namespace LocalBoundingChart
@@ -1325,17 +1325,17 @@ noncomputable def toSchemeStalkBoundingLocalizationPresentation
 
 /-- The actual stalk-defined codimension-one non-étale locus of the affine quotient
 morphism is empty. -/
-theorem schemeDivisorCrit1_restriction_eq_empty :
+theorem schemeDivisorNonEtaleLocus_restriction_eq_empty :
     letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ p) :=
       Ideal.Quotient.algebraQuotientOfLEComap h.toBoundingChart.span_le_comap
-    schemeDivisorCrit1
+    schemeDivisorNonEtaleLocus
       (AlgebraicGeometry.Spec.map
         (CommRingCat.ofHom (algebraMap (R ⧸ Ideal.span {a}) (S ⧸ p)))) = ∅ := by
   letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ p) :=
     Ideal.Quotient.algebraQuotientOfLEComap h.toBoundingChart.span_le_comap
   apply Set.eq_empty_iff_forall_notMem.mpr
   intro x
-  exact (h.toSchemeStalkBoundingChart x.1).not_mem_schemeDivisorCrit1
+  exact (h.toSchemeStalkBoundingChart x.1).notMem_schemeDivisorNonEtaleLocus
 
 end LocalBoundingChart
 
@@ -1594,11 +1594,11 @@ theorem formallyEtale {X Y : AlgebraicGeometry.Scheme.{u}}
 
 /-- A divisor point admitting a scheme-level local bounding presentation is not in the
 actual codimension-one non-étale locus. -/
-theorem not_mem_schemeDivisorCrit1
+theorem notMem_schemeDivisorNonEtaleLocus
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     {x : SchemeDivisorPoint X} (h : SchemeLocalBoundingPresentation g x.1) :
-    x ∉ schemeDivisorCrit1 g := by
-  rw [mem_schemeDivisorCrit1_iff]
+    x ∉ schemeDivisorNonEtaleLocus g := by
+  rw [mem_schemeDivisorNonEtaleLocus_iff]
   exact not_not_intro h.formallyEtale
 
 end SchemeLocalBoundingPresentation
@@ -1614,11 +1614,11 @@ theorem formallyEtale {X Y : AlgebraicGeometry.Scheme.{u}}
 
 /-- A divisor point with affine local bounding data is not in the actual codimension-one
 non-étale locus. -/
-theorem not_mem_schemeDivisorCrit1
+theorem notMem_schemeDivisorNonEtaleLocus
     {X Y : AlgebraicGeometry.Scheme.{u}} {g : X ⟶ Y}
     {x : SchemeDivisorPoint X} (h : SchemeAffineLocalBoundingPresentation g x.1) :
-    x ∉ schemeDivisorCrit1 g :=
-  h.toSchemeLocalBoundingPresentation.not_mem_schemeDivisorCrit1
+    x ∉ schemeDivisorNonEtaleLocus g :=
+  h.toSchemeLocalBoundingPresentation.notMem_schemeDivisorNonEtaleLocus
 
 end SchemeAffineLocalBoundingPresentation
 

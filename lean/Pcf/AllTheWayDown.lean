@@ -44,7 +44,7 @@ periodic lifting, the two-way normalization PCF comparison, and ramified-cover d
 `Pcf.SchemePCFAllTheWayDownAtDepth` and
 `Pcf.schemePCFAllTheWayDown_of_cover` recursively assemble that theorem on the actual
 reduced closures and return maps through every prescribed finite depth.
-`Pcf.SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le` proves that this
+`Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le` proves that this
 actual recursion has no branch longer than the topological Krull dimension of `X`.
 
 ## What is formalized here
@@ -72,7 +72,7 @@ particular:
 
 1. **The geometric tower is not produced in this abstract file.** Elsewhere
    `Pcf.schemePCFAllTheWayDownAtDepth_of_cover` recursively constructs the actual
-   scheme-level descent, and `Pcf.SchemePcfDescentBranch` packages its actual branches.
+   scheme-level descent, and `Pcf.SchemePCFDescentBranch` packages its actual branches.
    This file itself still takes a tower of `PCFSetup`s as input.
 2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PCFSetup.notMem_branch_iterate` is supplied
    to the abstract induction. On the actual invariant-divisor chart route it is derived

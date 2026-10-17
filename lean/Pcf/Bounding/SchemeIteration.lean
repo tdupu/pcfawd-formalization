@@ -27,7 +27,7 @@ namespace Pcf
 
 /-- Two divisorial dynamical systems with the same step and ramification functions are
 equal.  The positivity, lying-over, and branch-finiteness fields are propositions. -/
-theorem DivisorDynamics.ext_of_step_ram {P : Type u} {D E : DivisorDynamics P}
+theorem DivisorDynamics.ext_of_step_ramificationIdx {P : Type u} {D E : DivisorDynamics P}
     (hstep : D.step = E.step) (hram : D.ramificationIdx = E.ramificationIdx) : D = E := by
   cases D
   cases E
@@ -35,46 +35,46 @@ theorem DivisorDynamics.ext_of_step_ram {P : Type u} {D E : DivisorDynamics P}
 
 /-- The actual divisor dynamics of a scheme iterate is the abstract iterate of the
 actual divisor dynamics of the original morphism. -/
-theorem divDynOfFiniteDominantNormal_pow_eq_iter
+theorem divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ)
-    (hcritm : (schemeDivisorCrit1 (CategoryTheory.End.of f ^ m).asHom).Finite) :
-    divDynOfFiniteDominantNormal (CategoryTheory.End.of f ^ m).asHom hcritm =
-      (divDynOfFiniteDominantNormal f hcrit).iterate m := by
-  apply DivisorDynamics.ext_of_step_ram
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (m : ℕ)
+    (hcritm : (schemeDivisorNonEtaleLocus (CategoryTheory.End.of f ^ m).asHom).Finite) :
+    divisorDynamicsOfFiniteDominantNormal (CategoryTheory.End.of f ^ m).asHom hcritm =
+      (divisorDynamicsOfFiniteDominantNormal f hcrit).iterate m := by
+  apply DivisorDynamics.ext_of_step_ramificationIdx
   · funext x
     apply Subtype.ext
     change (CategoryTheory.End.of f ^ m).asHom.base x.1 =
-      (((divDynOfFiniteDominantNormal f hcrit).step)^[m] x).1
-    exact (divDynOfFiniteDominantNormal_iterate_step_val f hcrit m x).symm
+      (((divisorDynamicsOfFiniteDominantNormal f hcrit).step)^[m] x).1
+    exact (divisorDynamicsOfFiniteDominantNormal_iterate_step_val f hcrit m x).symm
   · funext x
-    change schemeDivisorRam (CategoryTheory.End.of f ^ m).asHom x =
-      (divDynOfFiniteDominantNormal f hcrit).iterateRamificationIdx m x
-    exact (divDynOfFiniteDominantNormal_iterRam f hcrit m x).symm
+    change schemeDivisorRamificationIdx (CategoryTheory.End.of f ^ m).asHom x =
+      (divisorDynamicsOfFiniteDominantNormal f hcrit).iterateRamificationIdx m x
+    exact (divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx f hcrit m x).symm
 
 /-- Characteristic-zero specialization, with critical-locus finiteness constructed
 canonically on both sides. -/
-theorem divDynOfFiniteDominantNormalCharZero_pow_eq_iter
+theorem divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     [NoetherianSpace X] [CharZero (X.presheaf.stalk (genericPoint X))]
     (m : ℕ) :
-    divDynOfFiniteDominantNormalCharZero (CategoryTheory.End.of f ^ m).asHom =
-      (divDynOfFiniteDominantNormalCharZero f).iterate m :=
-  divDynOfFiniteDominantNormal_pow_eq_iter f
-    (schemeDivisorCrit1_finite_of_exists_formallyEtale f
+    divisorDynamicsOfFiniteDominantNormalCharZero (CategoryTheory.End.of f ^ m).asHom =
+      (divisorDynamicsOfFiniteDominantNormalCharZero f).iterate m :=
+  divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate f
+    (schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale f
       ⟨genericPoint X,
         formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩)
     m
-    (schemeDivisorCrit1_finite_of_exists_formallyEtale
+    (schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale
       (CategoryTheory.End.of f ^ m).asHom
       (exists_formallyEtale_stalk_iterate_of_exists f
         ⟨genericPoint X,
           formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩ m))
 
-#print axioms DivisorDynamics.ext_of_step_ram
-#print axioms divDynOfFiniteDominantNormal_pow_eq_iter
-#print axioms divDynOfFiniteDominantNormalCharZero_pow_eq_iter
+#print axioms DivisorDynamics.ext_of_step_ramificationIdx
+#print axioms divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate
+#print axioms divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate
 
 end Pcf

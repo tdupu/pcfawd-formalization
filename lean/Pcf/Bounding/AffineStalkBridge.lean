@@ -522,7 +522,7 @@ noncomputable def
 The target and selected source divisors are honest height-one primes, and branch support
 is stated using `heightOneBranch`.  The result is already converted to the
 `SchemeStalkBoundingLocalizationPresentation` consumed by
-`SchemeNormalizationPcfSetupChart.chart`.  Thus the auxiliary contracted-ideal support
+`SchemeNormalizationPCFSetupChart.chart`.  Thus the auxiliary contracted-ideal support
 set, the local chart, the stalk-arrow isomorphism, and the localization presentation are
 all derived. -/
 noncomputable def

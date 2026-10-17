@@ -43,7 +43,7 @@ theorem schemeGenericInclusion_preimage_eq_top (U : A.Opens) [Nonempty U] :
     simpa using (inferInstance : Nonempty U))
 
 /-- The sections over the generic preimage of a nonempty open are the function field. -/
-def schemeGenericInclusion_sectionsIso (U : A.Opens) [Nonempty U] :
+def schemeGenericInclusionSectionsIso (U : A.Opens) [Nonempty U] :
     Γ(Spec A.functionField, schemeGenericInclusion A ⁻¹ᵁ U) ≅ A.functionField :=
   (Spec A.functionField).presheaf.mapIso
     (eqToIso (schemeGenericInclusion_preimage_eq_top A U).symm).op ≪≫
@@ -58,7 +58,7 @@ theorem schemeGlobalNormalization_preimage_integrallyClosed
   let S := Γ(Spec A.functionField, schemeGenericInclusion A ⁻¹ᵁ U)
   let : Algebra R S := ((schemeGenericInclusion A).app U).hom.toAlgebra
   let e : S ≃+* A.functionField :=
-    (schemeGenericInclusion_sectionsIso A U).commRingCatIsoToRingEquiv
+    (schemeGenericInclusionSectionsIso A U).commRingCatIsoToRingEquiv
   let : IsDomain S := e.toMulEquiv.isDomain _
   let : IsIntegrallyClosed S := IsIntegrallyClosed.of_equiv e.symm
   let : IsIntegrallyClosed (integralClosure R S) :=
@@ -120,7 +120,7 @@ instance schemeGlobalNormalization_isNormal : IsNormalScheme (schemeGlobalNormal
     (schemeGlobalNormalization_stalk_integrallyClosed A)
 
 #print axioms schemeGenericInclusion_preimage_eq_top
-#print axioms schemeGenericInclusion_sectionsIso
+#print axioms schemeGenericInclusionSectionsIso
 #print axioms schemeGlobalNormalization_preimage_integrallyClosed
 #print axioms schemeGlobalNormalization_stalk_integrallyClosed
 #print axioms isNormalScheme_of_stalk_integrallyClosed

@@ -60,14 +60,14 @@ abbrev HeightOnePrime (A : Type*) [CommRing A] :=
 /-- The codimension-one non-étale locus of an actual affine morphism.  Unlike the
 `UnnormalizedDynamics.nonEtaleLocus` field of the abstract dynamics, this set is defined directly from the
 localized ring map. -/
-def affineCrit1 (R S : Type*) [CommRing R] [CommRing S] [Algebra R S] :
+def affineNonEtaleLocus (R S : Type*) [CommRing R] [CommRing S] [Algebra R S] :
     Set (HeightOnePrime S) :=
   {q | ¬ Algebra.IsEtaleAt R q.1.asIdeal}
 
 @[simp]
-theorem mem_affineCrit1_iff {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
+theorem mem_affineNonEtaleLocus_iff {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
     (q : HeightOnePrime S) :
-    q ∈ affineCrit1 R S ↔ ¬ Algebra.IsEtaleAt R q.1.asIdeal :=
+    q ∈ affineNonEtaleLocus R S ↔ ¬ Algebra.IsEtaleAt R q.1.asIdeal :=
   Iff.rfl
 
 /-- On an affine scheme, the scheme-theoretic codimension-one carrier and the
@@ -110,7 +110,7 @@ This is the scheme-level finite-fiber fact needed for the map from divisors on a
 normalization to points of the possibly nonnormal scheme.  No codimension assertion is
 made about the target point; that separate assertion is exactly what is needed before the
 target can be restricted to its divisor carrier. -/
-theorem Scheme.Hom.finite_divisorPoint_fiber (y : Y) :
+theorem _root_.AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_fiber (y : Y) :
     {x : SchemeDivisorPoint X | x.imagePoint f = y}.Finite := by
   let inclusion : SchemeDivisorPoint X → X := fun x => x.1
   have hfiber : (f ⁻¹' {y}).Finite := f.finite_preimage_singleton y
@@ -1002,12 +1002,12 @@ section Ramification
 variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S] [Module.Finite R S]
 
 /-- Mathlib's ramification index at a height-one prime. -/
-noncomputable def heightOneRam (Q : HeightOnePrime S) : ℕ :=
+noncomputable def heightOneRamificationIdx (Q : HeightOnePrime S) : ℕ :=
   Ideal.ramificationIdx Q.1.asIdeal R
 
 /-- The ramification index at a height-one prime is positive. -/
-theorem heightOneRam_pos (Q : HeightOnePrime S) :
-    0 < heightOneRam (R := R) Q := by
+theorem heightOneRamificationIdx_pos (Q : HeightOnePrime S) :
+    0 < heightOneRamificationIdx (R := R) Q := by
   have := Q.1.isPrime
   exact Ideal.ramificationIdx_pos (R := R) Q.1.asIdeal
 
@@ -1016,7 +1016,7 @@ omit [Module.Finite R S] in
 localized upper extension is flat.  This is the geometric tower identity behind
 the product used by `DivisorDynamics.iterateRamificationIdx`; unlike that product identity, this theorem
 is about Mathlib's actual local ramification index. -/
-theorem heightOneRam_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
+theorem heightOneRamificationIdx_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
     [IsScalarTower R S T] (Q : HeightOnePrime S) (P : HeightOnePrime T)
     [P.1.asIdeal.LiesOver Q.1.asIdeal]
     [Algebra (Localization.AtPrime Q.1.asIdeal)
@@ -1025,8 +1025,8 @@ theorem heightOneRam_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
       (Localization.AtPrime P.1.asIdeal)]
     [Module.Flat (Localization.AtPrime Q.1.asIdeal)
       (Localization.AtPrime P.1.asIdeal)] :
-    heightOneRam (R := R) P =
-      heightOneRam (R := R) Q * heightOneRam (R := S) P :=
+    heightOneRamificationIdx (R := R) P =
+      heightOneRamificationIdx (R := R) Q * heightOneRamificationIdx (R := S) P :=
   Ideal.ramificationIdx_tower' Q.1.asIdeal P.1.asIdeal
 
 /-- The codimension-one branch support as contracted target ideals.
@@ -1036,7 +1036,7 @@ one.  Under the normal finite hypotheses below, `heightOneBranch` is its height-
 refinement. -/
 def heightOneBranchIdeal : Set (Ideal R) :=
   (fun Q : HeightOnePrime S => Q.1.asIdeal.under R) ''
-    {Q : HeightOnePrime S | 1 < heightOneRam (R := R) Q}
+    {Q : HeightOnePrime S | 1 < heightOneRamificationIdx (R := R) Q}
 
 omit [Module.Finite R S] in
 /-- Support of the contracted branch ideals on `D` implies that every ramified source
@@ -1044,7 +1044,7 @@ divisor contains the pullback of `D`. -/
 theorem ramified_heightOne_lies_over_of_branchIdeal_subset_singleton
     (D : Ideal R)
     (hbranch : heightOneBranchIdeal (R := R) (S := S) ⊆ {D})
-    (Q : HeightOnePrime S) (hQ : 1 < heightOneRam (R := R) Q) :
+    (Q : HeightOnePrime S) (hQ : 1 < heightOneRamificationIdx (R := R) Q) :
     D.map (algebraMap R S) ≤ Q.1.asIdeal := by
   have hmem : Q.1.asIdeal.under R ∈
       heightOneBranchIdeal (R := R) (S := S) := ⟨Q, hQ, rfl⟩
@@ -1096,12 +1096,12 @@ theorem heightOneDvrExponent_spec (Q : HeightOnePrime S) :
 
 /-- Mathlib's length-theoretic ramification index is exactly the usual DVR exponent at a
 height-one prime. -/
-theorem heightOneRam_eq_dvrExponent (Q : HeightOnePrime S) :
-    heightOneRam (R := R) Q = heightOneDvrExponent (R := R) Q := by
+theorem heightOneRamificationIdx_eq_dvrExponent (Q : HeightOnePrime S) :
+    heightOneRamificationIdx (R := R) Q = heightOneDvrExponent (R := R) Q := by
   let Sq := Localization.AtPrime Q.1.asIdeal
   let _ : IsDiscreteValuationRing Sq :=
     heightOnePrime_localRing_isDiscreteValuationRing Q
-  rw [heightOneRam, Ideal.ramificationIdx_def]
+  rw [heightOneRamificationIdx, Ideal.ramificationIdx_def]
   change (Module.length Sq
     (Sq ⧸ (Q.1.asIdeal.under R).map (algebraMap R Sq))).toNat = _
   rw [heightOneDvrExponent_spec (R := R) Q,
@@ -1123,12 +1123,12 @@ ramification index greater than one.  This is the two-ring analogue of `DivisorD
 -/
 def heightOneBranch : Set (HeightOnePrime R) :=
   heightOneUnder (R := R) (S := S) ''
-    {Q : HeightOnePrime S | 1 < heightOneRam (R := R) Q}
+    {Q : HeightOnePrime S | 1 < heightOneRamificationIdx (R := R) Q}
 
 theorem mem_heightOneBranch_iff (D : HeightOnePrime R) :
     D ∈ heightOneBranch (R := R) (S := S) ↔
       ∃ Q : HeightOnePrime S,
-        1 < heightOneRam (R := R) Q ∧
+        1 < heightOneRamificationIdx (R := R) Q ∧
           heightOneUnder (R := R) (S := S) Q = D :=
   Iff.rfl
 
@@ -1158,7 +1158,7 @@ ring-theoretic premise used by the canonical local-chart constructor. -/
 theorem ramified_heightOne_lies_over_of_branch_subset_singleton
     (D : HeightOnePrime R)
     (hbranch : heightOneBranch (R := R) (S := S) ⊆ {D})
-    (Q : HeightOnePrime S) (hQ : 1 < heightOneRam (R := R) Q) :
+    (Q : HeightOnePrime S) (hQ : 1 < heightOneRamificationIdx (R := R) Q) :
     D.1.asIdeal.map (algebraMap R S) ≤ Q.1.asIdeal := by
   have hmem : heightOneUnder (R := R) (S := S) Q ∈
       heightOneBranch (R := R) (S := S) :=
@@ -1180,7 +1180,7 @@ theorem ramified_heightOne_lies_over_of_avoids_other_branch_at
     (q : Ideal R) (D : HeightOnePrime R)
     (havoid : ∀ E ∈ heightOneBranch (R := R) (S := S), E ≠ D →
       ¬ E.1.asIdeal ≤ q)
-    (Q : HeightOnePrime S) (hQ : 1 < heightOneRam (R := R) Q)
+    (Q : HeightOnePrime S) (hQ : 1 < heightOneRamificationIdx (R := R) Q)
     (hQq : Q.1.asIdeal.under R ≤ q) :
     D.1.asIdeal.map (algebraMap R S) ≤ Q.1.asIdeal := by
   let E : HeightOnePrime R := heightOneUnder (R := R) (S := S) Q
@@ -1206,7 +1206,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S] [IsDomain S]
 primes have ramification index greater than one. -/
 theorem finite_heightOne_ramified
     (hgen : nonEtaleLocus R S ≠ Set.univ) :
-    {Q : HeightOnePrime S | 1 < heightOneRam (R := R) Q}.Finite := by
+    {Q : HeightOnePrime S | 1 < heightOneRamificationIdx (R := R) Q}.Finite := by
   let E : Set (PrimeSpectrum S) := nonEtaleLocus R S
   have hEclosed : IsClosed E := isClosed_nonEtaleLocus R S
   let I : Ideal S := PrimeSpectrum.vanishingIdeal E
@@ -1260,46 +1260,46 @@ Noetherian domain, expressed by a nonidentity `Algebra R R` structure.
 Its carrier is the height-one spectrum, its step is contraction, and its ramification
 function is Mathlib's `Ideal.ramificationIdx`.  Thus `step_surjective`, positivity, and
 finiteness of the branch set are theorems rather than supplied fields. -/
-noncomputable def divDynOfFiniteNormalSelfAlgebra
+noncomputable def divisorDynamicsOfFiniteNormalSelfAlgebra
     (hgen : nonEtaleLocus R R ≠ Set.univ) :
     DivisorDynamics (HeightOnePrime R) := by
   let step : HeightOnePrime R → HeightOnePrime R :=
     heightOneUnder (R := R) (S := R)
-  let ram : HeightOnePrime R → ℕ := heightOneRam (R := R)
+  let ram : HeightOnePrime R → ℕ := heightOneRamificationIdx (R := R)
   refine
     { step := step
       ramificationIdx := ram
       ramificationIdx_pos := ?_
       step_surjective := ?_
       step_image_ramified_finite := ?_ }
-  · exact heightOneRam_pos (R := R)
+  · exact heightOneRamificationIdx_pos (R := R)
   · exact heightOneUnder_surjective (R := R) (S := R)
   · refine ((finite_heightOne_ramified (R := R) (S := R) hgen).image step).subset ?_
     rintro Q ⟨Q', hstep, hram⟩
     exact ⟨Q', hram, hstep⟩
 
 @[simp]
-theorem divDynOfFiniteNormalSelfAlgebra_step
+theorem divisorDynamicsOfFiniteNormalSelfAlgebra_step
     (hgen : nonEtaleLocus R R ≠ Set.univ) (Q : HeightOnePrime R) :
-    (divDynOfFiniteNormalSelfAlgebra hgen).step Q =
+    (divisorDynamicsOfFiniteNormalSelfAlgebra hgen).step Q =
       heightOneUnder (R := R) (S := R) Q :=
   rfl
 
 @[simp]
-theorem divDynOfFiniteNormalSelfAlgebra_ram
+theorem divisorDynamicsOfFiniteNormalSelfAlgebra_ramificationIdx
     (hgen : nonEtaleLocus R R ≠ Set.univ) (Q : HeightOnePrime R) :
-    (divDynOfFiniteNormalSelfAlgebra hgen).ramificationIdx Q = heightOneRam (R := R) Q :=
+    (divisorDynamicsOfFiniteNormalSelfAlgebra hgen).ramificationIdx Q = heightOneRamificationIdx (R := R) Q :=
   rfl
 
 /-- The abstract branch set of the canonical affine divisor dynamics is exactly the
 honest height-one branch set of the ring endomorphism. -/
-theorem divDynOfFiniteNormalSelfAlgebra_branch
+theorem divisorDynamicsOfFiniteNormalSelfAlgebra_branch
     (hgen : nonEtaleLocus R R ≠ Set.univ) :
-    (divDynOfFiniteNormalSelfAlgebra hgen).branch =
+    (divisorDynamicsOfFiniteNormalSelfAlgebra hgen).branch =
       heightOneBranch (R := R) (S := R) := by
   ext D
-  simp only [DivisorDynamics.mem_branch_iff, divDynOfFiniteNormalSelfAlgebra_step,
-    divDynOfFiniteNormalSelfAlgebra_ram, mem_heightOneBranch_iff]
+  simp only [DivisorDynamics.mem_branch_iff, divisorDynamicsOfFiniteNormalSelfAlgebra_step,
+    divisorDynamicsOfFiniteNormalSelfAlgebra_ramificationIdx, mem_heightOneBranch_iff]
   constructor
   · rintro ⟨Q, hQD, hQ⟩
     exact ⟨Q, hQ, hQD⟩

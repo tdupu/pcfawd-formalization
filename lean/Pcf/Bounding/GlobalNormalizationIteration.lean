@@ -89,56 +89,56 @@ variable (k : Type u) [Field k] [CharZero k]
 
 /-- The upstairs dynamics in the canonical normalization package is the actual
 characteristic-zero divisor dynamics of its lifted morphism. -/
-theorem schemeGlobalNormalizationUnnormDyn_norm_eq
+theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq
     [IsFinite (schemeGlobalNormalizationMap X)] :
-    (schemeGlobalNormalizationUnnormDyn k f).norm =
-      divDynOfFiniteDominantNormalCharZero (schemeGlobalNormalizationLift f) := rfl
+    (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized =
+      divisorDynamicsOfFiniteDominantNormalCharZero (schemeGlobalNormalizationLift f) := rfl
 
 /-- The normalized divisor dynamics of an actual scheme power is exactly the
 abstract iterate, with its actual stalk ramification indices. -/
-theorem schemeGlobalNormalizationUnnormDyn_norm_pow (m : ℕ) :
-    (schemeGlobalNormalizationUnnormDyn k (End.of f ^ m).asHom).norm =
-      ((schemeGlobalNormalizationUnnormDyn k f).norm).iterate m := by
+theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow (m : ℕ) :
+    (schemeGlobalNormalizationUnnormalizedDynamics k (End.of f ^ m).asHom).normalized =
+      ((schemeGlobalNormalizationUnnormalizedDynamics k f).normalized).iterate m := by
   let := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType X k
-  rw [schemeGlobalNormalizationUnnormDyn_norm_eq,
-    schemeGlobalNormalizationUnnormDyn_norm_eq]
+  rw [schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq,
+    schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq]
   simpa only [schemeGlobalNormalizationLift_pow] using
-    divDynOfFiniteDominantNormalCharZero_pow_eq_iter (schemeGlobalNormalizationLift f) m
+    divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate (schemeGlobalNormalizationLift f) m
 
 /-- The postcritical set defined using the canonical normalized branch locus is
 unchanged by every positive iterate of the actual scheme morphism. -/
-theorem schemeNormalizedPcSet_pow (m : ℕ) (hm : 1 ≤ m) :
-    schemeNormalizedPcSet k (End.of f ^ m).asHom = schemeNormalizedPcSet k f := by
-  rw [schemeNormalizedPcSet_eq_normalization_image,
-    schemeNormalizedPcSet_eq_normalization_image,
-    schemeGlobalNormalizationUnnormDyn_norm_pow, DivisorDynamics.postcriticalSet_iterate _ hm]
-  exact congrArg (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormDyn k f).norm.postcriticalSet)
+theorem schemeNormalizedPostcriticalSet_pow (m : ℕ) (hm : 1 ≤ m) :
+    schemeNormalizedPostcriticalSet k (End.of f ^ m).asHom = schemeNormalizedPostcriticalSet k f := by
+  rw [schemeNormalizedPostcriticalSet_eq_normalization_image,
+    schemeNormalizedPostcriticalSet_eq_normalization_image,
+    schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow, DivisorDynamics.postcriticalSet_iterate _ hm]
+  exact congrArg (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized.postcriticalSet)
     (funext fun Q ↦ Subtype.ext (by
-      simp only [schemeGlobalNormalizationUnnormDyn_normalization_val]))
+      simp only [schemeGlobalNormalizationUnnormalizedDynamics_normalization_val]))
 
 /-- Normalized postcritical finiteness is equivalent to that of any positive
 iterate, without assuming normality of the original scheme. -/
-theorem schemeNormalizedPCF_pow_iff (m : ℕ) (hm : 1 ≤ m) :
-    SchemeNormalizedPCF k (End.of f ^ m).asHom ↔ SchemeNormalizedPCF k f := by
-  unfold SchemeNormalizedPCF
-  rw [schemeNormalizedPcSet_pow k f m hm]
+theorem isNormalizedPCF_pow_iff (m : ℕ) (hm : 1 ≤ m) :
+    IsNormalizedPCF k (End.of f ^ m).asHom ↔ IsNormalizedPCF k f := by
+  unfold IsNormalizedPCF
+  rw [schemeNormalizedPostcriticalSet_pow k f m hm]
 
 end FiniteType
 
 #check @schemeGlobalNormalizationMorphism_pow
-#check @schemeGlobalNormalizationUnnormDyn_norm_pow
-#check @schemeNormalizedPcSet_pow
-#check @schemeNormalizedPCF_pow_iff
+#check @schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow
+#check @schemeNormalizedPostcriticalSet_pow
+#check @isNormalizedPCF_pow_iff
 #print axioms schemeGenericMorphism_id
 #print axioms schemeGlobalNormalizationMorphism_id
 #print axioms schemeGlobalNormalizationLift_id
 #print axioms schemeGlobalNormalizationLift_comp_lift
 #print axioms schemeGlobalNormalizationMorphism_pow
 #print axioms schemeGlobalNormalizationLift_pow
-#print axioms schemeGlobalNormalizationUnnormDyn_norm_eq
-#print axioms schemeGlobalNormalizationUnnormDyn_norm_pow
-#print axioms schemeNormalizedPcSet_pow
-#print axioms schemeNormalizedPCF_pow_iff
+#print axioms schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq
+#print axioms schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow
+#print axioms schemeNormalizedPostcriticalSet_pow
+#print axioms isNormalizedPCF_pow_iff
 
 end
 

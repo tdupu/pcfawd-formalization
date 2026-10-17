@@ -165,13 +165,13 @@ Pcf.Palomar.pcfAllTheWayDown_charZero : (∀ (R S : Type u_1) [inst : CommRing R
 For comparison, the development's theorem it is derived from, extracted the same way:
 
 ```
-Pcf.pcfAllTheWayDown_charZero : Pcf.PcfAllTheWayDownLocalTheorems →
+Pcf.pcfAllTheWayDown_charZero : Pcf.PCFAllTheWayDownLocalTheorems →
   ∀ (k : Type u_1) [inst : Field k] [inst_1 : CharZero k] {X : AlgebraicGeometry.Scheme}
     (s : X ⟶ AlgebraicGeometry.Spec ↧k) [inst_2 : AlgebraicGeometry.LocallyOfFiniteType s] (f : X ⟶ X)
     [inst_3 : AlgebraicGeometry.IsFinite f] [inst_4 : AlgebraicGeometry.IsDominant f]
     [inst_5 : AlgebraicGeometry.IsIntegral X] [inst_6 : AlgebraicGeometry.IsLocallyNoetherian X]
     [inst_7 : TopologicalSpace.NoetherianSpace ↥X],
-    Pcf.SchemeNormalizedPCFOfFiniteType k s f → Pcf.SchemePCFAllTheWayDown k s f
+    Pcf.IsNormalizedPCFOfFiniteType k s f → Pcf.SchemePCFAllTheWayDown k s f
 'Pcf.pcfAllTheWayDown_charZero' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 

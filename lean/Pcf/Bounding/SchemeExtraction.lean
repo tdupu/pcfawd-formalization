@@ -37,13 +37,13 @@ open LocalBoundingChart
 /-- Restricting a quasi-finite quasi-compact morphism to codimension-one points gives
 finite fibers whenever its images have codimension one.  The explicit subtype map
 allows downstream divisor-dynamics constructors to use this without an import cycle. -/
-theorem Scheme.Hom.finite_divisorPoint_subtype_fiber {X Y : Scheme.{u}}
+theorem _root_.AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_subtype_fiber {X Y : Scheme.{u}}
     (f : X ⟶ Y) [LocallyQuasiFinite f] [QuasiCompact f]
     (hcodim : ∀ x : SchemeDivisorPoint X, Order.coheight (f x.1) = 1)
     (y : SchemeDivisorPoint Y) :
     ((fun x : SchemeDivisorPoint X ↦
       (⟨f x.1, hcodim x⟩ : SchemeDivisorPoint Y)) ⁻¹' {y}).Finite := by
-  refine (Scheme.Hom.finite_divisorPoint_fiber f y.1).subset ?_
+  refine (AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_fiber f y.1).subset ?_
   intro x hx
   exact congrArg Subtype.val hx
 
@@ -60,7 +60,7 @@ def stalkSingularLocus (X : Scheme.{u}) : Set X :=
   {x | ¬ IsRegularLocalRing (X.presheaf.stalk x)}
 
 /-- A point outside the pointwise singular locus has a regular local ring. -/
-theorem isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus
+theorem isRegularLocalRing_stalk_of_notMem_stalkSingularLocus
     {X : Scheme.{u}} {x : X} (hx : x ∉ stalkSingularLocus X) :
     IsRegularLocalRing (X.presheaf.stalk x) := by
   classical
@@ -490,7 +490,7 @@ theorem finitePreimageAffine_opens {X Y : Scheme.{u}} (f : X ⟶ Y)
   rfl
 
 /-- Finiteness of a finite morphism on the canonical affine preimage. -/
-theorem finitePreimageModuleFinite {X Y : Scheme.{u}} (f : X ⟶ Y)
+theorem moduleFinite_finitePreimageAffine {X Y : Scheme.{u}} (f : X ⟶ Y)
     [IsFinite f] (U : Y.affineOpens) :
     letI : Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) := (f.app U).hom.toAlgebra
     Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) := by
@@ -499,7 +499,7 @@ theorem finitePreimageModuleFinite {X Y : Scheme.{u}} (f : X ⟶ Y)
   exact f.finite_app U U.2
 
 /-- Dominance of a finite morphism makes the canonical affine section algebra faithful. -/
-theorem finitePreimageFaithfulSMul {X Y : Scheme.{u}} (f : X ⟶ Y)
+theorem faithfulSMul_finitePreimageAffine {X Y : Scheme.{u}} (f : X ⟶ Y)
     [IsFinite f] [IsDominant f] [IsReduced Y] (U : Y.affineOpens) :
     letI : Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) := (f.app U).hom.toAlgebra
     FaithfulSMul Γ(Y, U) Γ(X, finitePreimageAffine f U) := by
@@ -887,8 +887,8 @@ theorem coheight_apply_eq_one_of_mem_affine_finiteType
   letI : Nonempty (U : Y.Opens) := ⟨⟨f A.1, hAU⟩⟩
   letI : Nonempty (V : X.Opens) := ⟨⟨A.1, hAV⟩⟩
   letI : Algebra Γ(Y, U) Γ(X, V) := (f.app U).hom.toAlgebra
-  letI : Module.Finite Γ(Y, U) Γ(X, V) := finitePreimageModuleFinite f U
-  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := finitePreimageFaithfulSMul f U
+  letI : Module.Finite Γ(Y, U) Γ(X, V) := moduleFinite_finitePreimageAffine f U
+  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := faithfulSMul_finitePreimageAffine f U
   let Q : Ideal Γ(X, V) := (V.2.primeIdealOf ⟨A.1, hAV⟩).asIdeal
   let q : Ideal Γ(Y, U) := (U.2.primeIdealOf ⟨f A.1, hAU⟩).asIdeal
   letI : Q.IsPrime := by
@@ -963,17 +963,17 @@ local instance finitePreimageAlgebra :
 local instance finitePreimageTargetNoetherian : IsNoetherianRing Γ(Y, U) :=
   IsLocallyNoetherian.component_noetherian U
 
-local instance finitePreimageModuleFiniteInstance :
+local instance finitePreimageAffine_moduleFinite :
     Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageModuleFinite f U
+  moduleFinite_finitePreimageAffine f U
 
 local instance finitePreimageSourceNoetherian :
     IsNoetherianRing Γ(X, finitePreimageAffine f U) :=
   IsNoetherianRing.of_finite Γ(Y, U) Γ(X, finitePreimageAffine f U)
 
-local instance finitePreimageFaithfulSMulInstance :
+local instance finitePreimageAffine_faithfulSMul :
     FaithfulSMul Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageFaithfulSMul f U
+  faithfulSMul_finitePreimageAffine f U
 
 omit [IsNormalScheme X] in
 /-- A finite dominant morphism to a normal locally Noetherian integral scheme sends a
@@ -1734,7 +1734,7 @@ local instance selectedDivisorTargetNoetherian (U : Y.affineOpens) :
 
 local instance selectedDivisorModuleFinite (U : Y.affineOpens) :
     Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageModuleFinite f U
+  moduleFinite_finitePreimageAffine f U
 
 local instance selectedDivisorSourceNoetherian (U : Y.affineOpens) :
     IsNoetherianRing Γ(X, finitePreimageAffine f U) :=
@@ -1742,7 +1742,7 @@ local instance selectedDivisorSourceNoetherian (U : Y.affineOpens) :
 
 local instance selectedDivisorFaithfulSMul (U : Y.affineOpens) :
     FaithfulSMul Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageFaithfulSMul f U
+  faithfulSMul_finitePreimageAffine f U
 
 /-- The union, expressed pointwise on an affine chart, of all height-one branch
 components other than the distinguished divisor `D`. -/
@@ -1758,7 +1758,7 @@ def finiteAffineOtherBranchLocus (U : Y.affineOpens)
 omit [IsNormalScheme X] in
 /-- Pointwise nonmembership in the other-branch locus is exactly the avoidance
 predicate consumed by the local purity--Abhyankar constructor. -/
-theorem avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+theorem avoids_other_heightOneBranch_of_notMem_finiteAffineOtherBranchLocus
     (U : Y.affineOpens)
     [Nonempty (U : Y.Opens)]
     [Nonempty (finitePreimageAffine f U : X.Opens)]
@@ -2078,7 +2078,7 @@ noncomputable def
   have regular_ambient_stalk : IsRegularLocalRing
       (Y.presheaf.stalk ((pointClosureIdealSheaf B.1).subschemeι z.1)) := by
     simpa only [B] using
-      isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hambient
+      isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hambient
   have regular_base : IsRegularLocalRing (Localization.AtPrime q) := by
     letI : IsRegularLocalRing
         (Y.presheaf.stalk (J.subschemeι z.1)) := by
@@ -2103,7 +2103,7 @@ noncomputable def
   have regular_divisor_stalk : IsRegularLocalRing
       ((pointClosureIdealSheaf B.1).subscheme.presheaf.stalk z.1) := by
     simpa only [B] using
-      isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hdivisor
+      isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hdivisor
   have regular_divisor : IsRegularLocalRing
       (Localization.AtPrime q ⧸
         D.map (algebraMap R (Localization.AtPrime q))) := by
@@ -2500,7 +2500,7 @@ preimage divisor point under consideration, while `z` is its specified image.  E
 from the two pointwise singular loci supplies regularity, and exclusion from the affine
 other-branch locus supplies precisely the pointed branch-avoidance predicate. -/
 noncomputable def
-    SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0At
+    SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrectionAt
     (A : SchemeDivisorPoint X) (U : Y.affineOpens)
     [Algebra ℚ Γ(Y, U)]
     [Nonempty (U : Y.Opens)]
@@ -2571,11 +2571,11 @@ noncomputable def
       (Y.presheaf.stalk
         ((pointClosureIdealSheaf B.1).subschemeι z.1)) := by
     simpa only [B] using
-      isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hambient
+      isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hambient
   have regular_divisor : IsRegularLocalRing
       ((pointClosureIdealSheaf B.1).subscheme.presheaf.stalk z.1) := by
     simpa only [B] using
-      isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hdivisor
+      isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hdivisor
   have regular_ambient' : IsRegularLocalRing
       (Y.presheaf.stalk (J.subschemeι ((I.subschemeMap J f H) x))) := by
     change IsRegularLocalRing
@@ -2614,7 +2614,7 @@ noncomputable def
           (finitePreimageAffine f U) x hx).under Γ(Y, U) := by
     intro E hE hED
     rw [A.closurePoint_under_eq_primeIdealOf f U x hx z.1 hzU hxz]
-    apply avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+    apply avoids_other_heightOneBranch_of_notMem_finiteAffineOtherBranchLocus
       f U
       (affinePrimeOfSchemeDivisorPoint (A.mapFiniteDominantNormal f) U
         (A.image_mem_affine_of_closurePoint_mem f U z.1 hzU))
@@ -2657,7 +2657,7 @@ ambient stalk, the only theorem-specific inputs left here are the literal except
 locus exclusions, Zariski--Nagata purity, and Abhyankar's lemma at the constructed
 equation. -/
 noncomputable def
-    SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0UFDAt
+    SchemeDivisorPoint.closureStalkBoundingLocalizationOfCorrectionUFDAt
     (A : SchemeDivisorPoint X) (U : Y.affineOpens)
     [Algebra ℚ Γ(Y, U)]
     [Nonempty (U : Y.Opens)]
@@ -2708,7 +2708,7 @@ noncomputable def
       (A.closureMapFiniteDominantNormal f) x := by
   let cartier := A.imageDivisorCartierDataAtOfUFD f U x hx
     (A.image_mem_affine_of_closurePoint_mem f U z.1 hzU)
-  exact A.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0At
+  exact A.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrectionAt
     f U x hx z hzU hxz cartier hambient hdivisor hbranch purity
       (by simpa only [cartier] using abhyankar)
 
@@ -2720,7 +2720,7 @@ The ambient codimension-two statement is the only dimension-theoretic input.  Th
 Cartier equation is then constructed from ambient and divisor regularity, and purity and
 Abhyankar are applied to the resulting actual stalk chart. -/
 noncomputable def
-    SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0RegularDimTwoAt
+    SchemeDivisorPoint.closureStalkBoundingLocalizationOfCorrectionRegularDimTwoAt
     (A : SchemeDivisorPoint X) (U : Y.affineOpens)
     [Algebra ℚ Γ(Y, U)]
     [Nonempty (U : Y.Opens)]
@@ -2769,7 +2769,7 @@ noncomputable def
       (A.closureMapFiniteDominantNormal f) x := by
   let cartier := A.imageDivisorCartierDataAtOfRegularDimTwo
     f U x hx z hzU hxz hambientCoheight hambient hdivisor
-  exact A.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0At
+  exact A.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrectionAt
     f U x hx z hzU hxz cartier hambient hdivisor hbranch purity
       (by simpa only [cartier] using abhyankar)
 
@@ -2786,7 +2786,7 @@ This convenience form chooses a source point in the target point's fibre.  The g
 chart quantifier must instead use `...OfStep0At`, which preserves its specified source
 point. -/
 noncomputable def
-    SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0
+    SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrection
     (A : SchemeDivisorPoint X) (U : Y.affineOpens)
     [Algebra ℚ Γ(Y, U)]
     [Nonempty (U : Y.Opens)]
@@ -2840,11 +2840,11 @@ noncomputable def
   have regular_ambient : IsRegularLocalRing
       (Y.presheaf.stalk
         ((pointClosureIdealSheaf (A.mapFiniteDominantNormal f).1).subschemeι z.1)) :=
-    isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hambient
+    isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hambient
   have regular_divisor : IsRegularLocalRing
       ((pointClosureIdealSheaf (A.mapFiniteDominantNormal f).1).subscheme.presheaf.stalk
         z.1) :=
-    isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hdivisor
+    isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hdivisor
   have havoid : ∀ E ∈ heightOneBranch
         (R := Γ(Y, U)) (S := Γ(X, finitePreimageAffine f U)),
       E ≠ affinePrimeOfSchemeDivisorPoint (A.mapFiniteDominantNormal f) U
@@ -2856,7 +2856,7 @@ noncomputable def
           (A.closurePreimage_mem_finitePreimage f U z.1 hzU)).under Γ(Y, U) := by
     intro E hE hED
     rw [A.closurePreimage_under_eq_primeIdealOf f U z.1 hzU]
-    exact avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+    exact avoids_other_heightOneBranch_of_notMem_finiteAffineOtherBranchLocus
       f U
       (affinePrimeOfSchemeDivisorPoint (A.mapFiniteDominantNormal f) U
         (A.image_mem_affine_of_closurePoint_mem f U z.1 hzU))
@@ -2924,7 +2924,7 @@ local instance invariantIterateTargetNoetherian (U : X.affineOpens) :
 local instance invariantIterateModuleFinite (m : ℕ) (U : X.affineOpens) :
     Module.Finite Γ(X, U)
       Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
-  finitePreimageModuleFinite (CategoryTheory.End.of f ^ m).asHom U
+  moduleFinite_finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U
 
 local instance invariantIterateSourceNoetherian (m : ℕ) (U : X.affineOpens) :
     IsNoetherianRing
@@ -2935,7 +2935,7 @@ local instance invariantIterateSourceNoetherian (m : ℕ) (U : X.affineOpens) :
 local instance invariantIterateFaithfulSMul (m : ℕ) (U : X.affineOpens) :
     FaithfulSMul Γ(X, U)
       Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
-  finitePreimageFaithfulSMul (CategoryTheory.End.of f ^ m).asHom U
+  faithfulSMul_finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Build the stalk chart for an iterate of the actual restriction to an invariant
@@ -2948,7 +2948,7 @@ avoidance come from the literal Step-0 exclusions, and ambient codimension two i
 the proved low-dimensional principalization theorem.  The only local covering inputs are
 Zariski--Nagata purity and Abhyankar's lemma. -/
 noncomputable def
-    SchemeDivisorPoint.invariantClosureStalkBoundingLocalizationOfStep0At
+    SchemeDivisorPoint.invariantClosureStalkBoundingLocalizationOfCorrectionAt
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
     (m : ℕ) (U : X.affineOpens)
     [Algebra ℚ Γ(X, U)]
@@ -3020,10 +3020,10 @@ noncomputable def
     · exact hzU
   have regular_ambient : IsRegularLocalRing
       (X.presheaf.stalk ((pointClosureIdealSheaf A.1).subschemeι z.1)) :=
-    isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hambient
+    isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hambient
   have regular_divisor : IsRegularLocalRing
       ((pointClosureIdealSheaf A.1).subscheme.presheaf.stalk z.1) :=
-    isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus hdivisor
+    isRegularLocalRing_stalk_of_notMem_stalkSingularLocus hdivisor
   have regular_ambient' : IsRegularLocalRing
       (X.presheaf.stalk ((pointClosureIdealSheaf A.1).subschemeι (gM x))) := by
     rw [hxz']
@@ -3049,7 +3049,7 @@ noncomputable def
     intro E hE hEA
     rw [pointClosurePoint_under_eq_primeIdealOf
       fM U A A hAM x hx z.1 hzU hxz']
-    exact avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+    exact avoids_other_heightOneBranch_of_notMem_finiteAffineOtherBranchLocus
       fM U (affinePrimeOfSchemeDivisorPoint A U hAU)
       ⟨(pointClosureIdealSheaf A.1).subschemeι z.1, hzU⟩
       (by simpa only [fM] using hbranch) E hE hEA

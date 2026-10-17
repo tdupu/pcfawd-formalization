@@ -351,8 +351,8 @@ def schemeGlobalNormalizationRamifiedCover
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f) :
-    DivisorDynamics.RamifiedCover (schemeGlobalNormalizationUnnormDyn k f).norm
-      (schemeGlobalNormalizationUnnormDyn k g).norm := by
+    DivisorDynamics.RamifiedCover (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized
+      (schemeGlobalNormalizationUnnormalizedDynamics k g).normalized := by
   letI := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType X k
   letI := schemeGlobalNormalizationMap_isFinite_of_affineFiniteType Y k
   exact schemeRamifiedCoverCharZero (schemeGlobalNormalizationLift f)
@@ -371,25 +371,25 @@ theorem schemeGlobalNormalizationRamifiedCover_map_val
 
 /-- Ramification in the normalized cover is defined by its actual stalk map. -/
 @[simp]
-theorem schemeGlobalNormalizationRamifiedCover_ram
+theorem schemeGlobalNormalizationRamifiedCover_ramificationIdx
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f)
     (Q : SchemeDivisorPoint (schemeGlobalNormalization Y)) :
     (schemeGlobalNormalizationRamifiedCover k f g π hcomm).ram Q =
-      schemeDivisorRam (schemeGlobalNormalizationMorphism π) Q := rfl
+      schemeDivisorRamificationIdx (schemeGlobalNormalizationMorphism π) Q := rfl
 
 /-- `lem:covers` for the paper's normalized branch locus on possibly nonnormal
 integral varieties. The actual finite cover and commuting square are the only
 cover inputs; branch comparison and ramification multiplicativity are proved. -/
-theorem schemeNormalizedPCF_of_ramified_cover
+theorem isNormalizedPCF_of_ramified_cover
     (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π] (hcomm : g ≫ π = π ≫ f)
-    (hpcf : SchemeNormalizedPCF k g) : SchemeNormalizedPCF k f := by
-  apply (schemeNormalizedPCF_iff_normalization k f).mpr
-  exact (schemeGlobalNormalizationRamifiedCover k f g π hcomm).pcf
-    ((schemeNormalizedPCF_iff_normalization k g).mp hpcf)
+    (hpcf : IsNormalizedPCF k g) : IsNormalizedPCF k f := by
+  apply (isNormalizedPCF_iff_normalization k f).mpr
+  exact (schemeGlobalNormalizationRamifiedCover k f g π hcomm).isPCF
+    ((isNormalizedPCF_iff_normalization k g).mp hpcf)
 
 end FiniteType
 
@@ -397,7 +397,7 @@ end FiniteType
 #check @schemeGlobalNormalizationMorphism
 #check @schemeGlobalNormalizationMorphism_isFinite_of_finiteType
 #check @schemeGlobalNormalizationRamifiedCover
-#check @schemeNormalizedPCF_of_ramified_cover
+#check @isNormalizedPCF_of_ramified_cover
 #print axioms schemeGlobalNormalizationMorphism_comp
 #print axioms schemeGenericToNormalization_morphism
 #print axioms schemeGlobalNormalizationMorphism_isFinite_of_finiteType
@@ -411,8 +411,8 @@ end FiniteType
 #print axioms schemeGlobalNormalizationDivisorMap_finite_fiber
 #print axioms schemeGlobalNormalizationRamifiedCover
 #print axioms schemeGlobalNormalizationRamifiedCover_map_val
-#print axioms schemeGlobalNormalizationRamifiedCover_ram
-#print axioms schemeNormalizedPCF_of_ramified_cover
+#print axioms schemeGlobalNormalizationRamifiedCover_ramificationIdx
+#print axioms isNormalizedPCF_of_ramified_cover
 
 end
 

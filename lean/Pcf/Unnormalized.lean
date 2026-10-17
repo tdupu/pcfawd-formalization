@@ -27,9 +27,9 @@ the divisors over which `g` is not étale (`g(crit₁(g))`). Definition
 computing `crit_i(gᵐ)` from `crit_i(g)`; the manuscript proves only one-sided inclusions
 (Lemma `lem:tower-unnormalized`). The fields are:
 
-* `crit_subset_crit0`, `crit0_subset_crit1`, `crit1_finite` — Proposition
+* `mem_nonUnramifiedLocus_of_one_lt_ramificationIdx`, `nonUnramifiedLocus_subset_nonEtaleLocus`, `nonEtaleLocus_finite` — Proposition
   `prop:loci-compare` (1)–(2), for every iterate;
-* `crit0_tower`, `crit1_tower` — Lemma `lem:tower-unnormalized` (1)–(2), applied to
+* `nonUnramifiedLocus_tower`, `nonEtaleLocus_tower` — Lemma `lem:tower-unnormalized` (1)–(2), applied to
   `g` and `h = gⁿ`, which is the only instance Corollary `cor:orbit-unnormalized` uses.
 
 All five are **assumed**: they are scheme-level facts, proved in the manuscript from
@@ -57,9 +57,9 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
   (`crit₀`, `crit₁`, which live on `A` itself). When `A` is regular in codimension one
   the two sets of primes coincide; in general `ν : Ã → A` is only finite-to-one on
   primes, and this layer does not model `ν`. The existing `PCFSetup` already makes the
-  same identification for `sing` and `meets`. See `lean/AXIOMS.md` §B.8.
+  same identification for `singularPrimes` and `meets`. See `lean/AXIOMS.md` §B.8.
 * `crit₀ 0`, `crit₁ 0` (the identity) are unconstrained; nothing below uses them.
-* `key1` is the *conclusion* of Theorem `thm:bounding` for every iterate, not its proof;
+* `notMem_nonEtaleBranch_iterate` is the *conclusion* of Theorem `thm:bounding` for every iterate, not its proof;
   the bounding theorem itself is not formalized (purity and Abhyankar are assumed, as
   before).
 -/
@@ -73,13 +73,13 @@ namespace Pcf
 /-- A divisorial dynamical system together with the two **unnormalized** critical
 predicates of Definition `def:branch-loci`, indexed by the iterate.
 
-`crit0 m` is `Irr(crit₀(gᵐ))`, the primes of `A` at whose generic point `gᵐ` is not
+`nonUnramifiedLocus m` is `Irr(crit₀(gᵐ))`, the primes of `A` at whose generic point `gᵐ` is not
 unramified, and `nonEtaleLocus m` is `Irr(crit₁(gᵐ))`, those at which `gᵐ` is not étale. The
 five `Prop` fields are Proposition `prop:loci-compare` (1)–(2) and Lemma
 `lem:tower-unnormalized` (1)–(2), the latter for `g` and `h = gⁿ`; all are assumed, see
 `lean/AXIOMS.md` §B.8. -/
 structure UnnormalizedDynamics (P : Type u) extends DivisorDynamics P where
-  /-- `crit0 m = Irr(crit₀(gᵐ))`: `gᵐ` is not unramified at the generic point. -/
+  /-- `nonUnramifiedLocus m = Irr(crit₀(gᵐ))`: `gᵐ` is not unramified at the generic point. -/
   nonUnramifiedLocus : ℕ → Set P
   /-- `nonEtaleLocus m = Irr(crit₁(gᵐ))`: `gᵐ` is not étale at the generic point. -/
   nonEtaleLocus : ℕ → Set P
@@ -213,11 +213,11 @@ end UnnormalizedDynamics
 /-- The data of Theorem `thm:normal-invariant` with the restricted system carrying the
 unnormalized loci, and with the **étale** form of Theorem `thm:bounding` as hypothesis.
 
-Compared with `Pcf.PCFSetup`, the field `key1` concludes `Q ∉ branch₁(gᵐ)` instead of
+Compared with `Pcf.PCFSetup`, the field `notMem_nonEtaleBranch_iterate` concludes `Q ∉ branch₁(gᵐ)` instead of
 `Q ∉ branch(gᵐ)`; by Proposition `prop:loci-compare` the former is stronger, and
-`Pcf.NonEtalePCFSetup.toPCFSetup` recovers a `Pcf.PCFSetup`. The hypotheses of `key1` are
+`Pcf.NonEtalePCFSetup.toPCFSetup` recovers a `Pcf.PCFSetup`. The hypotheses of `notMem_nonEtaleBranch_iterate` are
 exactly those of `PCFSetup.notMem_branch_iterate`: `Q` is a prime of `A` outside `Sing(X) ∪ Sing(A)` and
-outside `A ∩ E` for every component `E ≠ A` of `branch(fᵐ)`. `key1` is **assumed**; it is
+outside `A ∩ E` for every component `E ≠ A` of `branch(fᵐ)`. `notMem_nonEtaleBranch_iterate` is **assumed**; it is
 the conclusion of the bounding theorem, which is not formalized. -/
 structure NonEtalePCFSetup (PX : Type u) (PA : Type v) where
   /-- The ambient system `f` on the primes of the normal variety `X`. -/
@@ -246,7 +246,7 @@ namespace NonEtalePCFSetup
 
 variable {PX : Type u} {PA : Type v} (S : NonEtalePCFSetup PX PA)
 
-/-- The underlying `Pcf.PCFSetup`: `key` follows from `key1` and Proposition
+/-- The underlying `Pcf.PCFSetup`: `key` follows from `notMem_nonEtaleBranch_iterate` and Proposition
 `prop:loci-compare`(2), and for `m = 0` from `branch(g⁰) = ∅`. -/
 def toPCFSetup : PCFSetup PX PA where
   ambient := S.ambient

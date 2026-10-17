@@ -42,27 +42,27 @@ theorem localDivisorFiber_isReduced_iff_ramificationIdx_eq_one
     _root_.IsReduced
       (Localization.AtPrime Q.1.asIdeal ⧸
         p.1.asIdeal.map (algebraMap R (Localization.AtPrime Q.1.asIdeal))) ↔
-      heightOneRam (R := R) Q = 1 := by
+      heightOneRamificationIdx (R := R) Q = 1 := by
   let Sq := Localization.AtPrime Q.1.asIdeal
   let m := IsLocalRing.maximalIdeal Sq
   letI : IsDiscreteValuationRing Sq :=
     heightOnePrime_localRing_isDiscreteValuationRing Q
   have hpow : p.1.asIdeal.map (algebraMap R Sq) =
-      m ^ heightOneRam (R := R) Q := by
-    rw [heightOneRam_eq_dvrExponent (R := R) Q]
+      m ^ heightOneRamificationIdx (R := R) Q := by
+    rw [heightOneRamificationIdx_eq_dvrExponent (R := R) Q]
     simpa only [show Q.1.asIdeal.under R = p.1.asIdeal from
       (Ideal.LiesOver.over (p := p.1.asIdeal) (P := Q.1.asIdeal)).symm] using
       heightOneDvrExponent_spec (R := R) Q
   rw [← Ideal.isRadical_iff_quotient_reduced, hpow]
   constructor
   · intro hrad
-    have hpos : 0 < heightOneRam (R := R) Q := heightOneRam_pos Q
-    have heq : m ^ heightOneRam (R := R) Q = m := by
+    have hpos : 0 < heightOneRamificationIdx (R := R) Q := heightOneRamificationIdx_pos Q
+    have heq : m ^ heightOneRamificationIdx (R := R) Q = m := by
       rw [← hrad.radical, Ideal.radical_pow m (Nat.ne_of_gt hpos)]
       exact (inferInstance : m.IsPrime).radical
     have hcoheight := congrArg Order.coheight heq
-    have hleft : Order.coheight (m ^ heightOneRam (R := R) Q) =
-        (heightOneRam (R := R) Q : ℕ∞) := by
+    have hleft : Order.coheight (m ^ heightOneRamificationIdx (R := R) Q) =
+        (heightOneRamificationIdx (R := R) Q : ℕ∞) := by
       dsimp [m]
       rw [IsDiscreteValuationRing.coheight_pow_maximalIdeal]
     have hright : Order.coheight m = (1 : ℕ∞) := by
@@ -70,7 +70,7 @@ theorem localDivisorFiber_isReduced_iff_ramificationIdx_eq_one
       dsimp [m]
       rw [IsDiscreteValuationRing.coheight_pow_maximalIdeal]
       norm_num
-    have hcoe : (heightOneRam (R := R) Q : ℕ∞) = (1 : ℕ∞) :=
+    have hcoe : (heightOneRamificationIdx (R := R) Q : ℕ∞) = (1 : ℕ∞) :=
       hleft.symm.trans (hcoheight.trans hright)
     exact_mod_cast hcoe
   · intro he
@@ -308,8 +308,8 @@ theorem schemeDivisorFiber_isReduced_iff_forall_chart_ramificationIdx_eq_one
   letI : Nonempty (U : Y.Opens) := ⟨y⟩
   letI : Nonempty (V : X.Opens) := ⟨⟨x, hxV⟩⟩
   letI : Algebra R S := (f.app U).hom.toAlgebra
-  letI : Module.Finite R S := finitePreimageModuleFinite f U
-  letI : FaithfulSMul R S := finitePreimageFaithfulSMul f U
+  letI : Module.Finite R S := moduleFinite_finitePreimageAffine f U
+  letI : FaithfulSMul R S := faithfulSMul_finitePreimageAffine f U
   letI : IsNoetherianRing R := IsLocallyNoetherian.component_noetherian U
   letI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
   have hp : p.1 = U.2.primeIdealOf y := by
@@ -337,13 +337,13 @@ theorem schemeDivisorFiber_isReduced_iff_forall_chart_ramificationIdx_eq_one
 
 /-- Global form of the reduced-fiber criterion, quantified over actual
 codimension-one points of the source scheme. -/
-theorem schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
+theorem schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one
     {X Y : Scheme.{u}} (f : X ⟶ Y) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian Y]
     [IsNormalScheme X] [IsNormalScheme Y]
     (E : SchemeDivisorPoint Y) :
     AlgebraicGeometry.IsReduced (f.fiber E.1) ↔
-      ∀ Q : SchemeDivisorPoint X, f Q.1 = E.1 → schemeDivisorRam f Q = 1 := by
+      ∀ Q : SchemeDivisorPoint X, f Q.1 = E.1 → schemeDivisorRamificationIdx f Q = 1 := by
   obtain ⟨_, ⟨W, hW, rfl⟩, hEW, -⟩ :=
     Y.isBasis_affineOpens.exists_subset_of_mem_open
       (Set.mem_univ E.1) isOpen_univ
@@ -360,8 +360,8 @@ theorem schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
   letI : Nonempty (U : Y.Opens) := ⟨⟨E.1, hEW⟩⟩
   letI : Nonempty (V : X.Opens) := ⟨⟨x, hxV⟩⟩
   letI : Algebra R S := (f.app U).hom.toAlgebra
-  letI : Module.Finite R S := finitePreimageModuleFinite f U
-  letI : FaithfulSMul R S := finitePreimageFaithfulSMul f U
+  letI : Module.Finite R S := moduleFinite_finitePreimageAffine f U
+  letI : FaithfulSMul R S := faithfulSMul_finitePreimageAffine f U
   letI : IsNoetherianRing R := IsLocallyNoetherian.component_noetherian U
   letI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
   letI : IsIntegrallyClosed R := IsNormalScheme.component_integrallyClosed U
@@ -389,9 +389,9 @@ theorem schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
     let qOver : p.1.asIdeal.primesOver S :=
       ⟨q.1.asIdeal, inferInstance, hq_lies⟩
     have h := hram qOver
-    have h' : schemeDivisorRam f
+    have h' : schemeDivisorRamificationIdx f
         (schemeDivisorPointOfAffinePrime V q) = 1 := by
-      rw [schemeDivisorRam_eq_heightOneRam f U q]
+      rw [schemeDivisorRamificationIdx_eq_heightOneRamificationIdx f U q]
       exact h
     rw [hq_rec] at h'
     exact h'
@@ -413,7 +413,7 @@ theorem schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
       exact hmap'.trans (congrArg Subtype.val
         (schemeDivisorPointOfAffinePrime_affinePrime E U hEW))
     have hD := hram D hmap
-    rw [schemeDivisorRam_eq_heightOneRam f U q] at hD
+    rw [schemeDivisorRamificationIdx_eq_heightOneRamificationIdx f U q] at hD
     change qIdeal.ramificationIdx R = 1 at hD
     simpa only [qIdeal] using hD
 
@@ -433,33 +433,33 @@ theorem mem_schemeReducedFiberBranch_iff
     (E : SchemeDivisorPoint Y) :
     E ∈ schemeReducedFiberBranch f ↔
       ∃ Q : SchemeDivisorPoint X,
-        f Q.1 = E.1 ∧ 1 < schemeDivisorRam f Q := by
+        f Q.1 = E.1 ∧ 1 < schemeDivisorRamificationIdx f Q := by
   rw [schemeReducedFiberBranch, Set.mem_ofPred_eq]
   constructor
   · intro hnonred
     have hnot : ¬ ∀ Q : SchemeDivisorPoint X,
-        f Q.1 = E.1 → schemeDivisorRam f Q = 1 := by
+        f Q.1 = E.1 → schemeDivisorRamificationIdx f Q = 1 := by
       intro h
       exact hnonred
-        ((schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one f E).mpr h)
+        ((schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one f E).mpr h)
     push Not at hnot
     obtain ⟨Q, hQE, hne⟩ := hnot
     refine ⟨Q, hQE, ?_⟩
-    have hpos := schemeDivisorRam_pos f Q
+    have hpos := schemeDivisorRamificationIdx_pos f Q
     omega
   · rintro ⟨Q, hQE, hram⟩ hred
     have h :=
-      (schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one f E).mp hred Q hQE
+      (schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one f E).mp hred Q hQE
     omega
 
 /-- On a normal scheme, the reduced-fiber branch definition is exactly the
 ramification-index branch of the actual divisor dynamics. -/
-theorem schemeReducedFiberBranch_eq_divDyn_branch
+theorem schemeReducedFiberBranch_eq_divisorDynamics_branch
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) :
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) :
     schemeReducedFiberBranch f =
-      (divDynOfFiniteDominantNormal f hcrit).branch := by
+      (divisorDynamicsOfFiniteDominantNormal f hcrit).branch := by
   ext E
   rw [mem_schemeReducedFiberBranch_iff f E, DivisorDynamics.mem_branch_iff]
   constructor
@@ -474,10 +474,10 @@ theorem schemeReducedFiberBranch_eq_divDyn_branch
 #print axioms affineSchemeDivisorFiber_isReduced_iff_forall_ramificationIdx_eq_one
 #print axioms schemeFiberRestrictIso
 #print axioms schemeFiberIsoOfArrowIso
-#print axioms schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
+#print axioms schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one
 #print axioms schemeReducedFiberBranch
 #print axioms mem_schemeReducedFiberBranch_iff
-#print axioms schemeReducedFiberBranch_eq_divDyn_branch
+#print axioms schemeReducedFiberBranch_eq_divisorDynamics_branch
 
 end
 

@@ -12,7 +12,7 @@ public import Pcf.Bounding.FibreProduct
 /-!
 # The bounding chart on the concrete affine divisor carrier
 
-`Pcf.affineCrit1` is the codimension-one non-étale locus of an actual ring map, rather than
+`Pcf.affineNonEtaleLocus` is the codimension-one non-étale locus of an actual ring map, rather than
 an abstract predicate supplied as a field of `Pcf.UnnormalizedDynamics`.  The theorem below applies the
 derived bounding theorem to this carrier: the restriction attached to a `BoundingChart` has
 no codimension-one critical points.
@@ -32,29 +32,29 @@ set_option linter.style.haveILetI false
 
 /-- On a bounding chart, the concrete codimension-one non-étale locus of the restricted
 map `R/(a) → S/𝔭` is empty. -/
-theorem BoundingChart.affineCrit1_restriction_eq_empty
+theorem BoundingChart.affineNonEtaleLocus_restriction_eq_empty
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     {a : R} {𝔭 : Ideal S} (h : BoundingChart R S a 𝔭) :
     letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
       Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
-    affineCrit1 (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) = ∅ := by
+    affineNonEtaleLocus (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) = ∅ := by
   letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
     Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
   apply Set.eq_empty_iff_forall_notMem.mpr
   intro q hq
   exact hq (h.isEtaleAt_restriction Stacks.existsPrimeOverBoth q.1)
 
-/-- Pointwise form of `affineCrit1_restriction_eq_empty`. -/
-theorem BoundingChart.not_mem_affineCrit1_restriction
+/-- Pointwise form of `affineNonEtaleLocus_restriction_eq_empty`. -/
+theorem BoundingChart.notMem_affineNonEtaleLocus_restriction
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     {a : R} {𝔭 : Ideal S} (h : BoundingChart R S a 𝔭)
     (q : HeightOnePrime (S ⧸ 𝔭)) :
     letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
       Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
-    q ∉ affineCrit1 (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) := by
+    q ∉ affineNonEtaleLocus (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) := by
   letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ 𝔭) :=
     Ideal.Quotient.algebraQuotientOfLEComap h.span_le_comap
-  rw [h.affineCrit1_restriction_eq_empty]
+  rw [h.affineNonEtaleLocus_restriction_eq_empty]
   simp
 
 end Pcf

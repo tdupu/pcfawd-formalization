@@ -85,7 +85,7 @@ theorem height_eq_two_of_divisorFlag_finiteType
 
 /-- The height of a prime in a quotient chart is the codimension of its actual
 closed-subscheme point. -/
-theorem Scheme.IdealSheafData.quotientPoint_height
+theorem _root_.AlgebraicGeometry.Scheme.IdealSheafData.quotientPoint_height
     {X : Scheme.{u}} (I : X.IdealSheafData) (U : X.affineOpens)
     (x : I.subscheme) (hx : x ∈ I.subschemeι ⁻¹ᵁ (U : X.Opens)) :
     (I.quotientPoint U x hx).asIdeal.height = Order.coheight x := by
@@ -125,7 +125,7 @@ theorem SchemeDivisorPoint.closureDivisor_coheight_of_mem_affine_finiteType
       (ideal_le_ambientPrimeOfQuotientPoint I U Q.1 hQU)
       (pointClosureIdealSheaf_ideal_height A U hAU)
     exact (congrArg Ideal.height (map_ambientPrimeOfQuotientPoint I U Q.1 hQU)).trans
-      ((Scheme.IdealSheafData.quotientPoint_height I U Q.1 hQU).trans Q.2)
+      ((AlgebraicGeometry.Scheme.IdealSheafData.quotientPoint_height I U Q.1 hQU).trans Q.2)
   have hdim := ringKrullDim_ambientPrimeLocalization I U Q.1 hQU
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height
     (ambientPrimeOfQuotientPoint I U Q.1 hQU), hheight] at hdim
@@ -154,7 +154,7 @@ theorem SchemeDivisorPoint.closureDivisor_coheight_of_finiteType
 
 #print axioms two_le_height_of_height_one_lt
 #print axioms height_eq_two_of_divisorFlag_finiteType
-#print axioms Scheme.IdealSheafData.quotientPoint_height
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientPoint_height
 #print axioms SchemeDivisorPoint.closureDivisor_coheight_of_mem_affine_finiteType
 #print axioms SchemeDivisorPoint.closureDivisor_coheight_of_finiteType
 

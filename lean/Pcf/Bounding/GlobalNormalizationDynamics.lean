@@ -41,7 +41,7 @@ noncomputable section
 
 /-- Assemble the actual normalized/unnormalized divisor dynamics from affine finite-type
 structures on the target. -/
-def schemeGlobalNormalizationUnnormDyn
+def schemeGlobalNormalizationUnnormalizedDynamics
     (k : Type u) [Field k] [CharZero k]
     {A : Scheme.{u}} (g : A ⟶ A)
     [IsFinite g] [IsDominant g] [LocallyOfFinitePresentation g]
@@ -49,26 +49,26 @@ def schemeGlobalNormalizationUnnormDyn
     [CharZero (A.presheaf.stalk (genericPoint A))]
     [∀ U : A.affineOpens, Algebra k Γ(A, U)]
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)] :
-    SchemeNormalizationUnnormDyn A
+    SchemeNormalizationUnnormalizedDynamics A
       (SchemeDivisorPoint (schemeGlobalNormalization A)) := by
   letI : IsFinite (schemeGlobalNormalizationMap A) :=
     schemeGlobalNormalizationMap_isFinite_of_affineFiniteType A k
   letI : IsLocallyNoetherian (schemeGlobalNormalization A) :=
     LocallyOfFiniteType.isLocallyNoetherian (schemeGlobalNormalizationMap A)
-  exact schemeNormalizationUnnormDynOfFiniteBirational k g
+  exact schemeNormalizationUnnormalizedDynamicsOfFiniteBirational k g
     (schemeGlobalNormalizationLift g) (schemeGlobalNormalizationMap A)
     (schemeGlobalNormalizationLift_comp g)
 
 /-- Assemble the same package directly from a locally finite-type structure morphism to
 the spectrum of a characteristic-zero field. -/
-def schemeGlobalNormalizationUnnormDynOfFiniteType
+def schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType
     (k : Type u) [Field k] [CharZero k]
     {A : Scheme.{u}} (s : A ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (g : A ⟶ A)
     [IsFinite g] [IsDominant g] [LocallyOfFinitePresentation g]
     [IsIntegral A] [IsLocallyNoetherian A] [NoetherianSpace A]
     [CharZero (A.presheaf.stalk (genericPoint A))] :
-    SchemeNormalizationUnnormDyn A
+    SchemeNormalizationUnnormalizedDynamics A
       (SchemeDivisorPoint (schemeGlobalNormalization A)) := by
   let φ (U : A.affineOpens) : k →+* Γ(A, U) :=
     (s.appLE ⊤ U (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom
@@ -78,10 +78,10 @@ def schemeGlobalNormalizationUnnormDynOfFiniteType
     change (φ U).FiniteType
     exact (s.finiteType_appLE (isAffineOpen_top _) U.2 (by simp)).comp
       (Scheme.ΓSpecIso (.of k)).symm.commRingCatIsoToRingEquiv.finite.finiteType
-  exact schemeGlobalNormalizationUnnormDyn k g
+  exact schemeGlobalNormalizationUnnormalizedDynamics k g
 
-#print axioms schemeGlobalNormalizationUnnormDyn
-#print axioms schemeGlobalNormalizationUnnormDynOfFiniteType
+#print axioms schemeGlobalNormalizationUnnormalizedDynamics
+#print axioms schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType
 
 end
 

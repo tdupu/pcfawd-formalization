@@ -19,7 +19,7 @@ inputs beyond its stated geometric and PCF hypotheses.
 
 The two local literature inputs listed below as the "only literature packages" are no longer
 assumed. Both are theorems, quantified over all rings of the working universe exactly as the
-inputs of `Pcf.PcfAllTheWayDownLocalTheorems` and of the compared Palomar statement:
+inputs of `Pcf.PCFAllTheWayDownLocalTheorems` and of the compared Palomar statement:
 
 | Input | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
@@ -37,7 +37,7 @@ beyond the standard axioms and the hypotheses printed in their statements** (cha
 field, integral locally Noetherian scheme locally of finite type with Noetherian underlying
 space, finite dominant self-map, normalized PCF). The statements of `ZariskiNagataPurity` and
 `AbhyankarLemma` were not changed in this run. The conditional theorems and the structure
-`PcfAllTheWayDownLocalTheorems` remain, unchanged, so the older sections of this file still
+`PCFAllTheWayDownLocalTheorems` remain, unchanged, so the older sections of this file still
 describe them correctly; they are now history for the headline. The modelling assumptions of §A
 and the abstract-layer fields of §B concern the legacy abstract interfaces, not the headline.
 
@@ -203,8 +203,8 @@ iterate of the canonical normalization:
   ring-product predicate `Stacks.IsFiniteDisjointUnionOfStandardTameCovers`.
 
 For the final theorem these are quantified once, for all rings in the working
-universe, by `Pcf.PcfAllTheWayDownLocalTheorems`.  The theorem
-`Pcf.schemePcfCoveringAtDepthOfLocalTheorems` constructs the complete recursive
+universe, by `Pcf.PCFAllTheWayDownLocalTheorems`.  The theorem
+`Pcf.schemePCFCoveringAtDepthOfLocalTheorems` constructs the complete recursive
 covering tree from those two fields.  Thus `Pcf.pcfAllTheWayDown_charZero` has no
 caller-supplied descendant PCF claim, local chart, or recursively prepared tree.
 
@@ -236,19 +236,19 @@ no field contains A6's conclusion-equivalent implication.
 
 | ID | Assumption | Manuscript source |
 | --- | --- | --- |
-| A1 | The primes of the normalized model of a variety form a type `P`, and a finite dominant self-map induces a *function* `step : P → P` (image of a prime is a prime). **Proved:** `affineDivisorUnder` and `divDynOfFiniteDominantNormal` handle normal schemes; `height_under_eq_of_finite_of_finiteType` and `finiteDominantFiniteType_divisor_lift` handle divisors on nonnormal finite-type targets. The `GlobalNormalization*.lean` modules construct the canonical finite normal birational normalization and its finite dominant commuting lift, and `schemeGlobalNormalizationUnnormDynOfFiniteType` assembles the actual divisor maps, finite fibres, commuting square and U1--U5. Only abstract ready-made interfaces retain this as data. | §`sec:intro` Conventions |
-| A2 | Ramification indices are captured by a function `ram : P → ℕ` with `ram P' = e(P'/g(P'))`, positive everywhere. **Constructed affinely and on actual schemes** as `heightOneRam` and `schemeDivisorRam`, with positivity proved. Codimension-one stalks of normal locally Noetherian integral schemes are proved to be DVRs. | the ramification paragraph before Definition `def:crit-branch` |
-| A3 | Branching is modelled by `1 < ram`, i.e. by `e > 1` alone. **The affine ramified divisor set is proved finite** by `finite_heightOne_ramified`, and the index has the expected DVR meaning by `heightOneRam_eq_dvrExponent`. the ramification paragraph before Definition `def:crit-branch`'s second clause (inseparable residue extension) is **not** modelled. | the ramification paragraph before Definition `def:crit-branch`, Definition `def:crit-branch` and Lemma `lem:dictionary` |
-| A4 | The ramification index of the `m`-th iterate equals `∏_{i<m} ram (stepⁱ ·)`. `DivisorDynamics.iterateRamificationIdx` is defined by this product. `heightOneRam_tower` proves the affine tower identity, `schemeDivisorRam_comp` proves the stalk identity under finite dominant normal geometry, and `divDynOfFiniteDominantNormal_iterRam` identifies the product with the actual scheme iterate's stalk index. | §`sec:prelim`, proof of Proposition `prop:iterates`(1) |
+| A1 | The primes of the normalized model of a variety form a type `P`, and a finite dominant self-map induces a *function* `step : P → P` (image of a prime is a prime). **Proved:** `affineDivisorUnder` and `divisorDynamicsOfFiniteDominantNormal` handle normal schemes; `height_under_eq_of_finite_of_finiteType` and `finiteDominantFiniteType_divisor_lift` handle divisors on nonnormal finite-type targets. The `GlobalNormalization*.lean` modules construct the canonical finite normal birational normalization and its finite dominant commuting lift, and `schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType` assembles the actual divisor maps, finite fibres, commuting square and U1--U5. Only abstract ready-made interfaces retain this as data. | §`sec:intro` Conventions |
+| A2 | Ramification indices are captured by a function `ram : P → ℕ` with `ram P' = e(P'/g(P'))`, positive everywhere. **Constructed affinely and on actual schemes** as `heightOneRamificationIdx` and `schemeDivisorRamificationIdx`, with positivity proved. Codimension-one stalks of normal locally Noetherian integral schemes are proved to be DVRs. | the ramification paragraph before Definition `def:crit-branch` |
+| A3 | Branching is modelled by `1 < ram`, i.e. by `e > 1` alone. **The affine ramified divisor set is proved finite** by `finite_heightOne_ramified`, and the index has the expected DVR meaning by `heightOneRamificationIdx_eq_dvrExponent`. the ramification paragraph before Definition `def:crit-branch`'s second clause (inseparable residue extension) is **not** modelled. | the ramification paragraph before Definition `def:crit-branch`, Definition `def:crit-branch` and Lemma `lem:dictionary` |
+| A4 | The ramification index of the `m`-th iterate equals `∏_{i<m} ram (stepⁱ ·)`. `DivisorDynamics.iterateRamificationIdx` is defined by this product. `heightOneRamificationIdx_tower` proves the affine tower identity, `schemeDivisorRamificationIdx_comp` proves the stalk identity under finite dominant normal geometry, and `divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx` identifies the product with the actual scheme iterate's stalk index. | §`sec:prelim`, proof of Proposition `prop:iterates`(1) |
 | A5 | On legacy abstract interfaces, the geometric objects `Sing(X)`, `Sing(A)` and `A ∩ E` are represented by sets of primes (`PCFSetup.singularPrimes`, `PCFSetup.meets`). On the actual finite-type invariant-divisor route, `InvariantDivisorGeometry.lean` constructs the incidence and singular sets and `invariantDivisorSing_finite_of_perfectField` proves the required finite correction from generic smoothness and local principal generation. | Theorem `thm:bounding` |
-| A6 | **The chart link** (`Pcf.PcfSetupChart.chart`, §G.4). For every `m ≥ 1`, every prime `Q` of `A` outside `Σₘ` and every `Q'` with `gᵐ(Q') = Q`, there is an affine chart of `fᵐ` around `Q` (a `Pcf.BoundingChart`) with a point `ξ` representing `Q'`, such that `Q' ∈ crit₁(gᵐ)` implies the chart's restriction `R/(a) → S/𝔭` is not étale at `ξ`. This identifies the abstract predicate `crit₁` with non-étaleness computed on charts, and encodes Step 0's choice of `U` avoiding `Σ`. Relative to the derived theorem it is exactly as strong as `key1`; see §G.4. | Theorem `thm:bounding`, Step 0 and Step 4; Definition `def:branch-loci` |
+| A6 | **The chart link** (`Pcf.PCFSetupChart.chart`, §G.4). For every `m ≥ 1`, every prime `Q` of `A` outside `Σₘ` and every `Q'` with `gᵐ(Q') = Q`, there is an affine chart of `fᵐ` around `Q` (a `Pcf.BoundingChart`) with a point `ξ` representing `Q'`, such that `Q' ∈ crit₁(gᵐ)` implies the chart's restriction `R/(a) → S/𝔭` is not étale at `ξ`. This identifies the abstract predicate `crit₁` with non-étaleness computed on charts, and encodes Step 0's choice of `U` avoiding `Σ`. Relative to the derived theorem it is exactly as strong as `notMem_nonEtaleBranch_iterate`; see §G.4. | Theorem `thm:bounding`, Step 0 and Step 4; Definition `def:branch-loci` |
 
 The preferred replacement for the legacy A6 row is:
 
 | ID | Structural input | Manuscript source |
 | --- | --- | --- |
-| A6s | **Legacy structural stalk-chart input** (`Pcf.SchemeNormalizationPcfSetupChart.chart`, §G.4). Its supplied `SchemeStalkBoundingLocalizationPresentation` contains only local algebra, canonical maps to actual stalks, localization properties, and a commutative square; all coordinate/arrow comparisons and formal étaleness are theorems. It is not conclusion-equivalent, but callers of this generic interface still supply it. | Theorem `thm:bounding`, Steps 0--4; Definition `def:branch-loci` |
-| A6i | **Literal invariant-divisor Step 0 interface** (`Pcf.InvariantDivisorStep0LocalData`). For the actual finite dominant endomorphism, invariant divisor, iterate and specified preimage, it records an affine neighborhood, characteristic zero, source/target incidence, ambient codimension two, regularity away from the finite correction, avoidance of every other height-one branch component, and G1/G2. It contains no chart, formal-étaleness assertion, `crit₁`, `key1`, or bounding conclusion. `invariantDivisorSetupOfFiniteType` constructs this interface from the actual finite-type geometry plus only the local G1/G2 packages; no caller of `pcfAllTheWayDown_scheme` supplies A6i. | Theorem `thm:bounding`, Step 0; G1/G2 in Steps 1--2 |
+| A6s | **Legacy structural stalk-chart input** (`Pcf.SchemeNormalizationPCFSetupChart.chart`, §G.4). Its supplied `SchemeStalkBoundingLocalizationPresentation` contains only local algebra, canonical maps to actual stalks, localization properties, and a commutative square; all coordinate/arrow comparisons and formal étaleness are theorems. It is not conclusion-equivalent, but callers of this generic interface still supply it. | Theorem `thm:bounding`, Steps 0--4; Definition `def:branch-loci` |
+| A6i | **Literal invariant-divisor Step 0 interface** (`Pcf.InvariantDivisorCorrectionLocalData`). For the actual finite dominant endomorphism, invariant divisor, iterate and specified preimage, it records an affine neighborhood, characteristic zero, source/target incidence, ambient codimension two, regularity away from the finite correction, avoidance of every other height-one branch component, and G1/G2. It contains no chart, formal-étaleness assertion, `crit₁`, `notMem_nonEtaleBranch_iterate`, or bounding conclusion. `invariantDivisorSetupOfFiniteType` constructs this interface from the actual finite-type geometry plus only the local G1/G2 packages; no caller of `pcfAllTheWayDown_scheme` supplies A6i. | Theorem `thm:bounding`, Step 0; G1/G2 in Steps 1--2 |
 
 **Consequence.** A3 restricts the development to the characteristic-zero
 setting of Theorem `thm:normal-invariant`, where non-étaleness at a source DVR is exactly `e > 1`.
@@ -266,7 +266,7 @@ The development has **two layers**, and it matters which one a statement lives i
   Theorem `thm:bounding` and the finiteness statements outright, from strictly smaller inputs.
 
 The two layers **are now joined**. `Pcf.PCFGeometry.toPCFSetup` constructs a
-`Pcf.PCFSetup` from geometric data with `sing_finite`, `meets_finite` and `key` **proved**,
+`Pcf.PCFSetup` from geometric data with `singularPrimes_finite`, `meets_finite` and `key` **proved**,
 and `Pcf.PCFGeometry.restriction_isPCF` is Theorem `thm:normal-invariant` on that route. `Pcf.divisorDynamicsOfGeometry` likewise
 constructs a `Pcf.DivisorDynamics` with `step_image_ramified_finite` proved.
 
@@ -278,33 +278,33 @@ So there are three routes to Theorem `thm:normal-invariant`:
   bounding conclusion `key` as an **explicit argument** (since 2026-10-04; it was the field
   P2, equivalent to B5 — see the warning below). What it genuinely no longer assumes is B3
   and B4.
-* **Chart route** (2026-10-04, §G) — `Pcf.PcfSetupChart.res_pcf1`. Assumes B1, B2, B3, B4,
+* **Chart route** (2026-10-04, §G) — `Pcf.PCFSetupChart.restriction_isNonEtaleBranchPCF`. Assumes B1, B2, B3, B4,
   U1–U5, the chart link A6, and **derives** B5/U6 from Zariski–Nagata purity (G1),
   Abhyankar's lemma (G2), both stated faithfully to the Stacks text. Tags 033B, the needed
   finite-presentation case of 036W, and 01JT are proved (G3–G5).
 * **Two-carrier chart route** (2026-10-05) —
-  `Pcf.NormalizationPcfSetupChart.norm_pcf`.  It has the same chart assumptions, but
+  `Pcf.NormalizationPCFSetupChart.normalized_isPCF`.  It has the same chart assumptions, but
   `NormalizationUnnormalizedDynamics` keeps divisors of the normalization separate from divisors of
   the possibly nonnormal restriction.  The final PCF transfer is proved from finite fibers;
   it no longer assumes or suggests that the two carriers are definitionally identical.
 * **Actual-scheme chart route** (2026-10-05) —
-  `Pcf.SchemeNormalizationPcfSetupChart.norm_pcf`. Its divisor carrier is
-  `SchemeDivisorPoint A`, and `Pcf.SchemeNormalizationUnnormDyn` defines every
+  `Pcf.SchemeNormalizationPCFSetupChart.normalized_isPCF`. Its divisor carrier is
+  `SchemeDivisorPoint A`, and `Pcf.SchemeNormalizationUnnormalizedDynamics` defines every
   `crit₀(gᵐ)` and `crit₁(gᵐ)` from the actual stalk map. Its generic structure stores U1,
-  but `schemeNormalizationUnnormDynOfFiniteBirational` proves U1 from the actual finite
+  but `schemeNormalizationUnnormalizedDynamicsOfFiniteBirational` proves U1 from the actual finite
   commuting maps and generic-stalk birationality. It assumes the structural chart input
-  A6s, but not A6's implication; U2–U5 are proved. `key1` is proved by deriving formal étaleness of
+  A6s, but not A6's implication; U2–U5 are proved. `notMem_nonEtaleBranch_iterate` is proved by deriving formal étaleness of
   the localized quotient map and transporting it across the derived arrow isomorphism
   supplied by the quotient-ring algebra maps, their localization properties, and their
   commutative square; the coordinate isomorphisms are derived.
 * **Actual invariant-divisor route** (2026-10-05) —
-  `Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf`. It starts with an actual
+  `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.normalized_isPCF`. It starts with an actual
   finite dominant endomorphism and invariant codimension-one point, identifies the
   restricted self-map and every iterate with the canonical reduced point-closure map,
   and constructs the A6s chart from A6i. Its only unproved local covering theorems are G1
   and G2; the remaining A6i fields are the literal Step 0 hypotheses and incidences, not
   a reformulation of formal étaleness or the conclusion. The constructor
-  `InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient` forces its ambient
+  `InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient` forces its ambient
   dynamics and fixed prime to come from the actual endomorphism and invariant divisor.
 
 **A correction, retained.** An earlier version of this file claimed Theorem `thm:bounding` (per-divisor form) is
@@ -369,7 +369,7 @@ The table below describes what the *structures* demand.
 | B2 | `DivisorDynamics.step_image_ramified_finite` | The branch divisor has finitely many components (§`sec:defs`, after Definition `def:crit-branch`). | **Discharged for the affine constructor** by `finite_heightOne_ramified` and for the actual normal-scheme constructor by finiteness of the actual critical divisor locus; in characteristic zero the latter follows from finite dominance, integrality, Noetherianity, and local finite presentation, with generic formal étaleness derived from separability. It remains a field of abstract ready-made `DivisorDynamics`s. |
 | B3 | `PCFSetup.singularPrimes_finite` | `Sing(Y) ∩ B` and `Sing(B)` contain finitely many primes (Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`). | **Genuinely discharged** by `Pcf.PCFGeometry.singularPrimes_finite`, from properness plus Noetherianness. |
 | B4 | `PCFSetup.meets_finite` | `B ∩ Z` contains finitely many primes (Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`). | **Genuinely discharged** by `Pcf.PCFGeometry.meets_finite`, from properness plus Noetherianness. |
-| B5 | `PCFSetup.notMem_branch_iterate` | **Theorem `thm:bounding` (per-divisor form)**, applied to every iterate. | **Derived on chart routes** (§G): the legacy `Pcf.PcfSetupChart.key1` uses A6; the preferred `Pcf.SchemeNormalizationPcfSetupChart.key1` uses actual divisor points, actual stalk-defined `crit₁`, and A6s, with no conclusion-equivalent implication. `Pcf.NonEtalePCFSetup.toPCFSetup` turns the étale form into `key`. On the abstract route and on `Pcf.PCFGeometry.toPCFSetup` it is an explicit argument. The former `standardForm` (P2) is **removed**. |
+| B5 | `PCFSetup.notMem_branch_iterate` | **Theorem `thm:bounding` (per-divisor form)**, applied to every iterate. | **Derived on chart routes** (§G): the legacy `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` uses A6; the preferred `Pcf.SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate` uses actual divisor points, actual stalk-defined `crit₁`, and A6s, with no conclusion-equivalent implication. `Pcf.NonEtalePCFSetup.toPCFSetup` turns the étale form into `key`. On the abstract route and on `Pcf.PCFGeometry.toPCFSetup` it is an explicit argument. The former `standardForm` (P2) is **removed**. |
 
 ### B.2 What the geometric layer actually assumes
 
@@ -490,7 +490,7 @@ Two cautions about the table above.
   does correspond to inverting `f` is `Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit`, which needs
   no `e`-th power hypothesis. Nothing in the development consumes either.
 * **`Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one` is about Mathlib's `Ideal.ramificationIdx`**, a
-  `Module.length`. `Pcf.heightOneRam_eq_dvrExponent` now identifies this length with the
+  `Module.length`. `Pcf.heightOneRamificationIdx_eq_dvrExponent` now identifies this length with the
   usual exponent for a finite extension of normal Noetherian domains at a height-one
   prime.  That theorem does **not** turn this particular Kummer statement into the
   manuscript's restriction index: the index here is over a base with the divisor equation
@@ -622,13 +622,13 @@ closedness argument**: Mathlib supplies it.
 
 ### Exactly what is and is not discharged
 
-* **Discharged:** `step_image_ramified_finite` for the **restricted** system `res`, on the
+* **Discharged:** `step_image_ramified_finite` for the **restricted** system `restriction`, on the
   `Pcf.PCFGeometry.ofPurityData` route.
-* **Still assumed:** `step_image_ramified_finite` for the **ambient** system `amb`. It is a field of
-  `amb : DivisorDynamics PX`, and `PX` is a bare type with no topology, so there is nothing to run
+* **Still assumed:** `step_image_ramified_finite` for the **ambient** system `ambient`. It is a field of
+  `ambient : DivisorDynamics PX`, and `PX` is a bare type with no topology, so there is nothing to run
   the argument on.
 * **Still assumed:** `step_image_ramified_finite` on the plain `Pcf.PCFGeometry` and `Pcf.PCFSetup`
-  routes, which take `res` as a ready-made `DivisorDynamics`. The field was not removed from the
+  routes, which take `restriction` as a ready-made `DivisorDynamics`. The field was not removed from the
   structure; an alternative constructor was added that does not need it.
 
 ### The trade, and its converse
@@ -652,7 +652,7 @@ of assumed.
 
 `Pcf.Examples.restrictionDynamicsOfPurity` is an inhabitant with **genuine ramification**:
 `resDynOfPurity.branch = {zeroPrime}`, and `Pcf.Examples.restrictionDynamicsOfPurity_isPCF` obtains
-`PCF` by *applying* `Pcf.PCFGeometry.restriction_isPCF_of_purityData`. Its `step_image_ramified_finite` is
+`IsPCF` by *applying* `Pcf.PCFGeometry.restriction_isPCF_of_purityData`. Its `step_image_ramified_finite` is
 proved, not supplied.
 
 Two caveats the file itself records. Its purity datum is built by
@@ -721,7 +721,7 @@ For the normalization comparison, `Pcf.heightOneComapPoint` and
 underlying space instead of silently identifying normalized and unnormalized divisors.
 `Pcf.finite_heightOne_comap_fiber` proves finite fibers for the affine map under
 quasi-finiteness, with no normality or height hypothesis on the target; the scheme-level
-`Pcf.Scheme.Hom.finite_divisorPoint_fiber` proves the same for every locally quasi-finite,
+`AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_fiber` proves the same for every locally quasi-finite,
 quasi-compact morphism.  When both affine rings are normal,
 `Pcf.finite_heightOneUnder_fiber` specializes this to the actual height-one contraction
 map.  Thus the finite-fiber clause used by the normalization bookkeeping is available.
@@ -836,9 +836,9 @@ of `heightOneBranch`. The last implication uses
 `isUnramifiedAt_of_ramificationIdx_eq_one_of_algebraRat` and
 `isUnramifiedAt_localization_algebraMapSubmonoid`.
 
-For a finite normal affine self-map, `Pcf.divDynOfFiniteNormalSelfAlgebra` uses this map as
+For a finite normal affine self-map, `Pcf.divisorDynamicsOfFiniteNormalSelfAlgebra` uses this map as
 `DivisorDynamics.step`, proves `step_surjective`, and
-`divDynOfFiniteNormalSelfAlgebra_branch` identifies its abstract branch set with
+`divisorDynamicsOfFiniteNormalSelfAlgebra_branch` identifies its abstract branch set with
 `heightOneBranch`. The older conclusion that Mathlib's Krull API could not reach
 codimension preservation was therefore too pessimistic and is retracted.
 `Pcf/Bounding/SchemeExtraction.lean` now extracts the finite affine preimage, finite
@@ -864,7 +864,7 @@ equation by the proved low-dimensional regular-local theorem. Thus the general
 regular-local-implies-UFD theorem (Stacks 0AG0/0AGA) is not needed. The point-closure map
 is functorial under composition and iteration; `invariantClosureMap_iterate` identifies
 the actual invariant-divisor restriction iterate with the restriction of the ambient
-iterate, and `InvariantDivisorSchemeNormalizationPcfSetup.toSchemeNormalizationPcfSetupChart`
+iterate, and `InvariantDivisorSchemeNormalizationPCFSetup.toSchemeNormalizationPCFSetupChart`
 constructs the global consumer chart from A6i.
 
 ### What it does not do
@@ -899,7 +899,7 @@ constructs the global consumer chart from A6i.
   `heightOneUnderOfCodim` packages the divisor map once codimension preservation is known.
   `height_under_eq_of_finite_of_finiteType` and
   `coheight_apply_eq_one_of_finiteType` prove the missing codimension statement by
-  Noether normalization. `schemeNormalizationUnnormDynOfFiniteType` builds the two
+  Noether normalization. `schemeNormalizationUnnormalizedDynamicsOfFiniteType` builds the two
   divisor carriers, normalization map, finite fibers, and commuting square from actual
   scheme morphisms. The new scheme route constructs the honest critical-locus
   consumer and removes A6's circular implication. Its coordinate/primes/stalk plumbing,
@@ -907,10 +907,10 @@ constructs the global consumer chart from A6i.
   from the original finite morphism once the literal Step 0 facts are supplied.
 * **A2 is discharged for the affine and actual normal-scheme constructors.** `ram` is definitionally
   Mathlib's `Ideal.ramificationIdx`; the height-one source localization is a DVR, and
-  `heightOneRam_eq_dvrExponent` proves that the length equals the maximal-ideal exponent
-  `e(𝔮/𝔪)`. `schemeDivisorRam` is the corresponding actual stalk index and
-  `divDynOfFiniteDominantNormal` installs it as the scheme-level dynamics.
-  `divDynOfFiniteDominantNormal_iterRam` proves equality of the actual iterate index with
+  `heightOneRamificationIdx_eq_dvrExponent` proves that the length equals the maximal-ideal exponent
+  `e(𝔮/𝔪)`. `schemeDivisorRamificationIdx` is the corresponding actual stalk index and
+  `divisorDynamicsOfFiniteDominantNormal` installs it as the scheme-level dynamics.
+  `divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx` proves equality of the actual iterate index with
   `DivisorDynamics.iterateRamificationIdx`.
 * **Non-vacuity is weak.** `Pcf.divisorDynamicsOfSpectrum` is inhabited (checked, with `R = S = ℚ`),
   but no instance with a genuinely ramified prime is exhibited; that needs a concrete
@@ -920,7 +920,7 @@ constructs the global consumer chart from A6i.
 
 Added 2026-10-04 for Appendix `app:other-defs` and the `1`-PCF form of Theorem
 `thm:normal-invariant`. `Pcf/Unnormalized.lean` extends `DivisorDynamics` by two critical predicates
-`crit0 m`, `nonEtaleLocus m` (for `crit₀(gᵐ)`, `crit₁(gᵐ)` of Definition `def:branch-loci`) and
+`nonUnramifiedLocus m`, `nonEtaleLocus m` (for `crit₀(gᵐ)`, `crit₁(gᵐ)` of Definition `def:branch-loci`) and
 stores U1–U5 because that abstract layer has no morphism of schemes. The actual-scheme
 layer now defines both predicates from the actual stalk maps and proves U2–U5.
 
@@ -928,29 +928,29 @@ Since 2026-10-05 the faithful abstract route uses `Pcf.NormalizationUnnormalized
 the same mathematical content, but normalized ramification divisors live on `PN` and the
 unnormalized critical loci live on `PA`.  `Pcf.UnnormalizedDynamics` remains as the legacy one-carrier
 interface and embeds by `NormalizationUnnormalizedDynamics.ofUnnormalizedDynamics`. On the newer actual-scheme
-route, `Pcf.SchemeNormalizationUnnormDyn A PN` has no arbitrary critical-locus fields:
+route, `Pcf.SchemeNormalizationUnnormalizedDynamics A PN` has no arbitrary critical-locus fields:
 `crit₀(gᵐ)` and `crit₁(gᵐ)` are definitionally the formal-unramified and formal-étale
 failure loci of the actual stalk map.
 
 | ID | Abstract field / actual-scheme result | Status on the actual-scheme route | Manuscript source |
 | --- | --- | --- | --- |
-| U1 | `SchemeNormalizationUnnormDyn.crit_subset_crit0` | **proved on the actual finite-birational route** by `schemeDivisorRam_gt_one_mem_crit0_of_finite_birational` and installed by `schemeNormalizationUnnormDynOfFiniteBirational`. The proof constructs the tensor-image branch and localization from the commuting stalk square, uses the generic-stalk isomorphism to obtain the common fraction field at every source stalk, and uses the proved iterate-index identification. It remains a field only on abstract/generic interfaces. | `prop:loci-compare`(2), first inclusion |
-| U2 | `SchemeNormalizationUnnormDyn.crit0_subset_crit1` | **proved**: formal étaleness implies formal unramifiedness for the actual stalk map. | `prop:loci-compare`(2), second inclusion |
-| U3 | `SchemeNormalizationUnnormDyn.crit1_finite` | **proved** from finite dominance, local finite presentation, integrality, Noetherianity, and characteristic zero at the generic stalk; the finite generic field extension is separable and hence formally étale, and composition handles every iterate. | `prop:loci-compare`(1) |
-| U4 | `SchemeNormalizationUnnormDyn.crit0_tower` | **proved** for actual stalk maps. | `lem:tower-unnormalized`(1) with `h = gⁿ` |
-| U5 | `SchemeNormalizationUnnormDyn.crit1_tower` | **proved** for actual stalk maps. | `lem:tower-unnormalized`(2) with `h = gⁿ` |
+| U1 | `SchemeNormalizationUnnormalizedDynamics.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx` | **proved on the actual finite-birational route** by `mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational` and installed by `schemeNormalizationUnnormalizedDynamicsOfFiniteBirational`. The proof constructs the tensor-image branch and localization from the commuting stalk square, uses the generic-stalk isomorphism to obtain the common fraction field at every source stalk, and uses the proved iterate-index identification. It remains a field only on abstract/generic interfaces. | `prop:loci-compare`(2), first inclusion |
+| U2 | `SchemeNormalizationUnnormalizedDynamics.nonUnramifiedLocus_subset_nonEtaleLocus` | **proved**: formal étaleness implies formal unramifiedness for the actual stalk map. | `prop:loci-compare`(2), second inclusion |
+| U3 | `SchemeNormalizationUnnormalizedDynamics.nonEtaleLocus_finite` | **proved** from finite dominance, local finite presentation, integrality, Noetherianity, and characteristic zero at the generic stalk; the finite generic field extension is separable and hence formally étale, and composition handles every iterate. | `prop:loci-compare`(1) |
+| U4 | `SchemeNormalizationUnnormalizedDynamics.nonUnramifiedLocus_tower` | **proved** for actual stalk maps. | `lem:tower-unnormalized`(1) with `h = gⁿ` |
+| U5 | `SchemeNormalizationUnnormalizedDynamics.nonEtaleLocus_tower` | **proved** for actual stalk maps. | `lem:tower-unnormalized`(2) with `h = gⁿ` |
 | U6 | `NonEtalePCFSetup.notMem_nonEtaleBranch_iterate` | the **étale** conclusion of `thm:bounding` for `fᵐ`, every `m ≥ 1`: a prime of `A` outside `Σ_m` is not in `branch₁(gᵐ)` | `thm:bounding` |
 
 U6 is the new primitive of the manuscript. It is *stronger* than B5 (`PCFSetup.notMem_branch_iterate`), and
 `Pcf.NonEtalePCFSetup.toPCFSetup` derives B5 from U6 and U1–U2; so the `NonEtalePCFSetup` route assumes
-U6 in place of B5, not in addition to it. `key1` is stated only for `m ≥ 1`; the `m = 0`
+U6 in place of B5, not in addition to it. `notMem_nonEtaleBranch_iterate` is stated only for `m ≥ 1`; the `m = 0`
 case of `key` is proved from `iterateRamificationIdx 0 = 1`.
 
-**U6 is derived on the chart route** (§G, 2026-10-04): `Pcf.PcfSetupChart.key1` proves it from
+**U6 is derived on the chart route** (§G, 2026-10-04): `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` proves it from
 Zariski–Nagata purity and Abhyankar's lemma on charts, given the modelling link A6 and the
-three proved standard facts G3–G5. `Pcf.NonEtalePCFSetup` keeps `key1` as a field so that the
-abstract route and the examples are unchanged; `Pcf.PcfSetupChart.toNonEtalePCFSetup` fills it.
-On the actual-scheme route, `Pcf.SchemeNormalizationPcfSetupChart.key1` instead derives
+three proved standard facts G3–G5. `Pcf.NonEtalePCFSetup` keeps `notMem_nonEtaleBranch_iterate` as a field so that the
+abstract route and the examples are unchanged; `Pcf.PCFSetupChart.toNonEtalePCFSetup` fills it.
+On the actual-scheme route, `Pcf.SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate` instead derives
 U6 from A6s; there is no implication from abstract critical membership to chart
 non-étaleness because critical membership already unfolds to the actual stalk predicate.
 
@@ -962,14 +962,14 @@ non-étaleness because critical membership already unfolds to the actual stalk p
   commutation with pushforward, and U1 after applying that map.  Theorems
   `normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet` and `normalized_isPCF_of_isNonEtaleBranchPCF` perform the transfer
   without injectivity. For actual finite dominant morphisms to finite-type integral
-  targets, `schemeNormalizationUnnormDynOfFiniteBirational` constructs the divisor map,
+  targets, `schemeNormalizationUnnormalizedDynamicsOfFiniteBirational` constructs the divisor map,
   finite fibers, commuting square, and U1 from generic-stalk birationality. The
   `GlobalNormalization*.lean` modules now construct the canonical normal finite
   normalization, prove the comparison isomorphism, construct the finite dominant commuting
-  lift, and feed it to `schemeGlobalNormalizationUnnormDynOfFiniteType`. Thus this geometry
+  lift, and feed it to `schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType`. Thus this geometry
   is fully discharged under the finite-type characteristic-zero hypotheses.
 * **On the legacy and two-carrier abstract interfaces, `crit_i(gᵐ)` is data.** On
-  `SchemeNormalizationUnnormDyn`, both are derived from the actual iterate's stalk map.
+  `SchemeNormalizationUnnormalizedDynamics`, both are derived from the actual iterate's stalk map.
   There is no equality formula for `crit₀(gᵐ)` in terms of `crit₀(g)`; U4 is the inclusion
   required downstream.
 * **Only the instance `h = gⁿ` of `lem:tower-unnormalized` is proved**, which is all
@@ -986,7 +986,7 @@ non-étaleness because critical membership already unfolds to the actual stalk p
 `Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF` (`thm:normal-invariant`), `Pcf.NonEtalePCFSetup.restriction_isNonUnramifiedBranchPCF/res_pcf`
 (`cor:normal-invariant-pcf`), `Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF_of_iterate` (`cor:normal-preperiodic`).
 On the corrected route the corresponding results are
-`Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF`, `norm_pcf`, and `norm_pcf_of_iter`; the last PCF
+`Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF`, `normalized_isPCF`, and `normalized_isPCF_of_iterate`; the last PCF
 step is a theorem from finite normalization fibers.
 
 ### `ex:pinched`
@@ -1074,7 +1074,7 @@ And, in the geometric layer, all of §`sec:bounding` except P1–P6:
 
 * `lem:restriction`, `prop:loci-compare`(3),
   `prop:pcf-equiv`(3), `lem:jacobian`, `ex:basilica`, `ex:dupont`, `ex:loci-compared`,
-  `rem:why-normalized`, `q:sing-B`.
+  `rem:why-normalized`, `q:singularPrimes-B`.
 * In `ex:pinched`: everything scheme-theoretic (§B.8).
 * In `ex:cusp`: the new sentence `branch₀(g) = branch₁(g) = {(0,0)} = B ∩ Z`.
 
@@ -1160,25 +1160,25 @@ conclusion: it mentions neither `a` nor `𝔭` nor either quotient ring.
 | Step 4, `T → D'` étale at `ξ'` | `Pcf.Bounding.isLocalization_of_localStructure`, `formallyEtale_of_localStructure`, `Pcf.BoundingChart.isEtaleAt_quot_of_pieces` | proved: the local ring of the base-changed restriction is a localization of `R'/(a)` |
 | the piece through a point | `Pcf.Bounding.exists_isUnit_evalRingHom_single`, `exists_lift_of_isUnit_single`, `isLocalizationAway_evalRingHom` | proved |
 | Step 4, descent to `g` | `Pcf.BoundingChart.isEtaleAt_restriction` | proved from the above plus G4 and G5, both proved; G3 (proved) is used inside |
-| concrete codimension-one `crit₁` of the chart restriction | `Pcf.affineCrit1`, `Pcf.BoundingChart.affineCrit1_restriction_eq_empty` | proved: `affineCrit1` is definitionally non-étaleness at a height-one prime, so the chart theorem makes it empty |
-| local chart at the generic point of `E ⊂ B` | `Pcf.exists_generator_map_atPrime_regular_dim_two`, `Pcf.mem_nonZeroDivisors_of_ringKrullDim_eq_two_of_quotient_eq_one`, `Pcf.isEtaleAt_height_zero_of_charZero_of_integral`, `Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfDivisors`, `Pcf.LocalBoundingChart.toBoundingChart`, `Pcf.isIntegralClosure_localizationAway_of_finite_of_integrallyClosed`, `isEtaleAt_restriction`, `affineCrit1_restriction_eq_empty` | proved from a finite dominant normal algebra, honest target/source height-one divisor ideals, a normal two-dimensional regular ambient stalk, and a one-dimensional regular divisor stalk; the canonical localized cover, selected minimal component, local equation, nonzerodivisor property, generic-point étaleness, tameness over `ℚ`, low-dimensional regular-ring promotions, cover Noetherianity, finite-map height equality, and normalization inside the principal localization are theorems |
+| concrete codimension-one `crit₁` of the chart restriction | `Pcf.affineNonEtaleLocus`, `Pcf.BoundingChart.affineNonEtaleLocus_restriction_eq_empty` | proved: `affineNonEtaleLocus` is definitionally non-étaleness at a height-one prime, so the chart theorem makes it empty |
+| local chart at the generic point of `E ⊂ B` | `Pcf.exists_generator_map_atPrime_regular_dim_two`, `Pcf.mem_nonZeroDivisors_of_ringKrullDim_eq_two_of_quotient_eq_one`, `Pcf.isEtaleAt_height_zero_of_charZero_of_integral`, `Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfDivisors`, `Pcf.LocalBoundingChart.toBoundingChart`, `Pcf.isIntegralClosure_localizationAway_of_finite_of_integrallyClosed`, `isEtaleAt_restriction`, `affineNonEtaleLocus_restriction_eq_empty` | proved from a finite dominant normal algebra, honest target/source height-one divisor ideals, a normal two-dimensional regular ambient stalk, and a one-dimensional regular divisor stalk; the canonical localized cover, selected minimal component, local equation, nonzerodivisor property, generic-point étaleness, tameness over `ℚ`, low-dimensional regular-ring promotions, cover Noetherianity, finite-map height equality, and normalization inside the principal localization are theorems |
 | localization presentation and actual stalk map of the affine quotient chart | `Pcf.LocalBoundingChart.toSchemeStalkBoundingLocalizationPresentation`; `Pcf.SchemeStalkBoundingLocalizationPresentation.toSchemeStalkBoundingPresentation`, `formallyEtale` | proved: the quotient-ring algebra maps, their localization properties and their square construct the two coordinate isomorphisms and the arrow isomorphism, across which the pointwise purity--Abhyankar conclusion is transported; the literal affine quotient uses the canonical structure-sheaf localizations and functoriality of `Spec` |
 | actual affine divisor quotient and its global-to-local stalk comparison | `Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingChart`; `toGlobalQuotientSchemeStalkBoundingLocalizationPresentationOfHeightOneDivisorsAt` | proved: for primes `D ≤ q` and `P ≤ Q`, with `Q` over `q`, the actual stalk arrow of `Spec(S/P) → Spec(R/D)` at `Q/P` is isomorphic to the canonical localized chart arrow; the composite constructor derives the exact dynamics-facing presentation from the finite dominant normal algebra, honest height-one divisors, pointed avoidance of every other branch divisor, purity and Abhyankar |
 | closed-subscheme affine quotients to actual stalks | `Scheme.IdealSheafData.quotientPoint`, `quotientStalk_isLocalization`, `quotientAppLE`, `comap_quotientPoint_quotientAppLE`, `stalkMap_comp_quotientStalkAlgebraMap`, `quotientAppLE_subschemeMap_eq_quotientMap`; `Pcf.closedSubschemeStalkBoundingLocalizationPresentation`, `closedSubschemeStalkBoundingLocalizationPresentationOfAmbientMap`, `affineIdealSheaf_le_map_of_localBoundingChart`, `affineIdealSheafStalkBoundingLocalizationPresentation`, `exists_principal_comap_affineBasicOpen_of_atPrime_regular_dim_two` | proved: canonical closed-subscheme section quotients localize to the actual stalks; their induced quotient map contracts the selected prime and commutes with the actual stalk map; for a morphism induced from the ambient schemes it is exactly the ordinary quotient of the ambient section map; on affine ambient schemes, the Step 0 regular local hypotheses produce the target principal equation, after which the chart derives the sheaf containment, restricted morphism, and complete dynamics-facing localization presentation |
-| the étale conclusion for the dynamics | `Pcf.PcfSetupChart.key1`; corrected two-carrier route `Pcf.NormalizationPcfSetupChart.key1`, `norm_pcf`, `norm_pcf_of_iter` | proved from the chart link A6; the corrected PCF transfer uses an explicit finite-fiber normalization map |
-| the étale conclusion with actual divisors and stalk-defined `crit₁` | `Pcf.SchemeNormalizationPcfSetupChart.key1`, `res_pcf1`, `norm_pcf` | proved from A6s, purity and Abhyankar; no field states or implies the critical-to-chart non-étaleness implication |
-| the invariant-divisor conclusion from the ambient endomorphism | `Pcf.InvariantDivisorSchemeNormalizationPcfSetup.toSchemeNormalizationPcfSetupChart`, `key1`, `res_pcf1`, `norm_pcf`, `norm_pcf_of_iter` | A6s is constructed from the actual restricted iterate and A6i; the local equation uses the exact dimension-two theorem, so the only external local covering inputs are G1 and G2 |
+| the étale conclusion for the dynamics | `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate`; corrected two-carrier route `Pcf.NormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate`, `normalized_isPCF`, `normalized_isPCF_of_iterate` | proved from the chart link A6; the corrected PCF transfer uses an explicit finite-fiber normalization map |
+| the étale conclusion with actual divisors and stalk-defined `crit₁` | `Pcf.SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate`, `restriction_isNonEtaleBranchPCF`, `normalized_isPCF` | proved from A6s, purity and Abhyankar; no field states or implies the critical-to-chart non-étaleness implication |
+| the invariant-divisor conclusion from the ambient endomorphism | `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.toSchemeNormalizationPCFSetupChart`, `notMem_nonEtaleBranch_iterate`, `restriction_isNonEtaleBranchPCF`, `normalized_isPCF`, `normalized_isPCF_of_iterate` | A6s is constructed from the actual restricted iterate and A6i; the local equation uses the exact dimension-two theorem, so the only external local covering inputs are G1 and G2 |
 
 Tameness of the `eᵢ` is consumed only inside G2; Steps 3–4 hold for any `e ≥ 1`
 (`Pcf.BoundingChart.isEtaleAt_quot_of_pieces` takes `e i ≠ 0` only).
 
 ### G.4 The chart link A6, and exactly what it is worth
 
-`Pcf.PcfSetupChart` is `Pcf.NonEtalePCFSetup` with `key1` replaced by `chart`: for each `m ≥ 1`,
+`Pcf.PCFSetupChart` is `Pcf.NonEtalePCFSetup` with `notMem_nonEtaleBranch_iterate` replaced by `chart`: for each `m ≥ 1`,
 good `Q`, and `Q'` over `Q`, a `Pcf.BoundingChart` and a point `ξ` representing `Q'`, with
-`Q' ∈ crit₁(gᵐ) → ¬ IsEtaleAt (R/(a)) ξ`. `Pcf.PcfSetupChart.key1` then derives `key1`.
-`Pcf.NormalizationPcfSetupChart` has the same chart link on the unnormalized carrier but
-keeps the normalized ramification carrier separate; its `norm_pcf` theorem is the faithful
+`Q' ∈ crit₁(gᵐ) → ¬ IsEtaleAt (R/(a)) ξ`. `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` then derives `notMem_nonEtaleBranch_iterate`.
+`Pcf.NormalizationPCFSetupChart` has the same chart link on the unnormalized carrier but
+keeps the normalized ramification carrier separate; its `normalized_isPCF` theorem is the faithful
 normalization conclusion.
 
 `Pcf.LocalBoundingChart` is now the preferred geometric source of that affine chart.  It
@@ -1188,15 +1188,15 @@ A6 no longer requires choosing a regular affine neighborhood.  It still requires
 scheme/stalk construction and, crucially, the identification of the actual divisor and
 non-étale point with the abstract dynamics.
 
-The new `Pcf.SchemeNormalizationPcfSetupChart` is the preferred replacement for this
+The new `Pcf.SchemeNormalizationPCFSetupChart` is the preferred replacement for this
 legacy interface. Its unnormalized carrier is literally `SchemeDivisorPoint A`, and its
-`Pcf.SchemeNormalizationUnnormDyn` has no `crit0` or `nonEtaleLocus` field: the loci for `g ^ m`
+`Pcf.SchemeNormalizationUnnormalizedDynamics` has no `nonUnramifiedLocus` or `nonEtaleLocus` field: the loci for `g ^ m`
 unfold to failure of formal unramifiedness and formal étaleness of `(g ^ m).stalkMap`.
 Its `chart` field returns a
 `SchemeStalkBoundingLocalizationPresentation`, which contains only local algebra, the
 natural quotient-ring algebra maps to the actual stalks, their localization properties,
 and their commutative square. The coordinate and arrow isomorphisms are derived.
-`SchemeNormalizationPcfSetupChart.key1` is therefore a genuine proof by contradiction
+`SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate` is therefore a genuine proof by contradiction
 between the definition of `crit₁` and the formal étaleness derived from purity and
 Abhyankar.
 
@@ -1215,11 +1215,11 @@ The exact dimension-two constructor
 `imageDivisorCartierDataAtOfRegularDimTwo` transports regularity from the actual ambient
 and divisor stalks and applies `exists_generator_map_atPrime_regular_dim_two`; hence it
 does not require a UFD instance or Stacks 0AG0/0AGA. The composite
-`invariantClosureStalkBoundingLocalizationOfStep0At` also proves the formerly missing
+`invariantClosureStalkBoundingLocalizationOfCorrectionAt` also proves the formerly missing
 global identification: `invariantClosureMap_iterate` identifies the categorical iterate
 of the actual invariant-divisor restriction with the point-closure map of the ambient
 iterate, and the specified source/target points contract correctly. Finally,
-`InvariantDivisorSchemeNormalizationPcfSetup.toSchemeNormalizationPcfSetupChart`
+`InvariantDivisorSchemeNormalizationPCFSetup.toSchemeNormalizationPCFSetupChart`
 translates the abstract good-point hypotheses through its literal A6i `localData` field
 and constructs A6s for the dynamics. Thus A6s remains a useful generic interface, but it
 is a theorem rather than an assumption on the actual invariant-divisor route.
@@ -1240,10 +1240,10 @@ not generally an open neighbourhood in the original scheme.
 
 **Honesty check.** On the legacy abstract carrier `PA`, no rings are attached (A1–A5), so
 the old A6 link is
-necessarily supplied by whoever supplies the data, and it is exactly as strong as `key1`
-*relative to the derived theorem*: given `key1`, `chart` could be discharged for every `Q'`
+necessarily supplied by whoever supplies the data, and it is exactly as strong as `notMem_nonEtaleBranch_iterate`
+*relative to the derived theorem*: given `notMem_nonEtaleBranch_iterate`, `chart` could be discharged for every `Q'`
 with a trivial chart (the identity cover `ℚ[x] → ℚ[x]`, `a = x`, satisfies every field of
-`Pcf.BoundingChart`); given `chart`, `key1` follows. This is **not** the situation the reviews
+`Pcf.BoundingChart`); given `chart`, `notMem_nonEtaleBranch_iterate` follows. This is **not** the situation the reviews
 of §B.2 refuted: there, the supplier chose the algebra to which Abhyankar's lemma was applied,
 and no geometry crossed. Here the algebra is the chart's own `R → S`, G1 and G2 are applied
 to *it*, and the only thing left to the supplier is to say which chart represents which
@@ -1252,7 +1252,7 @@ not the trust boundary of that abstraction. The actual invariant-divisor route i
 different: its carrier is `SchemeDivisorPoint`, `crit₁` is defined by the actual stalk
 map, the restriction and its iterates are identified as concrete scheme morphisms, and
 the chart is constructed from A6i. A6i contains G1/G2 and ordinary Step 0 facts, but no
-field from which formal étaleness or `key1` follows without G1/G2. The adversarial record
+field from which formal étaleness or `notMem_nonEtaleBranch_iterate` follows without G1/G2. The adversarial record
 at the authors' private research note `2026-10-04-divisor-bridge/fidelity.md` checks these fields one by one.
 
 ### G.5 Removed
@@ -1260,7 +1260,7 @@ at the authors' private research note `2026-10-04-divisor-bridge/fidelity.md` ch
 `Prop41Data.over`, `Prop41Data.ram`, `Prop41Data.standardForm`, `Prop41Data.branch`,
 `Prop41Data.notMem_branch`, `Prop41Data.branch_subset_bound`, `Prop41Data.finite_branch`,
 `PcfGeometry.standardForm`, `PcfGeometry.key` (the theorem); `PCFGeometry.toPCFSetup`,
-`res_pcf`, `restriction_isPCF_of_iterate` and `PCFGeometry.ofPurityData` / `restriction_isPCF_of_purityData` now take
+`restriction_isPCF`, `restriction_isPCF_of_iterate` and `PCFGeometry.ofPurityData` / `restriction_isPCF_of_purityData` now take
 the bounding conclusion as an explicit argument. The cofinite witness
 (`Pcf/Examples/CofiniteWitness.lean`) supplies it directly (`Pcf.Examples.notMem_branch_iterate_restrictionDynamics`), with
 no `KummerWitness`.
@@ -1287,16 +1287,16 @@ Using the vocabulary of the formalization-evidence contract:
   standing hypotheses, G1 (Zariski–Nagata purity, Tag 0BMB), G2 (Abhyankar's lemma, Tags
   0EYG/0EYH): `Pcf.BoundingChart.isEtaleAt_restriction` (§G). Tags 033B, the needed
   finite-presentation case of 036W, and 01JT are proved along the way.
-* Theorem `thm:normal-invariant` via `Pcf.PcfSetupChart.res_pcf1` — **CONDITIONAL** on
+* Theorem `thm:normal-invariant` via `Pcf.PCFSetupChart.restriction_isNonEtaleBranchPCF` — **CONDITIONAL** on
   A1–A6, B1–B4, U1–U5, G1 and G2. The former P2/U6 primitive is derived.  The corrected
-  two-carrier conclusion is `Pcf.NormalizationPcfSetupChart.norm_pcf`; its finite-fiber PCF
+  two-carrier conclusion is `Pcf.NormalizationPCFSetupChart.normalized_isPCF`; its finite-fiber PCF
   transfer is proved. The actual finite-type constructor supplies the codimension theorem,
   divisor map and finite fibers once the normalization morphism and lifted map are given.
-* Theorem `thm:normal-invariant` via `Pcf.SchemeNormalizationPcfSetupChart.norm_pcf` —
+* Theorem `thm:normal-invariant` via `Pcf.SchemeNormalizationPCFSetupChart.normalized_isPCF` —
   **CONDITIONAL** on the supplied finite commuting normalization and lifted maps,
   generic-stalk birationality, A5, A6s, characteristic zero at the generic stalk, G1 and
   G2. U1–U5 are proved on this finite-birational route. Unlike A6,
-  A6s contains no implication equivalent to `key1`: `crit₁` is the actual stalk-defined
+  A6s contains no implication equivalent to `notMem_nonEtaleBranch_iterate`: `crit₁` is the actual stalk-defined
   locus and the local chart supplies only concrete local algebra, localization properties,
   and a quotient-ring map square. The coordinate and arrow comparisons are derived.
   The canonical finite normal localized cover and its selected source divisor are now
@@ -1313,10 +1313,10 @@ Using the vocabulary of the formalization-evidence contract:
   source preimage and derives regularity and pointed avoidance from the literal Step 0
   exclusions. This generic route still accepts A6s as a field.
 * Theorem `thm:normal-invariant` via
-  `Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf` — **CONDITIONAL** on the
+  `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.normalized_isPCF` — **CONDITIONAL** on the
   ordinary properness fields, the supplied finite commuting normalization and lifted maps,
   generic-stalk birationality, characteristic zero at the generic stalk, A6i, G1 and G2.
-  U1–U5 are proved when `res` is built by the finite-birational constructor. Unlike the preceding
+  U1–U5 are proved when `restriction` is built by the finite-birational constructor. Unlike the preceding
   generic route, it constructs A6s. The local equation is derived by the exact
   dimension-two regular-local theorem, the actual invariant-divisor restriction and all
   iterates are identified with the ambient point-closure maps, and the specified source
@@ -1325,7 +1325,7 @@ Using the vocabulary of the formalization-evidence contract:
   conclusion-shaped chart field is assumed.
 * Theorem `thm:general` via `Pcf.pcfAllTheWayDown_scheme` — **LEAN-PROVED,
   CONDITIONAL** on its stated finite-type characteristic-zero geometry, ambient
-  normalized PCF, and `InvariantDivisorCoveringInputs`.  The latter consists
+  normalized PCF, and `InvariantDivisorCoveringHypotheses`.  The latter consists
   only of `Pcf.Stacks.ZariskiNagataPurity` and
   `Pcf.Stacks.AbhyankarLemma` on the actual local rings of every relevant
   iterate.  Tag 00NP supplies the needed local-domain conclusion from the
@@ -1343,11 +1343,11 @@ Using the vocabulary of the formalization-evidence contract:
   `Pcf.schemePCFAllTheWayDown_of_cover`.  Its recursive covering input contains the
   local purity/Abhyankar packages at each actual divisor closure and no PCF conclusion.
   The source-facing theorem `Pcf.pcfAllTheWayDown_charZero` removes this intermediate
-  input: `Pcf.schemePcfCoveringAtDepthOfLocalTheorems` builds it recursively from one
+  input: `Pcf.schemePCFCoveringAtDepthOfLocalTheorems` builds it recursively from one
   universe-wide pair of the purity and Abhyankar statements.
 * The numerical termination assertion in `cor:pcfawd` — **LEAN-PROVED** by
   `Pcf.SchemeDivisorFlag.length_le_topologicalKrullDim` and
-  `Pcf.SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le`.  Every actual
+  `Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le`.  Every actual
   recursive branch gives a strict specialization chain in the initial scheme, so a
   natural dimension bound `n` permits at most `n` restrictions.
   `Pcf.schemePCFAllTheWayDown_of_cover_to_dimension` consequently needs recursive

@@ -56,14 +56,14 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The actual stalk ramification index equals the height-one ramification
 index on any finite affine preimage chart. All algebra structures are the
 ones induced by the actual morphism and section-to-stalk maps. -/
-theorem schemeDivisorRam_eq_heightOneRam
+theorem schemeDivisorRamificationIdx_eq_heightOneRamificationIdx
     {X Y : Scheme.{u}} (f : X ⟶ Y) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
     (U : Y.affineOpens)
     (Q : HeightOnePrime Γ(X, finitePreimageAffine f U)) :
     letI : Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) := (f.app U).hom.toAlgebra
-    schemeDivisorRam f (schemeDivisorPointOfAffinePrime (finitePreimageAffine f U) Q) =
-      heightOneRam (R := Γ(Y, U)) Q := by
+    schemeDivisorRamificationIdx f (schemeDivisorPointOfAffinePrime (finitePreimageAffine f U) Q) =
+      heightOneRamificationIdx (R := Γ(Y, U)) Q := by
   let V := finitePreimageAffine f U
   let x := schemeDivisorPointOfAffinePrime V Q
   have hx : x.1 ∈ (V : X.Opens) := by
@@ -95,9 +95,9 @@ theorem schemeDivisorRam_eq_heightOneRam
   exact ramificationIdx_eq_of_localization_square p Q.1.asIdeal
 
 #print axioms ramificationIdx_eq_of_localization_square
-#print axioms schemeDivisorRam_eq_heightOneRam
+#print axioms schemeDivisorRamificationIdx_eq_heightOneRamificationIdx
 #check @ramificationIdx_eq_of_localization_square
-#check @schemeDivisorRam_eq_heightOneRam
+#check @schemeDivisorRamificationIdx_eq_heightOneRamificationIdx
 
 end
 

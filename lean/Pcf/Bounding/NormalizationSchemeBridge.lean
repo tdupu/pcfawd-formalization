@@ -113,7 +113,7 @@ open CategoryTheory _root_.AlgebraicGeometry
 The algebra structure on the function field is the composite of that map with
 the canonical inclusion of the upper stalk. This condition says nothing about
 ramification or either critical locus. -/
-def SchemeStalkBirationalAt {A N : Scheme.{u}} [IsIntegral N]
+def IsStalkBirationalAt {A N : Scheme.{u}} [IsIntegral N]
     (nu : N ⟶ A) (x : N) : Prop :=
   letI : Algebra (A.presheaf.stalk (nu x)) N.functionField :=
     ((algebraMap (N.presheaf.stalk x) N.functionField).comp
@@ -122,11 +122,11 @@ def SchemeStalkBirationalAt {A N : Scheme.{u}} [IsIntegral N]
 
 /-- Birationality at the generic point supplies the shared fraction field for
 every actual stalk map. No finiteness or normality hypothesis is needed here. -/
-theorem schemeStalkBirationalAt_of_isIso_generic_stalkMap
+theorem isStalkBirationalAt_of_isIso_generic_stalkMap
     {A N : Scheme.{u}} [IsIntegral A] [IsIntegral N]
     (nu : N ⟶ A) [IsDominant nu]
     [IsIso (nu.stalkMap (genericPoint N))] (x : N) :
-    SchemeStalkBirationalAt nu x := by
+    IsStalkBirationalAt nu x := by
   let B := A.presheaf.stalk (nu x)
   letI : Algebra B N.functionField :=
     ((algebraMap (N.presheaf.stalk x) N.functionField).comp
@@ -157,13 +157,13 @@ theorem schemeStalkBirationalAt_of_isIso_generic_stalkMap
 /-- A ramified divisor upstairs lies in the non-unramified locus downstairs.
 The only normalization-specific input is the common fraction field of the
 actual source stalk map; the base-change branch is constructed in the proof. -/
-theorem not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
+theorem not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRamificationIdx
     {A N : Scheme.{u}} (g : A ⟶ A) (gN : N ⟶ N) (nu : N ⟶ A)
     [LocallyOfFiniteType g] [IsFinite gN] [IsDominant gN]
     [IsIntegral N] [IsLocallyNoetherian N] [IsNormalScheme N]
     (hsquare : gN ≫ nu = nu ≫ g) (Q : SchemeDivisorPoint N)
-    (hbirational : SchemeStalkBirationalAt nu Q.1)
-    (hQ : 1 < schemeDivisorRam gN Q) :
+    (hbirational : IsStalkBirationalAt nu Q.1)
+    (hQ : 1 < schemeDivisorRamificationIdx gN Q) :
     ¬ (g.stalkMap (nu Q.1)).hom.FormallyUnramified := by
   let R₀ := A.presheaf.stalk (g (nu Q.1))
   let B := A.presheaf.stalk (nu Q.1)
@@ -216,7 +216,7 @@ theorem normalization_square_pow
 /-- U1 for actual finite scheme maps and an actual birational normalization
 map. The hypothesis at the generic stalk is the usual function-field meaning
 of birationality, and is independent of every critical locus and iterate. -/
-theorem schemeDivisorRam_gt_one_mem_crit0_of_finite_birational
+theorem mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational
     {A N : Scheme.{u}} (g : A ⟶ A) (gN : N ⟶ N) (nu : N ⟶ A)
     [IsFinite g] [IsFinite gN] [IsDominant gN]
     [IsIntegral A] [IsIntegral N] [IsLocallyNoetherian N] [IsNormalScheme N]
@@ -224,19 +224,19 @@ theorem schemeDivisorRam_gt_one_mem_crit0_of_finite_birational
     (hsquare : gN ≫ nu = nu ≫ g)
     (hcodim : ∀ Q : SchemeDivisorPoint N, Order.coheight (nu Q.1) = 1)
     (m : ℕ) (Q : SchemeDivisorPoint N)
-    (hQ : 1 < schemeDivisorRam (CategoryTheory.End.of gN ^ m).asHom Q) :
+    (hQ : 1 < schemeDivisorRamificationIdx (CategoryTheory.End.of gN ^ m).asHom Q) :
     schemeDivisorMap nu hcodim Q ∈
-      schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom := by
-  exact not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
+      schemeDivisorNonUnramifiedLocus (CategoryTheory.End.of g ^ m).asHom := by
+  exact not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRamificationIdx
     (CategoryTheory.End.of g ^ m).asHom (CategoryTheory.End.of gN ^ m).asHom nu
     (normalization_square_pow g gN nu hsquare m) Q
-    (schemeStalkBirationalAt_of_isIso_generic_stalkMap nu Q.1) hQ
+    (isStalkBirationalAt_of_isIso_generic_stalkMap nu Q.1) hQ
 
 /-- Construct the actual normalization dynamics without a U1 assumption.
 The generic stalk isomorphism records that the finite dominant map `nu` is
 birational. Together with normality of `N`, these are the structural properties
 of a finite normalization needed by the construction. -/
-noncomputable def schemeNormalizationUnnormDynOfFiniteBirational
+noncomputable def schemeNormalizationUnnormalizedDynamicsOfFiniteBirational
     (k : Type*) [Field k]
     {A N : Scheme.{u}} (g : A ⟶ A) (gN : N ⟶ N) (nu : N ⟶ A)
     [IsFinite g] [IsDominant g] [LocallyOfFinitePresentation g]
@@ -249,17 +249,17 @@ noncomputable def schemeNormalizationUnnormDynOfFiniteBirational
     [∀ U : A.affineOpens, Algebra k Γ(A, U)]
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)]
     (hsquare : gN ≫ nu = nu ≫ g) :
-    SchemeNormalizationUnnormDyn A (SchemeDivisorPoint N) :=
-  schemeNormalizationUnnormDynOfFiniteType k g gN nu hsquare fun m Q hQ ↦
-    schemeDivisorRam_gt_one_mem_crit0_of_finite_birational g gN nu hsquare
+    SchemeNormalizationUnnormalizedDynamics A (SchemeDivisorPoint N) :=
+  schemeNormalizationUnnormalizedDynamicsOfFiniteType k g gN nu hsquare fun m Q hQ ↦
+    mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational g gN nu hsquare
       (coheight_apply_eq_one_of_finiteType nu k) m Q
-      ((divDynOfFiniteNormalization_iterRam gN nu m Q) ▸ hQ)
+      ((divisorDynamicsOfFiniteNormalization_iterateRamificationIdx gN nu m Q) ▸ hQ)
 
 #print axioms ramificationIdx_eq_one_of_local_birational_square
-#print axioms schemeStalkBirationalAt_of_isIso_generic_stalkMap
-#print axioms not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
+#print axioms isStalkBirationalAt_of_isIso_generic_stalkMap
+#print axioms not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRamificationIdx
 #print axioms normalization_square_pow
-#print axioms schemeDivisorRam_gt_one_mem_crit0_of_finite_birational
-#print axioms schemeNormalizationUnnormDynOfFiniteBirational
+#print axioms mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational
+#print axioms schemeNormalizationUnnormalizedDynamicsOfFiniteBirational
 
 end Pcf

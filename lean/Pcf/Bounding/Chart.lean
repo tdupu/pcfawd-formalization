@@ -482,7 +482,7 @@ theorem isEtaleAt_quot_of_pieces (hEt : Algebra.Etale R R')
   exact Bounding.formallyEtale_of_localStructure (algebraMap R R' a) _ θ I hcomp
     (LocalModel.span_le_comap_span_root (u i) (algebraMap R R' a) he1)
     (LocalModel.quotientMap_bijective (u i) (algebraMap R R' a) he1)
-    (LocalModel.root_pow_mem_span_algebraMap' (u i) (algebraMap R R' a)) haI hIker hsurj hker hloc
+    (LocalModel.root_pow_mem_span_algebraMap_of_le (u i) (algebraMap R R' a)) haI hIker hsurj hker hloc
 
 end Pieces
 

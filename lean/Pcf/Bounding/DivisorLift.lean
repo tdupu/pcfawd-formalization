@@ -48,8 +48,8 @@ theorem coheight_eq_one_of_finite_preimage
   letI : Nonempty (U : Y.Opens) := ⟨⟨f x, hfxW⟩⟩
   letI : Nonempty (V : X.Opens) := ⟨⟨x, hxV⟩⟩
   letI : Algebra Γ(Y, U) Γ(X, V) := (f.app U).hom.toAlgebra
-  letI : Module.Finite Γ(Y, U) Γ(X, V) := finitePreimageModuleFinite f U
-  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := finitePreimageFaithfulSMul f U
+  letI : Module.Finite Γ(Y, U) Γ(X, V) := moduleFinite_finitePreimageAffine f U
+  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := faithfulSMul_finitePreimageAffine f U
   let Q : Ideal Γ(X, V) := (V.2.primeIdealOf ⟨x, hxV⟩).asIdeal
   let q : Ideal Γ(Y, U) := (U.2.primeIdealOf ⟨f x, hfxW⟩).asIdeal
   letI : Q.IsPrime := by
@@ -112,7 +112,7 @@ theorem SchemeDivisorPoint.mapFiniteDominantFiniteType_surjective :
 theorem SchemeDivisorPoint.mapFiniteDominantFiniteType_finite_fiber
     (y : SchemeDivisorPoint Y) :
     ((fun x : SchemeDivisorPoint X ↦ x.mapFiniteDominantFiniteType f k) ⁻¹' {y}).Finite := by
-  exact Scheme.Hom.finite_divisorPoint_subtype_fiber f
+  exact AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_subtype_fiber f
     (coheight_apply_eq_one_of_finiteType f k) y
 
 /-- Scheme-level `lem:lift`: the canonical divisor pushforward is surjective and has

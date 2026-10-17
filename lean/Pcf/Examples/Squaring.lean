@@ -266,7 +266,7 @@ omit [IsAlgClosed K] in
 `f([x : y : z]) = [x² : y² : z²]` on `P²` (ambient side, reduced to its branch primes,
 `Pcf.Examples.coordLines`), the fixed prime `A = H₀`, and the restriction
 `g = f|_{H₀}`, which is the squaring map of Example `ex:squaring`. Everything in sight is smooth,
-so `Σ` has no singular contribution and `sing = ∅`; the intersection contribution is
+so `Σ` has no singular contribution and `singularPrimes = ∅`; the intersection contribution is
 `meets 1 ∪ meets 2 = {∞, 0}`.
 
 The field `key` — Theorem `thm:bounding`, which is an *assumption* in `Pcf.Restriction` — is

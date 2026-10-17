@@ -79,7 +79,7 @@ theorem isRegularLocalRing_stalk_genericPoint {X : Scheme.{u}} [IsIntegral X] :
   infer_instance
 
 /-- The singular locus of an integral scheme omits its generic point. -/
-theorem genericPoint_not_mem_stalkSingularLocus {X : Scheme.{u}} [IsIntegral X] :
+theorem genericPoint_notMem_stalkSingularLocus {X : Scheme.{u}} [IsIntegral X] :
     genericPoint X ∉ stalkSingularLocus X :=
   fun h ↦ h isRegularLocalRing_stalk_genericPoint
 
@@ -87,7 +87,7 @@ theorem genericPoint_not_mem_stalkSingularLocus {X : Scheme.{u}} [IsIntegral X] 
 theorem stalkSingularLocus_ne_univ {X : Scheme.{u}} [IsIntegral X] :
     stalkSingularLocus X ≠ Set.univ := by
   intro h
-  exact genericPoint_not_mem_stalkSingularLocus
+  exact genericPoint_notMem_stalkSingularLocus
     (h.symm ▸ Set.mem_univ (genericPoint X))
 
 /-- The pointwise singular locus of the reduced closure of any point is proper. -/
@@ -122,7 +122,7 @@ theorem SchemeDivisorPoint.isRegularLocalRing_stalk
       (Localization.AtPrime p) (X.presheaf.stalk x.1)).toRingEquiv
 
 /-- A normal locally Noetherian integral scheme has no singular divisor points. -/
-theorem SchemeDivisorPoint.not_mem_stalkSingularLocus
+theorem SchemeDivisorPoint.notMem_stalkSingularLocus
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (x : SchemeDivisorPoint X) : x.1 ∉ stalkSingularLocus X :=
   fun h ↦ h x.isRegularLocalRing_stalk
@@ -132,7 +132,7 @@ scheme is empty, without an assumption that the full singular locus is closed. -
 theorem schemeDivisorPoint_stalkSingularLocus_eq_empty
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] :
     {x : SchemeDivisorPoint X | x.1 ∈ stalkSingularLocus X} = ∅ := by
-  exact Set.eq_empty_iff_forall_notMem.mpr fun x ↦ x.not_mem_stalkSingularLocus
+  exact Set.eq_empty_iff_forall_notMem.mpr fun x ↦ x.notMem_stalkSingularLocus
 
 /-- In particular the singular codimension-one locus is finite. -/
 theorem finite_schemeDivisorPoint_stalkSingularLocus
@@ -142,13 +142,13 @@ theorem finite_schemeDivisorPoint_stalkSingularLocus
   exact Set.finite_empty
 
 /-- On a divisor of a normal scheme, the generic point avoids the ambient singular locus. -/
-theorem genericPoint_not_mem_ambient_stalkSingularLocus
+theorem genericPoint_notMem_ambient_stalkSingularLocus
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (x : SchemeDivisorPoint X) :
     genericPoint (pointClosureIdealSheaf x.1).subscheme ∉
       (pointClosureIdealSheaf x.1).subschemeι ⁻¹' stalkSingularLocus X := by
   simpa only [Set.mem_preimage, pointClosureSubschemeι_genericPoint] using
-    x.not_mem_stalkSingularLocus
+    x.notMem_stalkSingularLocus
 
 /-- The union of the ambient and intrinsic singular loci on a reduced divisor is
 proper. Closedness of this union remains a separate regular-locus theorem. -/
@@ -160,7 +160,7 @@ theorem stalkSingularLoci_pointClosureSubscheme_ne_univ
   intro h
   have hmem := h.symm ▸ Set.mem_univ
     (genericPoint (pointClosureIdealSheaf x.1).subscheme)
-  exact hmem.elim (genericPoint_not_mem_ambient_stalkSingularLocus x)
-    genericPoint_not_mem_stalkSingularLocus
+  exact hmem.elim (genericPoint_notMem_ambient_stalkSingularLocus x)
+    genericPoint_notMem_stalkSingularLocus
 
 end Pcf

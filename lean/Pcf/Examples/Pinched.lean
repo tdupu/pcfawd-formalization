@@ -64,7 +64,7 @@ glued to a node `o`), and the restriction `g = f|_B` is `p(z) ↦ p(z²)`.
 
 * That `o ∈ crit₀(g)`: the fibre `g⁻¹(Q)` over `z = 4` is a local Artinian ring of length
   two. The length computation, the snake-lemma argument, the non-reducedness of the fibre
-  and the Singular check are not formalized; `crit0` is stipulated in `nodeUnnormalizedDynamics`
+  and the Singular check are not formalized; `nonUnramifiedLocus` is stipulated in `nodeUnnormalizedDynamics`
   and a hypothesis in `nonUnramifiedPostcriticalSet_infinite`.
 * The Ferrand pushout, that `X` is a variety, that `ν` is the normalization, that `X` is
   regular in codimension one, that `f` is finite and surjective, and that `B` is an

@@ -15,7 +15,7 @@ This file gives a source-facing statement of Corollary `cor:pcfawd` of
 local inputs used in the manuscript: Zariski--Nagata purity (Stacks 0BMB) and the
 standard-cover form of Abhyankar's lemma (Stacks 0EYG/0EYH).
 
-Unlike `SchemePcfCoveringAtDepth`, the public input below is not a recursively prepared
+Unlike `SchemePCFCoveringAtDepth`, the public input below is not a recursively prepared
 tree.  It states the two local theorems once, for all rings in the working universe.  The
 tree needed by the recursive scheme proof is constructed here.
 -/
@@ -35,7 +35,7 @@ set_option linter.style.haveILetI false
 /-- The two local literature theorems on which the characteristic-zero proof of PCF all
 the way down depends.  The statements are the affine forms recorded in
 `Pcf.Bounding.Stacks`; this structure contains no dynamical or PCF conclusion. -/
-structure PcfAllTheWayDownLocalTheorems : Prop where
+structure PCFAllTheWayDownLocalTheorems : Prop where
   purity : ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S],
     Stacks.ZariskiNagataPurity R S
   abhyankar : ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R),
@@ -54,14 +54,14 @@ def SchemePCFAllTheWayDown
 
 /-- The local purity and Abhyankar theorems construct the complete recursive covering
 tree used by the geometric proof.  No PCF assertion is an input to this construction. -/
-theorem schemePcfCoveringAtDepthOfLocalTheorems
-    (inputs : PcfAllTheWayDownLocalTheorems.{u})
+theorem schemePCFCoveringAtDepthOfLocalTheorems
+    (inputs : PCFAllTheWayDownLocalTheorems.{u})
     (k : Type u) [Field k] [CharZero k]
     (d : ℕ) {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X] :
-    SchemePcfCoveringAtDepth k d s f := by
+    SchemePCFCoveringAtDepth k d s f := by
   induction d generalizing X with
   | zero => trivial
   | succ d ih =>
@@ -87,22 +87,22 @@ finite-surjective hypothesis of the manuscript.  Separatedness is not used, so t
 statement is slightly more general in that direction.
 
 The proof is conditional exactly on the two named local theorems in
-`PcfAllTheWayDownLocalTheorems`; the recursive covering data are constructed above. -/
+`PCFAllTheWayDownLocalTheorems`; the recursive covering data are constructed above. -/
 theorem pcfAllTheWayDown_charZero
-    (inputs : PcfAllTheWayDownLocalTheorems.{u})
+    (inputs : PCFAllTheWayDownLocalTheorems.{u})
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
+    (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     SchemePCFAllTheWayDown k s f := by
   intro d
   exact schemePCFAllTheWayDownAtDepth_of_cover k d s f
-    (schemePcfCoveringAtDepthOfLocalTheorems inputs k d s f) hpcf
+    (schemePCFCoveringAtDepthOfLocalTheorems inputs k d s f) hpcf
 
-#print axioms PcfAllTheWayDownLocalTheorems
+#print axioms PCFAllTheWayDownLocalTheorems
 #print axioms SchemePCFAllTheWayDown
-#print axioms schemePcfCoveringAtDepthOfLocalTheorems
+#print axioms schemePCFCoveringAtDepthOfLocalTheorems
 #print axioms pcfAllTheWayDown_charZero
 #check @pcfAllTheWayDown_charZero
 

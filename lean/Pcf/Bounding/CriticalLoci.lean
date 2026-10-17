@@ -12,7 +12,7 @@ public import Mathlib.Topology.KrullDimension
 # Finiteness of the actual codimension-one critical locus
 
 The critical predicate is the failure of formal étaleness of the actual stalk map,
-as in `schemeDivisorCrit1`. A proper closed locus in an irreducible scheme contains
+as in `schemeDivisorNonEtaleLocus`. A proper closed locus in an irreducible scheme contains
 only finitely many divisor points when that locus is Noetherian. This supplies the
 topological finiteness step without assuming finiteness of the divisor locus itself.
 
@@ -29,8 +29,8 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 namespace Pcf
 
 /-- The full point locus where the actual stalk map is not formally étale. -/
-def schemeCrit1Locus {X Y : Scheme.{u}} (g : X ⟶ Y) : Set X :=
-  {x | schemeCrit1At g x}
+def schemeNonEtaleLocus {X Y : Scheme.{u}} (g : X ⟶ Y) : Set X :=
+  {x | SchemeStalkNotFormallyEtaleAt g x}
 
 /-- The actual stalk criterion agrees with the affine étale locus. -/
 theorem formallyEtale_stalkMap_iff
@@ -191,9 +191,9 @@ theorem exists_formallyEtale_stalk_iterate_of_exists
       exact RingHom.FormallyEtale.comp hi hfg
 
 /-- The full critical locus defined using the actual stalk map is closed. -/
-theorem isClosed_schemeCrit1Locus
+theorem isClosed_schemeNonEtaleLocus
     {X Y : Scheme.{u}} (f : X ⟶ Y) [LocallyOfFinitePresentation f] :
-    IsClosed (schemeCrit1Locus f) :=
+    IsClosed (schemeNonEtaleLocus f) :=
   (isOpen_formallyEtale_stalkLocus f).isClosed_compl
 
 /-- A proper closed Noetherian subspace of an irreducible scheme contains only
@@ -210,36 +210,36 @@ theorem finite_schemeDivisorPoint_mem_of_isClosed
 
 /-- The actual codimension-one critical locus is finite if its full point locus is
 closed, proper, and Noetherian, and the source is irreducible. -/
-theorem schemeDivisorCrit1_finite_of_isClosed
+theorem schemeDivisorNonEtaleLocus_finite_of_isClosed
     {X Y : Scheme.{u}} (g : X ⟶ Y) [IrreducibleSpace X]
-    [NoetherianSpace (schemeCrit1Locus g)]
-    (hclosed : IsClosed (schemeCrit1Locus g))
-    (hproper : schemeCrit1Locus g ≠ Set.univ) :
-    (schemeDivisorCrit1 g).Finite :=
+    [NoetherianSpace (schemeNonEtaleLocus g)]
+    (hclosed : IsClosed (schemeNonEtaleLocus g))
+    (hproper : schemeNonEtaleLocus g ≠ Set.univ) :
+    (schemeDivisorNonEtaleLocus g).Finite :=
   finite_schemeDivisorPoint_mem_of_isClosed hclosed hproper
 
 /-- For a closed critical locus on an irreducible source, one formally étale
 stalk supplies properness. No dense-open étale locus needs to be supplied. -/
-theorem schemeDivisorCrit1_finite_of_isClosed_of_exists_formallyEtale
+theorem schemeDivisorNonEtaleLocus_finite_of_isClosed_of_exists_formallyEtale
     {X Y : Scheme.{u}} (g : X ⟶ Y) [IrreducibleSpace X]
-    [NoetherianSpace (schemeCrit1Locus g)]
-    (hclosed : IsClosed (schemeCrit1Locus g))
+    [NoetherianSpace (schemeNonEtaleLocus g)]
+    (hclosed : IsClosed (schemeNonEtaleLocus g))
     (hetale : ∃ x : X, (g.stalkMap x).hom.FormallyEtale) :
-    (schemeDivisorCrit1 g).Finite := by
-  apply schemeDivisorCrit1_finite_of_isClosed g hclosed
+    (schemeDivisorNonEtaleLocus g).Finite := by
+  apply schemeDivisorNonEtaleLocus_finite_of_isClosed g hclosed
   intro h
   obtain ⟨x, hx⟩ := hetale
-  have hmem : x ∈ schemeCrit1Locus g := h.symm ▸ Set.mem_univ x
+  have hmem : x ∈ schemeNonEtaleLocus g := h.symm ▸ Set.mem_univ x
   exact hmem hx
 
 /-- On an irreducible Noetherian source, a locally finitely presented morphism
 with one formally étale stalk has finitely many critical divisor points. -/
-theorem schemeDivisorCrit1_finite_of_exists_formallyEtale
+theorem schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale
     {X Y : Scheme.{u}} (g : X ⟶ Y) [LocallyOfFinitePresentation g]
     [IrreducibleSpace X] [NoetherianSpace X]
     (hetale : ∃ x : X, (g.stalkMap x).hom.FormallyEtale) :
-    (schemeDivisorCrit1 g).Finite :=
-  schemeDivisorCrit1_finite_of_isClosed_of_exists_formallyEtale g
-    (isClosed_schemeCrit1Locus g) hetale
+    (schemeDivisorNonEtaleLocus g).Finite :=
+  schemeDivisorNonEtaleLocus_finite_of_isClosed_of_exists_formallyEtale g
+    (isClosed_schemeNonEtaleLocus g) hetale
 
 end Pcf

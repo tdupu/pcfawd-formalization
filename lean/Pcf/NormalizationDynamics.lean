@@ -26,7 +26,7 @@ This is the corrected abstract target for the normalization part of `HANDOFF.md`
 the normalization map from a finite morphism still requires proving that the image of a
 codimension-one point is codimension one on the nonnormal finite-type target.  Once that geometric
 theorem is available, `Pcf.finite_heightOne_comap_fiber` and
-`Pcf.Scheme.Hom.finite_divisorPoint_fiber` provide the finite-fiber field below.
+`AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_fiber` provide the finite-fiber field below.
 -/
 
 @[expose] public section
@@ -218,7 +218,7 @@ end NormalizationUnnormalizedDynamics
 /-- The data of Theorem `thm:normal-invariant` with normalized divisors (`PN`) and divisors of the
 possibly nonnormal restriction (`PA`) kept separate.
 
-The field `key1` is the étale conclusion of the bounding theorem.  `Bounding/Wiring.lean`
+The field `notMem_nonEtaleBranch_iterate` is the étale conclusion of the bounding theorem.  `Bounding/Wiring.lean`
 replaces it by chart data. -/
 structure NormalizationPCFSetup (PX : Type u) (PN : Type v) (PA : Type w) where
   /-- The ambient normalized divisorial system. -/
@@ -281,7 +281,7 @@ fibers of the normalization map rather than identifying normalized and unnormali
 theorem normalized_isPCF (h : S.ambient.IsPCF) : S.restriction.normalized.IsPCF :=
   S.restriction.normalized_isPCF_of_isNonEtaleBranchPCF (S.restriction_isNonEtaleBranchPCF h)
 
-/-- Periodic-prime form of `norm_pcf`. -/
+/-- Periodic-prime form of `normalized_isPCF`. -/
 theorem normalized_isPCF_of_iterate {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n)
     (hS : S.ambient = D.iterate n) (h : D.IsPCF) : S.restriction.normalized.IsPCF := by
   apply S.normalized_isPCF

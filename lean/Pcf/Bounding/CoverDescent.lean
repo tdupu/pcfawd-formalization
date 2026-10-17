@@ -19,7 +19,7 @@ orbit bound or the PCF conclusion.
 finite fibres, surjectivity, the commuting square, and multiplicativity of
 ramification around that square.  The branch identity is proved from these
 data, rather than supplied as a field.  The scheme constructor obtains this
-multiplicativity from the actual stalk theorem `schemeDivisorRam_comp`.
+multiplicativity from the actual stalk theorem `schemeDivisorRamificationIdx_comp`.
 
 The scheme statements below concern normal integral schemes.  Applying them
 to nonnormal varieties additionally requires passage to the normalizations
@@ -42,7 +42,7 @@ def ramifiedCoverBound (π : Q → P) (C : Set P) : Set P := π '' E.postcritica
 
 /-- The one-step branch inclusion and semiconjugacy imply the manuscript's
 postcritical-set bound.  Finite fibres are unnecessary in this direction. -/
-theorem pcSet_subset_ramifiedCoverBound (π : Q → P) (C : Set P)
+theorem postcriticalSet_subset_ramifiedCoverBound (π : Q → P) (C : Set P)
     (hcomm : ∀ q, π (E.step q) = D.step (π q))
     (hbranch : D.branch ∪ D.step '' C ⊆ C ∪ π '' E.branch) :
     D.postcriticalSet ⊆ E.ramifiedCoverBound π C := by
@@ -68,12 +68,12 @@ theorem pcSet_subset_ramifiedCoverBound (π : Q → P) (C : Set P)
       exact hstep _ ih
 
 /-- Set-theoretic form of `lem:covers`, with its minimal branch input visible. -/
-theorem pcf_of_ramified_branch_union (π : Q → P) (C : Set P)
+theorem isPCF_of_ramified_branch_union (π : Q → P) (C : Set P)
     (hcomm : ∀ q, π (E.step q) = D.step (π q)) (hC : C.Finite)
     (hbranch : D.branch ∪ D.step '' C ⊆ C ∪ π '' E.branch)
     (hE : E.IsPCF) : D.IsPCF :=
   ((hE.image π).union hC).subset
-    (D.pcSet_subset_ramifiedCoverBound E π C hcomm hbranch)
+    (D.postcriticalSet_subset_ramifiedCoverBound E π C hcomm hbranch)
 
 /-- Divisor data of a finite ramified cover intertwining two self-maps.
 `ram_comp` is the equality of the two ramification products in the commuting
@@ -155,13 +155,13 @@ theorem branch_union :
 
 /-- Every downstairs postcritical divisor lies in the image of the upstairs
 postcritical set or in the branch locus of the cover. -/
-theorem pcSet_subset : D.postcriticalSet ⊆ E.ramifiedCoverBound C.map C.branch :=
-  D.pcSet_subset_ramifiedCoverBound E C.map C.branch C.comm C.branch_union.le
+theorem postcriticalSet_subset : D.postcriticalSet ⊆ E.ramifiedCoverBound C.map C.branch :=
+  D.postcriticalSet_subset_ramifiedCoverBound E C.map C.branch C.comm C.branch_union.le
 
 include C in
 /-- PCF descends through a ramified cover. -/
-theorem pcf (hE : E.IsPCF) : D.IsPCF :=
-  D.pcf_of_ramified_branch_union E C.map C.branch C.comm C.branch_finite
+theorem isPCF (hE : E.IsPCF) : D.IsPCF :=
+  D.isPCF_of_ramified_branch_union E C.map C.branch C.comm C.branch_finite
     C.branch_union.le hE
 
 end RamifiedCover
@@ -177,10 +177,10 @@ noncomputable def schemeRamifiedCover
     [IsFinite π] [IsDominant π]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
-    (hf : (schemeDivisorCrit1 f).Finite) (hg : (schemeDivisorCrit1 g).Finite)
-    (hπ : (schemeDivisorCrit1 π).Finite) (hcomm : g ≫ π = π ≫ f) :
-    DivisorDynamics.RamifiedCover (divDynOfFiniteDominantNormal f hf)
-      (divDynOfFiniteDominantNormal g hg) where
+    (hf : (schemeDivisorNonEtaleLocus f).Finite) (hg : (schemeDivisorNonEtaleLocus g).Finite)
+    (hπ : (schemeDivisorNonEtaleLocus π).Finite) (hcomm : g ≫ π = π ≫ f) :
+    DivisorDynamics.RamifiedCover (divisorDynamicsOfFiniteDominantNormal f hf)
+      (divisorDynamicsOfFiniteDominantNormal g hg) where
   map q := q.mapFiniteDominantNormal π
   map_surjective := SchemeDivisorPoint.mapFiniteDominantNormal_surjective π
   finite_fiber := SchemeDivisorPoint.mapFiniteDominantNormal_finite_fiber π
@@ -189,30 +189,30 @@ noncomputable def schemeRamifiedCover
     change π (g q.1) = f (π q.1)
     simpa only [AlgebraicGeometry.Scheme.Hom.comp_apply] using
       congrArg (fun h : Y ⟶ X ↦ h q.1) hcomm
-  ram := schemeDivisorRam π
-  ram_pos := schemeDivisorRam_pos π
+  ram := schemeDivisorRamificationIdx π
+  ram_pos := schemeDivisorRamificationIdx_pos π
   branch_finite := by
     refine (hπ.image (fun q ↦ q.mapFiniteDominantNormal π)).subset ?_
     rintro p ⟨q, hqp, hq⟩
-    exact ⟨q, schemeDivisorRam_gt_one_mem_crit1 π q hq, hqp⟩
+    exact ⟨q, mem_schemeDivisorNonEtaleLocus_of_one_lt_ramificationIdx π q hq, hqp⟩
   ram_comp q := by
-    change schemeDivisorRam f (q.mapFiniteDominantNormal π) * schemeDivisorRam π q =
-      schemeDivisorRam π (q.mapFiniteDominantNormal g) * schemeDivisorRam g q
-    rw [← schemeDivisorRam_comp π f, ← schemeDivisorRam_comp g π, hcomm]
+    change schemeDivisorRamificationIdx f (q.mapFiniteDominantNormal π) * schemeDivisorRamificationIdx π q =
+      schemeDivisorRamificationIdx π (q.mapFiniteDominantNormal g) * schemeDivisorRamificationIdx g q
+    rw [← schemeDivisorRamificationIdx_comp π f, ← schemeDivisorRamificationIdx_comp g π, hcomm]
 
 /-- Scheme-level `lem:covers` for normal schemes, with the finiteness of the
 three actual critical divisor loci explicitly supplied. -/
-theorem scheme_pcf_of_ramified_cover
+theorem scheme_isPCF_of_ramified_cover
     {X Y : Scheme.{u}} (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
-    (hf : (schemeDivisorCrit1 f).Finite) (hg : (schemeDivisorCrit1 g).Finite)
-    (hπ : (schemeDivisorCrit1 π).Finite) (hcomm : g ≫ π = π ≫ f)
-    (hpcf : (divDynOfFiniteDominantNormal g hg).IsPCF) :
-    (divDynOfFiniteDominantNormal f hf).IsPCF :=
-  (schemeRamifiedCover f g π hf hg hπ hcomm).pcf hpcf
+    (hf : (schemeDivisorNonEtaleLocus f).Finite) (hg : (schemeDivisorNonEtaleLocus g).Finite)
+    (hπ : (schemeDivisorNonEtaleLocus π).Finite) (hcomm : g ≫ π = π ≫ f)
+    (hpcf : (divisorDynamicsOfFiniteDominantNormal g hg).IsPCF) :
+    (divisorDynamicsOfFiniteDominantNormal f hf).IsPCF :=
+  (schemeRamifiedCover f g π hf hg hπ hcomm).isPCF hpcf
 
 /-- A finite dominant cover of integral schemes is formally étale at the
 generic point when the target function field has characteristic zero. -/
@@ -247,13 +247,13 @@ theorem formallyEtale_stalkMap_genericPoint_of_cover_charZero
 
 /-- Finite dominant covers in characteristic zero have finitely many critical
 divisor points on a Noetherian integral source. -/
-theorem schemeDivisorCrit1_finite_of_cover_charZero
+theorem schemeDivisorNonEtaleLocus_finite_of_cover_charZero
     {X Y : Scheme.{u}} (π : Y ⟶ X) [IsFinite π] [IsDominant π]
     [IsIntegral X] [IsLocallyNoetherian X]
     [IsIntegral Y] [NoetherianSpace Y]
     [CharZero (X.presheaf.stalk (genericPoint X))] :
-    (schemeDivisorCrit1 π).Finite :=
-  schemeDivisorCrit1_finite_of_exists_formallyEtale π
+    (schemeDivisorNonEtaleLocus π).Finite :=
+  schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale π
     ⟨genericPoint Y, formallyEtale_stalkMap_genericPoint_of_cover_charZero π⟩
 
 /-- The actual ramified divisor cover of Noetherian normal integral schemes
@@ -267,16 +267,16 @@ noncomputable def schemeRamifiedCoverCharZero
     [CharZero (X.presheaf.stalk (genericPoint X))]
     [CharZero (Y.presheaf.stalk (genericPoint Y))]
     (hcomm : g ≫ π = π ≫ f) :
-    DivisorDynamics.RamifiedCover (divDynOfFiniteDominantNormalCharZero f)
-      (divDynOfFiniteDominantNormalCharZero g) :=
+    DivisorDynamics.RamifiedCover (divisorDynamicsOfFiniteDominantNormalCharZero f)
+      (divisorDynamicsOfFiniteDominantNormalCharZero g) :=
   schemeRamifiedCover f g π
-    (schemeDivisorCrit1_finite_of_cover_charZero f)
-    (schemeDivisorCrit1_finite_of_cover_charZero g)
-    (schemeDivisorCrit1_finite_of_cover_charZero π) hcomm
+    (schemeDivisorNonEtaleLocus_finite_of_cover_charZero f)
+    (schemeDivisorNonEtaleLocus_finite_of_cover_charZero g)
+    (schemeDivisorNonEtaleLocus_finite_of_cover_charZero π) hcomm
 
 /-- `lem:covers` for normal varieties in characteristic zero, expressed using
 the actual divisor pushforwards and stalk ramification indices. -/
-theorem scheme_pcf_of_ramified_cover_charZero
+theorem scheme_isPCF_of_ramified_cover_charZero
     {X Y : Scheme.{u}} (f : X ⟶ X) (g : Y ⟶ Y) (π : Y ⟶ X)
     [IsFinite f] [IsDominant f] [IsFinite g] [IsDominant g]
     [IsFinite π] [IsDominant π]
@@ -285,21 +285,21 @@ theorem scheme_pcf_of_ramified_cover_charZero
     [CharZero (X.presheaf.stalk (genericPoint X))]
     [CharZero (Y.presheaf.stalk (genericPoint Y))]
     (hcomm : g ≫ π = π ≫ f)
-    (hpcf : (divDynOfFiniteDominantNormalCharZero g).IsPCF) :
-    (divDynOfFiniteDominantNormalCharZero f).IsPCF :=
-  (schemeRamifiedCoverCharZero f g π hcomm).pcf hpcf
+    (hpcf : (divisorDynamicsOfFiniteDominantNormalCharZero g).IsPCF) :
+    (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF :=
+  (schemeRamifiedCoverCharZero f g π hcomm).isPCF hpcf
 
-#print axioms DivisorDynamics.pcSet_subset_ramifiedCoverBound
-#print axioms DivisorDynamics.pcf_of_ramified_branch_union
+#print axioms DivisorDynamics.postcriticalSet_subset_ramifiedCoverBound
+#print axioms DivisorDynamics.isPCF_of_ramified_branch_union
 #print axioms DivisorDynamics.RamifiedCover.finite_preimage
 #print axioms DivisorDynamics.RamifiedCover.branch_union
-#print axioms DivisorDynamics.RamifiedCover.pcSet_subset
-#print axioms DivisorDynamics.RamifiedCover.pcf
+#print axioms DivisorDynamics.RamifiedCover.postcriticalSet_subset
+#print axioms DivisorDynamics.RamifiedCover.isPCF
 #print axioms schemeRamifiedCover
-#print axioms scheme_pcf_of_ramified_cover
+#print axioms scheme_isPCF_of_ramified_cover
 #print axioms formallyEtale_stalkMap_genericPoint_of_cover_charZero
-#print axioms schemeDivisorCrit1_finite_of_cover_charZero
+#print axioms schemeDivisorNonEtaleLocus_finite_of_cover_charZero
 #print axioms schemeRamifiedCoverCharZero
-#print axioms scheme_pcf_of_ramified_cover_charZero
+#print axioms scheme_isPCF_of_ramified_cover_charZero
 
 end Pcf

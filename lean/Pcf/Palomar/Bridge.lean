@@ -18,7 +18,7 @@ The compact notions of `Pcf.Palomar.Statement` agree with the development's:
   integral scheme is `DivisorDynamics.IsPCF` of its divisor dynamics;
 * `isNormalizationLift_unique` / `isNormalizationLift_lift`: the canonical normalization lift
   `schemeGlobalNormalizationLift f` is the unique `IsNormalizationLift`, so
-  `IsNormalizedPCF f ↔ SchemeNormalizedPCFOfFiniteType k s f`;
+  `IsNormalizedPCF f ↔ IsNormalizedPCFOfFiniteType k s f`;
 * `iterateHom_eq_pow`, `iterateHom_apply`: iterates agree with `End` powers;
 * `pcfAllTheWayDownAtDepth_of_scheme`: the development's recursive predicate implies the
   compact one.
@@ -63,7 +63,7 @@ theorem endPow_apply {X : Scheme.{u}} (f : X ⟶ X) (n : ℕ) (x : X) :
 theorem divisorDynamics_step_iterate_val {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))] (n : ℕ) (x : SchemeDivisorPoint X) :
-    ((divDynOfFiniteDominantNormalCharZero f).step^[n] x).1 = (⇑f)^[n] x.1 := by
+    ((divisorDynamicsOfFiniteDominantNormalCharZero f).step^[n] x).1 = (⇑f)^[n] x.1 := by
   induction n generalizing x with
   | zero => rfl
   | succ n ih =>
@@ -74,8 +74,8 @@ theorem divisorDynamics_step_iterate_val {X : Scheme.{u}} (f : X ⟶ X) [IsFinit
 theorem isPCF_iff_divisorDynamics_isPCF {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))] :
-    IsPCF f ↔ (divDynOfFiniteDominantNormalCharZero f).IsPCF := by
-  let D := divDynOfFiniteDominantNormalCharZero f
+    IsPCF f ↔ (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF := by
+  let D := divisorDynamicsOfFiniteDominantNormalCharZero f
   have himage : Subtype.val '' D.postcriticalSet = postcriticalSet f := by
     ext y
     constructor
@@ -141,10 +141,10 @@ theorem isNormalizedPCF_iff_scheme (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X] :
-    IsNormalizedPCF f ↔ SchemeNormalizedPCFOfFiniteType k s f := by
-  rw [isNormalizedPCF_iff_lift, schemeNormalizedPCFOfFiniteType_iff_lift]
+    IsNormalizedPCF f ↔ IsNormalizedPCFOfFiniteType k s f := by
+  rw [isNormalizedPCF_iff_lift, isNormalizedPCFOfFiniteType_iff_lift]
   letI := schemeGlobalNormalizationMap_isFinite X k s
-  letI := schemeStalkCharZeroOfField k s (genericPoint X)
+  letI := charZero_stalk_of_field k s (genericPoint X)
   exact isPCF_iff_divisorDynamics_isPCF _
 
 /-! ## Restrictions to point closures -/
@@ -278,7 +278,7 @@ theorem pcfAllTheWayDown_charZero
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (hpcf : IsNormalizedPCF f) :
     PCFAllTheWayDown f := by
-  have inputs : PcfAllTheWayDownLocalTheorems.{u} :=
+  have inputs : PCFAllTheWayDownLocalTheorems.{u} :=
     { purity := fun R S _ _ _ ↦ (zariskiNagataPurity_iff R S).mp (purity R S)
       abhyankar := fun R S _ _ _ a ↦ (abhyankarLemma_iff R S a).mp (abhyankar R S a) }
   exact (pcfAllTheWayDown_iff_scheme k s f).mpr

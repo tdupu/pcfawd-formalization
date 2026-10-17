@@ -17,7 +17,7 @@ divisor point. Incidence means membership in the closure of the other ambient
 divisor. The singular correction uses the actual ambient and divisor stalks.
 
 This file supplies the geometric exceptional-set layer; later files complete the
-constructor of `InvariantDivisorStep0LocalData`.  In particular,
+constructor of `InvariantDivisorCorrectionLocalData`.  In particular,
 `AffineSchemeRamification.lean` proves the affine-to-stalk ramification comparison,
 and `FiniteSingularCorrection.lean` obtains the finite singular correction directly
 from generic smoothness and local principal generation, without assuming that the
@@ -92,7 +92,7 @@ def invariantDivisorMeets {X : Scheme.{u}} (A E : SchemeDivisorPoint X) :
   {Q | (pointClosureIdealSheaf A.1).subschemeι Q.1 ∈ closure ({E.1} : Set X)}
 
 /-- Two distinct divisor points do not specialize to one another. -/
-theorem SchemeDivisorPoint.not_mem_closure_of_ne {X : Scheme.{u}}
+theorem SchemeDivisorPoint.notMem_closure_of_ne {X : Scheme.{u}}
     (A E : SchemeDivisorPoint X) (h : E ≠ A) :
     A.1 ∉ closure ({E.1} : Set X) := by
   intro hAE
@@ -175,11 +175,11 @@ theorem schemeDivisorPointOfAffinePrime_map
     letI : Algebra Γ(Y, U) Γ(X, finitePreimageAffine f U) := (f.app U).hom.toAlgebra
     letI : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian U
     letI : Module.Finite Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-      finitePreimageModuleFinite f U
+      moduleFinite_finitePreimageAffine f U
     letI : IsNoetherianRing Γ(X, finitePreimageAffine f U) :=
       IsNoetherianRing.of_finite Γ(Y, U) Γ(X, finitePreimageAffine f U)
     letI : FaithfulSMul Γ(Y, U) Γ(X, finitePreimageAffine f U) :=
-      finitePreimageFaithfulSMul f U
+      faithfulSMul_finitePreimageAffine f U
     f (schemeDivisorPointOfAffinePrime (finitePreimageAffine f U) Q).1 =
       (schemeDivisorPointOfAffinePrime U (heightOneUnder (R := Γ(Y, U)) Q)).1 := by
   dsimp only
@@ -205,7 +205,7 @@ theorem invariantDivisorMeets_finite {X : Scheme.{u}} [NoetherianSpace X]
   have hmem : genericPoint (pointClosureIdealSheaf A.1).subscheme ∈
       (pointClosureIdealSheaf A.1).subschemeι ⁻¹' closure ({E.1} : Set X) :=
     heq.symm ▸ Set.mem_univ _
-  exact A.not_mem_closure_of_ne E h (by
+  exact A.notMem_closure_of_ne E h (by
     simpa only [Set.mem_preimage, pointClosureSubscheme_genericPoint] using hmem)
 
 /-- The two actual stalk singular loci excluded by Step 0. -/
@@ -264,7 +264,7 @@ def schemeStalkAlgebraOfField (k : Type u) [Field k]
     ((s.appLE ⊤ ⊤ (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom)).toAlgebra
 
 /-- Characteristic zero of the ground field passes to each scheme stalk. -/
-theorem schemeStalkCharZeroOfField (k : Type u) [Field k] [CharZero k]
+theorem charZero_stalk_of_field (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) (x : X) :
     CharZero (X.presheaf.stalk x) := by
   let := schemeStalkAlgebraOfField k s x
@@ -291,15 +291,15 @@ def invariantDivisorNormalization (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) :
-    SchemeNormalizationUnnormDyn (pointClosureIdealSheaf A.1).subscheme
+    SchemeNormalizationUnnormalizedDynamics (pointClosureIdealSheaf A.1).subscheme
       (SchemeDivisorPoint (schemeGlobalNormalization
         (pointClosureIdealSheaf A.1).subscheme)) := by
   let sA := (pointClosureIdealSheaf A.1).subschemeι ≫ s
   let : LocallyOfFiniteType sA := inferInstance
   let : CharZero ((pointClosureIdealSheaf A.1).subscheme.presheaf.stalk
       (genericPoint (pointClosureIdealSheaf A.1).subscheme)) :=
-    schemeStalkCharZeroOfField k sA _
-  exact schemeGlobalNormalizationUnnormDynOfFiniteType k sA
+    charZero_stalk_of_field k sA _
+  exact schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType k sA
     (A.invariantClosureMap f hA)
 
 /-- The stored unnormalized map is exactly the canonical restriction. -/
@@ -307,7 +307,7 @@ theorem invariantDivisorNormalization_g (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsLocallyNoetherian X] [NoetherianSpace X]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1) :
-    (invariantDivisorNormalization k s f A hA).g = A.invariantClosureMap f hA := rfl
+    (invariantDivisorNormalization k s f A hA).selfMap = A.invariantClosureMap f hA := rfl
 
 /-- The actual restriction and the unnormalized step stored in the canonical
 normalization package have the same iterated point maps. -/
@@ -320,7 +320,7 @@ theorem invariantDivisorNormalization_iterate_step_val
     (((invariantDivisorNormalization k s f A hA).toNormalizationUnnormalizedDynamics.step)^[m] Q).1 =
       (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q.1 := by
   exact schemeDivisorMap_iterate_val _
-    (invariantDivisorNormalization k s f A hA).g_preserves_divisors m Q
+    (invariantDivisorNormalization k s f A hA).selfMap_preserves_divisors m Q
 
 /-- A specified inverse image on the restriction lies in the finite affine
 preimage of every affine chart containing its target. -/
@@ -350,7 +350,7 @@ theorem SchemeDivisorPoint.invariantClosureIterate_source_mem
 #print axioms pointClosureSubscheme_locallyNoetherian
 #print axioms pointClosureSubscheme_noetherian
 #print axioms pointClosureSubscheme_genericPoint
-#print axioms SchemeDivisorPoint.not_mem_closure_of_ne
+#print axioms SchemeDivisorPoint.notMem_closure_of_ne
 #print axioms SchemeDivisorPoint.two_le_coheight_closureDivisor
 #print axioms schemeDivisorPointOfAffinePrime
 #print axioms schemeDivisorPointOfAffinePrime_injective
@@ -363,7 +363,7 @@ theorem SchemeDivisorPoint.invariantClosureIterate_source_mem
 #print axioms invariantDivisorSing_regular
 #print axioms invariantDivisorSing_finite_of_isClosed
 #print axioms schemeStalkAlgebraOfField
-#print axioms schemeStalkCharZeroOfField
+#print axioms charZero_stalk_of_field
 #print axioms schemeAffineRationalAlgebraOfField
 #print axioms SchemeDivisorPoint.invariantClosureMap_dominant
 #print axioms invariantDivisorNormalization

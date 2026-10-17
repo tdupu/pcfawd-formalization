@@ -91,7 +91,7 @@ theorem quotientMap_bijective (he : 1 ≤ e) :
 
 /-- `z^e ∈ (a)`: the root is nilpotent modulo `a`, in the form the local-structure lemma
 takes. -/
-theorem root_pow_mem_span_algebraMap' :
+theorem root_pow_mem_span_algebraMap_of_le :
     ∃ n, AdjoinRoot.root (localPoly u a e) ^ n
       ∈ Ideal.span {algebraMap R (AdjoinRoot (localPoly u a e)) a} :=
   ⟨e, root_pow_mem_span_algebraMap u a⟩

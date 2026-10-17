@@ -42,7 +42,7 @@ and `Pcf.PCFGeometry.restriction_isPCF`: the join no longer pretends to supply i
 | Step 0, the `Z` term (`B ⊄ Z`) | `Pcf.IsProperIrreducibleClosed.not_subset_sUnion`; properness is a field |
 | Step 0, the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim`, abstract `codim`; not wired in |
 | Step 0, the `Sing(B)` term | assumed as "proper closed" (generic regularity, char. zero) |
-| Lemma `lem:finitely-many` | `finite_bound`, `sing_finite`, `meets_finite` — **proved** |
+| Lemma `lem:finitely-many` | `finite_bound`, `singularPrimes_finite`, `meets_finite` — **proved** |
 | Theorem `thm:bounding`, Steps 1–4 | `Pcf.BoundingChart.isEtaleAt_restriction` (`Pcf/Bounding/`) |
 -/
 
@@ -351,7 +351,7 @@ theorem finite_bound [NoetherianSpace B] : D.bound.Finite := by
 
 /-! ### The finiteness fields of `Pcf.PCFSetup`, now proved
 
-`Pcf/Restriction.lean` carries `sing_finite` and `meets_finite` as hypotheses of
+`Pcf/Restriction.lean` carries `singularPrimes_finite` and `meets_finite` as hypotheses of
 `Pcf.PCFSetup`. In the geometric setting they are theorems: the loci are proper closed
 subsets by Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, and a proper closed subset
 of a Noetherian space contains
@@ -386,7 +386,7 @@ end BoundingCorrectionLoci
 
 Everything above proves Step 0 of Theorem `thm:bounding` as a statement about a topological
 space. This section connects it to `Pcf.PCFSetup`, the structure Theorem
-`thm:normal-invariant` consumes, so that the two fields `sing_finite` and `meets_finite` are
+`thm:normal-invariant` consumes, so that the two fields `singularPrimes_finite` and `meets_finite` are
 **discharged**. Primes of `A` are realized as the subtype `{s : Set B // Pcf.IsProperIrreducibleClosed s}`.
 
 The decisive feature of the manuscript's argument is visible in the type: the three
@@ -430,7 +430,7 @@ subsets. The bounding theorem is **not** a field: `Pcf.PCFGeometry.toPCFSetup` t
 conclusion as an explicit argument, and `Pcf/Bounding/Wiring.lean` derives that conclusion
 from charts.
 
-`amb` and `res` are `Pcf.DivisorDynamics`s, and `DivisorDynamics` carries `step_surjective` (lying over) and
+`ambient` and `restriction` are `Pcf.DivisorDynamics`s, and `DivisorDynamics` carries `step_surjective` (lying over) and
 `step_image_ramified_finite` (finiteness of the branch divisor) as fields; both are therefore assumed
 here too. `Pcf.divisorDynamicsOfGeometry` discharges `step_image_ramified_finite` for the restricted system from
 a proper closed locus. -/
@@ -490,9 +490,9 @@ theorem meets_finite [NoetherianSpace B] (E : PX) (hE : E ≠ G.fixedPrime) :
 /-- **The join.** Geometric data, together with the conclusion of Theorem `thm:bounding` for
 every iterate, yields the structure Theorem `thm:normal-invariant` consumes.
 
-`sing_finite` and `meets_finite` are genuinely proved, from Step 0's properness statements
+`singularPrimes_finite` and `meets_finite` are genuinely proved, from Step 0's properness statements
 plus Noetherianness. `key` is taken as an explicit argument: on the chart route it is
-`Pcf.PcfSetupChart.key1` (through `Pcf.NonEtalePCFSetup.toPCFSetup`), derived from purity and
+`Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` (through `Pcf.NonEtalePCFSetup.toPCFSetup`), derived from purity and
 Abhyankar's lemma. Lying over and `step_image_ramified_finite` remain fields of the two `DivisorDynamics`s. -/
 noncomputable def toPCFSetup [NoetherianSpace B]
     (key : ∀ (m : ℕ) (Q : {s : Set B // IsProperIrreducibleClosed s}), Q ∉ G.singularPrimes →
@@ -515,7 +515,7 @@ iterate (`key`).
 
 What this route assumes: `key`, `step_surjective` and `step_image_ramified_finite` on both `DivisorDynamics`s, and
 the properness of the three correction loci. What it no longer assumes separately:
-`sing_finite` and `meets_finite`, which are proved. -/
+`singularPrimes_finite` and `meets_finite`, which are proved. -/
 theorem restriction_isPCF [NoetherianSpace B]
     (key : ∀ (m : ℕ) (Q : {s : Set B // IsProperIrreducibleClosed s}), Q ∉ G.singularPrimes →
       (∀ E ∈ (G.ambient.iterate m).branch, E ≠ G.fixedPrime → Q ∉ G.meets E) →

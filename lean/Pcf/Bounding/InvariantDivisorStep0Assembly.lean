@@ -41,25 +41,25 @@ variable {X : Scheme.{u}} (f : X ⟶ X)
   [IsNormalScheme X] [NoetherianSpace X]
   [CharZero (X.presheaf.stalk (genericPoint X))]
 
-local instance affineStep0Algebra (U : X.affineOpens) :
+local instance affineCorrectionAlgebra (U : X.affineOpens) :
     Algebra Γ(X, U) Γ(X, finitePreimageAffine f U) := (f.app U).hom.toAlgebra
 
-local instance affineStep0TargetNoetherian (U : X.affineOpens) :
+local instance affineCorrectionTargetNoetherian (U : X.affineOpens) :
     IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian U
 
-local instance affineStep0Finite (U : X.affineOpens) :
+local instance affineCorrectionFinite (U : X.affineOpens) :
     Module.Finite Γ(X, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageModuleFinite f U
+  moduleFinite_finitePreimageAffine f U
 
-local instance affineStep0SourceNoetherian (U : X.affineOpens) :
+local instance affineCorrectionSourceNoetherian (U : X.affineOpens) :
     IsNoetherianRing Γ(X, finitePreimageAffine f U) :=
   IsNoetherianRing.of_finite Γ(X, U) Γ(X, finitePreimageAffine f U)
 
-local instance affineStep0Faithful (U : X.affineOpens) :
+local instance affineCorrectionFaithful (U : X.affineOpens) :
     FaithfulSMul Γ(X, U) Γ(X, finitePreimageAffine f U) :=
-  finitePreimageFaithfulSMul f U
+  faithfulSMul_finitePreimageAffine f U
 
-local instance affineStep0IntegrallyClosed (U : X.affineOpens) :
+local instance affineCorrectionIntegrallyClosed (U : X.affineOpens) :
     IsIntegrallyClosed Γ(X, U) := IsNormalScheme.component_integrallyClosed U
 
 /-- Every branch divisor on a finite affine preimage chart is an actual branch
@@ -71,24 +71,24 @@ theorem schemeDivisorPointOfAffinePrime_mem_branch
     (hE : E ∈ heightOneBranch (R := Γ(X, U))
       (S := Γ(X, finitePreimageAffine f U))) :
     schemeDivisorPointOfAffinePrime U E ∈
-      (divDynOfFiniteDominantNormalCharZero f).branch := by
+      (divisorDynamicsOfFiniteDominantNormalCharZero f).branch := by
   obtain ⟨F, hF, rfl⟩ := hE
   refine ⟨schemeDivisorPointOfAffinePrime (finitePreimageAffine f U) F, ?_, ?_⟩
   · exact Subtype.ext (schemeDivisorPointOfAffinePrime_map f U F)
-  · change 1 < schemeDivisorRam f
+  · change 1 < schemeDivisorRamificationIdx f
       (schemeDivisorPointOfAffinePrime (finitePreimageAffine f U) F)
-    rw [schemeDivisorRam_eq_heightOneRam f U F]
+    rw [schemeDivisorRamificationIdx_eq_heightOneRamificationIdx f U F]
     exact hF
 
 /-- Avoidance of actual ambient branch components implies the affine branch
 avoidance condition used by the local bounding theorem. -/
-theorem not_mem_finiteAffineOtherBranchLocus_of_meets
+theorem notMem_finiteAffineOtherBranchLocus_of_meets
     (A : SchemeDivisorPoint X)
     (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (U : X.affineOpens) [Nonempty (U : X.Opens)]
     [Nonempty (finitePreimageAffine f U : X.Opens)]
     (hQU : (pointClosureIdealSheaf A.1).subschemeι Q.1 ∈ (U : X.Opens))
-    (hmeets : ∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).branch,
+    (hmeets : ∀ E ∈ (divisorDynamicsOfFiniteDominantNormalCharZero f).branch,
       E ≠ A → Q ∉ invariantDivisorMeets A E) :
     (⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, hQU⟩ : (U : X.Opens)) ∉
       finiteAffineOtherBranchLocus (f := f) U
@@ -109,14 +109,14 @@ section CoveringInputs
 
 variable {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f]
 
-local instance coveringStep0Algebra (m : ℕ) (U : X.affineOpens) :
+local instance coveringCorrectionAlgebra (m : ℕ) (U : X.affineOpens) :
     Algebra Γ(X, U) Γ(X, finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U) :=
   ((CategoryTheory.End.of f ^ m).asHom.app U).hom.toAlgebra
 
 /-- The two classical local covering inputs, on precisely the rings extracted
 from an ambient iterate and a source point of the reduced divisor. No divisor
 restriction or étaleness conclusion is included in this bundle. -/
-structure InvariantDivisorLocalCoveringInputs
+structure InvariantDivisorLocalCoveringHypotheses
     (A : SchemeDivisorPoint X) (m : ℕ) (U : X.affineOpens)
     (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
@@ -156,20 +156,20 @@ variable (k : Type u) [Field k] [CharZero k]
 /-- Assemble the literal local Step-0 datum using regularity of the two actual
 stalks and avoidance of actual ambient branch components. In particular, source
 incidence, ambient codimension two, and affine branch avoidance are proved. -/
-def invariantDivisorStep0LocalDataOfRegular
+def invariantDivisorCorrectionLocalDataOfRegular
     (m : ℕ) (Q Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
     (hambient : (pointClosureIdealSheaf A.1).subschemeι Q.1 ∉ stalkSingularLocus X)
     (hdivisor : Q.1 ∉ stalkSingularLocus (pointClosureIdealSheaf A.1).subscheme)
-    (hmeets : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      ∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).iterate m |>.branch,
+    (hmeets : letI := charZero_stalk_of_field k s (genericPoint X)
+      ∀ E ∈ (divisorDynamicsOfFiniteDominantNormalCharZero f).iterate m |>.branch,
         E ≠ A → Q ∉ invariantDivisorMeets A E)
     (hQQ : (CategoryTheory.End.of (A.invariantClosureMap f hA) ^ m).asHom.base Q'.1 = Q.1)
     (cover : ∀ (U : X.affineOpens) (hx : Q'.1 ∈
         (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
-    InvariantDivisorStep0LocalData X f A m Q Q' := by
-  letI := schemeStalkCharZeroOfField k s (genericPoint X)
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx) :
+    InvariantDivisorCorrectionLocalData X f A m Q Q' := by
+  letI := charZero_stalk_of_field k s (genericPoint X)
   let hex := exists_isAffineOpen_mem_and_subset
     (show (pointClosureIdealSheaf A.1).subschemeι Q.1 ∈ (⊤ : X.Opens) by trivial)
   let U : X.affineOpens := ⟨Classical.choose hex, (Classical.choose_spec hex).1⟩
@@ -191,10 +191,10 @@ def invariantDivisorStep0LocalDataOfRegular
     ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q.1, hQU⟩⟩
   let : Nonempty (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens) :=
     ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q'.1, hx⟩⟩
-  apply not_mem_finiteAffineOtherBranchLocus_of_meets
+  apply notMem_finiteAffineOtherBranchLocus_of_meets
     (CategoryTheory.End.of f ^ m).asHom A Q U hQU
   intro E hE hEA
-  rw [divDynOfFiniteDominantNormalCharZero_pow_eq_iter] at hE
+  rw [divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate] at hE
   exact hmeets E hE hEA
 
 /-- Actual invariant-divisor setup for any finite geometric correction set
@@ -211,18 +211,18 @@ def invariantDivisorSetupOfFiniteRegularityCorrection
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
-    InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx) :
+    InvariantDivisorSchemeNormalizationPCFSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
         (pointClosureIdealSheaf A.1).subscheme)) := by
-  letI := schemeStalkCharZeroOfField k s (genericPoint X)
-  exact InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient f A hA
+  letI := charZero_stalk_of_field k s (genericPoint X)
+  exact InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient f A hA
     (invariantDivisorNormalization k s f A hA)
     (invariantDivisorNormalization_g k s f A hA)
     sing hsing (invariantDivisorMeets A) (invariantDivisorMeets_finite A)
     (by
       intro m _ Q hQ hmeets Q' hQQ
-      apply invariantDivisorStep0LocalDataOfRegular k s f A hA m Q Q'
+      apply invariantDivisorCorrectionLocalDataOfRegular k s f A hA m Q Q'
         (hregular Q hQ).1 (hregular Q hQ).2 hmeets
       · exact (invariantDivisorNormalization_iterate_step_val k s f A hA m Q').symm.trans
           (congrArg Subtype.val hQQ)
@@ -238,8 +238,8 @@ def invariantDivisorSetupOfClosedSingularLoci
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
-    InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx) :
+    InvariantDivisorSchemeNormalizationPCFSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
         (pointClosureIdealSheaf A.1).subscheme)) :=
   invariantDivisorSetupOfFiniteRegularityCorrection k s f A hA
@@ -248,7 +248,7 @@ def invariantDivisorSetupOfClosedSingularLoci
 
 /-- Postcritical finiteness on the canonical normalization of the actual
 invariant-divisor restriction, with a proved finite regularity correction. -/
-theorem invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
+theorem invariantDivisorNormalization_normalized_isPCF_of_finiteRegularityCorrection
     (sing : Set (SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme))
     (hsing : sing.Finite)
     (hregular : ∀ Q, Q ∉ sing →
@@ -258,42 +258,42 @@ theorem invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx)
-    (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
-    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx)
+    (hpcf : letI := charZero_stalk_of_field k s (genericPoint X)
+      (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).normalized.IsPCF :=
   (invariantDivisorSetupOfFiniteRegularityCorrection k s f A hA
-    sing hsing hregular cover).norm_pcf hpcf
+    sing hsing hregular cover).normalized_isPCF hpcf
 
 /-- The normal invariant-divisor theorem for actual scheme maps and canonical
 normalization, conditional only on the two singular-locus closedness statements
 and purity/Abhyankar beyond the standing geometric and PCF hypotheses. -/
-theorem invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
+theorem invariantDivisorNormalization_normalized_isPCF_of_closedSingularLoci
     (hX : IsClosed (stalkSingularLocus X))
     (hSingA : IsClosed (stalkSingularLocus (pointClosureIdealSheaf A.1).subscheme))
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx)
-    (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
-    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
-  (invariantDivisorSetupOfClosedSingularLoci k s f A hA hX hSingA cover).norm_pcf hpcf
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx)
+    (hpcf : letI := charZero_stalk_of_field k s (genericPoint X)
+      (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).normalized.IsPCF :=
+  (invariantDivisorSetupOfClosedSingularLoci k s f A hA hX hSingA cover).normalized_isPCF hpcf
 
 end Assembly
 
 #print axioms schemeDivisorPointOfAffinePrime_mem_branch
-#print axioms not_mem_finiteAffineOtherBranchLocus_of_meets
-#print axioms invariantDivisorStep0LocalDataOfRegular
+#print axioms notMem_finiteAffineOtherBranchLocus_of_meets
+#print axioms invariantDivisorCorrectionLocalDataOfRegular
 #print axioms invariantDivisorSetupOfFiniteRegularityCorrection
 #print axioms invariantDivisorSetupOfClosedSingularLoci
-#print axioms invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
-#print axioms invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
-#check @InvariantDivisorLocalCoveringInputs
-#check @invariantDivisorStep0LocalDataOfRegular
+#print axioms invariantDivisorNormalization_normalized_isPCF_of_finiteRegularityCorrection
+#print axioms invariantDivisorNormalization_normalized_isPCF_of_closedSingularLoci
+#check @InvariantDivisorLocalCoveringHypotheses
+#check @invariantDivisorCorrectionLocalDataOfRegular
 #check @invariantDivisorSetupOfClosedSingularLoci
-#check @invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
+#check @invariantDivisorNormalization_normalized_isPCF_of_closedSingularLoci
 
 end
 

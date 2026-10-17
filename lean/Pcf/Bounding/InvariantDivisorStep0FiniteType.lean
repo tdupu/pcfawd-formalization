@@ -40,8 +40,8 @@ def invariantDivisorSetupOfFiniteType
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx) :
-    InvariantDivisorSchemeNormalizationPcfSetup X f A hA (SchemeDivisorPoint X)
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx) :
+    InvariantDivisorSchemeNormalizationPCFSetup X f A hA (SchemeDivisorPoint X)
       (SchemeDivisorPoint (schemeGlobalNormalization
         (pointClosureIdealSheaf A.1).subscheme)) :=
   invariantDivisorSetupOfFiniteRegularityCorrection k s f A hA
@@ -52,20 +52,20 @@ def invariantDivisorSetupOfFiniteType
 restriction. Beyond the standing geometry and ambient PCF, the only inputs are
 the local purity and Abhyankar packages bundled in `cover`; Tag 00NP is proved
 separately. -/
-theorem invariantDivisorNormalization_norm_pcf_of_finiteType
+theorem invariantDivisorNormalization_normalized_isPCF_of_finiteType
     (cover : ∀ (m : ℕ) (U : X.affineOpens)
         (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme)
         (hx : Q'.1 ∈ (pointClosureIdealSheaf A.1).subschemeι ⁻¹ᵁ
           (finitePreimageAffine (End.of f ^ m).asHom U : X.Opens)),
-      InvariantDivisorLocalCoveringInputs f A m U Q' hx)
-    (hpcf : letI := schemeStalkCharZeroOfField k s (genericPoint X)
-      (divDynOfFiniteDominantNormalCharZero f).IsPCF) :
-    (invariantDivisorNormalization k s f A hA).norm.IsPCF :=
-  (invariantDivisorSetupOfFiniteType k s f A hA cover).norm_pcf hpcf
+      InvariantDivisorLocalCoveringHypotheses f A m U Q' hx)
+    (hpcf : letI := charZero_stalk_of_field k s (genericPoint X)
+      (divisorDynamicsOfFiniteDominantNormalCharZero f).IsPCF) :
+    (invariantDivisorNormalization k s f A hA).normalized.IsPCF :=
+  (invariantDivisorSetupOfFiniteType k s f A hA cover).normalized_isPCF hpcf
 
 #print axioms invariantDivisorSetupOfFiniteType
-#print axioms invariantDivisorNormalization_norm_pcf_of_finiteType
-#check @invariantDivisorNormalization_norm_pcf_of_finiteType
+#print axioms invariantDivisorNormalization_normalized_isPCF_of_finiteType
+#check @invariantDivisorNormalization_normalized_isPCF_of_finiteType
 
 end
 

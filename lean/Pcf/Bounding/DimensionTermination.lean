@@ -121,7 +121,7 @@ theorem SchemeDivisorFlag.isEmpty_succ_of_topologicalKrullDim_le
 
 /-- The data selecting one recursive child in `SchemePCFAllTheWayDownAtDepth`: a
 preperiodic divisor and a positive return period. -/
-structure SchemePcfDescentStep
+structure SchemePCFDescentStep
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -136,19 +136,19 @@ structure SchemePcfDescentStep
       (End.of f ^ preperiod).asHom.base divisor.1
 
 /-- The actual periodic image divisor selected by a recursive PCF descent step. -/
-def SchemePcfDescentStep.periodicDivisor
+def SchemePCFDescentStep.periodicDivisor
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}}
     {s : X ⟶ Spec (.of k)} [LocallyOfFiniteType s]
     {f : X ⟶ X} [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (a : SchemePcfDescentStep k s f) : SchemeDivisorPoint X :=
+    (a : SchemePCFDescentStep k s f) : SchemeDivisorPoint X :=
   schemeDivisorIterateOfFiniteType k s f a.preperiod a.divisor
 
 /-- A branch through the exact actual-scheme recursion used by
 `SchemePCFAllTheWayDownAtDepth`.  Its child is the reduced closure of the selected
 periodic image divisor and its map is the induced return map. -/
-def SchemePcfDescentBranch
+def SchemePCFDescentBranch
     (k : Type u) [Field k] [CharZero k]
     (d : ℕ) {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -157,9 +157,9 @@ def SchemePcfDescentBranch
   match d with
   | 0 => PUnit
   | d + 1 =>
-      Σ a : SchemePcfDescentStep k s f,
+      Σ a : SchemePCFDescentStep k s f,
       let B := schemeDivisorIterateOfFiniteType k s f a.preperiod a.divisor
-      SchemePcfDescentBranch k d
+      SchemePCFDescentBranch k d
         ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
         (B.invariantClosureMap (End.of f ^ a.period).asHom
           (schemeDivisorIterateOfFiniteType_periodic k s f a.preperiod a.period
@@ -167,13 +167,13 @@ def SchemePcfDescentBranch
 
 /-- Forgetting the dynamics of an actual recursive PCF branch leaves its chain of
 actual reduced divisor closures. -/
-noncomputable def SchemePcfDescentBranch.toDivisorFlag
+noncomputable def SchemePCFDescentBranch.toDivisorFlag
     (k : Type u) [Field k] [CharZero k]
     {d : ℕ} {X : Scheme.{u}}
     {s : X ⟶ Spec (.of k)} [LocallyOfFiniteType s]
     {f : X ⟶ X} [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (b : SchemePcfDescentBranch k d s f) : SchemeDivisorFlag X d := by
+    (b : SchemePCFDescentBranch k d s f) : SchemeDivisorFlag X d := by
   cases d with
   | zero => exact .nil X
   | succ d =>
@@ -181,36 +181,36 @@ noncomputable def SchemePcfDescentBranch.toDivisorFlag
       let B := schemeDivisorIterateOfFiniteType k s f a.preperiod a.divisor
       let hB := schemeDivisorIterateOfFiniteType_periodic k s f a.preperiod a.period
         a.divisor a.eventually_periodic
-      change SchemePcfDescentBranch k d
+      change SchemePCFDescentBranch k d
         ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
         (B.invariantClosureMap (End.of f ^ a.period).asHom hB) at tail
-      exact .cons B (SchemePcfDescentBranch.toDivisorFlag k
+      exact .cons B (SchemePCFDescentBranch.toDivisorFlag k
         (s := (pointClosureIdealSheaf B.1).subschemeι ≫ s)
         (f := B.invariantClosureMap (End.of f ^ a.period).asHom hB) tail)
 termination_by d
 
 /-- Every branch of the implemented recursive PCF descent has at most `n` restriction
 steps when the initial scheme has topological Krull dimension at most `n`. -/
-theorem SchemePcfDescentBranch.length_le_of_topologicalKrullDim_le
+theorem SchemePCFDescentBranch.length_le_of_topologicalKrullDim_le
     (k : Type u) [Field k] [CharZero k]
     {d n : ℕ} {X : Scheme.{u}}
     {s : X ⟶ Spec (.of k)} [LocallyOfFiniteType s]
     {f : X ⟶ X} [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (b : SchemePcfDescentBranch k d s f)
+    (b : SchemePCFDescentBranch k d s f)
     (hX : topologicalKrullDim X ≤ (n : WithBot ℕ∞)) : d ≤ n :=
   (b.toDivisorFlag k).length_le_of_topologicalKrullDim_le hX
 
 /-- Numerical termination for the exact scheme-level PCF recursion: if the initial
 scheme has dimension at most `n`, no branch can contain `n + 1` divisor restrictions. -/
-theorem SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
+theorem SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
     (k : Type u) [Field k] [CharZero k]
     (n : ℕ) {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (hX : topologicalKrullDim X ≤ (n : WithBot ℕ∞)) :
-    IsEmpty (SchemePcfDescentBranch k (n + 1) s f) :=
+    IsEmpty (SchemePCFDescentBranch k (n + 1) s f) :=
   ⟨fun b ↦ Nat.not_succ_le_self n
     (b.length_le_of_topologicalKrullDim_le k hX)⟩
 
@@ -227,7 +227,7 @@ theorem schemePCFAllTheWayDownAtDepth_of_succ
   induction d generalizing X with
   | zero => exact h.1
   | succ d ih =>
-      change SchemeNormalizedPCFOfFiniteType k s f ∧ _
+      change IsNormalizedPCFOfFiniteType k s f ∧ _
       constructor
       · exact h.1
       · intro A r p hp hA
@@ -261,26 +261,26 @@ theorem schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
-    (hno : IsEmpty (SchemePcfDescentBranch k (d + 1) s f))
+    (hno : IsEmpty (SchemePCFDescentBranch k (d + 1) s f))
     (h : SchemePCFAllTheWayDownAtDepth k d s f) :
     SchemePCFAllTheWayDownAtDepth k (d + 1) s f := by
   induction d generalizing X with
   | zero =>
-      change SchemeNormalizedPCFOfFiniteType k s f ∧ _
+      change IsNormalizedPCFOfFiniteType k s f ∧ _
       constructor
       · exact h
       · intro A r p hp hA
-        let a : SchemePcfDescentStep k s f := ⟨A, r, p, hp, hA⟩
+        let a : SchemePCFDescentStep k s f := ⟨A, r, p, hp, hA⟩
         exact isEmptyElim (hno.false ⟨a, PUnit.unit⟩)
   | succ d ih =>
-      change SchemeNormalizedPCFOfFiniteType k s f ∧ _
+      change IsNormalizedPCFOfFiniteType k s f ∧ _
       constructor
       · exact h.1
       · intro A r p hp hA
         let B := schemeDivisorIterateOfFiniteType k s f r A
         let hB := schemeDivisorIterateOfFiniteType_periodic k s f r p A hA
-        let a : SchemePcfDescentStep k s f := ⟨A, r, p, hp, hA⟩
-        have hnoChild : IsEmpty (SchemePcfDescentBranch k (d + 1)
+        let a : SchemePCFDescentStep k s f := ⟨A, r, p, hp, hA⟩
+        have hnoChild : IsEmpty (SchemePCFDescentBranch k (d + 1)
             ((pointClosureIdealSheaf B.1).subschemeι ≫ s)
             (B.invariantClosureMap (End.of f ^ p).asHom hB)) := by
           constructor
@@ -293,14 +293,14 @@ theorem schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch
 
 /-- Once the depth has reached a natural upper bound for the initial scheme's
 topological Krull dimension, there is no branch one step deeper. -/
-theorem SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
+theorem SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
     (k : Type u) [Field k] [CharZero k]
     {n d : ℕ} {X : Scheme.{u}}
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (hX : topologicalKrullDim X ≤ (n : WithBot ℕ∞)) (hnd : n ≤ d) :
-    IsEmpty (SchemePcfDescentBranch k (d + 1) s f) := by
+    IsEmpty (SchemePCFDescentBranch k (d + 1) s f) := by
   constructor
   intro b
   have hlen : d + 1 ≤ n := b.length_le_of_topologicalKrullDim_le k hX
@@ -317,8 +317,8 @@ theorem schemePCFAllTheWayDown_of_cover_to_dimension
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
     (hX : topologicalKrullDim X ≤ (n : WithBot ℕ∞))
-    (cover : SchemePcfCoveringAtDepth k n s f)
-    (hpcf : SchemeNormalizedPCFOfFiniteType k s f) :
+    (cover : SchemePCFCoveringAtDepth k n s f)
+    (hpcf : IsNormalizedPCFOfFiniteType k s f) :
     ∀ d, SchemePCFAllTheWayDownAtDepth k d s f := by
   have hn := schemePCFAllTheWayDownAtDepth_of_cover k n s f cover hpcf
   intro d
@@ -330,7 +330,7 @@ theorem schemePCFAllTheWayDown_of_cover_to_dimension
     | base => exact hn
     | succ d hnd ih =>
         exact schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch k d s f
-          (SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
+          (SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
             k s f hX hnd) ih
 
 #print axioms scheme_orderKrullDim_eq_topologicalKrullDim
@@ -340,15 +340,15 @@ theorem schemePCFAllTheWayDown_of_cover_to_dimension
 #print axioms SchemeDivisorFlag.length_le_topologicalKrullDim
 #print axioms SchemeDivisorFlag.length_le_of_topologicalKrullDim_le
 #print axioms SchemeDivisorFlag.isEmpty_succ_of_topologicalKrullDim_le
-#print axioms SchemePcfDescentStep
-#print axioms SchemePcfDescentBranch
-#print axioms SchemePcfDescentBranch.toDivisorFlag
-#print axioms SchemePcfDescentBranch.length_le_of_topologicalKrullDim_le
-#print axioms SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
+#print axioms SchemePCFDescentStep
+#print axioms SchemePCFDescentBranch
+#print axioms SchemePCFDescentBranch.toDivisorFlag
+#print axioms SchemePCFDescentBranch.length_le_of_topologicalKrullDim_le
+#print axioms SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
 #print axioms schemePCFAllTheWayDownAtDepth_of_succ
 #print axioms schemePCFAllTheWayDownAtDepth_mono
 #print axioms schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch
-#print axioms SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
+#print axioms SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
 #print axioms schemePCFAllTheWayDown_of_cover_to_dimension
 
 end

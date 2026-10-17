@@ -396,7 +396,7 @@ theorem ofFiniteNormalLocalizationOfDivisorsAt
     (dim_divisor : ringKrullDim
       (Localization.AtPrime q ⧸ Ideal.span {a}) = 1)
     (ramified_lies_over : ∀ W : HeightOnePrime S,
-      W.1.asIdeal.under R ≤ q → 1 < heightOneRam (R := R) W →
+      W.1.asIdeal.under R ≤ q → 1 < heightOneRamificationIdx (R := R) W →
         D.map (algebraMap R S) ≤ W.1.asIdeal)
     (purity : Stacks.ZariskiNagataPurity (Localization.AtPrime q)
       (Localization (Algebra.algebraMapSubmonoid S q.primeCompl)))
@@ -467,12 +467,12 @@ theorem ofFiniteNormalLocalizationOfDivisorsAt
         (show algebraMap R S r ∈
           Algebra.algebraMapSubmonoid S q.primeCompl from ⟨r, hrq, rfl⟩) hr
     let Wh : HeightOnePrime S := ⟨⟨W, inferInstance⟩, hWheight⟩
-    have hram_le : heightOneRam (R := R) Wh ≤ 1 := by
+    have hram_le : heightOneRamificationIdx (R := R) Wh ≤ 1 := by
       apply Nat.le_of_not_gt
       intro hram
       exact hnotle (ramified_lies_over Wh hWq hram)
-    have hram_eq : heightOneRam (R := R) Wh = 1 :=
-      Nat.le_antisymm hram_le (heightOneRam_pos (R := R) Wh)
+    have hram_eq : heightOneRamificationIdx (R := R) Wh = 1 :=
+      Nat.le_antisymm hram_le (heightOneRamificationIdx_pos (R := R) Wh)
     have hglobal : Algebra.IsUnramifiedAt R W :=
       isUnramifiedAt_of_ramificationIdx_eq_one_of_algebraRat W hram_eq
     exact isUnramifiedAt_localization_algebraMapSubmonoid q w
@@ -725,10 +725,10 @@ theorem formallyEtale_localRingHom (xi : PrimeSpectrum (S ⧸ p)) :
   exact hlocal
 
 /-- The concrete codimension-one non-étale locus of the local restriction is empty. -/
-theorem affineCrit1_restriction_eq_empty :
+theorem affineNonEtaleLocus_restriction_eq_empty :
     letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ p) :=
       Ideal.Quotient.algebraQuotientOfLEComap h.toBoundingChart.span_le_comap
-    affineCrit1 (R ⧸ Ideal.span {a}) (S ⧸ p) = ∅ := by
+    affineNonEtaleLocus (R ⧸ Ideal.span {a}) (S ⧸ p) = ∅ := by
   letI : Algebra (R ⧸ Ideal.span {a}) (S ⧸ p) :=
     Ideal.Quotient.algebraQuotientOfLEComap h.toBoundingChart.span_le_comap
   apply Set.eq_empty_iff_forall_notMem.mpr

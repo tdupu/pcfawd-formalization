@@ -205,7 +205,7 @@ hypotheses are invisible to `#print axioms` by construction.
 
 `Pcf.Examples.diagonalSquaring`'s `key` field is proved rather than assumed, so
 `Pcf.Examples.diagonalSquaring_restriction_isPCF` witnesses that `Pcf.PCFSetup.restriction_isPCF` is
-not vacuous. On the chart route (`Pcf/Bounding/`), `key1` is a theorem derived from
+not vacuous. On the chart route (`Pcf/Bounding/`), `notMem_nonEtaleBranch_iterate` is a theorem derived from
 Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
 -/
 
@@ -872,8 +872,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.existsPrimeOverBoth
 #print axioms Pcf.Stacks.isReduced_of_etale_of_isDomain
 #print axioms Pcf.affineDivisorPointEquiv
-#print axioms Pcf.Scheme.Hom.finite_divisorPoint_fiber
-#print axioms Pcf.Scheme.Hom.finite_divisorPoint_subtype_fiber
+#print axioms AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_fiber
+#print axioms AlgebraicGeometry.Scheme.Hom.finite_divisorPoint_subtype_fiber
 #print axioms Pcf.finite_heightOne_comap_fiber
 #print axioms Pcf.height_eq_one_of_liesOver_heightOne
 #print axioms Pcf.heightOneUnderOfCodim_surjective
@@ -924,8 +924,8 @@ hypotheses. -/
 #print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfDivisors
 #print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfHeightOneDivisorsAt
 #print axioms Pcf.LocalBoundingChart.ofFiniteNormalLocalizationOfHeightOneDivisors
-#print axioms Pcf.heightOneRam_pos
-#print axioms Pcf.heightOneRam_tower
+#print axioms Pcf.heightOneRamificationIdx_pos
+#print axioms Pcf.heightOneRamificationIdx_tower
 #print axioms Pcf.heightOneBranchIdeal
 #print axioms Pcf.ramified_heightOne_lies_over_of_branchIdeal_subset_singleton
 #print axioms Pcf.heightOneBranch
@@ -935,33 +935,33 @@ hypotheses. -/
 #print axioms Pcf.ramified_heightOne_lies_over_of_branch_subset_singleton
 #print axioms Pcf.ramified_heightOne_lies_over_of_avoids_other_branch_at
 #print axioms Pcf.heightOneDvrExponent_spec
-#print axioms Pcf.heightOneRam_eq_dvrExponent
+#print axioms Pcf.heightOneRamificationIdx_eq_dvrExponent
 #print axioms Pcf.finite_heightOne_ramified
-#print axioms Pcf.divDynOfFiniteNormalSelfAlgebra
-#print axioms Pcf.divDynOfFiniteNormalSelfAlgebra_branch
+#print axioms Pcf.divisorDynamicsOfFiniteNormalSelfAlgebra
+#print axioms Pcf.divisorDynamicsOfFiniteNormalSelfAlgebra_branch
 #print axioms Pcf.LocalBoundingChart.toBoundingChart
 #print axioms Pcf.LocalBoundingChart.restrictionRingHom
 #print axioms Pcf.LocalBoundingChart.restrictionPoint
 #print axioms Pcf.LocalBoundingChart.isEtaleAt_restriction
 #print axioms Pcf.LocalBoundingChart.formallyEtale_localRingHom
-#print axioms Pcf.LocalBoundingChart.affineCrit1_restriction_eq_empty
+#print axioms Pcf.LocalBoundingChart.affineNonEtaleLocus_restriction_eq_empty
 #print axioms Pcf.ringEquiv_formallyEtale
 #print axioms Pcf.formallyEtale_respectsIso
 #print axioms Pcf.SchemeStalkBoundingChart.formallyEtale
-#print axioms Pcf.SchemeStalkBoundingChart.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingChart.notMem_schemeDivisorNonEtaleLocus
 #print axioms Pcf.SchemeStalkBoundingPresentation.toSchemeStalkBoundingChart
 #print axioms Pcf.SchemeStalkBoundingPresentation.formallyEtale
-#print axioms Pcf.SchemeStalkBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingPresentation.notMem_schemeDivisorNonEtaleLocus
 #print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.toSchemeStalkBoundingPresentation
 #print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.formallyEtale
-#print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeStalkBoundingLocalizationPresentation.notMem_schemeDivisorNonEtaleLocus
 #print axioms Pcf.SchemeStalkBoundingChart.toSchemeStalkBoundingLocalizationPresentation
 #print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentation
 #print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfIdeals
 #print axioms Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfAmbientMap
 #print axioms Pcf.exists_principal_affineBasicOpen_of_atPrime_isPrincipal
 #print axioms Pcf.exists_principal_affineBasicOpen_of_atPrime_regular_dim_two
-#print axioms Pcf.IdealSheafData.exists_generator_comap_top_of_ideal_eq_span
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.exists_generator_comap_top_of_ideal_eq_span
 #print axioms Pcf.exists_principal_comap_affineBasicOpen_of_atPrime_regular_dim_two
 #print axioms Pcf.affineIdealSheaf_le_map_of_localBoundingChart
 #print axioms Pcf.affineIdealSheafStalkBoundingLocalizationPresentation
@@ -988,8 +988,8 @@ hypotheses. -/
 #print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientAppLE_comp_mk_subschemeMap
 #print axioms AlgebraicGeometry.Scheme.IdealSheafData.subschemeMap_ideal_le
 #print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientAppLE_subschemeMap_eq_quotientMap
-#print axioms Pcf.finitePreimageModuleFinite
-#print axioms Pcf.finitePreimageFaithfulSMul
+#print axioms Pcf.moduleFinite_finitePreimageAffine
+#print axioms Pcf.faithfulSMul_finitePreimageAffine
 #print axioms Pcf.pointClosureIdealSheaf_ideal
 #print axioms Pcf.pointClosureIdealSheaf_ideal_isPrime
 #print axioms Pcf.pointClosureIdealSheaf_ideal_height
@@ -1031,9 +1031,9 @@ hypotheses. -/
 #print axioms Pcf.ringKrullDim_divisorQuotientLocalization
 #print axioms Pcf.ambientPrimeOfQuotientPoint_comap
 #print axioms Pcf.ringKrullDim_eq_two_of_cartier_quotient_eq_one
-#print axioms Pcf.isRegularLocalRing_stalk_of_not_mem_stalkSingularLocus
+#print axioms Pcf.isRegularLocalRing_stalk_of_notMem_stalkSingularLocus
 #print axioms Pcf.SchemeDivisorPoint.image_mem_affine_of_closurePoint_mem
-#print axioms Pcf.avoids_other_heightOneBranch_of_not_mem_finiteAffineOtherBranchLocus
+#print axioms Pcf.avoids_other_heightOneBranch_of_notMem_finiteAffineOtherBranchLocus
 #print axioms Pcf.SchemeDivisorPoint.closurePreimage_under_eq_primeIdealOf
 #print axioms Pcf.SchemeDivisorPoint.closurePoint_under_eq_primeIdealOf
 #print axioms Pcf.pointClosurePoint_under_eq_primeIdealOf
@@ -1054,47 +1054,47 @@ hypotheses. -/
 #print axioms
   Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCartier
 #print axioms
-  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0At
-#print axioms Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0UFDAt
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrectionAt
+#print axioms Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfCorrectionUFDAt
 #print axioms
-  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfStep0RegularDimTwoAt
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationOfCorrectionRegularDimTwoAt
 #print axioms Pcf.SchemeDivisorPoint.invariantClosureMap_iterate
 #print axioms Pcf.SchemeDivisorPoint.invariantClosureMap_isFinite
 #print axioms
   Pcf.SchemeDivisorPoint.invariantClosureMap_locallyOfFinitePresentation
 #print axioms
-  Pcf.SchemeDivisorPoint.invariantClosureStalkBoundingLocalizationOfStep0At
+  Pcf.SchemeDivisorPoint.invariantClosureStalkBoundingLocalizationOfCorrectionAt
 #print axioms
-  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfStep0
-#print axioms Pcf.LocalBoundingChart.schemeDivisorCrit1_restriction_eq_empty
-#print axioms Pcf.schemeDivisorCrit0_subset_crit1
+  Pcf.SchemeDivisorPoint.closureStalkBoundingLocalizationPresentationOfFiniteDominantNormalOfCorrection
+#print axioms Pcf.LocalBoundingChart.schemeDivisorNonEtaleLocus_restriction_eq_empty
+#print axioms Pcf.schemeDivisorNonUnramifiedLocus_subset_nonEtaleLocus
 #print axioms Pcf.formallyEtale_stalkMap_iff
 #print axioms Pcf.isOpen_formallyEtale_stalkLocus
 #print axioms Pcf.map_genericPoint_eq_of_isDominant
 #print axioms Pcf.formallyEtale_stalkMap_genericPoint_of_exists
 #print axioms Pcf.formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero
 #print axioms Pcf.exists_formallyEtale_stalk_iterate_of_exists
-#print axioms Pcf.isClosed_schemeCrit1Locus
+#print axioms Pcf.isClosed_schemeNonEtaleLocus
 #print axioms Pcf.finite_schemeDivisorPoint_mem_of_isClosed
-#print axioms Pcf.schemeDivisorCrit1_finite_of_isClosed
-#print axioms Pcf.schemeDivisorCrit1_finite_of_isClosed_of_exists_formallyEtale
-#print axioms Pcf.schemeDivisorCrit1_finite_of_exists_formallyEtale
+#print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_isClosed
+#print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_isClosed_of_exists_formallyEtale
+#print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_exists_formallyEtale
 #print axioms Pcf.isReduced_vanishingIdeal_subscheme
 #print axioms Pcf.isIntegral_vanishingIdeal_subscheme
 #print axioms Pcf.pointClosureSubscheme_isIntegral
 #print axioms Pcf.pointClosureSubschemeι_genericPoint
 #print axioms Pcf.isRegularLocalRing_stalk_genericPoint
-#print axioms Pcf.genericPoint_not_mem_stalkSingularLocus
+#print axioms Pcf.genericPoint_notMem_stalkSingularLocus
 #print axioms Pcf.stalkSingularLocus_ne_univ
 #print axioms Pcf.stalkSingularLocus_pointClosureSubscheme_ne_univ
 #print axioms Pcf.SchemeDivisorPoint.isRegularLocalRing_stalk
-#print axioms Pcf.SchemeDivisorPoint.not_mem_stalkSingularLocus
+#print axioms Pcf.SchemeDivisorPoint.notMem_stalkSingularLocus
 #print axioms Pcf.schemeDivisorPoint_stalkSingularLocus_eq_empty
 #print axioms Pcf.finite_schemeDivisorPoint_stalkSingularLocus
-#print axioms Pcf.genericPoint_not_mem_ambient_stalkSingularLocus
+#print axioms Pcf.genericPoint_notMem_ambient_stalkSingularLocus
 #print axioms Pcf.stalkSingularLoci_pointClosureSubscheme_ne_univ
-#print axioms Pcf.RingHom.Etale.localRingHom_formallyEtale
-#print axioms Pcf.AlgebraicGeometry.Etale.stalkMap_formallyEtale
+#print axioms RingHom.Etale.localRingHom_formallyEtale
+#print axioms AlgebraicGeometry.Etale.stalkMap_formallyEtale
 #print axioms Pcf.LocalBoundingChart.restrictionRingHom_etale
 #print axioms Pcf.LocalBoundingChart.restrictionScheme_etale
 #print axioms Pcf.schemeResLETopIso
@@ -1105,45 +1105,45 @@ hypotheses. -/
 #print axioms Pcf.LocalBoundingChart.toSchemeAffineLocalBoundingPresentation
 #print axioms Pcf.SchemeLocalBoundingPresentation.restrictedEtale
 #print axioms Pcf.SchemeLocalBoundingPresentation.formallyEtale
-#print axioms Pcf.SchemeLocalBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeLocalBoundingPresentation.notMem_schemeDivisorNonEtaleLocus
 #print axioms Pcf.SchemeAffineLocalBoundingPresentation.formallyEtale
-#print axioms Pcf.SchemeAffineLocalBoundingPresentation.not_mem_schemeDivisorCrit1
+#print axioms Pcf.SchemeAffineLocalBoundingPresentation.notMem_schemeDivisorNonEtaleLocus
 #print axioms Pcf.schemeDivisorMap_val
 #print axioms Pcf.schemeDivisorMap_finite_fiber
 #print axioms Pcf.schemeDivisorMap_comm_of_comm
 #print axioms Pcf.schemeDivisorMap_iterate_val
-#print axioms Pcf.schemeDivisorCrit0_tower
-#print axioms Pcf.schemeDivisorCrit1_tower
-#print axioms Pcf.SchemeNormalizationUnnormDyn.crit0_subset_crit1
-#print axioms Pcf.SchemeNormalizationUnnormDyn.crit0_tower
-#print axioms Pcf.SchemeNormalizationUnnormDyn.crit1_tower
-#print axioms Pcf.SchemeNormalizationUnnormDyn.finite_iterate
-#print axioms Pcf.SchemeNormalizationUnnormDyn.finitePresentation_iterate
-#print axioms Pcf.SchemeNormalizationUnnormDyn.toNormalizationUnnormalizedDynamics
+#print axioms Pcf.schemeDivisorNonUnramifiedLocus_tower
+#print axioms Pcf.schemeDivisorNonEtaleLocus_tower
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.nonUnramifiedLocus_subset_nonEtaleLocus
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.nonUnramifiedLocus_tower
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.nonEtaleLocus_tower
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.finite_iterate
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.finitePresentation_iterate
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.toNormalizationUnnormalizedDynamics
 #print axioms Pcf.ramificationIdx_pos_of_quasiFinite
 #print axioms Pcf.SchemeDivisorPoint.stalk_isDiscreteValuationRing
 #print axioms Pcf.stalkMap_injective_of_dominant_integral
-#print axioms Pcf.schemeDivisorRam_comp
-#print axioms Pcf.schemeDivisorRam_id
-#print axioms Pcf.schemeDivisorRam_pos
-#print axioms Pcf.schemeDivisorRam_eq_one_of_formallyEtale
-#print axioms Pcf.schemeDivisorRam_gt_one_mem_crit1
+#print axioms Pcf.schemeDivisorRamificationIdx_comp
+#print axioms Pcf.schemeDivisorRamificationIdx_id
+#print axioms Pcf.schemeDivisorRamificationIdx_pos
+#print axioms Pcf.schemeDivisorRamificationIdx_eq_one_of_formallyEtale
+#print axioms Pcf.mem_schemeDivisorNonEtaleLocus_of_one_lt_ramificationIdx
 #print axioms Pcf.coheight_apply_eq_of_finite_dominant_normal
 #print axioms Pcf.SchemeDivisorPoint.mapFiniteDominantNormal_surjective
 #print axioms Pcf.SchemeDivisorPoint.mapFiniteDominantNormal_finite_fiber
-#print axioms Pcf.divDynOfFiniteDominantNormal
-#print axioms Pcf.divDynOfFiniteDominantNormalOfExistsFormallyEtale
-#print axioms Pcf.divDynOfFiniteDominantNormalNoetherian
-#print axioms Pcf.divDynOfFiniteDominantNormalCharZero
-#print axioms Pcf.divDynOfFiniteDominantNormal_iterate_step_val
-#print axioms Pcf.divDynOfFiniteDominantNormal_iterRam
-#print axioms Pcf.DivisorDynamics.ext_of_step_ram
-#print axioms Pcf.divDynOfFiniteDominantNormal_pow_eq_iter
-#print axioms Pcf.divDynOfFiniteDominantNormalCharZero_pow_eq_iter
-#print axioms Pcf.divDynOfFiniteNormalization
-#print axioms Pcf.divDynOfFiniteNormalization_iterRam
-#print axioms Pcf.schemeNormalizationUnnormDynOfFiniteType
-#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormal
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormalOfExistsFormallyEtale
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormalNoetherian
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormalCharZero
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormal_iterate_step_val
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx
+#print axioms Pcf.DivisorDynamics.ext_of_step_ramificationIdx
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate
+#print axioms Pcf.divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate
+#print axioms Pcf.divisorDynamicsOfFiniteNormalization
+#print axioms Pcf.divisorDynamicsOfFiniteNormalization_iterateRamificationIdx
+#print axioms Pcf.schemeNormalizationUnnormalizedDynamicsOfFiniteType
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient
 #print axioms Pcf.isDedekindDomain_of_formallyUnramified_local
 #print axioms Pcf.formallyUnramified_normalization_of_local
 #print axioms Pcf.ramificationIdx_normalization_eq_one_of_local
@@ -1157,11 +1157,11 @@ hypotheses. -/
 #print axioms
   Pcf.not_formallyUnramified_of_one_lt_ramificationIdx_localized_birational
 #print axioms Pcf.ramificationIdx_eq_one_of_local_birational_square
-#print axioms Pcf.schemeStalkBirationalAt_of_isIso_generic_stalkMap
-#print axioms Pcf.not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRam
+#print axioms Pcf.isStalkBirationalAt_of_isIso_generic_stalkMap
+#print axioms Pcf.not_formallyUnramified_stalkMap_of_one_lt_schemeDivisorRamificationIdx
 #print axioms Pcf.normalization_square_pow
-#print axioms Pcf.schemeDivisorRam_gt_one_mem_crit0_of_finite_birational
-#print axioms Pcf.schemeNormalizationUnnormDynOfFiniteBirational
+#print axioms Pcf.mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational
+#print axioms Pcf.schemeNormalizationUnnormalizedDynamicsOfFiniteBirational
 #print axioms Pcf.schemeGlobalNormalization_isIntegral
 #print axioms Pcf.schemeGlobalNormalizationMap_isIntegralHom
 #print axioms Pcf.schemeGlobalNormalizationMap_isDominant
@@ -1184,7 +1184,7 @@ hypotheses. -/
 #print axioms Pcf.schemeNormalizationComparisonIso
 #print axioms Pcf.schemeNormalizationComparison_isIso
 #print axioms Pcf.schemeGenericInclusion_preimage_eq_top
-#print axioms Pcf.schemeGenericInclusion_sectionsIso
+#print axioms Pcf.schemeGenericInclusionSectionsIso
 #print axioms Pcf.schemeGlobalNormalization_preimage_integrallyClosed
 #print axioms Pcf.schemeGlobalNormalization_stalk_integrallyClosed
 #print axioms Pcf.isNormalScheme_of_stalk_integrallyClosed
@@ -1193,24 +1193,24 @@ hypotheses. -/
 #print axioms Pcf.finite_schemeGenericIntegralClosure
 #print axioms Pcf.schemeGlobalNormalizationMap_isFinite_of_affineFiniteType
 #print axioms Pcf.schemeGlobalNormalizationMap_isFinite
-#print axioms Pcf.schemeGlobalNormalizationUnnormDyn
-#print axioms Pcf.schemeGlobalNormalizationUnnormDynOfFiniteType
-#print axioms Pcf.SchemeNormalizationPcfSetupChart.key1
-#print axioms Pcf.SchemeNormalizationPcfSetupChart.res_pcf1
-#print axioms Pcf.SchemeNormalizationPcfSetupChart.norm_pcf
+#print axioms Pcf.schemeGlobalNormalizationUnnormalizedDynamics
+#print axioms Pcf.schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType
+#print axioms Pcf.SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate
+#print axioms Pcf.SchemeNormalizationPCFSetupChart.restriction_isNonEtaleBranchPCF
+#print axioms Pcf.SchemeNormalizationPCFSetupChart.normalized_isPCF
 #print axioms
-  Pcf.InvariantDivisorSchemeNormalizationPcfSetup.toSchemeNormalizationPcfSetupChart
-#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.key1
-#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.res_pcf1
-#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf
-#print axioms Pcf.InvariantDivisorSchemeNormalizationPcfSetup.norm_pcf_of_iter
-#print axioms Pcf.BoundingChart.affineCrit1_restriction_eq_empty
-#print axioms Pcf.BoundingChart.not_mem_affineCrit1_restriction
-#print axioms Pcf.PcfSetupChart.key1
-#print axioms Pcf.PcfSetupChart.toNonEtalePCFSetup
-#print axioms Pcf.PcfSetupChart.res_pcf1
-#print axioms Pcf.PcfSetupChart.res_pcf
-#print axioms Pcf.PcfSetupChart.res_pcf1_of_iter
+  Pcf.InvariantDivisorSchemeNormalizationPCFSetup.toSchemeNormalizationPCFSetupChart
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPCFSetup.notMem_nonEtaleBranch_iterate
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPCFSetup.restriction_isNonEtaleBranchPCF
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPCFSetup.normalized_isPCF
+#print axioms Pcf.InvariantDivisorSchemeNormalizationPCFSetup.normalized_isPCF_of_iterate
+#print axioms Pcf.BoundingChart.affineNonEtaleLocus_restriction_eq_empty
+#print axioms Pcf.BoundingChart.notMem_affineNonEtaleLocus_restriction
+#print axioms Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate
+#print axioms Pcf.PCFSetupChart.toNonEtalePCFSetup
+#print axioms Pcf.PCFSetupChart.restriction_isNonEtaleBranchPCF
+#print axioms Pcf.PCFSetupChart.restriction_isPCF
+#print axioms Pcf.PCFSetupChart.restriction_isNonEtaleBranchPCF_of_iterate
 
 /-! ## §`sec:examples`: Examples `ex:squaring` and `ex:squaring-P2`, and the non-vacuity witness -/
 
@@ -1368,10 +1368,10 @@ than a definitional identification of the two carriers. -/
 #print axioms Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF
 #print axioms Pcf.NormalizationPCFSetup.normalized_isPCF
 #print axioms Pcf.NormalizationPCFSetup.normalized_isPCF_of_iterate
-#print axioms Pcf.NormalizationPcfSetupChart.key1
-#print axioms Pcf.NormalizationPcfSetupChart.toNormalizationPCFSetup
-#print axioms Pcf.NormalizationPcfSetupChart.norm_pcf
-#print axioms Pcf.NormalizationPcfSetupChart.norm_pcf_of_iter
+#print axioms Pcf.NormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate
+#print axioms Pcf.NormalizationPCFSetupChart.toNormalizationPCFSetup
+#print axioms Pcf.NormalizationPCFSetupChart.normalized_isPCF
+#print axioms Pcf.NormalizationPCFSetupChart.normalized_isPCF_of_iterate
 
 /-! ## Canonical normalization and ramified-cover descent
 
@@ -1380,24 +1380,24 @@ identified with the image of the upstairs postcritical set.  Cover descent deriv
 branch identity from actual stalk ramification in the commuting square. -/
 
 #print axioms Pcf.NormalizationUnnormalizedDynamics.branch_eq_normalization_image
-#print axioms Pcf.NormalizationUnnormalizedDynamics.pcSet_eq_normalization_image
-#print axioms Pcf.NormalizationUnnormalizedDynamics.pcf_iff_norm_pcf
-#print axioms Pcf.SchemeNormalizationUnnormDyn.pcf_iff_norm_pcf
+#print axioms Pcf.NormalizationUnnormalizedDynamics.postcriticalSet_eq_normalization_image
+#print axioms Pcf.NormalizationUnnormalizedDynamics.isPCF_iff_normalized_isPCF
+#print axioms Pcf.SchemeNormalizationUnnormalizedDynamics.isPCF_iff_normalized_isPCF
 #print axioms Pcf.schemeNormalizedBranch_eq_normalization_image
 #print axioms Pcf.schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch
 #print axioms Pcf.mem_schemeNormalizedBranch_iff_nonreduced_normalizedFiber
-#print axioms Pcf.schemeNormalizedPcSet_eq_normalization_image
-#print axioms Pcf.schemeNormalizedPCF_iff_normalization
-#print axioms Pcf.DivisorDynamics.pcSet_subset_ramifiedCoverBound
-#print axioms Pcf.DivisorDynamics.pcf_of_ramified_branch_union
+#print axioms Pcf.schemeNormalizedPostcriticalSet_eq_normalization_image
+#print axioms Pcf.isNormalizedPCF_iff_normalization
+#print axioms Pcf.DivisorDynamics.postcriticalSet_subset_ramifiedCoverBound
+#print axioms Pcf.DivisorDynamics.isPCF_of_ramified_branch_union
 #print axioms Pcf.DivisorDynamics.RamifiedCover.branch_union
-#print axioms Pcf.DivisorDynamics.RamifiedCover.pcf
+#print axioms Pcf.DivisorDynamics.RamifiedCover.isPCF
 #print axioms Pcf.schemeRamifiedCover
-#print axioms Pcf.scheme_pcf_of_ramified_cover
+#print axioms Pcf.scheme_isPCF_of_ramified_cover
 #print axioms Pcf.formallyEtale_stalkMap_genericPoint_of_cover_charZero
-#print axioms Pcf.schemeDivisorCrit1_finite_of_cover_charZero
+#print axioms Pcf.schemeDivisorNonEtaleLocus_finite_of_cover_charZero
 #print axioms Pcf.schemeRamifiedCoverCharZero
-#print axioms Pcf.scheme_pcf_of_ramified_cover_charZero
+#print axioms Pcf.scheme_isPCF_of_ramified_cover_charZero
 #print axioms Pcf.schemeGenericMorphism_comp
 #print axioms Pcf.schemeGenericMorphism_comp_morphism
 #print axioms Pcf.schemeGlobalNormalizationMorphism
@@ -1415,18 +1415,18 @@ branch identity from actual stalk ramification in the commuting square. -/
 #print axioms Pcf.schemeGlobalNormalizationDivisorMap_finite_fiber
 #print axioms Pcf.schemeGlobalNormalizationRamifiedCover
 #print axioms Pcf.schemeGlobalNormalizationRamifiedCover_map_val
-#print axioms Pcf.schemeGlobalNormalizationRamifiedCover_ram
-#print axioms Pcf.schemeNormalizedPCF_of_ramified_cover
+#print axioms Pcf.schemeGlobalNormalizationRamifiedCover_ramificationIdx
+#print axioms Pcf.isNormalizedPCF_of_ramified_cover
 #print axioms Pcf.schemeGenericMorphism_id
 #print axioms Pcf.schemeGlobalNormalizationMorphism_id
 #print axioms Pcf.schemeGlobalNormalizationLift_id
 #print axioms Pcf.schemeGlobalNormalizationLift_comp_lift
 #print axioms Pcf.schemeGlobalNormalizationMorphism_pow
 #print axioms Pcf.schemeGlobalNormalizationLift_pow
-#print axioms Pcf.schemeGlobalNormalizationUnnormDyn_norm_eq
-#print axioms Pcf.schemeGlobalNormalizationUnnormDyn_norm_pow
-#print axioms Pcf.schemeNormalizedPcSet_pow
-#print axioms Pcf.schemeNormalizedPCF_pow_iff
+#print axioms Pcf.schemeGlobalNormalizationUnnormalizedDynamics_normalized_eq
+#print axioms Pcf.schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow
+#print axioms Pcf.schemeNormalizedPostcriticalSet_pow
+#print axioms Pcf.isNormalizedPCF_pow_iff
 
 /-! ## Actual invariant-divisor geometry
 
@@ -1474,7 +1474,7 @@ divisor. -/
 #print axioms Pcf.isRegularLocalRing_of_principal_quotient_of_dim_one
 #print axioms Pcf.two_le_height_of_height_one_lt
 #print axioms Pcf.height_eq_two_of_divisorFlag_finiteType
-#print axioms Pcf.Scheme.IdealSheafData.quotientPoint_height
+#print axioms AlgebraicGeometry.Scheme.IdealSheafData.quotientPoint_height
 #print axioms Pcf.SchemeDivisorPoint.closureDivisor_coheight_of_mem_affine_finiteType
 #print axioms Pcf.SchemeDivisorPoint.closureDivisor_coheight_of_finiteType
 #print axioms Pcf.pointClosureSubscheme_irreducible
@@ -1483,7 +1483,7 @@ divisor. -/
 #print axioms Pcf.pointClosureSubscheme_locallyNoetherian
 #print axioms Pcf.pointClosureSubscheme_noetherian
 #print axioms Pcf.pointClosureSubscheme_genericPoint
-#print axioms Pcf.SchemeDivisorPoint.not_mem_closure_of_ne
+#print axioms Pcf.SchemeDivisorPoint.notMem_closure_of_ne
 #print axioms Pcf.SchemeDivisorPoint.two_le_coheight_closureDivisor
 #print axioms Pcf.schemeDivisorPointOfAffinePrime
 #print axioms Pcf.schemeDivisorPointOfAffinePrime_injective
@@ -1496,7 +1496,7 @@ divisor. -/
 #print axioms Pcf.invariantDivisorSing_regular
 #print axioms Pcf.invariantDivisorSing_finite_of_isClosed
 #print axioms Pcf.schemeStalkAlgebraOfField
-#print axioms Pcf.schemeStalkCharZeroOfField
+#print axioms Pcf.charZero_stalk_of_field
 #print axioms Pcf.schemeAffineRationalAlgebraOfField
 #print axioms Pcf.SchemeDivisorPoint.invariantClosureMap_dominant
 #print axioms Pcf.invariantDivisorNormalization
@@ -1504,51 +1504,51 @@ divisor. -/
 #print axioms Pcf.invariantDivisorNormalization_iterate_step_val
 #print axioms Pcf.SchemeDivisorPoint.invariantClosureIterate_source_mem
 #print axioms Pcf.ramificationIdx_eq_of_localization_square
-#print axioms Pcf.schemeDivisorRam_eq_heightOneRam
+#print axioms Pcf.schemeDivisorRamificationIdx_eq_heightOneRamificationIdx
 #print axioms Pcf.localDivisorFiber_isReduced_iff_ramificationIdx_eq_one
 #print axioms Pcf.divisorFiber_isReduced_iff_forall_ramificationIdx_eq_one
 #print axioms Pcf.schemeFiberRestrictIso
 #print axioms Pcf.schemeFiberIsoOfArrowIso
-#print axioms Pcf.schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRam_eq_one
+#print axioms Pcf.schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one
 #print axioms Pcf.schemeReducedFiberBranch
 #print axioms Pcf.mem_schemeReducedFiberBranch_iff
-#print axioms Pcf.schemeReducedFiberBranch_eq_divDyn_branch
+#print axioms Pcf.schemeReducedFiberBranch_eq_divisorDynamics_branch
 #print axioms Pcf.schemeDivisorPointOfAffinePrime_mem_branch
-#print axioms Pcf.not_mem_finiteAffineOtherBranchLocus_of_meets
-#print axioms Pcf.invariantDivisorStep0LocalDataOfRegular
+#print axioms Pcf.notMem_finiteAffineOtherBranchLocus_of_meets
+#print axioms Pcf.invariantDivisorCorrectionLocalDataOfRegular
 #print axioms Pcf.invariantDivisorSetupOfFiniteRegularityCorrection
 #print axioms Pcf.invariantDivisorSetupOfClosedSingularLoci
 #print axioms
-  Pcf.invariantDivisorNormalization_norm_pcf_of_finiteRegularityCorrection
-#print axioms Pcf.invariantDivisorNormalization_norm_pcf_of_closedSingularLoci
+  Pcf.invariantDivisorNormalization_normalized_isPCF_of_finiteRegularityCorrection
+#print axioms Pcf.invariantDivisorNormalization_normalized_isPCF_of_closedSingularLoci
 #print axioms Pcf.exists_principalOpen_map_eq_span_of_isPrincipal_atPrime
 #print axioms Pcf.finite_schemeDivisorPoint_stalkSingularLocus_of_perfectField
 #print axioms Pcf.mem_basicOpen_iff_notMem_primeIdealOf
 #print axioms Pcf.exists_open_invariantDivisor_regularityCorrection
 #print axioms Pcf.invariantDivisorSing_finite_of_perfectField
 #print axioms Pcf.invariantDivisorSetupOfFiniteType
-#print axioms Pcf.invariantDivisorNormalization_norm_pcf_of_finiteType
+#print axioms Pcf.invariantDivisorNormalization_normalized_isPCF_of_finiteType
 
 /-! ## Scheme-level PCF all the way down -/
 
-#print axioms Pcf.SchemeNormalizedPCFOfFiniteType
-#print axioms Pcf.schemeNormalizedPCFOfFiniteType_iff_lift
-#print axioms Pcf.schemeNormalizedPCFOfFiniteType_pow_iff
-#print axioms Pcf.schemeNormalizedPCFOfFiniteType_of_cover
+#print axioms Pcf.IsNormalizedPCFOfFiniteType
+#print axioms Pcf.isNormalizedPCFOfFiniteType_iff_lift
+#print axioms Pcf.isNormalizedPCFOfFiniteType_pow_iff
+#print axioms Pcf.isNormalizedPCFOfFiniteType_of_cover
 #print axioms Pcf.pointClosureSubschemeMap_comm
 #print axioms Pcf.schemeEnd_pow_comm
-#print axioms Pcf.InvariantDivisorCoveringInputs
+#print axioms Pcf.InvariantDivisorCoveringHypotheses
 #print axioms Pcf.schemeAffineAlgebraOfField
 #print axioms Pcf.schemeAffineAlgebraOfField_finiteType
-#print axioms Pcf.schemeNormalizedPCFOfFiniteType_iff
-#print axioms Pcf.invariantDivisor_schemeNormalizedPCFOfFiniteType
-#print axioms Pcf.periodicDivisor_schemeNormalizedPCFOfFiniteType
+#print axioms Pcf.isNormalizedPCFOfFiniteType_iff
+#print axioms Pcf.invariantDivisor_isNormalizedPCFOfFiniteType
+#print axioms Pcf.periodicDivisor_isNormalizedPCFOfFiniteType
 #print axioms Pcf.schemeDivisorIterateOfFiniteType
 #print axioms Pcf.schemeDivisorIterateOfFiniteType_val
 #print axioms Pcf.schemeDivisorIterateOfFiniteType_periodic
 #print axioms Pcf.pcfAllTheWayDown_scheme
 #print axioms Pcf.SchemePCFAllTheWayDownAtDepth
-#print axioms Pcf.SchemePcfCoveringAtDepth
+#print axioms Pcf.SchemePCFCoveringAtDepth
 #print axioms Pcf.schemePCFAllTheWayDownAtDepth_of_cover
 #print axioms Pcf.schemePCFAllTheWayDown_of_cover
 #print axioms Pcf.scheme_orderKrullDim_eq_topologicalKrullDim
@@ -1558,20 +1558,20 @@ divisor. -/
 #print axioms Pcf.SchemeDivisorFlag.length_le_topologicalKrullDim
 #print axioms Pcf.SchemeDivisorFlag.length_le_of_topologicalKrullDim_le
 #print axioms Pcf.SchemeDivisorFlag.isEmpty_succ_of_topologicalKrullDim_le
-#print axioms Pcf.SchemePcfDescentStep
-#print axioms Pcf.SchemePcfDescentBranch
-#print axioms Pcf.SchemePcfDescentBranch.toDivisorFlag
-#print axioms Pcf.SchemePcfDescentBranch.length_le_of_topologicalKrullDim_le
-#print axioms Pcf.SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
+#print axioms Pcf.SchemePCFDescentStep
+#print axioms Pcf.SchemePCFDescentBranch
+#print axioms Pcf.SchemePCFDescentBranch.toDivisorFlag
+#print axioms Pcf.SchemePCFDescentBranch.length_le_of_topologicalKrullDim_le
+#print axioms Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le
 #print axioms Pcf.schemePCFAllTheWayDownAtDepth_of_succ
 #print axioms Pcf.schemePCFAllTheWayDownAtDepth_mono
 #print axioms Pcf.schemePCFAllTheWayDownAtDepth_succ_of_isEmpty_branch
 #print axioms
-  Pcf.SchemePcfDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
+  Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
 #print axioms Pcf.schemePCFAllTheWayDown_of_cover_to_dimension
-#print axioms Pcf.PcfAllTheWayDownLocalTheorems
+#print axioms Pcf.PCFAllTheWayDownLocalTheorems
 #print axioms Pcf.SchemePCFAllTheWayDown
-#print axioms Pcf.schemePcfCoveringAtDepthOfLocalTheorems
+#print axioms Pcf.schemePCFCoveringAtDepthOfLocalTheorems
 #print axioms Pcf.pcfAllTheWayDown_charZero
 
 /-! ## Purity and Abhyankar run (2026-10-16)

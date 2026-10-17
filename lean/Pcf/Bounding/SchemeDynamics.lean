@@ -17,7 +17,7 @@ on the stalk algebra (which need not be a finite module).
 
 Finite dominance over a normal locally Noetherian integral target proves
 surjectivity and finiteness of the divisor-map fibers. For self-maps,
-`divDynOfFiniteDominantNormal` uses finiteness of the actual critical divisor
+`divisorDynamicsOfFiniteDominantNormal` uses finiteness of the actual critical divisor
 locus. The characteristic-zero constructor derives that finiteness from the
 finite dominant geometry and Noetherianity: the generic stalk extension is
 finite and separable, hence formally étale. None of these inputs asserts PCF
@@ -26,7 +26,7 @@ or a bounding conclusion.
 Ramification indices multiply under composition because the intermediate
 codimension-one stalk is a DVR and the upper stalk extension is torsion free.
 Consequently `DivisorDynamics.iterateRamificationIdx` agrees with the ramification index of the actual
-scheme iterate. The comparison with affine-coordinate `heightOneRam` remains
+scheme iterate. The comparison with affine-coordinate `heightOneRamificationIdx` remains
 separate.
 -/
 
@@ -61,7 +61,7 @@ theorem ramificationIdx_pos_of_quasiFinite
 
 /-- The codimension-one ramification index of the actual stalk homomorphism.
 Both the base stalk and its action on the source stalk are determined by `f`. -/
-noncomputable def schemeDivisorRam {X Y : Scheme.{u}} (f : X ⟶ Y)
+noncomputable def schemeDivisorRamificationIdx {X Y : Scheme.{u}} (f : X ⟶ Y)
     (x : SchemeDivisorPoint X) : ℕ :=
   letI := (f.stalkMap x.1).hom.toAlgebra
   (IsLocalRing.maximalIdeal (X.presheaf.stalk x.1)).ramificationIdx
@@ -118,13 +118,13 @@ theorem stalkMap_injective_of_dominant_integral
 set_option backward.isDefEq.respectTransparency false in
 /-- Ramification indices of actual stalk maps multiply under composition.
 The upper stalk extension is torsion free over the intermediate DVR and hence flat. -/
-theorem schemeDivisorRam_comp
+theorem schemeDivisorRamificationIdx_comp
     {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
     [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
     (x : SchemeDivisorPoint X) :
-    schemeDivisorRam (f ≫ g) x =
-      schemeDivisorRam g (x.mapFiniteDominantNormal f) * schemeDivisorRam f x := by
+    schemeDivisorRamificationIdx (f ≫ g) x =
+      schemeDivisorRamificationIdx g (x.mapFiniteDominantNormal f) * schemeDivisorRamificationIdx f x := by
   let R := Z.presheaf.stalk (g (f x.1))
   let S := Y.presheaf.stalk (f x.1)
   let T := X.presheaf.stalk x.1
@@ -147,19 +147,19 @@ theorem schemeDivisorRam_comp
     (IsLocalRing.maximalIdeal T)
 
 /-- The actual stalk ramification index is positive for a quasi-finite morphism. -/
-theorem schemeDivisorRam_pos {X Y : Scheme.{u}} (f : X ⟶ Y)
+theorem schemeDivisorRamificationIdx_pos {X Y : Scheme.{u}} (f : X ⟶ Y)
     [LocallyQuasiFinite f] (x : SchemeDivisorPoint X) :
-    0 < schemeDivisorRam f x := by
+    0 < schemeDivisorRamificationIdx f x := by
   letI := (f.stalkMap x.1).hom.toAlgebra
   letI : Algebra.QuasiFinite (Y.presheaf.stalk (f x.1)) (X.presheaf.stalk x.1) :=
     f.quasiFiniteAt x.1
   exact ramificationIdx_pos_of_quasiFinite _
 
 /-- Formal étaleness of the actual stalk implies ramification index one. -/
-theorem schemeDivisorRam_eq_one_of_formallyEtale
+theorem schemeDivisorRamificationIdx_eq_one_of_formallyEtale
     {X Y : Scheme.{u}} (f : X ⟶ Y) [LocallyOfFiniteType f]
     (x : SchemeDivisorPoint X) (hx : (f.stalkMap x.1).hom.FormallyEtale) :
-    schemeDivisorRam f x = 1 := by
+    schemeDivisorRamificationIdx f x = 1 := by
   letI := (f.stalkMap x.1).hom.toAlgebra
   letI : Algebra.EssFiniteType (Y.presheaf.stalk (f x.1)) (X.presheaf.stalk x.1) :=
     LocallyOfFiniteType.stalkMap f x.1
@@ -167,12 +167,12 @@ theorem schemeDivisorRam_eq_one_of_formallyEtale
   exact Ideal.ramificationIdx_eq_one _ _
 
 /-- A ramified divisor belongs to the actual non-formally-étale stalk locus. -/
-theorem schemeDivisorRam_gt_one_mem_crit1
+theorem mem_schemeDivisorNonEtaleLocus_of_one_lt_ramificationIdx
     {X Y : Scheme.{u}} (f : X ⟶ Y) [LocallyOfFiniteType f]
-    (x : SchemeDivisorPoint X) (hx : 1 < schemeDivisorRam f x) :
-    x ∈ schemeDivisorCrit1 f := by
+    (x : SchemeDivisorPoint X) (hx : 1 < schemeDivisorRamificationIdx f x) :
+    x ∈ schemeDivisorNonEtaleLocus f := by
   intro hetale
-  have h := schemeDivisorRam_eq_one_of_formallyEtale f x hetale
+  have h := schemeDivisorRamificationIdx_eq_one_of_formallyEtale f x hetale
   omega
 
 /-- Finite dominant morphisms to normal locally Noetherian integral schemes
@@ -190,8 +190,8 @@ theorem coheight_apply_eq_of_finite_dominant_normal
   letI : Nonempty (U : Y.Opens) := ⟨⟨f x, hxW⟩⟩
   letI : Nonempty (V : X.Opens) := ⟨⟨x, hxV⟩⟩
   letI : Algebra Γ(Y, U) Γ(X, V) := (f.app U).hom.toAlgebra
-  letI : Module.Finite Γ(Y, U) Γ(X, V) := finitePreimageModuleFinite f U
-  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := finitePreimageFaithfulSMul f U
+  letI : Module.Finite Γ(Y, U) Γ(X, V) := moduleFinite_finitePreimageAffine f U
+  letI : FaithfulSMul Γ(Y, U) Γ(X, V) := faithfulSMul_finitePreimageAffine f U
   letI : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian U
   letI : IsNoetherianRing Γ(X, V) := IsNoetherianRing.of_finite Γ(Y, U) _
   letI : IsIntegrallyClosed Γ(Y, U) := IsNormalScheme.component_integrallyClosed U
@@ -242,80 +242,80 @@ theorem SchemeDivisorPoint.mapFiniteDominantNormal_finite_fiber
 /-- The actual ambient dynamics, assuming only finiteness of the actual
 codimension-one non-étale locus in addition to the finite normal geometry.
 This assumption concerns a single morphism and contains no orbit condition. -/
-noncomputable def divDynOfFiniteDominantNormal
+noncomputable def divisorDynamicsOfFiniteDominantNormal
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) : DivisorDynamics (SchemeDivisorPoint X) where
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) : DivisorDynamics (SchemeDivisorPoint X) where
   step x := x.mapFiniteDominantNormal f
-  ramificationIdx := schemeDivisorRam f
-  ramificationIdx_pos := schemeDivisorRam_pos f
+  ramificationIdx := schemeDivisorRamificationIdx f
+  ramificationIdx_pos := schemeDivisorRamificationIdx_pos f
   step_surjective := SchemeDivisorPoint.mapFiniteDominantNormal_surjective f
   step_image_ramified_finite := by
     refine (hcrit.image (fun x ↦ x.mapFiniteDominantNormal f)).subset ?_
     rintro y ⟨x, hxy, hx⟩
-    exact ⟨x, schemeDivisorRam_gt_one_mem_crit1 f x hx, hxy⟩
+    exact ⟨x, mem_schemeDivisorNonEtaleLocus_of_one_lt_ramificationIdx f x hx, hxy⟩
 
 /-- Under a proper Noetherian critical locus, its finitely many divisorial
 components give the branch-finiteness input automatically. An étale stalk
 witnesses properness since the source is irreducible. -/
-noncomputable def divDynOfFiniteDominantNormalOfExistsFormallyEtale
+noncomputable def divisorDynamicsOfFiniteDominantNormalOfExistsFormallyEtale
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    [NoetherianSpace (schemeCrit1Locus f)]
+    [NoetherianSpace (schemeNonEtaleLocus f)]
     (hetale : ∃ x : X, (f.stalkMap x).hom.FormallyEtale) :
     DivisorDynamics (SchemeDivisorPoint X) :=
-  divDynOfFiniteDominantNormal f
-    (schemeDivisorCrit1_finite_of_isClosed_of_exists_formallyEtale f
-      (isClosed_schemeCrit1Locus f) hetale)
+  divisorDynamicsOfFiniteDominantNormal f
+    (schemeDivisorNonEtaleLocus_finite_of_isClosed_of_exists_formallyEtale f
+      (isClosed_schemeNonEtaleLocus f) hetale)
 
 /-- For a globally Noetherian scheme, the critical locus is automatically
 Noetherian; generic étaleness is the only extra input to the constructor. -/
-noncomputable def divDynOfFiniteDominantNormalNoetherian
+noncomputable def divisorDynamicsOfFiniteDominantNormalNoetherian
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     (hetale : ∃ x : X, (f.stalkMap x).hom.FormallyEtale) :
     DivisorDynamics (SchemeDivisorPoint X) :=
-  divDynOfFiniteDominantNormalOfExistsFormallyEtale f hetale
+  divisorDynamicsOfFiniteDominantNormalOfExistsFormallyEtale f hetale
 
 /-- In characteristic zero, a finite dominant endomorphism of a Noetherian
 normal integral scheme supplies its actual divisor dynamics with no separate
 generic-étaleness or branch-finiteness hypothesis. -/
-noncomputable def divDynOfFiniteDominantNormalCharZero
+noncomputable def divisorDynamicsOfFiniteDominantNormalCharZero
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))] :
     DivisorDynamics (SchemeDivisorPoint X) :=
-  divDynOfFiniteDominantNormalNoetherian f
+  divisorDynamicsOfFiniteDominantNormalNoetherian f
     ⟨genericPoint X,
       formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩
 
 @[simp]
-theorem divDynOfFiniteDominantNormal_step_val
+theorem divisorDynamicsOfFiniteDominantNormal_step_val
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) (x : SchemeDivisorPoint X) :
-    ((divDynOfFiniteDominantNormal f hcrit).step x).1 = f x.1 := rfl
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (x : SchemeDivisorPoint X) :
+    ((divisorDynamicsOfFiniteDominantNormal f hcrit).step x).1 = f x.1 := rfl
 
 @[simp]
-theorem divDynOfFiniteDominantNormal_ram
+theorem divisorDynamicsOfFiniteDominantNormal_ramificationIdx
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) (x : SchemeDivisorPoint X) :
-    (divDynOfFiniteDominantNormal f hcrit).ramificationIdx x = schemeDivisorRam f x := rfl
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (x : SchemeDivisorPoint X) :
+    (divisorDynamicsOfFiniteDominantNormal f hcrit).ramificationIdx x = schemeDivisorRamificationIdx f x := rfl
 
 /-- The abstract iterated step agrees with the actual scheme iterate on points. -/
-theorem divDynOfFiniteDominantNormal_iterate_step_val
+theorem divisorDynamicsOfFiniteDominantNormal_iterate_step_val
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
-    (((divDynOfFiniteDominantNormal f hcrit).step)^[m] x).1 =
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
+    (((divisorDynamicsOfFiniteDominantNormal f hcrit).step)^[m] x).1 =
       (CategoryTheory.End.of f ^ m).asHom.base x.1 :=
   schemeDivisorMap_iterate_val f (coheight_apply_eq_one f) m x
 
 /-- The stalk ramification index of the identity is one. -/
-@[simp] theorem schemeDivisorRam_id {X : Scheme.{u}} (x : SchemeDivisorPoint X) :
-    schemeDivisorRam (𝟙 X) x = 1 := by
-  apply schemeDivisorRam_eq_one_of_formallyEtale
+@[simp] theorem schemeDivisorRamificationIdx_id {X : Scheme.{u}} (x : SchemeDivisorPoint X) :
+    schemeDivisorRamificationIdx (𝟙 X) x = 1 := by
+  apply schemeDivisorRamificationIdx_eq_one_of_formallyEtale
   rw [Scheme.Hom.stalkMap_id]
   change (RingHom.id _).FormallyEtale
   rw [RingHom.FormallyEtale]
@@ -323,25 +323,25 @@ theorem divDynOfFiniteDominantNormal_iterate_step_val
 
 /-- The product of the one-step ramification indices is the ramification
 index of the actual scheme iterate. -/
-theorem divDynOfFiniteDominantNormal_iterRam
+theorem divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
-    (hcrit : (schemeDivisorCrit1 f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
-    (divDynOfFiniteDominantNormal f hcrit).iterateRamificationIdx m x =
-      schemeDivisorRam (CategoryTheory.End.of f ^ m).asHom x := by
+    (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (m : ℕ) (x : SchemeDivisorPoint X) :
+    (divisorDynamicsOfFiniteDominantNormal f hcrit).iterateRamificationIdx m x =
+      schemeDivisorRamificationIdx (CategoryTheory.End.of f ^ m).asHom x := by
   induction m generalizing x with
   | zero => simp
   | succ m ih =>
       rw [show m + 1 = 1 + m by omega, DivisorDynamics.iterateRamificationIdx_add,
         DivisorDynamics.iterateRamificationIdx_one, Function.iterate_one, ih, add_comm, pow_succ]
       exact (Nat.mul_comm _ _).trans
-        (schemeDivisorRam_comp f (CategoryTheory.End.of f ^ m).asHom x).symm
+        (schemeDivisorRamificationIdx_comp f (CategoryTheory.End.of f ^ m).asHom x).symm
 
 /-- A finite dominant map from an integral normal scheme to a Noetherian
 characteristic-zero integral scheme transfers the Noetherian and
 characteristic-zero hypotheses needed to construct the source's divisor
 dynamics.  This is the situation of a finite normalization morphism. -/
-noncomputable def divDynOfFiniteNormalization
+noncomputable def divisorDynamicsOfFiniteNormalization
     {A N : Scheme.{u}} (gN : N ⟶ N) (nu : N ⟶ A)
     [IsFinite gN] [IsDominant gN]
     [IsFinite nu] [IsDominant nu]
@@ -362,11 +362,11 @@ noncomputable def divDynOfFiniteNormalization
     charZero_of_injective_ringHom e.symm.injective
   letI : CharZero (N.presheaf.stalk (genericPoint N)) :=
     charZero_of_injective_ringHom (nu.stalkMap (genericPoint N)).hom.injective
-  exact divDynOfFiniteDominantNormalCharZero gN
+  exact divisorDynamicsOfFiniteDominantNormalCharZero gN
 
 /-- The normalization constructor retains the actual ramification indices of
 all scheme iterates. -/
-theorem divDynOfFiniteNormalization_iterRam
+theorem divisorDynamicsOfFiniteNormalization_iterateRamificationIdx
     {A N : Scheme.{u}} (gN : N ⟶ N) (nu : N ⟶ A)
     [IsFinite gN] [IsDominant gN]
     [IsFinite nu] [IsDominant nu]
@@ -374,12 +374,12 @@ theorem divDynOfFiniteNormalization_iterRam
     [NoetherianSpace A]
     [CharZero (A.presheaf.stalk (genericPoint A))]
     (m : ℕ) (Q : SchemeDivisorPoint N) :
-    (divDynOfFiniteNormalization gN nu).iterateRamificationIdx m Q =
-      schemeDivisorRam (CategoryTheory.End.of gN ^ m).asHom Q := by
-  unfold divDynOfFiniteNormalization divDynOfFiniteDominantNormalCharZero
-    divDynOfFiniteDominantNormalNoetherian
-    divDynOfFiniteDominantNormalOfExistsFormallyEtale
-  exact divDynOfFiniteDominantNormal_iterRam gN _ m Q
+    (divisorDynamicsOfFiniteNormalization gN nu).iterateRamificationIdx m Q =
+      schemeDivisorRamificationIdx (CategoryTheory.End.of gN ^ m).asHom Q := by
+  unfold divisorDynamicsOfFiniteNormalization divisorDynamicsOfFiniteDominantNormalCharZero
+    divisorDynamicsOfFiniteDominantNormalNoetherian
+    divisorDynamicsOfFiniteDominantNormalOfExistsFormallyEtale
+  exact divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx gN _ m Q
 
 /-- Construct the two-carrier normalization package from actual scheme morphisms.
 
@@ -392,7 +392,7 @@ The remaining `hU1` argument is exactly the comparison between ramification of
 the normalized iterate and formal unramifiedness of the unnormalized iterate.
 It is kept visible because neither a divisor-set map nor a commuting square
 identifies the relevant local rings or ramification indices. -/
-noncomputable def schemeNormalizationUnnormDynOfFiniteType
+noncomputable def schemeNormalizationUnnormalizedDynamicsOfFiniteType
     (k : Type*) [Field k]
     {A N : Scheme.{u}} (g : A ⟶ A) (gN : N ⟶ N) (nu : N ⟶ A)
     [IsFinite g] [IsDominant g] [LocallyOfFinitePresentation g]
@@ -405,16 +405,16 @@ noncomputable def schemeNormalizationUnnormDynOfFiniteType
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)]
     (hsquare : gN ≫ nu = nu ≫ g)
     (hU1 : ∀ m Q,
-      1 < (divDynOfFiniteNormalization gN nu).iterateRamificationIdx m Q →
+      1 < (divisorDynamicsOfFiniteNormalization gN nu).iterateRamificationIdx m Q →
         schemeDivisorMap nu (coheight_apply_eq_one_of_finiteType nu k) Q ∈
-          schemeDivisorCrit0 (CategoryTheory.End.of g ^ m).asHom) :
-    SchemeNormalizationUnnormDyn A (SchemeDivisorPoint N) := {
-    g := g
+          schemeDivisorNonUnramifiedLocus (CategoryTheory.End.of g ^ m).asHom) :
+    SchemeNormalizationUnnormalizedDynamics A (SchemeDivisorPoint N) := {
+    selfMap := g
     finite := inferInstance
     dominant := inferInstance
     finitePresentation := inferInstance
-    g_preserves_divisors := coheight_apply_eq_one_of_finiteType g k
-    norm := divDynOfFiniteNormalization gN nu
+    selfMap_preserves_divisors := coheight_apply_eq_one_of_finiteType g k
+    normalized := divisorDynamicsOfFiniteNormalization gN nu
     normalization := schemeDivisorMap nu (coheight_apply_eq_one_of_finiteType nu k)
     normalization_step := fun Q ↦ by
       exact schemeDivisorMap_comm_of_comm gN g nu
@@ -424,7 +424,7 @@ noncomputable def schemeNormalizationUnnormDynOfFiniteType
     normalization_finite_fiber := fun Q ↦
       schemeDivisorMap_finite_fiber nu
         (coheight_apply_eq_one_of_finiteType nu k) Q
-    crit_subset_crit0 := hU1
+    mem_nonUnramifiedLocus_of_one_lt_ramificationIdx := hU1
     integral := inferInstance
     noetherian := inferInstance
     charZero := inferInstance }
@@ -436,16 +436,16 @@ prime is the actual invariant divisor `A`, and its invariance is proved from `hA
 This removes the possibility of pairing the geometric Step-0 data for `f` with an
 unrelated abstract ambient `DivisorDynamics`.  The remaining inputs are the normalized
 restriction package, the finite exceptional sets, and the literal Step-0 data. -/
-noncomputable def InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient
+noncomputable def InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient
     {X : Scheme.{u}} (f : X ⟶ X)
     [IsFinite f] [IsDominant f] [IsIntegral X] [IsLocallyNoetherian X]
     [IsNormalScheme X] [NoetherianSpace X]
     [CharZero (X.presheaf.stalk (genericPoint X))]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
     {PN : Type*}
-    (res : SchemeNormalizationUnnormDyn
+    (res : SchemeNormalizationUnnormalizedDynamics
       (pointClosureIdealSheaf A.1).subscheme PN)
-    (res_g : res.g = A.invariantClosureMap f hA)
+    (res_g : res.selfMap = A.invariantClosureMap f hA)
     (sing : Set (SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme))
     (sing_finite : sing.Finite)
     (meets : SchemeDivisorPoint X →
@@ -453,37 +453,37 @@ noncomputable def InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient
     (meets_finite : ∀ E, E ≠ A → (meets E).Finite)
     (localData : ∀ (m : ℕ), 1 ≤ m →
       ∀ (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme), Q ∉ sing →
-      (∀ E ∈ (divDynOfFiniteDominantNormalCharZero f).iterate m |>.branch,
+      (∀ E ∈ (divisorDynamicsOfFiniteDominantNormalCharZero f).iterate m |>.branch,
         E ≠ A → Q ∉ meets E) →
       ∀ (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme),
         res.toNormalizationUnnormalizedDynamics.step^[m] Q' = Q →
-        InvariantDivisorStep0LocalData X f A m Q Q') :
-    InvariantDivisorSchemeNormalizationPcfSetup X f A hA
+        InvariantDivisorCorrectionLocalData X f A m Q Q') :
+    InvariantDivisorSchemeNormalizationPCFSetup X f A hA
       (SchemeDivisorPoint X) PN where
-  amb := divDynOfFiniteDominantNormalCharZero f
+  ambient := divisorDynamicsOfFiniteDominantNormalCharZero f
   fixedPrime := A
   fixed := Subtype.ext hA
-  res := res
-  res_g := res_g
-  sing := sing
-  sing_finite := sing_finite
+  restriction := res
+  restriction_selfMap := res_g
+  singularPrimes := sing
+  singularPrimes_finite := sing_finite
   meets := meets
   meets_finite := meets_finite
   localData := localData
 
 #print axioms SchemeDivisorPoint.stalk_isDiscreteValuationRing
 #print axioms stalkMap_injective_of_dominant_integral
-#print axioms schemeDivisorRam_comp
-#print axioms schemeDivisorRam_id
-#print axioms divDynOfFiniteDominantNormal_iterRam
-#print axioms divDynOfFiniteNormalization_iterRam
+#print axioms schemeDivisorRamificationIdx_comp
+#print axioms schemeDivisorRamificationIdx_id
+#print axioms divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx
+#print axioms divisorDynamicsOfFiniteNormalization_iterateRamificationIdx
 #print axioms coheight_apply_eq_of_finite_dominant_normal
 #print axioms SchemeDivisorPoint.mapFiniteDominantNormal_finite_fiber
-#print axioms divDynOfFiniteDominantNormalNoetherian
-#print axioms divDynOfFiniteDominantNormalCharZero
-#print axioms divDynOfFiniteDominantNormal_iterate_step_val
-#print axioms divDynOfFiniteNormalization
-#print axioms schemeNormalizationUnnormDynOfFiniteType
-#print axioms InvariantDivisorSchemeNormalizationPcfSetup.ofActualAmbient
+#print axioms divisorDynamicsOfFiniteDominantNormalNoetherian
+#print axioms divisorDynamicsOfFiniteDominantNormalCharZero
+#print axioms divisorDynamicsOfFiniteDominantNormal_iterate_step_val
+#print axioms divisorDynamicsOfFiniteNormalization
+#print axioms schemeNormalizationUnnormalizedDynamicsOfFiniteType
+#print axioms InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient
 
 end Pcf
