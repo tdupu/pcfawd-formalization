@@ -93,11 +93,14 @@ is recorded in the declaration's docstring.
   consequences used (`StrictRootCover.lean`); Stacks' decomposition of `B` over `A_f` is done on
   the integral model (`StrictNormalDecomposition.lean`, `StrictRootComponent.lean`); Stacks'
   final step (the exponent is a unit) is not needed, since every positive integer is invertible.
-  The six differences are listed in the docstring of `Pcf.Stacks.abhyankarLemma`.
+  (Since phase 3 these differences are recorded at the shared lemmas, see `Tame/Defs.lean`,
+  "Shared lemmas", and the module docstring of `Tame/Tag0EYGTame.lean`.)
 
 ### Phase 2 (2026-10-17): Stacks-form statements
 
-Additional theorems; nothing above was changed or re-proved. Run record:
+Additional theorems; at the time of phase 2 nothing above was changed or re-proved (phase 3,
+below, later changed the statement `Pcf.Stacks.AbhyankarLemma` and merged the two `0EYG`
+proofs). Run record:
 the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`FRAME-PHASE2.md`, `STATUS.md`).
 
 | Claim | Theorem | File | `#print axioms` |
@@ -133,7 +136,7 @@ The finiteness of `S` (first assertion of `0EYH`) is proved:
 | Claim | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
 | The normalization is finite, tame case (`0EYH`, first assertion, affine) | `Pcf.Stacks.finite_of_isIntegralClosure_away` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` | `[propext, Classical.choice, Quot.sound]` |
-| The same, every positive integer invertible (no tameness; does not use the tame proof) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit` | same | `[propext, Classical.choice, Quot.sound]` |
+| The same, every positive integer invertible (no tameness hypothesis) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit` | same | `[propext, Classical.choice, Quot.sound]` |
 | `0EYG`/`0EYH` affine, normalization not assumed finite | `Pcf.Stacks.abhyankarLemma`, `Pcf.Stacks.abhyankarLemma_tame` | same | `[propext, Classical.choice, Quot.sound]` |
 
 The previous statements are kept as `Pcf.Stacks.AbhyankarLemmaOfFinite` and
@@ -143,6 +146,16 @@ scheme layer applies them at local rings.  The Palomar statement `Pcf.Palomar.Ab
 still assumes the normalization finite (it is `AbhyankarLemmaOfFinite`); `Pcf.Palomar.abhyankarLemma_iff`
 now proves its equivalence with `Pcf.Stacks.AbhyankarLemma` using the finiteness theorem, and the
 headline statements are unchanged.
+
+The two `0EYG` proofs are now one: `Pcf.Stacks.abhyankarLemma_of_finite` supplies tameness from
+"every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`)
+and applies `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`; each of the 16 former
+characteristic-zero/tame lemma pairs has one proof (map in `Tame/Defs.lean`, "Shared lemmas"), and
+the six `Tame/` files that held the tame duplicates were deleted.  So the characteristic-zero
+results, including `finite_of_isIntegralClosure_away_of_natCast_isUnit` and the PCFAWD headline,
+now go through the tame proof; their statements are unchanged.  The former consistency check
+`Pcf.Stacks.abhyankarLemma_of_tame` (same statement and route as `abhyankarLemma_of_finite`) was
+removed.
 
 `Module.Finite R S` could not simply be dropped: pcf's `Algebra.IsEtaleAt` is formal étaleness of
 the local rings and does not give finite type.  For `R = ℚ[t]_{(t)}`, `a = t`, and `S` the integral

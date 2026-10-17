@@ -5,9 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Stacks.Abhyankar.StrictGenericPresentation
-public import Pcf.Stacks.Abhyankar.StrictHenselizationLocalize
-public import Pcf.Stacks.Abhyankar.StrictStandardConclusion
+public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 public import Pcf.Palomar.Statement
 
 /-!
@@ -19,13 +17,10 @@ for all `R S a`, and its Palomar-facing form `palomar_abhyankarLemma`.  The publ
 `Pcf.Stacks.abhyankarLemma`, which proves that finiteness (Stacks `0EYH`), is in
 `Pcf.Stacks.Abhyankar.FiniteNormalization`.
 
-* `henselianLocalRing_of_ringEquiv`: transport of henselianity along a ring equivalence;
-* `PointedEtaleNeighborhood.geometricPointAt p = κ(p)ˢᵉᵖ`, with `R → κ(p)ˢᵉᵖ` of kernel `p`;
-* `hasAbhyankarStandardCoverAt_of_mem_divisor`: the conclusion at a point `y ∈ V(a)`, by comparing
-  `LocalColimit R Ω` with `LocalColimit R_y Ω` (`localColimitAtPrimeRingEquiv`, Stacks `04GW`),
-  applying the strictly henselian case
-  `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian`, and descending with
-  `hasAbhyankarStandardCoverAt_of_strict`;
+* `hasAbhyankarStandardCoverAt_of_mem_divisor`: the conclusion at a point `y ∈ V(a)`.  Every
+  positive integer being a unit of `R`, `S` is tamely ramified in codimension one
+  (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`), so this is the tame case
+  `hasAbhyankarStandardCoverAt_of_mem_divisor_tame` (`Tame/Tag0EYGTame.lean`);
 * `abhyankarLemma_of_finite`, `palomar_abhyankarLemma`.
 -/
 
@@ -39,72 +34,11 @@ namespace Pcf.Stacks
 
 set_option linter.style.haveILetI false
 
-section Transport
-
-variable {B B' : Type u} [CommRing B] [CommRing B']
-
-/-- Henselianity is invariant under ring equivalence. -/
-theorem henselianLocalRing_of_ringEquiv [HenselianLocalRing B'] (e : B' ≃+* B) :
-    HenselianLocalRing B := by
-  let _ : Nontrivial B := e.symm.toEquiv.nontrivial
-  let _ : IsLocalRing B := IsLocalRing.of_surjective' e.toRingHom e.surjective
-  apply ((HenselianLocalRing.TFAE B).out 3 1).mp
-  intro K _ φ hφ f hf a₀ ha₀ hda₀
-  let q : B' →+* B := e.toRingHom
-  have hlifts : f ∈ Polynomial.lifts q := Polynomial.mem_lifts_of_surjective e.surjective f
-  obtain ⟨F, hF, -, hFmonic⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlifts hf
-  let ψ : B' →+* K := φ.comp q
-  have hψ : Function.Surjective ψ := hφ.comp e.surjective
-  have hroot : F.eval₂ ψ a₀ = 0 := by
-    rw [← Polynomial.eval₂_map, hF]
-    exact ha₀
-  have hderiv : F.derivative.eval₂ ψ a₀ ≠ 0 := by
-    rw [← Polynomial.eval₂_map, ← Polynomial.derivative_map, hF]
-    exact hda₀
-  have hhens := ((HenselianLocalRing.TFAE B').out 1 3).mp (inferInstance : HenselianLocalRing B')
-  obtain ⟨a, ha, hφa⟩ := hhens (K := K) ψ hψ F hFmonic a₀ hroot hderiv
-  refine ⟨q a, ?_, hφa⟩
-  change f.eval (q a) = 0
-  rw [← hF, Polynomial.eval_map, Polynomial.eval₂_at_apply, ha.eq_zero, map_zero]
-
-end Transport
-
-namespace PointedEtaleNeighborhood
-
-open Pcf.Stacks.PointedEtaleNeighborhood
-
-/-- The separably closed geometric point at a prime `p` of `R`: `Ω = κ(p)ˢᵉᵖ`, where `κ(p)` is
-the residue field of `R_p`. -/
-abbrev geometricPointAt {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] : Type u :=
-  SeparableClosure (ResidueField (Localization.AtPrime p))
-
-/-- The structure map `R → κ(p)ˢᵉᵖ`. -/
-@[instance_reducible]
-noncomputable def geometricPointAtAlgebra {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] :
-    Algebra R (geometricPointAt p) :=
-  ((algebraMap (ResidueField (Localization.AtPrime p)) (geometricPointAt p)).comp
-    ((residue (Localization.AtPrime p)).comp (algebraMap R (Localization.AtPrime p)))).toAlgebra
-
-theorem ker_geometricPointAtAlgebra {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] :
-    letI := geometricPointAtAlgebra p
-    RingHom.ker (algebraMap R (geometricPointAt p)) = p := by
-  letI := geometricPointAtAlgebra p
-  ext r
-  change (algebraMap (ResidueField (Localization.AtPrime p)) (geometricPointAt p))
-    (residue _ (algebraMap R (Localization.AtPrime p) r)) = 0 ↔ r ∈ p
-  rw [map_eq_zero, residue_eq_zero_iff,
-    IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime p) p]
-
-end PointedEtaleNeighborhood
-
-open PointedEtaleNeighborhood in
 /-- **Abhyankar's lemma at a point of the divisor (Stacks Tags `0EYG`, `0EYH`).**  The unpacked
-form of `abhyankarLemma_of_finite`: with `Ω = κ(y)ˢᵉᵖ`, the strict henselization
-`Rˢʰ = LocalColimit R Ω`
-is identified with that of `R_y` (`04GW`), which transports Noetherianity, strict henselianity and
-regularity of `Rˢʰ ⧸ (a)`; then `Rˢʰ ⊗_R S` is a finite product of standard root covers
-(`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian`), which descends to a pointed
-étale neighbourhood (`05N9`, `hasAbhyankarStandardCoverAt_of_strict`). -/
+form of `abhyankarLemma_of_finite`.  If every positive integer is a unit of `R`, then `S` is
+tamely ramified over `R` in codimension one
+(`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`), and the conclusion is the tame case
+`hasAbhyankarStandardCoverAt_of_mem_divisor_tame`. -/
 theorem hasAbhyankarStandardCoverAt_of_mem_divisor
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R)
     [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
@@ -113,67 +47,9 @@ theorem hasAbhyankarStandardCoverAt_of_mem_divisor
       Algebra.IsEtaleAt R w.asIdeal)
     [IsIntegralClosure S R (Localization.Away (algebraMap R S a))]
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal) :
-    HasAbhyankarStandardCoverAt R S a y := by
-  let p := y.asIdeal
-  let Rp := Localization.AtPrime p
-  let Ω := geometricPointAt p
-  letI : Algebra R Ω := geometricPointAtAlgebra p
-  have hΩ : RingHom.ker (algebraMap R Ω) = p := ker_geometricPointAtAlgebra p
-  letI : Algebra Rp Ω := atPrimeAlgebra p hΩ
-  haveI hRpΩ : IsScalarTower R Rp Ω := atPrimeAlgebra_isScalarTower p hΩ
-  haveI : IsScalarTower Rp (ResidueField Rp) Ω := by
-    refine IsScalarTower.of_algebraMap_eq' ?_
-    apply IsLocalization.ringHom_ext p.primeCompl
-    rw [← IsScalarTower.algebraMap_eq, RingHom.comp_assoc,
-      IsLocalRing.ResidueField.algebraMap_eq]
-    rfl
-  -- the strict henselizations of `R` at `Ω` and of `R_p`
-  let B := LocalColimit R Ω
-  let B' := LocalColimit Rp Ω
-  let φ : B ≃+* B' := localColimitAtPrimeRingEquiv p hΩ
-  have hφ : ∀ r : R, φ (algebraMap R B r) = algebraMap Rp B' (algebraMap R Rp r) :=
-    localColimitAtPrimeRingEquiv_algebraMap p hΩ
-  -- facts about `R_p`
-  have haRp : algebraMap R Rp a ∈ maximalIdeal Rp := by
-    rw [IsLocalization.AtPrime.to_map_mem_maximal_iff Rp p]
-    exact hy
-  haveI : IsRegularLocalRing (Rp ⧸ Ideal.span ({algebraMap R Rp a} : Set Rp)) := by
-    have := isRegularLocalRing_quotient_localization (Ideal.span ({a} : Set R)) p
-      ((Ideal.span_singleton_le_iff_mem p).mpr hy)
-    rwa [Ideal.map_span, Set.image_singleton] at this
-  -- transport the strict-local facts from `B'` to `B`
-  haveI : IsNoetherianRing B := isNoetherianRing_of_ringEquiv B' φ.symm
-  haveI : HenselianLocalRing B := henselianLocalRing_of_ringEquiv φ.symm
-  haveI : IsSepClosed (ResidueField B) :=
-    isSepClosed_of_ringEquiv (IsLocalRing.ResidueField.mapEquiv φ.symm)
-  let aB : B := algebraMap R B a
-  have hφa : φ aB = algebraMap Rp B' (algebraMap R Rp a) := hφ a
-  have haB : aB ∈ maximalIdeal B := by
-    have h' : algebraMap Rp B' (algebraMap R Rp a) ∈ maximalIdeal B' :=
-      map_le_maximalIdeal_localColimit (Ideal.span {algebraMap R Rp a})
-        (by rw [Ideal.span_le, Set.singleton_subset_iff]; exact haRp)
-        (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_singleton _)))
-    rw [← hφa, mem_maximalIdeal, mem_nonunits_iff, isUnit_map_iff] at h'
-    exact h'
-  have ha0B : aB ∈ nonZeroDivisors B := algebraMap_mem_nonZeroDivisors_localColimit ha
-  haveI : IsRegularLocalRing (B ⧸ Ideal.span ({aB} : Set B)) := by
-    haveI : IsRegularLocalRing (B' ⧸ Ideal.span
-        ({algebraMap Rp B' (algebraMap R Rp a)} : Set B')) :=
-      quotient_span_localColimit_isRegularLocalRing (Ω := Ω) (algebraMap R Rp a)
-    exact IsRegularLocalRing.of_ringEquiv (Ideal.quotientEquiv (Ideal.span ({aB} : Set B))
-      (Ideal.span ({algebraMap Rp B' (algebraMap R Rp a)} : Set B')) φ (by
-        rw [Ideal.map_span, Set.image_singleton]
-        exact congrArg (fun x ↦ Ideal.span {x}) hφa.symm)).symm
-  have hnatB : ∀ n : ℕ, n ≠ 0 → IsUnit (n : B) := fun n hn ↦ by
-    simpa only [map_natCast] using (hnat n hn).map (algebraMap R B)
-  -- the normalization after base change
-  haveI : Algebra.Etale B (Localization.Away (algebraMap B (B ⊗[R] S) aB)) :=
-    etale_localizationAway_baseChange (S := S) B a hetale
-  haveI : IsIntegralClosure (B ⊗[R] S) B (Localization.Away (algebraMap B (B ⊗[R] S) aB)) :=
-    localColimit_isIntegralClosure_localizationAway (Ω := Ω) (S := S) a
-  have hstrict : IsFiniteDisjointUnionOfStandardTameCovers B (B ⊗[R] S) aB :=
-    isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian aB haB ha0B hnatB
-  exact hasAbhyankarStandardCoverAt_of_strict a y hΩ ha hnat hstrict
+    HasAbhyankarStandardCoverAt R S a y :=
+  hasAbhyankarStandardCoverAt_of_mem_divisor_tame R S a ha hetale
+    (isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit R S hnat a) y hy
 
 /-- **Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG` and `0EYH`)**, unconditionally,
 in pcf's affine form `Pcf.Stacks.AbhyankarLemmaOfFinite` (normalization assumed finite).
@@ -193,28 +69,16 @@ Comparison with the tags (restrictions, all already part of the statement
   `R' ⊗_R S` a finite product of `R'[x]/(x^e - u a)` with `e` invertible (here even `u = 1`).
   Points outside `D` (the tag's trivial case) are not treated.
 
-Proof route: follows the proof of `0EYG` (reduction to the strict henselization at `κ(y)ˢᵉᵖ`,
+Proof route: every positive integer being invertible in `R`, `S` is tamely ramified over `R` in
+codimension one (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`: the ramification
+indices are units and the residue extensions are separable in characteristic zero), and the proof
+is that of the tame case, `Pcf.Stacks.abhyankarLemma_tame_of_finite` (`Tame/Tag0EYGTame.lean`), whose
+lemmas are shared by both theorems: reduction to the strict henselization at `κ(y)ˢᵉᵖ`,
 decomposition into normal domains, root cover, `0BRM`, `0EYE` with Zariski–Nagata purity, strict
-splitting, `09EV`, descent to an étale stage), with these differences:
-* the strict henselization of `R` is compared to that of `R_y` (`04GW`,
-  `localColimitAtPrimeRingEquiv`, by a cofinality argument rather than Stacks' proof);
-* the decomposition into normal domains is of the normalization `Rˢʰ ⊗[R] S`, not of `B` over
-  `A_f` (`localColimit_tensor_exists_normalDomain_decomposition`);
-* the root-cover exponent is any common multiple `E` of the ramification indices, not their
-  product, and `0BRM` is used in the divisibility form `e ∣ E` (`DVRAbhyankarDivisible.lean`);
-* strict henselianity of the root cover `A'` is replaced by the two consequences used
-  (`StrictRootCover.lean`);
-* the normalization step is carried out on integral models
-  (`strictRootCoverEquivOfFractionRingEquiv`) rather than over `A_f`, giving the `0EYH` form
-  directly;
-* Stacks' final step (the exponent `n` is a unit) is not needed, since every positive integer is
-  invertible in `R`.
-
-A second, independent proof in any characteristic, under the tags' hypothesis "tamely ramified in
-codimension 1", is `Pcf.Stacks.abhyankarLemma_tame_of_finite` (`Tame/Tag0EYGTame.lean`); this
-theorem is not derived from it.  The scheme-level statements of the tags are
-`Pcf.Stacks.SchemeLevel.tag0EYG` and `Pcf.Stacks.SchemeLevel.tag0EYH` (`Scheme/Tag0EYG.lean`,
-`Scheme/Tag0EYH.lean`). -/
+splitting, `09EV`, the exponent is a unit, descent to an étale stage.  The divergences from the
+Stacks proof are recorded there and at the shared lemmas.  The scheme-level statements of the
+tags are `Pcf.Stacks.SchemeLevel.tag0EYG` and `Pcf.Stacks.SchemeLevel.tag0EYH`
+(`Scheme/Tag0EYG.lean`, `Scheme/Tag0EYH.lean`). -/
 @[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
     of D, normalization assumed finite over R; pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \

@@ -53,6 +53,13 @@ ind-étale field extension of `ℚ(t)`, and every positive integer is invertible
 finite over `R`, and the conclusion fails (it would make `S` finite by faithfully flat descent along
 an étale neighbourhood of the closed point).  So the finiteness of `Y → X ∖ D` from Stacks `0EYG`
 is kept as the hypothesis `Module.Finite R[1/a] (R[1/a] ⊗_R S)`.
+
+The two hypotheses together are exactly "`Y = Spec S[1/a] → X ∖ D = Spec R[1/a]` is finite
+étale": given them, `S[1/a]` is étale over `R[1/a]` (`etale_away`: finite over the Noetherian
+`R[1/a]`, hence of finite presentation, and formally étale at every prime because `R → R[1/a]` is
+a localization); conversely, if `S[1/a]` is finite étale over `R[1/a]`, then `R[1/a] ⊗_R S` is
+finite and each `S_w`, `a ∉ w`, is a localization of `S[1/a]`, formally étale over `R[1/a]` and
+hence over `R`.
 -/
 
 @[expose] public section
@@ -462,8 +469,9 @@ theorem finite_of_isIntegralClosure_away [IsNoetherianRing R] {a : R}
 
 /-- **The normalization is finite, characteristic zero** (Stacks Tag `0EYH`, first assertion,
 affine form, every positive integer invertible in `R`; no tameness hypothesis is needed).  The
-local input is the characteristic-zero theorem `abhyankarLemma_of_finite`, so this does not use
-the tame proof. -/
+local input is the characteristic-zero theorem `abhyankarLemma_of_finite` (through
+`SchemeLevel.abhyankarLemmaTame_of_natCast_isUnit`), whose proof is the shared tame proof with
+tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`. -/
 @[stacks 0EYH "first assertion (the normalization is finite), affine form; every positive integer \
   invertible"]
 theorem finite_of_isIntegralClosure_away_of_natCast_isUnit [IsNoetherianRing R] {a : R}
@@ -497,10 +505,13 @@ Comparison with the tags (restrictions, all part of the statement `AbhyankarLemm
 
 The normalization `S` is not assumed finite over `R`: its finiteness (first assertion of `0EYH`) is
 `finite_of_isIntegralClosure_away`, and the theorem is then `abhyankarLemma_tame_of_finite`. -/
-@[stacks 0EYG "affine form; tamely ramified in codimension 1, any characteristic; normalization \
-    (0EYH) form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
-  stacks 0EYH "affine local-structure clause at points of D; tamely ramified in codimension 1, \
-    any characteristic; pieces R'[x]/(x^e - f), f = u_i a"]
+@[stacks 0EYG "affine form; Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and \
+    S etale at primes not containing a; tamely ramified in codimension 1, any characteristic; \
+    normalization (0EYH) form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
+  stacks 0EYH "affine local-structure clause at points of D, normalization proved finite; \
+    Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and S etale at primes not \
+    containing a; tamely ramified in codimension 1, any characteristic; pieces R'[x]/(x^e - f), \
+    f = u_i a"]
 theorem abhyankarLemma_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemmaTame R S a := by
   intro hR ha hreg hfin hetale hint htame y hy
@@ -518,10 +529,12 @@ at the points of `D`, as for `abhyankarLemma_tame`.
 The normalization `S` is not assumed finite over `R`: its finiteness is
 `finite_of_isIntegralClosure_away_of_natCast_isUnit`, and the theorem is then the
 characteristic-zero proof `abhyankarLemma_of_finite`. -/
-@[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
-    of D; pieces R'[x]/(x^e - f), f = u_i a",
-  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D; \
-    pieces R'[x]/(x^e - f), f = u_i a"]
+@[stacks 0EYG "affine; all positive integers invertible; Y -> X \\ D finite etale as: \
+    R[1/a] ⊗ S finite over R[1/a] and S etale at primes not containing a; normalization (0EYH) \
+    form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
+  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \
+    normalization proved finite; Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and \
+    S etale at primes not containing a; pieces R'[x]/(x^e - f), f = u_i a"]
 theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemma R S a := by
   intro hR ha hreg hfin hetale hint hnat y hy

@@ -23,8 +23,8 @@ Three forms:
 * `tag0EYG`: unconditional, discharging it by the tame affine theorem
   `Pcf.Stacks.abhyankarLemma_tame_of_finite` (any characteristic);
 * `tag0EYG_of_natCast_isUnit`: on a `ℚ`-scheme, discharging it by the
-  characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite`, independently of the tame
-  proof.
+  characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite` (whose proof is the tame proof
+  with tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`).
 
 ## Stacks proof step → Lean
 

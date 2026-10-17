@@ -6,22 +6,26 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Stacks.Abhyankar.Tame.Defs
-public import Pcf.Stacks.Abhyankar.Tame.GenericPresentation
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
-public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
-public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Abhyankar.StrictGenericPresentation
+public import Pcf.Stacks.Abhyankar.StrictHenselizationLocalize
+public import Pcf.Stacks.Abhyankar.StrictStandardConclusion
 
 /-!
 # Abhyankar's lemma for a regular divisor, tame case (Stacks Tags `0EYG`, `0EYH`)
 
-The second proof of Abhyankar's lemma for a regular divisor in pcf: the hypothesis of the tag
-("tamely ramified in codimension `1`", any characteristic) instead of the characteristic-zero
-hypothesis of `Pcf.Stacks.abhyankarLemma_of_finite`.  Main theorem:
-`Pcf.Stacks.abhyankarLemma_tame_of_finite : ∀ R S a, AbhyankarLemmaTameOfFinite R S a` (the
-normalization `S` assumed finite over `R`; the public `Pcf.Stacks.abhyankarLemma_tame`, which
-proves that finiteness as in Stacks `0EYH`, is in `Pcf.Stacks.Abhyankar.FiniteNormalization`),
-with the unpacked form
-`hasAbhyankarStandardCoverAt_of_mem_divisor_tame`.
+Abhyankar's lemma for a regular divisor under the hypothesis of the tag ("tamely ramified in
+codimension `1`", any characteristic).  Main theorem: `Pcf.Stacks.abhyankarLemma_tame_of_finite :
+∀ R S a, AbhyankarLemmaTameOfFinite R S a` (the normalization `S` assumed finite over `R`; the
+public `Pcf.Stacks.abhyankarLemma_tame`, which proves that finiteness as in Stacks `0EYH`, is in
+`Pcf.Stacks.Abhyankar.FiniteNormalization`), with the unpacked form
+`hasAbhyankarStandardCoverAt_of_mem_divisor_tame`.  The characteristic-zero theorem
+`Pcf.Stacks.abhyankarLemma_of_finite` (`Tag0EYG.lean`) is proved through the same unpacked form,
+with tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`; all
+intermediate lemmas are shared by the two theorems.
+
+Also here: `henselianLocalRing_of_ringEquiv` (transport of henselianity along a ring equivalence)
+and the geometric point `PointedEtaleNeighborhood.geometricPointAt p = κ(p)ˢᵉᵖ`.
 
 ## Stacks correspondence (proof of `0EYG`, Lemma 58.31.5)
 
@@ -62,6 +66,64 @@ namespace Pcf.Stacks
 
 set_option linter.style.haveILetI false
 
+section Transport
+
+variable {B B' : Type u} [CommRing B] [CommRing B']
+
+/-- Henselianity is invariant under ring equivalence. -/
+theorem henselianLocalRing_of_ringEquiv [HenselianLocalRing B'] (e : B' ≃+* B) :
+    HenselianLocalRing B := by
+  let _ : Nontrivial B := e.symm.toEquiv.nontrivial
+  let _ : IsLocalRing B := IsLocalRing.of_surjective' e.toRingHom e.surjective
+  apply ((HenselianLocalRing.TFAE B).out 3 1).mp
+  intro K _ φ hφ f hf a₀ ha₀ hda₀
+  let q : B' →+* B := e.toRingHom
+  have hlifts : f ∈ Polynomial.lifts q := Polynomial.mem_lifts_of_surjective e.surjective f
+  obtain ⟨F, hF, -, hFmonic⟩ := Polynomial.lifts_and_natDegree_eq_and_monic hlifts hf
+  let ψ : B' →+* K := φ.comp q
+  have hψ : Function.Surjective ψ := hφ.comp e.surjective
+  have hroot : F.eval₂ ψ a₀ = 0 := by
+    rw [← Polynomial.eval₂_map, hF]
+    exact ha₀
+  have hderiv : F.derivative.eval₂ ψ a₀ ≠ 0 := by
+    rw [← Polynomial.eval₂_map, ← Polynomial.derivative_map, hF]
+    exact hda₀
+  have hhens := ((HenselianLocalRing.TFAE B').out 1 3).mp (inferInstance : HenselianLocalRing B')
+  obtain ⟨a, ha, hφa⟩ := hhens (K := K) ψ hψ F hFmonic a₀ hroot hderiv
+  refine ⟨q a, ?_, hφa⟩
+  change f.eval (q a) = 0
+  rw [← hF, Polynomial.eval_map, Polynomial.eval₂_at_apply, ha.eq_zero, map_zero]
+
+end Transport
+
+namespace PointedEtaleNeighborhood
+
+open Pcf.Stacks.PointedEtaleNeighborhood
+
+/-- The separably closed geometric point at a prime `p` of `R`: `Ω = κ(p)ˢᵉᵖ`, where `κ(p)` is
+the residue field of `R_p`. -/
+abbrev geometricPointAt {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] : Type u :=
+  SeparableClosure (ResidueField (Localization.AtPrime p))
+
+/-- The structure map `R → κ(p)ˢᵉᵖ`. -/
+@[instance_reducible]
+noncomputable def geometricPointAtAlgebra {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] :
+    Algebra R (geometricPointAt p) :=
+  ((algebraMap (ResidueField (Localization.AtPrime p)) (geometricPointAt p)).comp
+    ((residue (Localization.AtPrime p)).comp (algebraMap R (Localization.AtPrime p)))).toAlgebra
+
+theorem ker_geometricPointAtAlgebra {R : Type u} [CommRing R] (p : Ideal R) [p.IsPrime] :
+    letI := geometricPointAtAlgebra p
+    RingHom.ker (algebraMap R (geometricPointAt p)) = p := by
+  letI := geometricPointAtAlgebra p
+  ext r
+  change (algebraMap (ResidueField (Localization.AtPrime p)) (geometricPointAt p))
+    (residue _ (algebraMap R (Localization.AtPrime p) r)) = 0 ↔ r ∈ p
+  rw [map_eq_zero, residue_eq_zero_iff,
+    IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime p) p]
+
+end PointedEtaleNeighborhood
+
 open PointedEtaleNeighborhood in
 /-- **Abhyankar's lemma at a point of the divisor, tame case (Stacks Tags `0EYG`, `0EYH`).**  The
 unpacked form of `abhyankarLemma_tame_of_finite`: with `Ω = κ(y)ˢᵉᵖ`, the strict henselization
@@ -73,8 +135,8 @@ root covers with invertible exponents
 (`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`), which descends to a
 pointed étale neighbourhood (`05N9`, `hasAbhyankarStandardCoverAt_of_strict_tame`).
 
-The proof follows that of the characteristic-zero `hasAbhyankarStandardCoverAt_of_mem_divisor`,
-with the two uses of "every positive integer is a unit" replaced by the tame inputs. -/
+The characteristic-zero form `hasAbhyankarStandardCoverAt_of_mem_divisor` (`Tag0EYG.lean`) is
+derived from this theorem. -/
 theorem hasAbhyankarStandardCoverAt_of_mem_divisor_tame
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R)
     [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
@@ -165,10 +227,11 @@ Comparison with the tags (restrictions, all part of the statement `AbhyankarLemm
   `R'[x]/(x^e - u a)` with `e` invertible in `R'` and `u` a unit of `R'`. Points outside `D` (the
   tag's trivial case) are not treated.
 
-This is the second proof of the tag in pcf; the first, `Pcf.Stacks.abhyankarLemma_of_finite`,
-assumes that every positive integer is invertible.  Proof route: that of `0EYG`, see the module
+The characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite`, which assumes every
+positive integer invertible, is proved through the same unpacked form
+`hasAbhyankarStandardCoverAt_of_mem_divisor_tame`.  Proof route: that of `0EYG`, see the module
 docstring and `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`; the divergences from the Stacks
-proof are recorded at each declaration of `Pcf.Stacks.Abhyankar.Tame`. -/
+proof are recorded at the shared lemmas (map in `Tame/Defs.lean`, "Shared lemmas"). -/
 @[stacks 0EYG "affine form; tamely ramified in codimension 1, any characteristic; normalization \
     (0EYH) form at points of D, normalization assumed finite over R; pieces R'[x]/(x^e - f), \
     f = u_i a",
@@ -181,11 +244,5 @@ theorem abhyankarLemma_tame_of_finite (R S : Type u) [CommRing R] [CommRing S] [
   haveI := hfin
   haveI := hint
   exact hasAbhyankarStandardCoverAt_of_mem_divisor_tame R S a ha hetale htame y hy
-
-/-- The characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite` is recovered from the
-tame theorem (a consistency check). -/
-theorem abhyankarLemma_of_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
-    AbhyankarLemmaOfFinite R S a :=
-  AbhyankarLemmaOfFinite.of_tame (abhyankarLemma_tame_of_finite R S a)
 
 end Pcf.Stacks
