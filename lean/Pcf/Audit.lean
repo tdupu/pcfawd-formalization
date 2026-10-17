@@ -1462,8 +1462,6 @@ divisor. -/
 #print axioms Pcf.isClosed_stalkSingularLocus_Spec_of_moduleFinite
 #print axioms Pcf.stalkSingularLocus_Spec_eq_empty
 #print axioms Pcf.stalkSingularLocus_affineSpace_eq_empty
-#print axioms Pcf.isRegularLocalRing_of_flat_of_formallyUnramified
-#print axioms Pcf.isRegularRing_of_etale
 #print axioms Pcf.isRegularLocalRing_of_isSmoothAt
 #print axioms Pcf.isRegularRing_of_smooth
 #print axioms Pcf.isRegularLocalRing_stalk_of_mem_smoothLocus

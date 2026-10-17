@@ -106,7 +106,7 @@ theorem kummerUnit_localizationAtPrime_isRegularLocalRing
     change (maximalIdeal T).under S = maximalIdeal S
     rw [← Ideal.under_under (B := U),
       Localization.AtPrime.under_maximalIdeal, hq]
-  exact Pcf.isRegularLocalRing_of_flat_of_formallyUnramified S T
+  exact Pcf.Stacks.isRegularLocalRing_of_flat_of_formallyUnramified S T
 
 /-- The closed local factor of a Kummer unit algebra over a DVR is a domain. -/
 theorem kummerUnit_localizationAtPrime_isDomain

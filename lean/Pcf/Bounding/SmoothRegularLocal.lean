@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Bounding.FiniteTypeRegularLocus
+public import Pcf.Stacks.Common.EtaleRegular
 public import Mathlib.RingTheory.Unramified.LocalStructure
 public import Mathlib.RingTheory.Unramified.LocalRing
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
@@ -27,60 +28,6 @@ open IsLocalRing AlgebraicGeometry CategoryTheory
 
 namespace Pcf
 
-/-- Regularity ascends along a flat, formally unramified local map of
-Noetherian local rings essentially of finite type. -/
-theorem isRegularLocalRing_of_flat_of_formallyUnramified
-    (R : Type u) (S : Type v) [CommRing R] [CommRing S]
-    [IsRegularLocalRing R] [IsLocalRing S] [IsNoetherianRing S]
-    [Algebra R S] [IsLocalHom (algebraMap R S)]
-    [Algebra.EssFiniteType R S] [Module.Flat R S]
-    [Algebra.FormallyUnramified R S] : IsRegularLocalRing S := by
-  apply IsRegularLocalRing.of_spanFinrank_maximalIdeal_le
-  have hspan : (maximalIdeal S).spanFinrank ≤ (maximalIdeal R).spanFinrank := by
-    rw [← Algebra.FormallyUnramified.map_maximalIdeal (R := R)]
-    exact Ideal.spanFinrank_map_le_of_fg _ (Ideal.fg_of_isNoetherianRing _)
-  have hlo : (maximalIdeal S).LiesOver (maximalIdeal R) :=
-    ⟨(IsLocalRing.maximalIdeal_comap (algebraMap R S)).symm⟩
-  have hdim : ringKrullDim R ≤ ringKrullDim S := by
-    rw [← maximalIdeal_height_eq_ringKrullDim, ← maximalIdeal_height_eq_ringKrullDim]
-    exact WithBot.coe_le_coe.mpr (by
-      rw [Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown (maximalIdeal R)
-        (maximalIdeal S)]
-      exact le_self_add)
-  calc
-    ((maximalIdeal S).spanFinrank : WithBot ℕ∞) ≤ (maximalIdeal R).spanFinrank := by
-      exact_mod_cast hspan
-    _ = ringKrullDim R := IsRegularLocalRing.spanFinrank_maximalIdeal
-    _ ≤ ringKrullDim S := hdim
-
-#print axioms isRegularLocalRing_of_flat_of_formallyUnramified
-
-/-- An étale algebra over a regular ring is regular. -/
-theorem isRegularRing_of_etale
-    (R : Type u) (S : Type v) [CommRing R] [CommRing S]
-    [IsRegularRing R] [Algebra R S] [Algebra.Etale R S] : IsRegularRing S := by
-  let : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing R S
-  apply isRegularRing_iff.mpr
-  intro q hq
-  let p := q.under R
-  let : Algebra (Localization.AtPrime p) (Localization.AtPrime q) :=
-    Localization.AtPrime.algebraOfLiesOver p q
-  have : IsScalarTower R (Localization.AtPrime p) (Localization.AtPrime q) :=
-    inferInstance
-  have : IsLocalHom (algebraMap (Localization.AtPrime p) (Localization.AtPrime q)) := by
-    rw [Localization.AtPrime.algebraMap_eq]
-    infer_instance
-  have : Algebra.EssFiniteType (Localization.AtPrime p) (Localization.AtPrime q) :=
-    Algebra.EssFiniteType.of_comp R _ _
-  have : Algebra.FormallyUnramified R (Localization.AtPrime q) :=
-    Algebra.FormallyUnramified.comp R S _
-  have : Algebra.FormallyUnramified (Localization.AtPrime p) (Localization.AtPrime q) :=
-    Algebra.FormallyUnramified.of_restrictScalars R _ _
-  exact isRegularLocalRing_of_flat_of_formallyUnramified (Localization.AtPrime p)
-    (Localization.AtPrime q)
-
-#print axioms isRegularRing_of_etale
-
 /-- A smooth point of a finitely presented algebra over a regular ring has a
 regular local ring. No perfectness or characteristic assumption is needed. -/
 theorem isRegularLocalRing_of_isSmoothAt
@@ -91,7 +38,7 @@ theorem isRegularLocalRing_of_isSmoothAt
   obtain ⟨f, hfp, n, _, _, _⟩ :=
     Algebra.IsSmoothAt.exists_isStandardEtale_mvPolynomial (R := R) (p := p)
   have : IsRegularRing (Localization.Away f) :=
-    isRegularRing_of_etale (MvPolynomial (Fin n) R) (Localization.Away f)
+    Pcf.Stacks.isRegularRing_of_etale (MvPolynomial (Fin n) R) (Localization.Away f)
   let q := p.map (algebraMap S (Localization.Away f))
   have : q.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint (.powers f) _ _ inferInstance
