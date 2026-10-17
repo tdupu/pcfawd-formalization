@@ -90,7 +90,11 @@ factors: each `B ⧸ (1 - εᵢ)` is an integrally closed domain, and `B ≃ ∏
 `CompleteOrthogonalIdempotents.bijective_pi`.
 
 Divergence from Stacks: Stacks assumes reduced with finitely many minimal primes; here Noetherian
-gives finitely many minimal primes and normality gives reducedness. -/
+gives finitely many minimal primes and normality gives reducedness.  The proof route also
+differs: Stacks takes the idempotents of the total ring of fractions `Q(B) = ∏ B_{𝔭ᵢ}`, which lie
+in `B` because `B` is integrally closed in `Q(B)`; here the minimal primes are pairwise comaximal
+(two of them cannot lie in one prime, since the local rings of `B` are domains) and the Chinese
+remainder theorem gives `B ≅ ∏ B ⧸ 𝔭ᵢ`. -/
 @[stacks 030C "Noetherian case, normal implies finite product of normal domains"]
 theorem IsStacksNormalRing.exists_completeOrthogonalIdempotents {B : Type u} [CommRing B]
     [IsNoetherianRing B] (hB : IsStacksNormalRing B) :

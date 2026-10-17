@@ -35,7 +35,8 @@ from the flat quasi-finite statement `height_eq_height_under_of_flat_of_quasiFin
 
 The Stacks proof uses Serre's criterion in the Noetherian case and an absolute Noetherian
 approximation in general. Here we instead use Mathlib's theorem that smooth base change commutes
-with integral closure (Stacks `03GV`, `TensorProduct.toIntegralClosure_bijective_of_smooth`):
+with integral closure (Stacks Algebra, Lemma 10.147.5, Tag `0CBF`; scheme form `03GV`;
+`TensorProduct.toIntegralClosure_bijective_of_smooth`):
 for `R` a normal domain with fraction field `K` and `S` etale over `R`, the ring `S` is integrally
 closed in its generic fibre `S ⊗[R] K`, which is Artinian and reduced. Localizing at a prime `Q` of
 `S`, the generic fibre becomes a field, since a separating idempotent would be integral over `S`,
@@ -92,7 +93,7 @@ variable (R S K : Type*) [CommRing R] [CommRing S] [Algebra R S]
 
 /-- A smooth algebra over a normal domain is integrally closed in its generic fibre. This is the
 form in which Mathlib's theorem that smooth base change commutes with integral closure (Stacks
-`03GV`) enters the proof of Stacks `033C`. -/
+Algebra, Lemma 10.147.5, Tag `0CBF`; scheme form `03GV`) enters the proof of Stacks `033C`. -/
 theorem isIntegrallyClosedIn_tensor_fractionRing_of_smooth [Algebra.Smooth R S] :
     IsIntegrallyClosedIn S (S ⊗[R] K) := by
   rw [isIntegrallyClosedIn_iff]
@@ -215,8 +216,8 @@ of an etale algebra over a normal domain is a normal domain.
 The proof differs from the Stacks proof (which reduces to Serre's criterion in the Noetherian case
 and to a limit argument in general): the localization `S_Q` is integrally closed in the
 localization of the generic fibre `S ⊗[R] K` (smooth base change commutes with integral closure,
-Stacks `03GV`), and the latter localization is a field because the separating idempotents of the
-Artinian generic fibre are integral over `S`. -/
+Stacks `0CBF`, Algebra 10.147.5; scheme form `03GV`), and the latter localization is a field
+because the separating idempotents of the Artinian generic fibre are integral over `S`. -/
 @[stacks 033C "etale case, base a normal domain, local form"]
 theorem isDomain_isIntegrallyClosed_atPrime_of_etale_of_isDomain (Q : Ideal S) [Q.IsPrime] :
     IsDomain (Localization.AtPrime Q) ∧ IsIntegrallyClosed (Localization.AtPrime Q) := by
@@ -287,7 +288,10 @@ theorem isDomain_isIntegrallyClosed_atPrime_of_etale (q : Ideal B) [q.IsPrime]
 
 variable (B) in
 /-- **Stacks `033C`, etale case.** An etale algebra over a normal ring (Stacks `00GV`: all local
-rings at primes are normal domains) is a normal ring. -/
+rings at primes are normal domains) is a normal ring.
+
+The proof route differs from Stacks (Serre's criterion in the Noetherian case, Noetherian
+approximation in general); see `isDomain_isIntegrallyClosed_atPrime_of_etale_of_isDomain`. -/
 @[stacks 033C "etale case"]
 theorem IsStacksNormalRing.of_etale (hA : IsStacksNormalRing A) : IsStacksNormalRing B := by
   intro q
@@ -297,7 +301,10 @@ theorem IsStacksNormalRing.of_etale (hA : IsStacksNormalRing A) : IsStacksNormal
 
 variable (A B) in
 /-- **Stacks `033C`, etale case, base a normal domain.** An etale algebra over a normal domain is a
-normal ring in the Stacks sense (it need not be a domain). -/
+normal ring in the Stacks sense (it need not be a domain).
+
+The proof route differs from Stacks (Serre's criterion in the Noetherian case, Noetherian
+approximation in general); see `isDomain_isIntegrallyClosed_atPrime_of_etale_of_isDomain`. -/
 @[stacks 033C "etale case, base a normal domain"]
 theorem isStacksNormalRing_of_etale_of_isDomain [IsDomain A] [IsIntegrallyClosed A] :
     IsStacksNormalRing B :=
@@ -305,7 +312,10 @@ theorem isStacksNormalRing_of_etale_of_isDomain [IsDomain A] [IsIntegrallyClosed
 
 variable (A B) in
 /-- **Stacks `033C`, etale case, domains.** An etale domain over a normal domain is integrally
-closed. -/
+closed.
+
+The proof route differs from Stacks (Serre's criterion in the Noetherian case, Noetherian
+approximation in general); see `isDomain_isIntegrallyClosed_atPrime_of_etale_of_isDomain`. -/
 @[stacks 033C "etale case, both rings domains"]
 theorem isIntegrallyClosed_of_etale [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] :
     IsIntegrallyClosed B :=

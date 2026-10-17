@@ -62,7 +62,10 @@ theorem isRegularLocalRing_iff_globalDimension_lt_top (R : Type u) [CommRing R] 
   Pcf.Vendor.Auslander_Buchsbaum_Serre R
 
 /-- **Stacks Project Tag 0AFS, second sentence.** The localization of a regular local ring at a
-prime ideal is a regular local ring. -/
+prime ideal is a regular local ring.
+
+Proof as in Stacks: finite global dimension localizes (Algebra, Lemma 10.109.13) and the
+Auslander–Buchsbaum–Serre theorem (vendored mathlib4 #29802) converts back to regularity. -/
 @[stacks 0AFS "second sentence"]
 theorem isRegularLocalRing_localization_atPrime (R : Type u) [CommRing R] [IsRegularLocalRing R]
     (p : Ideal R) [p.IsPrime] : IsRegularLocalRing (Localization.AtPrime p) :=

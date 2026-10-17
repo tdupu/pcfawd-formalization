@@ -35,7 +35,8 @@ If `V` is a finite étale cover of `U` whose restriction to `U₀` extends to a 
 
 ## The proof route (divergence from Stacks)
 
-Stacks proves `0BLM` from `0BLS`/`0BM6` using the vanishing of the local cohomology groups
+Stacks proves `0BLM` from `0BLS` (Lemma 58.20.6), whose full-faithfulness input `0BM6` (Lemma
+58.19.6) uses the vanishing of the local cohomology groups
 `H¹_m(A)`, `H²_m(A)` (depth `≥ 3`) and the theorem on formal functions (`0EKS`).  Local
 cohomology is not available at the pinned Mathlib revision, so the proof here is different; the
 statement is unchanged.  Informally:
@@ -961,9 +962,12 @@ a cover which extends over `Spec (A/(f))`, then it extends over `Spec A`.
 
 Divergence from Stacks: the statement is the case of Lemma 58.20.7 (`0BLM`) in which `A` is
 complete and regular (depth `≥ 3` being automatic) and `f` is a minimal generator of `m`, which
-is the case used in the induction of Tag `0BMA`.  The proof does not use the local cohomology
-argument of Lemmas 58.19.6/58.20.6 (`0BM6`) and the formal-functions theorem (`0EKS`); see the
-module docstring. -/
+is the case used in the induction of Tag `0BMA`.  Step 1 of the proof (the lift of `Y₀` by
+`09ZL` over the henselian pair `(A, fA)`) is that of the Stacks proof of Lemma 58.20.6 (`0BLS`) in
+the complete case; step 0 (the finite normal model of Tag `0BM9`) is a preliminary.  The
+full-faithfulness step diverges: Stacks uses Lemma 58.19.6 (`0BM6`: `H¹_𝔪`, `H²_𝔪` annihilated
+by a power of `f`, then the formal-functions theorem `0EKS`); here the map is built by
+formal-étale lifting and a regular-pair Hartogs argument; see the module docstring. -/
 @[stacks 0BLM "complete regular local case, for `f ∉ m²`"]
 theorem hypersurfaceFiniteEtaleLifting_of_isAdicComplete
     (d : ℕ) (hd : 2 ≤ d) (hdim : ringKrullDim A = d + 1)

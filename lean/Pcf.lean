@@ -147,6 +147,7 @@ public import Pcf.Stacks.Purity.PuncturedEtaleOfPointwise
 public import Pcf.Stacks.Purity.Tag0BMBLocalModel
 public import Pcf.Stacks.Purity.Tag0BMB
 public import Pcf.Stacks.Purity.Tag0BMA
+public import Pcf.Stacks.Purity.Tag0BMBScheme
 public import Pcf.Stacks.Abhyankar.DivisorNormalizationTransport
 public import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
 public import Pcf.Stacks.Abhyankar.StrictHenselizationCompletionFlat

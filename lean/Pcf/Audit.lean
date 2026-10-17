@@ -104,6 +104,7 @@ public import Pcf.Stacks.Purity.PuncturedEtaleOfPointwise
 public import Pcf.Stacks.Purity.Tag0BMA
 public import Pcf.Stacks.Purity.Tag0BMB
 public import Pcf.Stacks.Purity.Tag0BMBLocalModel
+public import Pcf.Stacks.Purity.Tag0BMBScheme
 public import Pcf.Stacks.Purity.GabberPolynomialIdempotent
 public import Pcf.Stacks.Abhyankar.DivisorNormalizationTransport
 public import Pcf.Stacks.Abhyankar.LocalizedNormalizationComparison
@@ -1578,6 +1579,7 @@ Every non-internal theorem of the modules added in the purity/Abhyankar run
 Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 #print axioms Pcf.Stacks.zariskiNagataPurity
+#print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.palomar_zariskiNagataPurity
 #print axioms Pcf.Stacks.abhyankarLemma
 #print axioms Pcf.Stacks.palomar_abhyankarLemma
@@ -1942,6 +1944,14 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.isEtaleAt_of_le
 #print axioms Pcf.Stacks.mem_minimalPrimes_of_quasiFiniteAt
 #print axioms Pcf.Stacks.module_finite_localization_atPrime_of_unique
+
+-- Pcf.Stacks.Purity.Tag0BMBScheme
+#print axioms Pcf.Stacks.IsStacksNormalRing.isDomain_isIntegrallyClosed_of_isLocalRing
+#print axioms Pcf.Stacks.formallyUnramified_stalkMap_iff
+#print axioms Pcf.Stacks.formallyUnramified_stalkMap_of_stacksUnramifiedAt
+#print axioms Pcf.Stacks.isRegularLocalRing_atPrime_of_eq
+#print axioms Pcf.Stacks.stacksEtaleAt_of_isEtaleAt
+#print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
 
 -- Pcf.Stacks.Purity.GabberPolynomialIdempotent
 #print axioms Pcf.Stacks.exists_isIdempotentElem_sub_mem_of_aeval_eq_zero_of_gabberPolynomial

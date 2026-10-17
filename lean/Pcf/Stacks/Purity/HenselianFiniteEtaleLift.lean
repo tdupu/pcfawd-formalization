@@ -82,7 +82,12 @@ monic factors.
 This is the factorization condition in the definition of a henselian pair (Stacks Tag `09XE`),
 deduced from Mathlib's simple-root formulation `HenselianRing` when the base ring is local.  The
 proof lifts the residual point of the etale universal coprime factorization ring with the local
-case of Stacks Tag `09XI`, condition (2). -/
+case of Stacks Tag `09XI`, condition (2).
+
+Tag `09XE` is a definition (henselian pair); for a local ring, its agreement with Mathlib's
+simple-root formulation is Stacks Lemma 10.153.3 (`04GG`, (1) ⇔ (3)).  That proof is not
+followed: the factorization is obtained from a section of the étale universal
+coprime-factorization ring, lifted by the local case of `09XI`, condition (2). -/
 @[stacks 09XE "factorization condition, for a local ring henselian in Mathlib's sense"]
 theorem exists_monic_factorization_lift_of_henselian
     (I : Ideal R) [HenselianRing R I]
@@ -137,10 +142,11 @@ variable {B : Type v} [CommRing B] [Algebra R B]
 of `B`, for `B` integral over the base.
 
 This is the existence half of condition (4) of Stacks Tag `09XI` for a local base ring; the
-uniqueness half is `injective_idempotentQuotientMap_of_isIntegral`.  The proof follows the
-`(3) ⇒ (1)` circle of Tag `09XI` backwards: Tag `09XG` gives a monic annihilating polynomial
-reducing to `X ^ d (X - 1) ^ d`, Hensel factorization splits it, and a Bezout combination of the
-factors is the idempotent. -/
+uniqueness half is `injective_idempotentQuotientMap_of_isIntegral`.  Proof route differs from
+Stacks, which proves `(2) ⇒ (4)` by lifting along an étale map (More on Algebra, Lemma 15.9.10).
+Here `(1) ⇒ (4)` is proved directly: Tag `09XG` gives a monic annihilating polynomial reducing to
+`X ^ d (X - 1) ^ d`, the henselian factorization (`exists_monic_factorization_lift_of_henselian`)
+splits it, and a Bezout combination of the factors is the idempotent. -/
 @[stacks 09XI "(4), existence of idempotent lifts, local base ring"]
 theorem exists_isIdempotentElem_sub_mem_of_isIntegral_of_henselian
     [Algebra.IsIntegral R B] (I : Ideal R) [HenselianRing R I] (b : B)

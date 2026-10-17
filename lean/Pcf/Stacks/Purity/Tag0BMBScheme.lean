@@ -34,11 +34,12 @@ opens `x ∈ U ⊆ X`, `V ⊆ Y` with `f(U) ⊆ V` such that the ring map `𝒪_
   For finite-type ring maps it is equivalent to Stacks' Definition 10.122.3 ("isolated in its
   fibre"); Mathlib proves the scheme form of this equivalence as
   `Scheme.Hom.quasiFiniteAt_iff_isOpen_singleton_asFiber` (this file does not restate it).
-* `StacksUnramifiedAt` — Definition 29.36.1(1): the ring map is unramified, i.e. of finite type
-  with `Ω = 0` (`RingHom.FiniteType` and `RingHom.FormallyUnramified`).
-* `StacksEtaleAt` — Definition 29.37.1(1): the ring map is étale (`RingHom.Etale`: of finite
-  presentation and formally étale; Stacks Definition 10.143.1 asks for finite presentation with
-  `H₁(NL) = 0` and `Ω = 0`, which is formal étaleness by Mathlib's `Algebra.formallyEtale_iff`).
+* `StacksUnramifiedAt` — Definition 29.36.1(1) (Tag `02G4`): the ring map is unramified, i.e. of
+  finite type with `Ω = 0` (`RingHom.FiniteType` and `RingHom.FormallyUnramified`).
+* `StacksEtaleAt` — Definition 29.37.1(1) (Tag `02GI`): the ring map is étale (`RingHom.Etale`: of
+  finite presentation and formally étale; Stacks Definition 10.143.1 asks for finite presentation
+  with `H₁(NL) = 0` and `Ω = 0`, which is formal étaleness by Mathlib's
+  `Algebra.formallyEtale_iff`).
 
 "Normal" for `𝒪_{X,x}` is `IsStacksNormalRing` (Stacks Definition 10.37.11, `00GV`), "regular"
 is `IsRegularLocalRing`, and `dim` is `ringKrullDim`.
@@ -76,8 +77,9 @@ variable {X Y : Scheme.{u}}
 
 /-- **Quasi-finite at a point**, Stacks Definition 29.21.1(1) (Tag `01TD`): there are affine opens
 `x ∈ U ⊆ X` and `V ⊆ Y` with `f(U) ⊆ V` such that `𝒪_Y(V) → 𝒪_X(U)` is of finite type and
-quasi-finite at the prime corresponding to `x`. -/
-@[stacks 01TD "quasi-finite at a point"]
+quasi-finite at the prime corresponding to `x`. Tag `01TD` also defines locally quasi-finite and
+quasi-finite morphisms; only the first clause, quasi-finite at `x`, is formalized here. -/
+@[stacks 01TD "first clause: quasi-finite at a point"]
 def StacksQuasiFiniteAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (hU : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V) (hx : x ∈ U),
@@ -86,14 +88,19 @@ def StacksQuasiFiniteAt (f : X ⟶ Y) (x : X) : Prop :=
 
 /-- **Unramified at a point**, Stacks Definition 29.36.1(1): there are affine opens `x ∈ U ⊆ X`
 and `V ⊆ Y` with `f(U) ⊆ V` such that `𝒪_Y(V) → 𝒪_X(U)` is unramified, i.e. of finite type with
-vanishing module of differentials. -/
+vanishing module of differentials (Stacks Definition 10.151.1, Tag `00UT`; vanishing of `Ω` is
+`RingHom.FormallyUnramified`). Tag `02G4` also defines G-unramified at `x` and unramified
+morphisms; only the first clause, unramified at `x`, is formalized here. -/
+@[stacks 02G4 "first clause: unramified at a point"]
 def StacksUnramifiedAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (_ : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V), x ∈ U ∧
     (f.appLE V U hUV).hom.FiniteType ∧ (f.appLE V U hUV).hom.FormallyUnramified
 
 /-- **Étale at a point**, Stacks Definition 29.37.1(1): there are affine opens `x ∈ U ⊆ X` and
-`V ⊆ Y` with `f(U) ⊆ V` such that `𝒪_Y(V) → 𝒪_X(U)` is étale. -/
+`V ⊆ Y` with `f(U) ⊆ V` such that `𝒪_Y(V) → 𝒪_X(U)` is étale. Tag `02GI` also defines étale
+and standard étale morphisms; only the first clause, étale at `x`, is formalized here. -/
+@[stacks 02GI "first clause: étale at a point"]
 def StacksEtaleAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (_ : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V), x ∈ U ∧ (f.appLE V U hUV).hom.Etale

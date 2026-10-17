@@ -264,8 +264,9 @@ theorem faithfullyFlat_adicCompletion :
 
 /-- Stacks Tag `07NV`: a Noetherian local ring and its completion have the same dimension.
 
-Proof route: Stacks compares Hilbert polynomials; here we use flatness (going down) and the
-equality `m_A Â = m_Â`, so that the closed fibre is a field. -/
+Proof: the alternative proof given in Stacks (Algebra, Lemma 10.112.7): `A → Â` is flat, so the
+going-down height formula applies, and its closed fibre is a field because `m_A Â = m_Â`.  (Stacks'
+main proof compares Hilbert functions.) -/
 @[stacks 07NV]
 theorem ringKrullDim_adicCompletion :
     ringKrullDim (AdicCompletion (maximalIdeal A) A) = ringKrullDim A := by

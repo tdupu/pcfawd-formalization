@@ -593,7 +593,12 @@ theorem localColimit_completion_flat :
     fun i ↦ (stageLocalToLocalColimit_algebraMap X (x i)).trans (hx i)⟩
 
 /-- **Stacks Tag `06LJ`, `R ⇒ Rˢʰ`.**  The strict henselization of a Noetherian local ring is
-Noetherian.  This discharges `hflat` in `localColimit_isNoetherianRing_of_completion`. -/
+Noetherian.  This discharges `hflat` in `localColimit_isNoetherianRing_of_completion`.
+
+Proof as in Stacks: flatness of the completion (part (c), `localColimit_completion_flat`),
+Noetherianity of the completion from the finitely generated maximal ideal `𝔪 Rˢʰ` (Tags `032B`,
+`05GH`), and descent of Noetherianity along the faithfully flat completion (Algebra,
+Lemma 10.164.1). -/
 @[stacks 06LJ "the implication (1) ⇒ (3), for the pcf colimit model `LocalColimit R Ω` of \
   `R^sh`, Ω any field over κ(𝔪): `R` Noetherian implies it is Noetherian"]
 instance localColimit_isNoetherianRing : IsNoetherianRing (LocalColimit R Ω) :=
@@ -606,7 +611,9 @@ theorem ringKrullDim_localColimit_eq :
   ringKrullDim_localColimit (R := R) (Ω := Ω)
 
 /-- The completion of the strict henselization of a Noetherian local ring is Noetherian
-(Stacks Tag `06LJ` part (a), strict case). -/
+(Stacks Tag `06LJ` part (a), strict case).  Here it is read off from Noetherianity of `Rˢʰ`;
+Stacks' argument for (a) (the maximal ideal `𝔪 Rˢʰ` is finitely generated, Algebra 10.160.3) is
+the one used inside `localColimit_isNoetherianRing_of_completion`. -/
 @[stacks 06LJ "part (a), strict case, for the pcf colimit model `LocalColimit R Ω` of `R^sh`, \
   Ω any field over κ(𝔪): its completion is Noetherian"]
 theorem localColimit_completion_isNoetherianRing :

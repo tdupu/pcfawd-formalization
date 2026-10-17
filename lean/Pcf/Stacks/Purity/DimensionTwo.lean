@@ -151,7 +151,14 @@ scheme pullback hypothesis.
 
 The `IsIntegrallyClosed R` argument holds for every regular local ring (Stacks `0567`,
 `isIntegrallyClosed_of_isRegularLocalRing`); callers supply it, as in
-`puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two`. -/
+`puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two`.
+
+Proof route: the `d = 2` case of the Stacks proof of `0BMA`.  The algebra is shown to be flat,
+hence finite free, and then étale by the discriminant (the option "Discriminants, Lemma 49.3.1"
+named in the Stacks proof).  Stacks obtains flatness from going down, Cohen–Macaulayness of the
+two-dimensional normal local rings (Serre's criterion, Algebra 10.157.4) and miracle flatness
+(Algebra 10.128.1).  Here flatness comes from an elementary miracle flatness for a regular pair
+(`Pcf.Stacks.Purity.MiracleFlatnessTwo`), without the Cohen–Macaulay API. -/
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
     (R : Type u) [CommRing R] [IsRegularLocalRing R] [IsIntegrallyClosed R] (hdim : ringKrullDim R = 2) :
     FiniteNormalPuncturedEtalePurity R := by

@@ -98,8 +98,13 @@ Proof: induction on the dimension, as in Stacks. The base case `d = 2` is `Dimen
 (via clause (2) ⇒ clause (1)). In the step, `A/(x)` for `x ∈ m \ m²` is again a complete
 regular local ring, of one less dimension.
 
-Proof route diverges from Stacks: the step uses the complete-case lifting theorem
-`hypersurfaceFiniteEtaleLifting_of_isAdicComplete` instead of `0BLM` via `0BM6`/`0EKS`. -/
+Proof route diverges from Stacks.  Stacks runs the induction over all regular local rings and
+applies `0BLM`, whose proof (`0BLS`) reduces to the completion by `0BLL`, lifts with `09ZL`, and
+gets full faithfulness from local cohomology (`0BM6`, `0EKS`).  Here the induction runs over
+complete regular local rings only (the passage to arbitrary `A` is
+`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`), and the step uses
+`hypersurfaceFiniteEtaleLifting_of_isAdicComplete`, which replaces `0BM6`/`0EKS` by an
+elementary formal lifting. -/
 @[stacks 0BMA "clause (1), complete regular local case"]
 theorem puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
     (A : Type u) [CommRing A] [IsRegularLocalRing A] [IsAdicComplete (maximalIdeal A) A]
@@ -152,14 +157,12 @@ directory.
 Concretely, "finite `A → B`, `B` normal" is made precise as `FiniteNormalPuncturedEtalePurity`
 (finite, torsion-free, Stacks-normal), the target category of Tag `0BM9`.
 
-Follows the Stacks proof of `0BMA`? No (phase-1 proof, not re-proved): the Stacks proof is by
-induction on `d` for `A` itself using `0BLL`/`0BLH` and `0BM6`/`0EKS`;
-this proof does not follow it.
-
-Proof route diverges from Stacks: clause (1) is proved for the completion `A^∧` (complete case
-above, using the elementary formal lifting in place of `0BM6`/`0EKS`), and clause (2) for `A`
-then follows by completion descent (Hartogs for a regular pair plus fpqc descent of étaleness,
-in place of `0BLL`/`0BLH`). -/
+Proof route diverges from Stacks (phase-1 proof, not re-proved).  Stacks proves `0BMA` by
+induction on `d` for `A` itself, through `0BLM`, whose proof (`0BLS`) passes to the completion by
+`0BLL` (which uses `0BLH`) and gets full faithfulness from `0BM6`/`0EKS`.  Here clause (1) is
+proved for the completion `A^∧` (complete case above, using the elementary formal lifting in
+place of `0BM6`/`0EKS`), and clause (2) for `A` then follows by completion descent (Hartogs for a
+regular pair plus fpqc descent of étaleness, in place of `0BLL`/`0BLH`). -/
 @[stacks 0BMA "clause (2), with B torsion-free over A added; literal clause (2) is false for
   B = A × κ(𝔪)"]
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
@@ -172,8 +175,9 @@ theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
 /-- **Stacks Tag `0BMA`, clause (1)**: for a regular local ring of dimension `≥ 2`, every finite
 étale cover of the punctured spectrum extends to a finite étale cover of the spectrum.
 
-Proof route diverges from Stacks: obtained from clause (2) (see
-`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`) through Tag `0BM9`. -/
+Proof: from clause (2) (`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`) through the
+equivalence of Tag `0BM9` (Lemma 58.20.3), which is also how the Stacks proof passes between the
+two clauses.  The proof route diverges from Stacks only inside clause (2); see that theorem. -/
 @[stacks 0BMA "clause (1)"]
 theorem puncturedSpectrumPurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
@@ -188,10 +192,13 @@ theorem puncturedSpectrumPurity_of_isRegularLocalRing
 This discharges the two inputs of `zariskiNagataPurity_of_inputs`: `033C` by
 `IsStacksNormalRing.of_etale` and `0BMA` by
 `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`.
-Follows the Stacks proof of `0BMB`? Only partly: the height induction and reduction are as in
-Stacks (the descent is done on local rings rather than with `02VN`), but the `0BMA` input it uses
-is not proved by the Stacks proof (completion descent and an elementary formal lifting replace
-`0BLL`/`0BLH` and `0BM6`/`0EKS`); see that theorem and `AXIOMS.md`. -/
+Proof route: the strong induction on the height and the étale-local finite model of the Stacks
+proof (`zariskiNagataPurity_of_inputs`, `hasZariskiNagataPurityAt_of_lowerHeight`).  It diverges
+from Stacks in two places: the final descent of étaleness is done on local rings (Kähler
+differentials and Tor-free tensor products) instead of with Descent, Lemma 35.23.31 / Tag `02VN`,
+and inside `0BMA`, whose input here is not proved by the Stacks proof (completion descent and an
+elementary formal lifting replace `0BLL`/`0BLH` and `0BM6`/`0EKS`); see
+`finiteNormalPuncturedEtalePurity_of_isRegularLocalRing` and `AXIOMS.md`. -/
 @[stacks 0BMB "affine, pointwise"]
 theorem zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
     ZariskiNagataPurity R S :=

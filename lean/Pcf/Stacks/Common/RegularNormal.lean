@@ -293,7 +293,10 @@ theorem isStacksNormalRing_of_isRegularRing (R : Type u) [CommRing R] [IsRegular
 /-- **Stacks Project Tag 0567, regular local case.** A regular local ring is integrally closed.
 
 Tag `0567` is stated for regular rings (Tag `00OD`); a regular local ring is a regular ring by
-Tag `0AFS` (`isRegularRing_of_isRegularLocalRing`). -/
+Tag `0AFS` (`isRegularRing_of_isRegularLocalRing`).
+
+The proof route differs from Stacks (which uses Serre's criterion `031S`); see
+`isIntegrallyClosed_of_isRegularRing`. -/
 @[stacks 0567 "regular local case"]
 theorem isIntegrallyClosed_of_isRegularLocalRing (R : Type u) [CommRing R] [IsRegularLocalRing R] :
     IsIntegrallyClosed R := by
@@ -301,7 +304,10 @@ theorem isIntegrallyClosed_of_isRegularLocalRing (R : Type u) [CommRing R] [IsRe
   let _ : IsDomain R := isDomain_of_isRegularLocalRing R
   exact isIntegrallyClosed_of_isRegularRing R
 
-/-- **Stacks Project Tag 0567, regular local case**, in the Stacks normal-ring form. -/
+/-- **Stacks Project Tag 0567, regular local case**, in the Stacks normal-ring form.
+
+The proof route differs from Stacks (which uses Serre's criterion `031S`); see
+`isIntegrallyClosed_of_isRegularRing`. -/
 @[stacks 0567 "regular local case"]
 theorem isStacksNormalRing_of_isRegularLocalRing (R : Type u) [CommRing R]
     [IsRegularLocalRing R] : IsStacksNormalRing R := by
