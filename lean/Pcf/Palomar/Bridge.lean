@@ -5,6 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
+public import Pcf.Palomar.LocalTheorems
 public import Pcf.Palomar.Statement
 public import Pcf.Bounding.PcfAllTheWayDownCharZero
 public import Pcf.Stacks.Abhyankar.FiniteNormalization
@@ -24,8 +25,10 @@ The compact notions of `Pcf.Palomar.Statement` agree with the development's:
 * `pcfAllTheWayDownAtDepth_of_scheme`: the development's recursive predicate implies the
   compact one.
 
-The compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` is then derived from
-`Pcf.pcfAllTheWayDown_charZero`.
+The conditional theorem `Pcf.Palomar.pcfAllTheWayDown_charZero`, whose inputs are the Palomar
+forms of purity and Abhyankar's lemma (`Pcf.Palomar.LocalTheorems`), is then derived from
+`Pcf.pcfAllTheWayDown_charZero`.  The compared theorem is its unconditional form
+`Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` (`Pcf.Palomar.Unconditional`).
 -/
 
 @[expose] public section
@@ -265,7 +268,7 @@ theorem abhyankarLemma_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S
     exact h hR ha hreg (Module.Finite.base_change R (Localization.Away a) S) hetale hint hnat
       y hy
 
-/-! ## The compared theorem -/
+/-! ## The conditional theorem -/
 
 /-- **PCF all the way down in characteristic zero**, conditional on Zariski–Nagata purity
 and Abhyankar's lemma. -/

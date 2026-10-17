@@ -5,7 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Palomar.Statement
+public import Pcf.Palomar.LocalTheorems
 public import Pcf.Stacks.Purity.DimensionOne
 public import Pcf.Stacks.Purity.Tag0BMBLocalModel
 

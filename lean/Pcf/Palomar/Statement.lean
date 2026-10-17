@@ -10,24 +10,19 @@ public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
 public import Mathlib.AlgebraicGeometry.Morphisms.Finite
 public import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
 public import Mathlib.RingTheory.RamificationInertia.Basic
-public import Mathlib.RingTheory.Etale.Locus
-public import Mathlib.RingTheory.QuasiFinite.Basic
-public import Mathlib.RingTheory.Ideal.Height
-public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Mathlib.RingTheory.IntegralClosure.IsIntegralClosure.Basic
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.Localization.Away.Basic
-public import Mathlib.RingTheory.TensorProduct.Basic
-public import Mathlib.RingTheory.AdjoinRoot
 
 /-!
 # The Palomar statement surface
 
-A compact restatement, in Mathlib vocabulary, of `Pcf.pcfAllTheWayDown_charZero`.
+A compact restatement, in Mathlib vocabulary, of `Pcf.pcfAllTheWayDown_charZero_unconditional`.
+Its definitions are those of `palomar/PcfChallenge.lean`, and only the module docstring differs.
 Every definition here is written so that its body contains no nested proof term that Lean
 would abstract into an auxiliary `_proof_n` theorem: each proof obligation is a separately
 named lemma applied to variables only.  `Pcf.Palomar.Bridge` proves that these notions agree
 with the development's and derives the theorem.
+
+The Palomar forms of the two local theorems (Zariski–Nagata purity and Abhyankar's lemma) are
+in `Pcf.Palomar.LocalTheorems`; they are not part of the compared statement.
 -/
 
 @[expose] public section
@@ -35,86 +30,18 @@ with the development's and derives the theorem.
 universe u
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace
-open scoped TensorProduct
 
 namespace Pcf.Palomar
 
 noncomputable section
 
-/-! ## The two assumed local theorems -/
-
-/-! The three scoped instances below only restate Mathlib instances under names whose
-arguments are variables, so that no definition below contains a compound proof term. -/
-
-/-- The ideal of a point of `Spec S` is prime. -/
-scoped instance (priority := high) primeSpectrum_isPrime {S : Type u} [CommRing S]
-    (w : PrimeSpectrum S) : w.asIdeal.IsPrime :=
-  w.isPrime
-
-/-- An algebra `R → R'` gives commuting actions of `R` and `R'` on `R'`. -/
-scoped instance (priority := high) algebra_smulCommClass {R R' : Type u} [CommRing R]
-    [CommRing R'] [Algebra R R'] : SMulCommClass R R' R' :=
-  Algebra.to_smulCommClass
+/-! The scoped instance below only restates a Mathlib instance under a name whose arguments are
+variables, so that no definition below contains a compound proof term. -/
 
 /-- Stalks of a scheme are local rings. -/
 scoped instance (priority := high) stalk_isLocalRing {X : Scheme.{u}} (x : X) :
     IsLocalRing (X.presheaf.stalk x) :=
   inferInstance
-
-/-- The pointwise hypotheses of Stacks Tag 0BMB for `Spec S → Spec R` at `w`. -/
-structure PurityHypothesesAt (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
-    (w : PrimeSpectrum S) : Prop where
-  source_isDomain : IsDomain (Localization.AtPrime w.asIdeal)
-  source_isIntegrallyClosed : IsIntegrallyClosed (Localization.AtPrime w.asIdeal)
-  target_isRegular : IsRegularLocalRing (Localization.AtPrime (w.asIdeal.under R))
-  quasiFinite : Algebra.QuasiFiniteAt R w.asIdeal
-  equalDimension : w.asIdeal.height = (w.asIdeal.under R).height
-  positiveDimension : 1 ≤ w.asIdeal.height
-  unramifiedCodimensionOne :
-    ∀ w' : PrimeSpectrum S, w' ⤳ w → w'.asIdeal.height = 1 →
-      Algebra.IsUnramifiedAt R w'.asIdeal
-
-/-- **Zariski–Nagata purity of the branch locus**, Stacks Tag 0BMB, affine form: for
-Noetherian `R`, Noetherian `S` of finite type over `R`, and every prime `w` of `S` satisfying
-the hypotheses of the tag, `R → S` is étale at `w`. -/
-def ZariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] : Prop :=
-  IsNoetherianRing R → IsNoetherianRing S → Algebra.FiniteType R S →
-    ∀ w : PrimeSpectrum S, PurityHypothesesAt R S w → Algebra.IsEtaleAt R w.asIdeal
-
-/-- The standard tame cover `R[z] / (z^e - u a)`. -/
-def standardCoverPoly {R : Type u} [CommRing R] (u : Rˣ) (a : R) (e : ℕ) : Polynomial R :=
-  Polynomial.X ^ e - Polynomial.C ((u : R) * a)
-
-/-- `C` is, as an `R`-algebra, a finite product of standard covers `R[z]/(z^{e_i} - u_i a)`
-with every `e_i` positive and invertible in `R`. -/
-def IsFiniteProductOfStandardTameCovers (R C : Type u) [CommRing R] [CommRing C]
-    [Algebra R C] (a : R) : Prop :=
-  ∃ (ι : Type) (_ : Fintype ι) (e : ι → ℕ) (u : ι → Rˣ),
-    (∀ i, e i ≠ 0) ∧ (∀ i, IsUnit ((e i : ℕ) : R)) ∧
-    Nonempty (C ≃ₐ[R] ∀ i, AdjoinRoot (standardCoverPoly (u i) a (e i)))
-
-/-- **Abhyankar's lemma for a regular divisor**, Stacks Tags 0EYG/0EYH, in the affine form
-assumed here: `R` Noetherian, `a` a nonzerodivisor with `R/(a)` regular, `S` finite over `R`,
-étale away from `a`, and the integral closure of `R` in `S[1/a]`, and every positive integer
-invertible in `R` (stronger than the tags' tameness hypothesis).  Then every prime `y ∋ a`
-has an étale neighbourhood `R'` (Noetherian, `a` a nonzerodivisor with `R'/(a)` regular) over
-which `S` becomes a finite product of standard tame covers. -/
-def AbhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=
-  IsNoetherianRing R →
-  a ∈ nonZeroDivisors R →
-  IsRegularRing (R ⧸ Ideal.span {a}) →
-  Module.Finite R S →
-  (∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal) →
-  IsIntegralClosure S R (Localization.Away (algebraMap R S a)) →
-  (∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) →
-  ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
-    ∃ (R' : Type u) (_ : CommRing R') (_ : Algebra R R'),
-      Algebra.Etale R R' ∧
-      (∃ y' : PrimeSpectrum R', y'.asIdeal.under R = y.asIdeal) ∧
-      IsNoetherianRing R' ∧
-      algebraMap R R' a ∈ nonZeroDivisors R' ∧
-      IsRegularRing (R' ⧸ Ideal.span {algebraMap R R' a}) ∧
-      IsFiniteProductOfStandardTameCovers R' (R' ⊗[R] S) (algebraMap R R' a)
 
 /-! ## Ramification and post-critical finiteness -/
 

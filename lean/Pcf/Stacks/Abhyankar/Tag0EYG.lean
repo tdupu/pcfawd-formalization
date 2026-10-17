@@ -6,7 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
-public import Pcf.Palomar.Statement
+public import Pcf.Palomar.LocalTheorems
 
 /-!
 # Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG`, `0EYH`)

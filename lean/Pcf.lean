@@ -173,6 +173,8 @@ public import Pcf.Stacks.Abhyankar.FiniteNormalization
 public import Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 public import Pcf.Audit
 public import Pcf.Palomar.Bridge
+public import Pcf.Palomar.LocalTheorems
+public import Pcf.Palomar.Statement
 public import Pcf.Palomar.Unconditional
 
 @[expose] public section

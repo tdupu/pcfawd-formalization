@@ -29,8 +29,10 @@ This file discharges those inputs:
 * `Pcf.pcfAllTheWayDownLocalTheorems`: the structure `Pcf.PCFAllTheWayDownLocalTheorems`, built
   from the two theorems;
 * `Pcf.pcfAllTheWayDown_charZero_unconditional`: the development-side statement with no inputs;
-* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the compared Palomar statement with the
-  `purity` and `abhyankar` binders removed and nothing else changed.
+* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the Palomar statement
+  `Pcf.Palomar.pcfAllTheWayDown_charZero` with the `purity` and `abhyankar` binders removed and
+  nothing else changed.  This is the theorem compared by the Palomar Challenge
+  (`palomar/PcfChallenge.lean`).
 -/
 
 @[expose] public section
@@ -68,7 +70,7 @@ namespace Pcf.Palomar
 
 /-- **PCF all the way down in characteristic zero**, unconditionally.
 
-The statement is that of the compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its
+The statement is that of the conditional theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its
 `purity` and `abhyankar` binders removed. Those two inputs are supplied by
 `Pcf.Palomar.zariskiNagataPurity` (Zariski--Nagata purity, Stacks `0BMB`) and
 `Pcf.Palomar.abhyankarLemma` (Abhyankar's lemma, Stacks `0EYG`/`0EYH`), both proved in

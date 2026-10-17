@@ -2,7 +2,7 @@
   "challenge_module": "PcfChallenge",
   "solution_module": "PcfSolution",
   "theorem_names": [
-    "Pcf.Palomar.pcfAllTheWayDown_charZero",
+    "Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional",
     "Pcf.Palomar.existsUnique_isNormalizationLift",
     "Pcf.Palomar.exists_pointClosure_restriction"
   ],
