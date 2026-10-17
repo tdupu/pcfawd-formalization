@@ -13,7 +13,7 @@ public import Pcf.Palomar.Statement
 /-!
 # Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG`, `0EYH`)
 
-The top theorem of the Abhyankar run (leaf A6): `Pcf.Stacks.abhyankarLemma`, an unconditional
+The main theorem: `Pcf.Stacks.abhyankarLemma`, an unconditional
 proof of `Pcf.Stacks.AbhyankarLemma R S a` for all `R S a`, and its Palomar-facing form
 `palomar_abhyankarLemma`.
 

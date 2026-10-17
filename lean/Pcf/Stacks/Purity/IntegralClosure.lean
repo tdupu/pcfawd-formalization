@@ -9,7 +9,7 @@ public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 public import Pcf.Stacks.Purity.NormalRing
 
 /-!
-# The finite-separable integral-closure leaf of Tag 0BM9
+# The finite-separable integral-closure input of Tag 0BM9
 
 In the proof of Stacks Tag `0BM9`, a connected finite étale cover of the punctured spectrum
 has a finite separable function-field extension.  Its affine extension is obtained from the

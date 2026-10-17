@@ -20,7 +20,7 @@ public import Pcf.Stacks.Purity.HenselianFiniteEtaleLift
 /-!
 # The strict root cover in the proof of Abhyankar's lemma (Stacks Tag `0EYG`)
 
-Leaf A5 of the Abhyankar run, structural part.  In the strictly henselian paragraph of the proof
+In the strictly henselian paragraph of the proof
 of Stacks Tag `0EYG`, `A` is a regular local ring, `f ∈ 𝔪_A` is a nonzerodivisor with `A ⧸ (f)`
 regular, and the proof forms the finite free `A`-algebra
 

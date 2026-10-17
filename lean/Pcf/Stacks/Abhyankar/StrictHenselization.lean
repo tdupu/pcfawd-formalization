@@ -98,7 +98,7 @@ noncomputable def StrictlyHenselianLocalRing.finiteEtaleLocalAlgEquiv
 
 /-- Regularity transfers to a finite etale local component over a strictly henselian local ring.
 
-This follows from the preceding algebra equivalence.  It is a ready local leaf for the regularity
+This follows from the preceding algebra equivalence.  It is a local input for the regularity
 part of the Abhyankar proof, but is not Tag `06LN`: that tag concerns the (strict) henselization
 itself, not a finite etale local algebra. -/
 theorem StrictlyHenselianLocalRing.isRegularRing_finite_etale_local

@@ -20,7 +20,7 @@ public import Pcf.Stacks.Purity.NormalRing
 /-!
 # Decomposition of the strict-local normalization into normal domains
 
-Leaf A4 of the Abhyankar run: the decomposition step in the strict-local paragraph of Stacks Tag
+The decomposition step in the strict-local paragraph of Stacks Tag
 `0EYG` ("`B` is normal too (`033C`) and we conclude `Y` is a finite disjoint union of spectra of
 normal domains by `10.37.16` (`030C`)").
 
@@ -30,8 +30,8 @@ normal domains by `10.37.16` (`030C`)").
   integral closure of `A` in a normal `T[1/f]`, then `T` is a finite product of integrally closed
   domains, each the integral closure of `A` in its localization at `f`;
 * `PointedEtaleNeighborhood.localColimit_tensor_exists_normalDomain_decomposition` : the case
-  `A = Rˢʰ`, `T = Rˢʰ ⊗[R] S`, using A2/A3 (`StrictNormalizationColimit`), `0567`, `06LN`, `00NU`
-  and the étale case of `033C`.
+  `A = Rˢʰ`, `T = Rˢʰ ⊗[R] S`, using `05WS` and `03GE` (`StrictNormalizationColimit`), `0567`,
+  `06LN`, `00NU` and the étale case of `033C`.
 -/
 
 @[expose] public section
@@ -228,10 +228,10 @@ noncomputable def CompleteOrthogonalIdempotents.piQuotientAlgEquiv {A T : Type*}
 
 variable {A T : Type u} [CommRing A] [CommRing T] [Algebra A T]
 
-/-- **General form of A4.**  Let `T` be the integral closure of `A` in `T[1/f]`, with `A`
-Noetherian, `T` finite over `A` and `T[1/f]` a normal ring.  Then `T` is a finite product of
-integrally closed domains `Nᵢ = T ⧸ (1 - eᵢ)`, each finite over `A` and the integral closure of
-`A` in `Nᵢ[1/f]`.
+/-- **Normal-domain decomposition (Stacks `030C`), general form.**  Let `T` be the integral
+closure of `A` in `T[1/f]`, with `A` Noetherian, `T` finite over `A` and `T[1/f]` a normal
+ring.  Then `T` is a finite product of integrally closed domains `Nᵢ = T ⧸ (1 - eᵢ)`, each finite
+over `A` and the integral closure of `A` in `Nᵢ[1/f]`.
 
 Proof: `T[1/f]` is a finite product of normal domains (`030C`); the cutting idempotents are
 integral over `A`, so they lie in `T`; each factor `Nᵢ` embeds into the corresponding factor of
@@ -446,8 +446,8 @@ theorem localColimit_isStacksNormalRing_of_regular_divisor (a : R)
   have : IsRegularRing (LocalColimit R Ω) := isRegularRing_of_isRegularLocalRing _
   exact isStacksNormalRing_of_isRegularRing _
 
-/-- **A4, normality of the generic part.**  `(Rˢʰ ⊗[R] S)[1/a]` is a normal ring: it is étale over
-the normal ring `Rˢʰ` (Stacks `033C`, `IsStacksNormalRing.of_etale`). -/
+/-- **Normality of the generic part (Stacks `033C`).**  `(Rˢʰ ⊗[R] S)[1/a]` is a normal ring:
+it is étale over the normal ring `Rˢʰ` (Stacks `033C`, `IsStacksNormalRing.of_etale`). -/
 theorem localColimit_tensor_localizationAway_isStacksNormalRing
     (a : R)
     (ha : a ∈ maximalIdeal R) (hreg : a ∈ nonZeroDivisors R)
@@ -461,10 +461,7 @@ theorem localColimit_tensor_localizationAway_isStacksNormalRing
   have := etale_localizationAway_baseChange (S := S) (LocalColimit R Ω) a hetale
   exact IsStacksNormalRing.of_etale _ hA
 
-/-- **A4 (strict-local decomposition in the proof of Stacks `0EYG`).**  The localized factor
-`StrictBaseChangeFactorAway Ω S a (e i)` is `Nᵢ[1/a]`; its element is written as the image of
-`a` under the quotient map, which is definitionally `algebraMap Rˢʰ Nᵢ a`.
-  Let `R` be a Noetherian
+/-- **Strict-local decomposition in the proof of Stacks `0EYG`.**  Let `R` be a Noetherian
 local ring, `a ∈ 𝔪_R` a nonzerodivisor with `R ⧸ (a)` regular, and `S` a finite `R`-algebra,
 étale over `R` away from `a` and equal to the normalization of `R` in `S[1/a]`.  Then
 `Rˢʰ ⊗[R] S` is a finite product of integrally closed domains `Nᵢ = (Rˢʰ ⊗[R] S) ⧸ (1 - eᵢ)`,
@@ -475,8 +472,8 @@ The algebra equivalence `Rˢʰ ⊗[R] S ≃ₐ[Rˢʰ] ∏ Nᵢ` is
 
 Divergence from Stacks: Stacks decomposes the finite étale `A_f`-algebra `B` (Algebra
 `10.37.16` = `030C`) and works with each domain component.  Here the decomposition is of the
-normalization `Rˢʰ ⊗[R] S` itself (A3), whose idempotents are those of `B` because they are
-integral.  The factors are not shown to be local (Stacks' proof does not use this). -/
+normalization `Rˢʰ ⊗[R] S` itself (Stacks `03GE`), whose idempotents are those of `B` because
+they are integral.  The factors are not shown to be local (Stacks' proof does not use this). -/
 theorem localColimit_tensor_exists_normalDomain_decomposition
     (a : R)
     (ha : a ∈ maximalIdeal R) (hreg : a ∈ nonZeroDivisors R)

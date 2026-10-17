@@ -26,6 +26,22 @@ under `Pcf.Vendor.RegularLocalization`. This file restates the pcf-facing conseq
 None of these is a global instance (instance hygiene: Mathlib already has the low-priority
 instance `IsRegularRing → IsRegularLocalRing (Localization.AtPrime p)`). Downstream files can opt
 in with the scoped instances in the namespace `Pcf.Stacks.RegularLocalization`.
+
+## Global instances from the vendored code
+
+Importing this file brings the global (not scoped) instances of the vendored PR #29802 into
+scope; the vendored copy keeps them as the PR declares them:
+
+* `IsRegularLocalRing R → IsDomain R` (`Pcf.Vendor.RegularLocalization.RegularLocalRingBasic`,
+  priority lowered to `low` by pcf), so every importer finds `IsDomain` for a regular local ring
+  by instance search; the explicit `isDomain_of_isRegularLocalRing` still works;
+* `Nontrivial M` for a maximal Cohen–Macaulay module `M`, priority `low`
+  (`Pcf.Vendor.RegularLocalization.MaximalCohenMacaulay`);
+* `ModuleCat.IsCohenMacaulay (ModuleCat.of R R)` for a Cohen–Macaulay local ring `R`
+  (`Pcf.Vendor.RegularLocalization.CohenMacaulay`).
+
+All three conclude a proposition, so they cannot create data diamonds with Mathlib; they
+disappear when the PR lands and the vendored copy is removed.
 -/
 
 @[expose] public section

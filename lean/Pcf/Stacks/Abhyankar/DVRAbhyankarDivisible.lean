@@ -72,7 +72,8 @@ made by the dominance argument of step 4 instead of multiplicativity of ramifica
   what is stated.
 * The ring `(B₁)_{𝔪ᵢⱼ}` is replaced by an arbitrary DVR `T` dominating `B` whose fraction field
   is `L(π^{1/E})`; these are exactly the localizations of `B₁` at its maximal ideals.
-* The tameness hypothesis is `e` invertible in `S` (as in the rest of pcf's Abhyankar run).
+* The tameness hypothesis is `e` invertible in `S` (as in the rest of pcf's proof of Abhyankar's
+  lemma).
 * Only the case `K₁ = K(π^{1/E})` is treated.
 -/
 
@@ -184,7 +185,8 @@ be a DVR with a local `S`-algebra structure not killing `π`.  Let `x ∈ T` sat
 In the notation of Tag `0BRM`: `S = B`, `πᵉu = π_A` is a uniformizer of `A`, `e ∣ E = d·e` is the
 ramification index of `A ⊂ A₁ = A[π_A^{1/E}]`, and `T = (B₁)_𝔪`; the conclusion says that
 `A₁ → T` has ramification index one.  See the module docstring for the proof route. -/
-@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}); conclusion: the root is a uniformizer of (B₁)_𝔪 (ramification index one); tame case e ∈ Sˣ"]
+@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}); conclusion: the root is a \
+  uniformizer of (B₁)_𝔪 (ramification index one); tame case e ∈ Sˣ"]
 theorem maximalIdeal_eq_span_root_of_dvd
     (π : S) (hπ : Irreducible π) (u : Sˣ) (e : ℕ) (he : 1 ≤ e) (heUnit : IsUnit (e : S))
     (d : ℕ) (hd : 1 ≤ d) (x : T)
@@ -243,7 +245,8 @@ theorem maximalIdeal_eq_span_root_of_dvd
     isLocalHom_localizationAtPrime_of_under_eq_maximalIdeal S U m hm
   -- `π` is a uniformizer of `U_𝔪` because `U_𝔪` is formally unramified over `S`.
   letI : Algebra.FormallyUnramified S U := inferInstance
-  letI : Algebra.FormallyUnramified U Um := Algebra.FormallyUnramified.of_isLocalization m.primeCompl
+  letI : Algebra.FormallyUnramified U Um :=
+    Algebra.FormallyUnramified.of_isLocalization m.primeCompl
   letI : Algebra.FormallyUnramified S Um := Algebra.FormallyUnramified.comp S U Um
   have hπUm : Irreducible (algebraMap S Um π) := by
     rw [IsDiscreteValuationRing.irreducible_iff_uniformizer,
@@ -294,7 +297,8 @@ theorem maximalIdeal_eq_span_root_of_dvd
   have hroot_irred : Irreducible (AdjoinRoot.root (dvrRootPoly ϖ d)) :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer _).mpr hVmax
   have hsurj : Function.Surjective φ.toRingHom := by
-    refine surjective_of_isLocalHom_of_dvr φ.toRingHom hroot_irred (by rwa [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, hφroot]) ?_
+    refine surjective_of_isLocalHom_of_dvr φ.toRingHom hroot_irred
+      (by rwa [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, hφroot]) ?_
     intro t
     obtain ⟨p, q, hq, hpq⟩ := hgen t
     refine ⟨aeval (AdjoinRoot.root (dvrRootPoly ϖ d)) (p.map (algebraMap S Um)),
@@ -330,7 +334,9 @@ the ramification index), `e` invertible in `S`, and `E = d·e`.  Let `A₁ = R[x
 In Stacks' notation `T = (B₁)_{𝔪ᵢⱼ}` for `K₁ = K(a^{1/E})`, and the conclusion "formally smooth in
 the adic topology" is, for these essentially finite type local extensions, formal unramifiedness
 (Stacks `0BRJ`). -/
-@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}), tame case e ∈ Sˣ; (B₁)_𝔪 replaced by any DVR dominating B with fraction field L(π^{1/E}); conclusion stated as formal unramifiedness"]
+@[stacks 0BRM "divisibility form e ∣ E with K₁ = K(π^{1/E}), tame case e ∈ Sˣ; (B₁)_𝔪 \
+  replaced by any DVR dominating B with fraction field L(π^{1/E}); conclusion stated as \
+  formal unramifiedness"]
 theorem formallyUnramified_dvrRoot_of_dvd
     {R : Type w} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
     [Algebra R S] [Algebra R T] [IsScalarTower R S T]

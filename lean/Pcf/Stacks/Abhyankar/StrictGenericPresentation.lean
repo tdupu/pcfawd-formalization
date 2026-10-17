@@ -12,7 +12,7 @@ public import Pcf.Stacks.Purity.Tag0BMA
 /-!
 # The generic presentation and the strictly henselian case of Abhyankar's lemma
 
-Leaf A6 of the Abhyankar run (Stacks Tag `0EYG`, last paragraph, with the addendum `0EYH`).
+Stacks Tag `0EYG`, last paragraph, with the addendum `0EYH`.
 
 Over a Noetherian strictly henselian local ring `A` with a regular divisor `a`, each normal
 domain component `N` of the normalization has fraction field `K(a^{1/n})`
@@ -30,7 +30,7 @@ purity, strict splitting and `09EV`).  This file finishes the argument:
   finite product `∏ A[x]/(x^{nᵢ} - a)`, i.e. the `hstrict` input of
   `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict`.
 
-Route change from the run plan: instead of building the generic presentation
+Divergence from Stacks: instead of building the generic presentation
 `N[1/a] ≅ A_a[y]/(y^n - a)` and passing through
 `strictStandardPresentation_of_localizedPresentation`, the integral models are compared directly
 (both are the integral closure of `A` in `K(a^{1/n})`), which yields `hstrict` without

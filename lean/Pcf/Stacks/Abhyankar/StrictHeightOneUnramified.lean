@@ -11,7 +11,7 @@ public import Pcf.Stacks.Abhyankar.StrictRootComponent
 /-!
 # Codimension-one unramifiedness of the root-cover component (Stacks Tag `0EYG`, paragraph 4)
 
-Leaf A5 of the Abhyankar run, the `0BRM` transport.  Paragraph 4 of the proof of Stacks Tag `0EYG`:
+The `0BRM` transport.  Paragraph 4 of the proof of Stacks Tag `0EYG`:
 
 > By Abhyankar's lemma (`0BRM`) we see that `Spec(B')` is unramified over `Spec(A')` in
 > codimension 1.

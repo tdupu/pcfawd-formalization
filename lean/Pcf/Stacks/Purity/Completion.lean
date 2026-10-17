@@ -13,10 +13,10 @@ public import Pcf.Stacks.Abhyankar.StrictHenselizationRegularity
 /-!
 # Completion facts for the complete-case hypersurface lifting route
 
-This file collects the completion inputs of the purity route (leaves P4b-i and P4b-iii of the
-purity/Abhyankar plan).
+This file collects the completion inputs of the proof of Stacks Tag `0BMA` (purity for regular
+local rings) via complete regular local rings.
 
-## Completeness (P4b-iii)
+## Completeness
 
 * `Pcf.Stacks.IsAdicComplete.of_le` (Stacks `090T`): if `I ⊆ J`, `I` is finitely generated and
   `M` is `J`-adically complete, then `M` is `I`-adically complete.
@@ -30,7 +30,7 @@ purity/Abhyankar plan).
   `Pcf.Stacks.isAdicComplete_map_span_singleton_of_finite`: over a complete Noetherian local
   ring, a finite module (or finite algebra) is `(f)`-adically complete for every `f ∈ m`.
 
-## The completion of a regular local ring (P4b-i)
+## The completion of a regular local ring
 
 For a Noetherian local ring `A` with completion `Â = AdicCompletion (maximalIdeal A) A`:
 

@@ -19,7 +19,7 @@ public import Pcf.Stacks.Common.RegularLocalization
 Two inputs of the strict-local paragraph of Stacks Tag `0EYG` for the pointed-étale-colimit model
 `Rˢʰ = LocalColimit R Ω` of the strict henselization.
 
-**A2 (the divisor stays regular).**  "Since `A → A^{sh}` is flat ... `f` maps to a nonzerodivisor
+**The divisor stays regular.**  "Since `A → A^{sh}` is flat ... `f` maps to a nonzerodivisor
 ... `A^{sh}/fA^{sh} = (A/fA)^{sh}` (`05WS`) is a regular local ring as the strict henselization of
 `O_{D,x}` (`06LN`)."
 
@@ -29,7 +29,7 @@ Two inputs of the strict-local paragraph of Stacks Tag `0EYG` for the pointed-é
   field; via the proved `05WS` comparison `localQuotientBaseChangeAlgEquiv` and the `06LN`/`06LJ`
   regularity of `LocalColimit (R ⧸ I) Ω`.
 
-**A3 (normalization commutes with `R → Rˢʰ`).**  Stacks `03GE` (Lemma 10.147.2) is the étale case.
+**Normalization commutes with `R → Rˢʰ`.**  Stacks `03GE` (Lemma 10.147.2) is the étale case.
 `Rˢʰ` is a filtered colimit of étale `R`-algebras, and integral closure commutes with it:
 
 * `exists_refinement_map_eq_zero_of_map_eq_zero` : vanishing in `Rˢʰ ⊗[R] B` happens at a stage;
@@ -38,7 +38,7 @@ Two inputs of the strict-local paragraph of Stacks Tag `0EYG` for the pointed-é
   `IsIntegralClosure` forms; the latter is exactly the `hnormalization` input of
   `strictStandardPresentation_of_localizedPresentation`.
 
-The A3 results hold for any `R` and any `Ω`; no locality is needed.
+The normalization results hold for any `R` and any `Ω`; no locality is needed.
 -/
 
 @[expose] public section
@@ -129,8 +129,9 @@ theorem quotient_localColimit_isRegularLocalRing (I : Ideal R)
   exact IsRegularLocalRing.of_ringEquiv
     (localQuotientBaseChangeAlgEquiv I φ).toRingEquiv.symm
 
-/-- **A2.** The image of the divisor in the strict henselization cuts out a regular ring:
-`Rˢʰ ⧸ (a)` is regular local (hence a regular ring) when `R ⧸ (a)` is regular local. -/
+/-- **Stacks `05WS`, `06LN`.** The image of the divisor in the strict henselization cuts out a
+regular ring: `Rˢʰ ⧸ (a)` is regular local (hence a regular ring) when `R ⧸ (a)` is regular
+local. -/
 theorem quotient_span_localColimit_isRegularLocalRing (a : R)
     [IsRegularLocalRing (R ⧸ Ideal.span {a})] :
     IsRegularLocalRing (LocalColimit R Ω ⧸
@@ -138,8 +139,8 @@ theorem quotient_span_localColimit_isRegularLocalRing (a : R)
   have := quotient_localColimit_isRegularLocalRing (Ω := Ω) (Ideal.span {a})
   rwa [Ideal.map_span, Set.image_singleton] at this
 
-/-- **A2, the form consumed by `0EYG`.**  For `a` in the maximal ideal of the local ring `R`
-with `R ⧸ (a)` a regular ring, `Rˢʰ ⧸ (a)` is a regular ring.  This is the
+/-- **Stacks `05WS`, `06LN`, the form consumed by `0EYG`.**  For `a` in the maximal ideal of
+the local ring `R` with `R ⧸ (a)` a regular ring, `Rˢʰ ⧸ (a)` is a regular ring.  This is the
 `[IsRegularRing (LocalColimit R Ω ⧸ (a))]` input of
 `strictStandardPresentation_of_localizedPresentation`. -/
 theorem quotient_span_localColimit_isRegularRing (a : R)
@@ -244,9 +245,9 @@ theorem toIntegralClosure_map_val {Y T B : Type u} [CommRing Y] [CommRing T] [Co
   | add x y hx hy => simp only [map_add, Subalgebra.coe_add, hx, hy]
   | tmul y b => rfl
 
-/-- **A3, comparison map.**  For every `R`-algebra `B`, the comparison
-`Rˢʰ ⊗[R] (integral closure of R in B) → integral closure of Rˢʰ in Rˢʰ ⊗[R] B` is bijective:
-integral closure commutes with the ind-étale base change `R → Rˢʰ`.
+/-- **Normalization commutes with `R → Rˢʰ`, comparison map.**  For every `R`-algebra `B`, the
+comparison `Rˢʰ ⊗[R] (integral closure of R in B) → integral closure of Rˢʰ in Rˢʰ ⊗[R] B` is
+bijective: integral closure commutes with the ind-étale base change `R → Rˢʰ`.
 
 Proof: injectivity is flatness.  For surjectivity, an element integral over `Rˢʰ` and its
 integral equation are defined over a pointed étale stage `A_λ`; the equation holds after a
@@ -348,8 +349,8 @@ theorem localColimitIntegralClosureEquiv_val (x : LocalColimit R Ω ⊗[R] N) :
       exact congrArg (fun z : B => x ⊗ₜ[R] z)
         (IsIntegralClosure.algebraMap_equiv R N B (integralClosure R B) y)
 
-/-- **A3.** If `N` is the integral closure of `R` in `B`, then `Rˢʰ ⊗[R] N` is the integral
-closure of `Rˢʰ` in `Rˢʰ ⊗[R] B`.
+/-- **Normalization commutes with `R → Rˢʰ`.** If `N` is the integral closure of `R` in `B`,
+then `Rˢʰ ⊗[R] N` is the integral closure of `Rˢʰ` in `Rˢʰ ⊗[R] B`.
 
 Stacks `03GE` (Lemma 10.147.2) is the étale case; this is its extension to the filtered
 colimit of pointed étale neighbourhoods defining `Rˢʰ`. -/
@@ -375,8 +376,9 @@ theorem localColimit_isIntegralClosure :
 
 end IntegralClosure
 
-/-- **A3, the form consumed by `0EYG`.**  If `S` is the normalization of `R` in `S[1/a]`, then
-`Rˢʰ ⊗[R] S` is the normalization of `Rˢʰ` in `(Rˢʰ ⊗[R] S)[1/a]`.
+/-- **Normalization commutes with `R → Rˢʰ`, the form consumed by `0EYG`.**  If `S` is the
+normalization of `R` in `S[1/a]`, then `Rˢʰ ⊗[R] S` is the normalization of `Rˢʰ` in
+`(Rˢʰ ⊗[R] S)[1/a]`.
 
 This is exactly the `hnormalization` hypothesis of
 `strictStandardPresentation_of_localizedPresentation`. -/

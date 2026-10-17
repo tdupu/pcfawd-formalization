@@ -197,7 +197,8 @@ theorem isDomain_of_isRegularLocalRing [IsRegularLocalRing R] : IsDomain R := by
       (@Ideal.span_singleton_mul_eq_self_of_isPrime _ _ _ min.1.1 _ (xnmem.2 _ min) hp).symm
       (((Ideal.span_singleton_le_iff_mem _).mpr xmem).trans (maximalIdeal_le_jacobson _))
 
--- pcf: priority lowered (instance hygiene, purity/Abhyankar PLAN risk 7).
+-- pcf: priority lowered (instance hygiene); this instance is global, see the docstring of
+-- `Pcf.Stacks.Common.RegularLocalization`.
 instance (priority := low) [IsRegularLocalRing R] : IsDomain R := isDomain_of_isRegularLocalRing R
 
 /-- Regular local ring of dimension one is discrete valuation ring.

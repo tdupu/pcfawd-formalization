@@ -12,7 +12,7 @@ public import Pcf.Stacks.Purity.FiniteNormalModel
 /-!
 # Existence of the root-cover component (Stacks Tag `0EYG`, paragraph 4)
 
-Leaf A5 of the Abhyankar run, normalization-existence part (WP14c).  In paragraph 4 of the proof
+The normalization-existence part of paragraph 4.  In paragraph 4 of the proof
 of Stacks Tag `0EYG` one forms the root cover `A' = A[x]/(x^E − a)` and `B' = B ⊗_A A'`, where
 `B = N[1/a]` for a normal domain component `N`.  The structure `StrictRootComponentData` of
 `StrictHeightOneTransport.lean` asks for a normal-domain component `N'` of the normalization of
@@ -30,10 +30,12 @@ constructs everything except the unramifiedness:
   normal; `B'` is étale over `A'` hence normal (`033C`), hence a finite product of normal domains
   (`030C`); `N'` is the integral closure of `A'` in a factor `B'_j`, finite because the generic
   fibre `Frac(A') ⊗ B'_j` is finite étale over `Frac(A')`;
-* `PointedEtaleNeighborhood.strictBaseChangeFactor_faithfulSMul`: WP13's domain factors
-  `Nᵢ = StrictBaseChangeFactor R Ω S (e i)` are faithful over `Rˢʰ = LocalColimit R Ω`;
+* `PointedEtaleNeighborhood.strictBaseChangeFactor_faithfulSMul`: the domain factors
+  `Nᵢ = StrictBaseChangeFactor R Ω S (e i)` of
+  `localColimit_tensor_exists_normalDomain_decomposition` are faithful over
+  `Rˢʰ = LocalColimit R Ω`;
 * `PointedEtaleNeighborhood.exists_strictRootComponentPreData_strictBaseChangeFactor`: the
-  existence statement for WP13's factors over `Rˢʰ`.
+  existence statement for these factors over `Rˢʰ`.
 
 ## Assembly with the codimension-one input
 
@@ -481,7 +483,7 @@ variable {R Ω S : Type u} [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [Fi
   [Algebra R Ω] [Algebra (ResidueField R) Ω] [IsScalarTower R (ResidueField R) Ω]
   [IsSepClosure (ResidueField R) Ω] [CommRing S] [Algebra R S] [Module.Finite R S]
 
-/-- **Faithfulness of WP13's factors.**  A domain factor `Nᵢ` of `Rˢʰ ⊗[R] S` that is the
+/-- **Faithfulness of the normal-domain factors.**  A domain factor `Nᵢ` of `Rˢʰ ⊗[R] S` that is the
 integral closure of `Rˢʰ` in `Nᵢ[1/a]` is faithful over `Rˢʰ`: `Nᵢ[1/a]` is a localization of the
 étale `Rˢʰ`-algebra `(Rˢʰ ⊗[R] S)[1/a]`, hence flat, and nonzero, over the domain `Rˢʰ`
 (`faithfulSMul_of_flat_of_isDomain`); and `Nᵢ ⊂ Nᵢ[1/a]`. -/
@@ -500,7 +502,7 @@ theorem strictBaseChangeFactor_faithfulSMul (a : R) (ha : a ∈ maximalIdeal R)
   haveI := etale_localizationAway_baseChange (S := S) (LocalColimit R Ω) a hetale
   exact faithfulSMul_quotient_idempotent _ he hic.algebraMap_injective
 
-/-- **Existence of the root-cover component for WP13's factors.**  For a factor
+/-- **Existence of the root-cover component for the normal-domain factors.**  For a factor
 `Nᵢ = StrictBaseChangeFactor R Ω S (e i)` from
 `localColimit_tensor_exists_normalDomain_decomposition` (a domain, finite over `Rˢʰ`, the
 integral closure of `Rˢʰ` in `Nᵢ[1/a]`), the root-cover component pre-data over `Rˢʰ` exists

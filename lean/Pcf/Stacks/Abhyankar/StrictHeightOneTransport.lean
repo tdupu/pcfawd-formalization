@@ -13,7 +13,7 @@ public import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
 /-!
 # Codimension-one input for the strict root cover (Stacks Tag `0EYG`, paragraph 4)
 
-Leaf A5 of the Abhyankar run, codimension-one part.  Paragraph 4 of the proof of Stacks Tag
+Paragraph 4 of the proof of Stacks Tag
 `0EYG` forms the root cover `A' = A[x]/(x^e − f)` and asserts:
 
 > Set `B' = B ⊗_A A' = B ⊗_{A_f} A'_{f'}`. By Abhyankar's lemma (`0BRM`) we see that `Spec(B')`
@@ -22,8 +22,8 @@ Leaf A5 of the Abhyankar run, codimension-one part.  Paragraph 4 of the proof of
 > us that the ramification indices have all become equal to 1.
 
 This file records the reductions of that assertion, states the codimension-one input as the
-structure `StrictRootComponentData` (constructed downstream, see below), and combines it with the classification of
-`StrictComponentClassification.lean`:
+structure `StrictRootComponentData` (constructed downstream, see below), and combines it with
+the classification of `StrictComponentClassification.lean`:
 
 * `under_eq_of_height_eq_one_of_mem`: a height-one prime of a finite normal domain extension
   `N'/A'` containing `x` lies over the height-one prime `(x)` of `A'` (going-down / `00ON`);
@@ -178,7 +178,8 @@ with its structure maps `A → A' → N'` and `N → N'`, étaleness over `A'` a
 codimension-one conclusion of Abhyankar's lemma for DVRs (`0BRM`): `N'` is unramified over `A'`
 at every height-one prime.
 
-Constructing this data is the open part of leaf A5; see the module docstring. -/
+It is constructed downstream (`StrictRootComponent.lean`, `StrictHeightOneUnramified.lean`);
+see the module docstring. -/
 structure StrictRootComponentData where
   /-- The component `N'`. -/
   carrier : Type u
@@ -241,7 +242,7 @@ root-cover component data exists has fraction field `K(a^{1/n})`, `n ∣ E`, `K 
 assuming Zariski–Nagata purity.
 
 The hypotheses on `Rˢʰ` in `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`
-are discharged by `06LJ` (Noetherian), the strict henselian structure, and `A2`
+are discharged by `06LJ` (Noetherian), the strict henselian structure, and `05WS`/`06LN`
 (`quotient_span_localColimit_isRegularLocalRing`). -/
 theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
     (a : R) (ha : a ∈ maximalIdeal R) (ha0 : a ∈ nonZeroDivisors R)

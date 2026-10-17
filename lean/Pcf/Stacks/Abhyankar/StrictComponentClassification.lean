@@ -12,7 +12,7 @@ public import Pcf.Stacks.Abhyankar.Tag0EYE
 /-!
 # Per-component classification in the strictly henselian case of Stacks Tag `0EYG`
 
-Leaf A5 of the Abhyankar run, classification part.  This file formalizes paragraphs 4–5 of the
+This file formalizes paragraphs 4–5 of the
 proof of Stacks Tag `0EYG` for one normal domain component `N` of the normalization after
 strict henselization:
 
@@ -51,7 +51,8 @@ given with its map `N → N'`, and suppose `N'` is unramified over `A'` at every
    `Frac(N) ≅ K(a^{1/n})` for a divisor `n` of `E`.
 
 The conclusion is the field-level statement `Frac(N) ≃ₐ[K] K[y]/(y^n − a)`, `n ∣ E`, which is
-the input of leaf A6 (normalization uniqueness identifies `N[1/a]` with `A[1/a][y]/(y^n − a)`).
+the input of the last paragraph of `0EYG` (normalization uniqueness identifies `N[1/a]` with
+`A[1/a][y]/(y^n − a)`; see `StrictGenericPresentation.lean`).
 
 ## Divergences from Stacks
 

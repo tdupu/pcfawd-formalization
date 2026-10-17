@@ -48,7 +48,7 @@ theorem rootOfUnity_eq_one_of_residue_eq_one {n : ℕ}
   exact sub_eq_zero.mp hzsub
 
 /-- Reduction to the residue field is injective on `n`-th roots of unity when `n` is a
-residue-field unit.  This is the unconditional torsion-injectivity leaf used in the tame
+residue-field unit.  This is the torsion-injectivity input used in the tame
 root-of-unity descent for Stacks Tag `09EV`. -/
 theorem restrictRootsOfUnity_residue_injective {n : ℕ}
     (hunit : IsUnit ((n : ℕ) : ResidueField R)) :
@@ -347,7 +347,8 @@ theorem dvrRoot_split
   refine ⟨a, c, by simp [c], ?_⟩
   have hz : z = ∑ i : Fin n, algebraMap A (AdjoinRoot (dvrRootPoly π n)) (d i) *
       AdjoinRoot.root (dvrRootPoly π n) ^ (i : ℕ) := by
-    simpa only [d, β, dvrRootBasis_apply, Algebra.smul_def] using (dvrRootBasis π hn).sum_repr z |>.symm
+    simpa only [d, β, dvrRootBasis_apply, Algebra.smul_def] using
+      (dvrRootBasis π hn).sum_repr z |>.symm
   rw [hz, Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ (⟨0, hn⟩ : Fin n))]
   simp only [Fin.val_zero, pow_zero, mul_one]
   congr 1

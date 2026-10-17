@@ -42,8 +42,9 @@ statement is unchanged.  Informally:
 
 0. (Tag `0BM9`, pcf.) `V ≅ Spec B ×_X U` for a finite, torsion-free, Stacks-normal `A`-algebra
    `B` whose spectrum is étale over `U`.
-1. (Tag `09ZL`, WP5.) `A` is henselian, so the given extension `Y₀` of `V|_{U₀}` lifts to a finite
-   étale `A`-algebra `C` with `Y₀ ≅ Spec (C/fC)`.
+1. (Tag `09ZL`, `exists_finite_etale_lift_of_henselianLocalRing`.) `A` is henselian, so the
+   given extension `Y₀` of `V|_{U₀}` lifts to a finite étale `A`-algebra `C` with
+   `Y₀ ≅ Spec (C/fC)`.
 2. The isomorphism `V|_{U₀} ≅ Y₀|_{U₀}` is encoded algebraically as an `A`-algebra map
    `φ₀ : B → C/fC` which becomes bijective after inverting any `x ∈ m`
    (restriction of the isomorphism to the affine open `D(xq) ⊆ U₀`).
@@ -54,7 +55,8 @@ statement is unchanged.  Informally:
 4. (`Pcf.Stacks.Purity.FormalEtaleLift`.) `φ₀` lifts uniquely to `B → C/f^(n+1)C` for every `n`:
    locally on `D(x)` and `D(y)` by formal étaleness along the nilpotent kernel, glued by the
    depth-two Hartogs lemma for the regular pair `x, y`; the lifts are compatible by uniqueness and
-   converge, since `C` is `(f)`-adically complete (WP4), to `φ : B → C` with `φ mod f = φ₀`.
+   converge, since `C` is `(f)`-adically complete (`Purity/Completion`), to `φ : B → C` with
+   `φ mod f = φ₀`.
 5. Let `p = (f)`, a prime of `A` not containing `x`.  Localizing at `p`, `φ_p` is bijective by
    Nakayama's lemma: `φ₀` is bijective after inverting `x`, `f ∈ p A_p` and `f` is a
    nonzerodivisor on `C`.

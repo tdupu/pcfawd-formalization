@@ -150,8 +150,9 @@ spectrum is etale over the punctured spectrum is etale.  The finite algebra may 
 and is not assumed local; generic and codimension-one etaleness are derived from the literal
 scheme pullback hypothesis.
 
-The explicit `IsIntegrallyClosed R` argument records the one result about regular local rings
-which is not yet available at the pinned Mathlib revision. -/
+The `IsIntegrallyClosed R` argument holds for every regular local ring (Stacks `0567`,
+`isIntegrallyClosed_of_isRegularLocalRing`); callers supply it, as in
+`puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two`. -/
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
     (R : Type u) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsRegularLocalRing R] [IsIntegrallyClosed R] (hdim : ringKrullDim R = 2) :
