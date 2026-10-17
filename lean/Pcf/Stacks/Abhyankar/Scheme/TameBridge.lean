@@ -268,12 +268,5 @@ theorem chartTame_of_isTamelyRamifiedInCodimOne {X Y : Scheme.{u}} {D : X.IdealS
   simp [eK, heKr]
   rfl
 
-
 end Pcf.Stacks.SchemeLevel
 
-#print axioms Pcf.Stacks.SchemeLevel.length_quotient_map_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.ramificationIdx_eq_of_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.IsTamelyRamifiedAt.of_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.integralClosureRingEquiv
-#print axioms Pcf.Stacks.SchemeLevel.IsTamelyRamifiedOver.of_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.chartTame_of_isTamelyRamifiedInCodimOne

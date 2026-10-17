@@ -32,7 +32,8 @@ Setting: `R` Noetherian, `a ∈ R` a nonzerodivisor with `R/(a)` regular, `B` fi
 ## Relation to the Stacks proof of Tag `0EYG`
 
 Stacks reduces to the strict henselization and works with `B` itself.  Here the affine
-hypothesis (work package `A′`) is stated, like phase 1's `Pcf.Stacks.AbhyankarLemma`, for the
+hypothesis (`Pcf.Stacks.AbhyankarLemmaTame`) is stated, like the characteristic-zero
+`Pcf.Stacks.AbhyankarLemma`, for the
 *normalization* `S` of `R` in `S[1/a]` and requires `S` finite.  The normalization of `R` in `B`
 need not be known to be finite a priori, so the route differs from Stacks: we apply the hypothesis
 at the regular local ring `R_y`, where finiteness of the normalization is the classical fact
@@ -50,7 +51,6 @@ set_option linter.style.haveILetI false
 
 namespace Pcf.Stacks.SchemeLevel.AffineTame
 section Chart
-
 
 variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra R Ra]
   [IsLocalization.Away a Ra]
@@ -81,6 +81,7 @@ noncomputable instance tensorAlgebra :
   (Algebra.TensorProduct.map (AlgHom.id (Localization.AtPrime y) (Localization.AtPrime y))
     (IsScalarTower.toAlgHom R Ra B)).toRingHom.toAlgebra
 
+/-- `R_y ⊗_R R_a` is the localization of `R_y` away from the image of `a`. -/
 theorem isLocalization_tensor :
     IsLocalization.Away (algebraMap R (Localization.AtPrime y) a)
       (Localization.AtPrime y ⊗[R] Ra) := by
@@ -95,12 +96,14 @@ instance : IsScalarTower (Localization.AtPrime y) (Localization.AtPrime y ⊗[R]
     simp
     rfl
 
+/-- The algebra map `R_y ⊗_R R_a → B_y` on pure tensors: `r ⊗ x ↦ r ⊗ x`. -/
 theorem algebraMap_tensor_tmul (r : Localization.AtPrime y) (x : Ra) :
     algebraMap (Localization.AtPrime y ⊗[R] Ra) (By B y) (r ⊗ₜ x) =
       (show By B y from r ⊗ₜ[R] algebraMap Ra B x) := by
   change Algebra.TensorProduct.map _ _ (r ⊗ₜ x) = _
   simp
 
+/-- If `B` is integral over `R_a`, then `B_y` is integral over `R_y ⊗_R R_a`. -/
 theorem isIntegral_tensor [Algebra.IsIntegral Ra B] :
     Algebra.IsIntegral (Localization.AtPrime y ⊗[R] Ra) (By B y) := by
   constructor
@@ -181,6 +184,7 @@ abbrev ay : Localization.AtPrime y := algebraMap R (Localization.AtPrime y) a
 
 omit [Algebra.Etale Ra B] in
 include Ra in
+/-- `B_y` is the localization of the normalization `N_y` away from `a_y`. -/
 theorem isLocalization_away_ny :
     IsLocalization.Away (algebraMap (Localization.AtPrime y) (Ny B y) (ay a y))
       (By B y) := by
@@ -191,6 +195,7 @@ theorem isLocalization_away_ny :
 
 omit [Algebra.Etale Ra B] in
 include Ra in
+/-- `N_y` is the integral closure of `R_y` in `N_y[1/a_y]`. -/
 theorem isIntegralClosure_ny :
     IsIntegralClosure (Ny B y) (Localization.AtPrime y)
       (Localization.Away (algebraMap (Localization.AtPrime y) (Ny B y) (ay a y))) := by
@@ -201,19 +206,20 @@ theorem isIntegralClosure_ny :
 
 omit [Module.Finite Ra B] in
 include a Ra in
+/-- `B_y = R_y ⊗_R B` is étale over `R_y` (as `B` is étale over `R_a`, hence over `R`). -/
 theorem etale_by : Algebra.Etale (Localization.AtPrime y) (By B y) := by
   have : Algebra.Etale R Ra := Algebra.Etale.of_isLocalizationAway a
   have : Algebra.Etale R B := Algebra.Etale.comp R Ra B
   exact (inferInstance : Algebra.Etale (Localization.AtPrime y) (Localization.AtPrime y ⊗[R] B))
 
 include Ra in
+/-- `N_y` is étale over `R_y` at every prime not containing `a_y`. -/
 theorem isEtaleAt_ny (w : PrimeSpectrum (Ny B y))
     (hw : algebraMap (Localization.AtPrime y) (Ny B y) (ay a y) ∉ w.asIdeal) :
     Algebra.IsEtaleAt (Localization.AtPrime y) w.asIdeal := by
   have := isLocalization_away_ny a Ra B y
   have := etale_by a Ra B y
   exact Pcf.Stacks.isEtaleAt_of_isLocalization_away (D := By B y) _ w hw
-
 
 include a Ra in
 /-- `N_y` is finite over `R_y` when `R_y` is a Noetherian normal domain (it will be regular local):
@@ -286,9 +292,7 @@ theorem finite_ny [IsDomain (Localization.AtPrime y)] [IsIntegrallyClosed (Local
   apply hψinj
   exact congrArg Subtype.val hxz
 
-
 end Chart
-
 
 section TameLocalization
 
@@ -298,6 +302,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S] (p : Ideal R) [p.
   [IsLocalization (algebraMapSubmonoid S p.primeCompl) Sₚ]
   [Algebra Rₚ Sₚ] [Algebra R Sₚ] [IsScalarTower R S Sₚ] [IsScalarTower R Rₚ Sₚ]
 
+/-- For a prime `q` of `S` over `p`, the image of `R ∖ p` in `S` is disjoint from `q`. -/
 theorem disjoint_primeCompl (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
     Disjoint (algebraMapSubmonoid S p.primeCompl : Set S) q := by
   rw [Set.disjoint_left]
@@ -307,11 +312,13 @@ theorem disjoint_primeCompl (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
   exact hrq
 
 omit [Algebra R Sₚ] [IsScalarTower R S Sₚ] in
+/-- A prime `q` of `S` over `p` extends to a prime of the localization `S_p`. -/
 theorem isPrime_map (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
     (q.map (algebraMap S Sₚ)).IsPrime :=
   IsLocalization.isPrime_of_isPrime_disjoint _ Sₚ q inferInstance (disjoint_primeCompl p q hq)
 
 omit [Algebra R Sₚ] [IsScalarTower R S Sₚ] in
+/-- A prime `q` of `S` over `p` is recovered from its extension to `S_p`. -/
 theorem comap_map (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
     (q.map (algebraMap S Sₚ)).comap (algebraMap S Sₚ) = q :=
   IsLocalization.under_map_of_isPrime_disjoint _ Sₚ inferInstance (disjoint_primeCompl p q hq)

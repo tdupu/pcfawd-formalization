@@ -132,6 +132,7 @@ public import Pcf.Examples.Pinched
 public import Pcf.Stacks.Common.EtaleNormal
 public import Pcf.Stacks.Common.RegularNormal
 public import Pcf.Stacks.Common.RegularLocalization
+public import Pcf.Stacks.Common.AffineBasicOpen
 public import Pcf.Stacks.Purity.DimensionTwo
 public import Pcf.Stacks.Purity.DiscriminantGlobal
 public import Pcf.Stacks.Purity.LocalEtaleSectionLifting

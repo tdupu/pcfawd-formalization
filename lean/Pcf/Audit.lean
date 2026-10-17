@@ -2309,3 +2309,15 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 #print axioms Pcf.Stacks.SchemeLevel.residueField_algebraMap_algebraMap
 #print axioms Pcf.Stacks.SchemeLevel.residueField_map_localRingEquiv_algebraMap
 #print axioms Pcf.Stacks.SchemeLevel.under_eq_comap_of_ringEquiv
+
+-- Definitions and auxiliary declarations of the scheme-level and tame Abhyankar layers
+#print axioms Pcf.Stacks.PointedEtaleNeighborhood.stageToStrictBaseChange
+#print axioms Pcf.Stacks.residueFieldMapₐOfLiesOver
+#print axioms Pcf.Stacks.SchemeLevel.genericFibreRing
+#print axioms Pcf.Stacks.SchemeLevel.integralClosureRingEquiv
+#print axioms Pcf.Stacks.SchemeLevel.normalizationAppAlgEquiv
+#print axioms Pcf.Stacks.SchemeLevel.specFractionFieldToScheme
+#print axioms Pcf.Stacks.SchemeLevel.standardRingOneOneEquiv
+#print axioms Pcf.Stacks.SchemeLevel.standardTameRingEquiv
+#print axioms Pcf.Stacks.SchemeLevel.standardTameRingOneOneEquiv
+#print axioms Pcf.Stacks.StrictRootComponentPreData.toDataOfDvd_tame

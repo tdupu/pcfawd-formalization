@@ -109,13 +109,4 @@ theorem IsRegularScheme.of_isOpenImmersion {Z : Scheme.{u}} (f : Z ⟶ X) [IsOpe
   have := hX.isRegularLocalRing_stalk (f z)
   exact IsRegularLocalRing.of_ringEquiv (asIso (f.stalkMap z)).commRingCatIsoToRingEquiv
 
-#print axioms IsAffineOpen.primeIdealOf_fromSpec
-#print axioms isRegularLocalRing_stalk_of_isRegularRing
-#print axioms isRegularRing_of_isRegularLocalRing_stalk
-#print axioms IsRegularScheme.isRegularLocalRing_stalk
-#print axioms IsRegularScheme.isLocallyNoetherian
-#print axioms isRegularScheme_iff
-#print axioms IsRegularScheme.isRegularRing
-#print axioms IsRegularScheme.of_isOpenImmersion
-
 end Pcf.Stacks.SchemeLevel

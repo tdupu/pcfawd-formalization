@@ -33,18 +33,20 @@ Stacks step → Lean:
 * "`A^{sh}/fA^{sh} = (A/fA)^{sh}` (10.156.4) is a regular local ring (15.46.10)" —
   `quotient_span_localColimit_isRegularLocalRing` (`05WS`, `06LN`).
 * "By Lemma 58.31.1 (`0EYD`) the base change of `Y` to `Spec(A^{sh})` is tamely ramified in
-  codimension `1`" — `isTamelyRamifiedAt_quotient_idempotent_of_etale_cover` instantiated at
-  `Rˢʰ ⊗_R S` (`PointedEtaleNeighborhood.isTamelyRamifiedAt_strictBaseChangeFactor`).
-* "Assume we've proven the assertion for the base change … `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`"
-  — `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame` (integral `0EYH` form).
+  codimension `1`" — `PointedEtaleNeighborhood.isTamelyRamifiedAt_strictBaseChangeFactor`, applied
+  to each domain factor of `Rˢʰ ⊗_R S`.
+* "Assume we've proven the assertion for the base change …
+  `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`" —
+  `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame` (integral `0EYH` form).
 * "The displayed isomorphism descends … (10.127.8). After increasing `λ` … `e_i` is invertible in
-  `A_λ`" — `hasAbhyankarStandardCoverAt_of_strict_tame` (`05N9` descent, `exists_stage_natCast_isUnit`).
+  `A_λ`" — `hasAbhyankarStandardCoverAt_of_strict_tame` (`05N9` descent,
+  `exists_stage_natCast_isUnit`).
 
-Divergences from Stacks: the strict henselization of `R` at `κ(y)ˢᵉᵖ` is compared with that of
-`R_y` (`04GW`) rather than working with `𝒪_{X,x}` directly; the normalization step is carried out on
-the integral models, so the conclusion is the `0EYH` form `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - a)`
-directly; `0EYD` is proved by comparing ramification indices along the ind-étale base change
-instead of via More on Algebra 15.116.9.  The points `x ∉ D` of the tag are not treated.
+Divergences from Stacks: the strict henselization of `R` at `κ(y)ˢᵉᵖ` is compared with that of `R_y`
+(`04GW`) rather than working with `𝒪_{X,x}` directly; the normalization step is carried out on the
+integral models, so the conclusion is the `0EYH` form `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - u_i a)` (`u_i`
+units of `R'`) directly; `0EYD` is proved by comparing ramification indices along the ind-étale base
+change instead of via More on Algebra 15.116.9. The points `x ∉ D` of the tag are not treated.
 -/
 
 @[expose] public section
@@ -63,12 +65,13 @@ unpacked form of `abhyankarLemma_tame`: with `Ω = κ(y)ˢᵉᵖ`, the strict he
 `Rˢʰ = LocalColimit R Ω` is identified with that of `R_y` (`04GW`), which transports
 Noetherianity, strict henselianity and regularity of `Rˢʰ ⧸ (a)`; tameness of `S[1/a]` over `R` in
 codimension one is transported to each normal-domain component of `Rˢʰ ⊗_R S` (`0EYD`,
-`isTamelyRamifiedAt_strictBaseChangeFactor`); then `Rˢʰ ⊗_R S` is a finite product of standard root
-covers with invertible exponents (`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`),
-which descends to a pointed étale neighbourhood (`05N9`, `hasAbhyankarStandardCoverAt_of_strict_tame`).
+`isTamelyRamifiedAt_strictBaseChangeFactor`); then `Rˢʰ ⊗_R S` is a finite product of standard
+root covers with invertible exponents
+(`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`), which descends to a
+pointed étale neighbourhood (`05N9`, `hasAbhyankarStandardCoverAt_of_strict_tame`).
 
-The proof is that of `hasAbhyankarStandardCoverAt_of_mem_divisor` (phase 1) with the two uses of
-"every positive integer is a unit" replaced by the tame inputs. -/
+The proof follows that of the characteristic-zero `hasAbhyankarStandardCoverAt_of_mem_divisor`,
+with the two uses of "every positive integer is a unit" replaced by the tame inputs. -/
 theorem hasAbhyankarStandardCoverAt_of_mem_divisor_tame
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R)
     [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
@@ -135,16 +138,10 @@ theorem hasAbhyankarStandardCoverAt_of_mem_divisor_tame
   haveI : IsIntegralClosure (B ⊗[R] S) B (Localization.Away (algebraMap B (B ⊗[R] S) aB)) :=
     localColimit_isIntegralClosure_localizationAway (Ω := Ω) (S := S) a
   -- `0EYD`: tameness of each normal-domain component of `B ⊗[R] S` over `B`
-  -- (`isTamelyRamifiedAt_quotient_idempotent_of_etale_cover`, instantiated at the strict base
-  -- change with its étale-stage cover and flatness over `S`)
-  letI : Algebra S (B ⊗[R] S) := Algebra.TensorProduct.rightAlgebra
-  haveI : Module.Flat R B := localColimit_flat (R := R) (Ω := Ω)
-  haveI : Module.Flat S (B ⊗[R] S) := module_flat_strictBaseChange (R := R) (Ω := Ω) S
   have hstrict : IsFiniteDisjointUnionOfStandardTameCovers B (B ⊗[R] S) aB := by
     refine isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame aB haB ha0B ?_
     intro e he _ _ _ q hq hqa
-    exact isTamelyRamifiedAt_quotient_idempotent_of_etale_cover a htame haB ha0B
-      (exists_etale_cover_strictBaseChange (R := R) (Ω := Ω) S) e he q hq hqa
+    exact isTamelyRamifiedAt_strictBaseChangeFactor (Ω := Ω) a htame haB ha0B e he q hq hqa
   exact hasAbhyankarStandardCoverAt_of_strict_tame a y hΩ ha hstrict
 
 /-- **Abhyankar's lemma for a regular divisor, tame case (Stacks Tags `0EYG` and `0EYH`)**, in
@@ -155,21 +152,25 @@ codimension `1`" (`IsTamelyRamifiedInCodimensionOneAlong`, Stacks `0BSE` with `0
 Comparison with the tags (restrictions, all part of the statement `AbhyankarLemmaTame`):
 * *Affine form*: `X = Spec R` with `R` Noetherian and `D = V(a)`, `a` a nonzerodivisor with
   `R ⧸ (a)` regular (`D` an effective Cartier divisor which is a regular scheme).
-* *Conclusion shape*: instead of `Y → X ∖ D`, the input is its normalization `S` (finite over
-  `R`, étale away from `a`, the integral closure of `R` in `S[1/a]`), and the conclusion is the
-  `0EYH` local-structure form: at every point `y ∈ V(a)` there is an étale neighbourhood
-  `R → R'` over `y` with `R'` Noetherian, `a` a nonzerodivisor with `R' ⧸ (a)` regular, and
-  `R' ⊗_R S` a finite product of `R'[x]/(x^e - u a)` with `e` invertible in `R'` (here even
-  `u = 1`).  Points outside `D` (the tag's trivial case) are not treated.
+* *Conclusion shape*: instead of `Y → X ∖ D`, the input is its normalization `S` (étale away from
+  `a`, the integral closure of `R` in `S[1/a]`), *assumed* finite over `R`: Stacks `0EYH`
+  concludes this finiteness, and the scheme-level `Pcf.Stacks.SchemeLevel.tag0EYH` proves it
+  rather than assuming it.  The conclusion is the `0EYH` local-structure form: at
+  every point `y ∈ V(a)` there is an étale neighbourhood `R → R'` over `y` with `R'` Noetherian, `a`
+  a nonzerodivisor with `R' ⧸ (a)` regular, and `R' ⊗_R S` a finite product of `R'[x]/(x^e - u a)`
+  with `e` invertible in `R'` and `u` a unit of `R'`. Points outside `D` (the tag's trivial case)
+  are not treated.
 
 This is the second proof of the tag in pcf; the first, `Pcf.Stacks.abhyankarLemma`, assumes that
 every positive integer is invertible and is unchanged.  Proof route: that of `0EYG`, see the module
 docstring and `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`; the divergences from the Stacks
 proof are recorded at each declaration of `Pcf.Stacks.Abhyankar.Tame`. -/
 @[stacks 0EYG "affine form; tamely ramified in codimension 1, any characteristic; normalization \
-    (0EYH) form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
+    (0EYH) form at points of D; input is the normalization S of R in Y, assumed finite over R \
+    (concluded in 0EYH); pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine local-structure clause at points of D; tamely ramified in codimension 1, \
-    any characteristic; pieces R'[x]/(x^e - f), f = u_i a"]
+    any characteristic; input is the normalization S, assumed finite over R (concluded in 0EYH); \
+    pieces R'[x]/(x^e - f), f = u_i a"]
 theorem abhyankarLemma_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemmaTame R S a := by
   intro _ ha hreg hfin hetale hint htame y hy
@@ -178,17 +179,10 @@ theorem abhyankarLemma_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R 
   haveI := hint
   exact hasAbhyankarStandardCoverAt_of_mem_divisor_tame R S a ha hetale htame y hy
 
-/-- The characteristic-zero theorem of phase 1 is recovered from the tame theorem (a consistency
-check; `Pcf.Stacks.abhyankarLemma` keeps its own proof). -/
+/-- The characteristic-zero theorem `Pcf.Stacks.abhyankarLemma` is recovered from the tame theorem
+(a consistency check; `Pcf.Stacks.abhyankarLemma` keeps its own proof). -/
 theorem abhyankarLemma_of_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemma R S a :=
   AbhyankarLemma.of_tame (abhyankarLemma_tame R S a)
-
-#print axioms hasAbhyankarStandardCoverAt_of_mem_divisor_tame
-#print axioms abhyankarLemma_tame
-#print axioms abhyankarLemma_of_tame
-
-#check @hasAbhyankarStandardCoverAt_of_mem_divisor_tame
-#check @abhyankarLemma_tame
 
 end Pcf.Stacks

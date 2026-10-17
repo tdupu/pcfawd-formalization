@@ -14,13 +14,14 @@ public import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
 /-!
 # Abhyankar's lemma for a regular divisor, tame case (Stacks Tags `0EYG`, `0EYH`): statement
 
-This directory (`Pcf.Stacks.Abhyankar.Tame`) contains the second, general proof of Abhyankar's
-lemma for a regular divisor: the hypothesis "every positive integer is invertible" of
-`Pcf.Stacks.AbhyankarLemma` (phase 1, characteristic zero) is replaced by the hypothesis of Stacks
-Tag `0EYG` itself, "`Y` is tamely ramified over `X` in codimension `1`" (Stacks `0BSE`, Section
-58.31, with More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic.  Nothing of
-phase 1 is removed or re-proved; the phase-1 theorems are reused where they do not depend on
-characteristic zero, and the steps that did are given new general versions in this directory.
+This directory (`Pcf.Stacks.Abhyankar.Tame`) contains the second, general proof of Abhyankar's lemma
+for a regular divisor: the hypothesis "every positive integer is invertible" of
+`Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by the hypothesis of Stacks Tag `0EYG`
+itself, "`Y` is tamely ramified over `X` in codimension `1`" (Stacks `0BSE`, Section 58.31, with
+More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic. Nothing of the
+characteristic-zero development is removed or re-proved; the characteristic-zero theorems are reused
+where they do not depend on characteristic zero, and the steps that did are given new general
+versions in this directory.
 
 ## The statement
 
@@ -55,7 +56,7 @@ lying over a height-one prime `p ∋ a`.  These agree: `isTamelyRamifiedInCodime
 below proves it (Krull's principal ideal theorem and incomparability), so the predicate is used
 unchanged and no new definition is needed.
 
-## Dependency map: phase-1 declarations reused versus re-generalized
+## Dependency map: characteristic-zero declarations reused versus re-generalized
 
 Reused as they are (no characteristic hypothesis):
 * the strict henselization `LocalColimit R Ω` and its structure: Noetherian (`06LJ`,
@@ -82,9 +83,10 @@ Reused as they are (no characteristic hypothesis):
 * the integral root model (`strictRootCoverEquivOfFractionRingEquiv`) and the `05N9` descent
   machinery (`exists_stage_units`, `exists_stage_standardTameCover_of_limit_equiv`).
 
-Re-generalized in this directory (phase-1 version used `∀ n ≠ 0, IsUnit (n : R)` or `CharZero`):
+Re-generalized in this directory (characteristic-zero version used `∀ n ≠ 0, IsUnit (n : R)` or
+`CharZero`):
 * `StrictBaseChangeTame`: new, the affine `0EYD` (58.31.1) transport of tameness from `S/R` to the
-  components of `Rˢʰ ⊗_R S` over `Rˢʰ` (phase 1 had nothing to transport);
+  components of `Rˢʰ ⊗_R S` over `Rˢʰ` (the characteristic-zero proof had nothing to transport);
 * `DVRAbhyankarResidue`: `maximalIdeal_eq_span_root_of_dvd` plus the residue clause of `0BRM`
   (`κ(𝔪)/κ_B` separable), replacing the characteristic-zero separability;
 * `HeightOneUnramified`: `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`,
@@ -94,12 +96,21 @@ Re-generalized in this directory (phase-1 version used `∀ n ≠ 0, IsUnit (n :
   (`exists_dvrRootFractionPowerEquiv_of_embedding`, which assumed `CharZero`) and the component
   classification `exists_rootExponent_fractionRing_equiv_of_strictComponent`, with `E`
   invertible in `κ((a))` from tameness and `E ≥ 1` instead of `E ≥ 2`;
-* `RootExponentUnit`: new, the last paragraph of `0EYG` (`n` is a unit of `A`), which phase 1
-  obtained from `hnat`;
+* `RootExponentUnit`: new, the last paragraph of `0EYG` (`n` is a unit of `A`), which the
+  characteristic-zero proof obtained from `hnat`;
 * `StandardDescent`: `exists_pointedEtale_standardTameCover_of_strict` and
   `hasAbhyankarStandardCoverAt_of_strict` without `hnat` ("after increasing `λ` a bit more we
   may assume `e_i` is invertible in `A_λ`");
 * `GenericPresentation`, `Tag0EYGTame`: the strictly henselian case and the main theorem.
+
+## Deliberate duplication
+
+Several `_tame` lemmas in this directory restate a characteristic-zero lemma without the
+hypothesis `∀ n ≠ 0, IsUnit (n : R)`, with essentially the same proof, so each characteristic-zero
+lemma is a special case of its `_tame` version.  This duplication is intentional: pcf keeps two
+independent proofs of Stacks `0EYG`.  The characteristic-zero proof (`Pcf.Stacks.abhyankarLemma`)
+is left untouched and must not be derived from the tame one, so its intermediate lemmas are not
+rewritten as corollaries of the `_tame` lemmas.
 -/
 
 @[expose] public section
@@ -118,7 +129,7 @@ form.**  This is `Pcf.Stacks.AbhyankarLemma R S a` with the characteristic-zero 
 ramified over `R` in codimension one along `V(a)` (`IsTamelyRamifiedInCodimensionOneAlong`,
 Stacks `0BSE` with `09E9`; see the module docstring for the fidelity check).
 
-Comparison with the tags (the remaining restrictions are those of phase 1):
+Comparison with the tags (the remaining restrictions are those of `Pcf.Stacks.AbhyankarLemma`):
 * affine form `X = Spec R`, `D = V(a)`, `a` a nonzerodivisor with `R ⧸ (a)` regular;
 * the input is the normalization `S` of `R` in `Y = Spec S[1/a]` (finite, étale away from `a`,
   `IsIntegralClosure`), and the conclusion is the `0EYH` local-structure form at the points of
@@ -138,8 +149,8 @@ def AbhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a
   ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
     HasAbhyankarStandardCoverAt R S a y
 
-/-- The tame statement implies the characteristic-zero statement of phase 1: if every positive
-integer is a unit, `S` is tamely ramified in codimension one
+/-- The tame statement implies the characteristic-zero statement `Pcf.Stacks.AbhyankarLemma`: if
+every positive integer is a unit, `S` is tamely ramified in codimension one
 (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`). -/
 theorem AbhyankarLemma.of_tame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] {a : R}
     (h : AbhyankarLemmaTame R S a) : AbhyankarLemma R S a := by
@@ -240,10 +251,5 @@ theorem isTamelyRamifiedInCodimensionOneAlong_iff [IsNoetherianRing R] [Module.F
     exact h q hp1 hap
 
 end Fidelity
-
-#print axioms AbhyankarLemma.of_tame
-#print axioms isUnit_natCast_residueField_iff
-#print axioms mem_minimalPrimes_span_singleton_iff_height_eq_one
-#print axioms isTamelyRamifiedInCodimensionOneAlong_iff
 
 end Pcf.Stacks

@@ -161,6 +161,7 @@ Proof route (differs from Stacks, see the module docstring): split over the stri
 henselization `LocalColimit R Ω` at `y` (`isFiniteSplit_of_strictlyHenselianLocalRing`), then
 descend the isomorphism to a pointed étale stage (Tag `05N9`, `exists_descendedAlgEquiv`).
 The stage lies over `y` because its geometric point has kernel over `y`. -/
+@[stacks 04HN "affine form over a Noetherian ring; pointed étale neighbourhood of a prime"]
 theorem hasSplitCoverAt_of_finite_etale {R : Type u} [CommRing R] [IsNoetherianRing R]
     (B : Type u) [CommRing B] [Algebra R B] [Module.Finite R B] [Algebra.Etale R B]
     (y : PrimeSpectrum R) : HasSplitCoverAt B y := by
@@ -274,10 +275,5 @@ theorem hasSplitCoverAt_of_finite_etale {R : Type u} [CommRing R] [IsNoetherianR
   let _ : IsNoetherianRing Z := Algebra.FiniteType.isNoetherianRing R Z
   refine ⟨Z, inferInstance, inferInstance, inferInstance, ⟨y', hy'⟩, inferInstance, n, ?_⟩
   exact ⟨final⟩
-
-#print axioms isFiniteSplit_of_strictlyHenselianLocalRing
-#print axioms strictlyHenselianLocalRing_of_ringEquiv
-#print axioms localColimit_strictlyHenselianLocalRing_of_prime
-#print axioms hasSplitCoverAt_of_finite_etale
 
 end Pcf.Stacks.SchemeLevel

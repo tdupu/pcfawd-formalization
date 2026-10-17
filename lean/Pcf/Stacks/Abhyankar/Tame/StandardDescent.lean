@@ -22,7 +22,7 @@ Paragraph 2 of the proof of Stacks Tag `0EYG` (Lemma 58.31.5):
 > assume `e_i` is invertible in `A_λ`. Then `Spec(A_λ) → Spec(A)` is the desired étale
 > neighbourhood of `x`.
 
-Phase 1 (`Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent`,
+The characteristic-zero development (`Pcf.Stacks.Abhyankar.StrictHenselizationStandardDescent`,
 `Pcf.Stacks.Abhyankar.StrictStandardConclusion`) proved this descent under the extra hypothesis
 `hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)`, which was used only to make the exponents `e_i` units
 at the chosen stage.  This file removes that hypothesis: the exponents are units in the strict
@@ -33,13 +33,13 @@ and then the identity `e_i · e_i⁻¹ = 1` to a further stage
 
 ## Correspondence with the Stacks proof
 
-| Stacks step (0EYG, paragraph 2) | Lean |
-| --- | --- |
-| `A^sh = colim A_λ`, étale `A_λ` | `PointedEtaleNeighborhood.LocalColimit R Ω` (phase 1) |
-| descent of the isomorphism (10.127.8) | `exists_stage_standardTameCover_of_limit_equiv` (phase 1) |
-| descent of the units `u_i` of the pieces | `exists_stage_units` (phase 1) |
-| "after increasing `λ` ... `e_i` invertible in `A_λ`" | `exists_stage_natCast_isUnit` (new) |
-| `Spec(A_λ) → Spec(A)` is the étale neighbourhood | `hasAbhyankarStandardCoverAt_of_strict_tame` |
+* `A^sh = colim A_λ`, étale `A_λ` → `PointedEtaleNeighborhood.LocalColimit R Ω` (characteristic-zero
+  development)
+* descent of the isomorphism (10.127.8) → `exists_stage_standardTameCover_of_limit_equiv`
+  (characteristic-zero development)
+* descent of the units `u_i` of the pieces → `exists_stage_units` (characteristic-zero development)
+* "after increasing `λ` ... `e_i` invertible in `A_λ`" → `exists_stage_natCast_isUnit` (new)
+* `Spec(A_λ) → Spec(A)` is the étale neighbourhood → `hasAbhyankarStandardCoverAt_of_strict_tame`
 
 The only difference from Stacks is that the colimit is taken over the explicit category
 `PointedEtaleNeighborhood R Ω` of pointed étale neighbourhoods.
@@ -104,10 +104,10 @@ hypothesis.**  A strict-local standard presentation of the normalization descend
 `exists_stage_units`, and the exponents become units at a stage by `exists_stage_natCast_isUnit`
 ("after increasing `λ` a bit more").
 
-This is `exists_pointedEtale_standardTameCover_of_strict` of phase 1 with the hypothesis
-`∀ n ≠ 0, IsUnit (n : R)` removed; the proof is the same except for the exponent step, which
-reads the invertibility of the exponents off the strict-local presentation (where Stacks has
-"each `e_i` is an integer invertible in `A^sh`"). -/
+This is `exists_pointedEtale_standardTameCover_of_strict` of the characteristic-zero development
+with the hypothesis `∀ n ≠ 0, IsUnit (n : R)` removed; the proof is the same except for the exponent
+step, which reads the invertibility of the exponents off the strict-local presentation (where Stacks
+has "each `e_i` is an integer invertible in `A^sh`"). -/
 theorem exists_pointedEtale_standardTameCover_of_strict_tame
     {S : Type u} [CommRing S] [Algebra R S] [IsNoetherianRing R]
     (a : R) [Module.Finite R S]
@@ -249,8 +249,8 @@ presentation descends to the exact local standard-cover conclusion
 is Noetherian, `a` stays a nonzerodivisor (flatness of étale maps) and `A_λ ⧸ (a)` stays regular
 (`quotient_span_isRegularRing_of_etale`, Stacks `0EYH`'s Noetherian/regular clauses).
 
-This is `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict` of phase 1 with the
-hypothesis `∀ n ≠ 0, IsUnit (n : R)` removed; the proof is unchanged. -/
+This is `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict` of the characteristic-zero
+development with the hypothesis `∀ n ≠ 0, IsUnit (n : R)` removed; the proof is unchanged. -/
 theorem hasAbhyankarStandardCoverAt_of_strict_tame
     {S : Type u} [CommRing S] [Algebra R S] [IsNoetherianRing R]
     (a : R) (y : PrimeSpectrum R)
@@ -292,13 +292,5 @@ theorem hasAbhyankarStandardCoverAt_of_strict_tame
   refine ⟨X, inferInstance, inferInstance, inferInstance, ?_, inferInstance,
     hmapRegular, inferInstance, hstandard⟩
   exact ⟨y', hy'⟩
-
-#print axioms exists_stage_natCast_isUnit
-#print axioms exists_pointedEtale_standardTameCover_of_strict_tame
-#print axioms hasAbhyankarStandardCoverAt_of_strict_tame
-
-#check @exists_stage_natCast_isUnit
-#check @exists_pointedEtale_standardTameCover_of_strict_tame
-#check @hasAbhyankarStandardCoverAt_of_strict_tame
 
 end Pcf.Stacks.PointedEtaleNeighborhood

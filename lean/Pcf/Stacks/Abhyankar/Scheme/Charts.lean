@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Stacks.Abhyankar.Scheme.Defs
+public import Pcf.Stacks.Common.AffineBasicOpen
 
 /-!
 # Affine charts of a base change
@@ -127,15 +128,6 @@ theorem exists_pullback_iso_sigma {X Z : Scheme.{u}} (h : Z ⟶ X) {V : X.Opens}
     exact congrFun (g.commutes x) _
   rw [← hG, IsIso.inv_hom_id_assoc, IsPullback.isoPullback_inv_snd]
 
-/-- `x ∈ D(f)` iff `f ∉ 𝔭_x`, for `x` in an affine open. -/
-theorem mem_basicOpen_iff_notMem_primeIdealOf {X : Scheme.{u}} {V : X.Opens}
-    (hV : IsAffineOpen V) (f : Γ(X, V)) (x : V) :
-    (x : X) ∈ X.basicOpen f ↔ f ∉ (hV.primeIdealOf x).asIdeal := by
-  rw [← hV.fromSpec_primeIdealOf x]
-  change hV.primeIdealOf x ∈ hV.fromSpec ⁻¹ᵁ X.basicOpen f ↔ _
-  rw [hV.fromSpec_preimage_basicOpen]
-  rfl
-
 /-- **Étale chart.**  If `A` is an étale `Γ(V)`-algebra with a prime over the prime of `x ∈ V`,
 and `A ⊗_{Γ(V)} Γ(h⁻¹V) ≅ ∏_i C_i`, then `φ : Spec A → Spec Γ(V) ≅ V ⊂ X` is étale with `x` in
 its image, and `Z ×_X Spec A ≅ ∐_i Spec C_i` over `Spec A`. -/
@@ -161,12 +153,5 @@ theorem exists_etale_pullback_iso_sigma {X Z : Scheme.{u}} (h : Z ⟶ X) {V : X.
         hV.primeIdealOf ⟨x, hx⟩ := PrimeSpectrum.ext hy'
     change hV.fromSpec (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V) A)) y') = x
     rw [hc, hV.fromSpec_primeIdealOf]
-
-#print axioms isPullback_fromSpec_app
-#print axioms isPullback_tensor_fromSpec
-#print axioms isIso_sigmaDesc_fin
-#print axioms exists_pullback_iso_sigma
-#print axioms mem_basicOpen_iff_notMem_primeIdealOf
-#print axioms exists_etale_pullback_iso_sigma
 
 end Pcf.Stacks.SchemeLevel

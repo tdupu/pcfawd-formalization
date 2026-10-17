@@ -11,6 +11,7 @@ public import Mathlib.RingTheory.RingHom.Etale
 public import Mathlib.RingTheory.RingHom.Unramified
 public import Mathlib.RingTheory.RingHom.QuasiFinite
 public import Pcf.Stacks.Purity.Tag0BMA
+public import Pcf.Stacks.Common.AffineBasicOpen
 
 /-!
 # Zariski--Nagata purity at the scheme level (Stacks Tag `0BMB`)
@@ -30,7 +31,7 @@ opens `x ∈ U ⊆ X`, `V ⊆ Y` with `f(U) ⊆ V` such that the ring map `𝒪_
 
 * `StacksQuasiFiniteAt` — Definition 29.21.1(1) (Tag `01TD`): of finite type and quasi-finite at
   the prime of `x`. Quasi-finiteness at a prime is Mathlib's `RingHom.QuasiFiniteAt` (the
-  localization is quasi-finite), the same encoding as phase 1's `ZariskiNagataPurityInputsAt`.
+  localization is quasi-finite), the same encoding as the ring-level `ZariskiNagataPurityInputsAt`.
   For finite-type ring maps it is equivalent to Stacks' Definition 10.122.3 ("isolated in its
   fibre"); Mathlib proves the scheme form of this equivalence as
   `Scheme.Hom.quasiFiniteAt_iff_isOpen_singleton_asFiber` (this file does not restate it).
@@ -118,7 +119,6 @@ theorem IsStacksNormalRing.isDomain_isIntegrallyClosed_of_isLocalRing
   obtain ⟨h₁, h₂⟩ := h ⟨m, inferInstance⟩
   exact ⟨e.toMulEquiv.isDomain _, IsIntegrallyClosed.of_equiv e.toRingEquiv.symm⟩
 
-set_option backward.isDefEq.respectTransparency false in
 /-- For affine opens `x ∈ V ⊆ f⁻¹(U)`, the stalk map of `f` at `x` is formally unramified iff
 `𝒪_Y(U) → 𝒪_X(V)` is unramified at the prime of `x`. -/
 theorem formallyUnramified_stalkMap_iff {f : X ⟶ Y} {x : X} (U : Y.Opens)
@@ -155,8 +155,29 @@ theorem formallyUnramified_stalkMap_of_stacksUnramifiedAt {f : X ⟶ Y} {x : X}
     .of_isLocalization (hU.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl
   exact Algebra.FormallyUnramified.comp Γ(Y, V) Γ(X, U) _
 
+-- Both options are needed (Mathlib v4.35): without them the final `simp only [..., appLE_map]`
+-- does not close the goal; Mathlib uses the same `… in` options in `AlgebraicGeometry`.
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+/-- Spreading out to a basic open: if `𝒪_Y(V) → 𝒪_X(U)_r` has the (isomorphism-invariant)
+property `Q`, then so does `𝒪_Y(V) → 𝒪_X(D(r))`. -/
+theorem appLE_basicOpen_of_away
+    {Q : ∀ {R S : Type u} [CommRing R] [CommRing S], (R →+* S) → Prop}
+    (hQ : RingHom.RespectsIso Q) {f : X ⟶ Y} {U : X.Opens} (hU : IsAffineOpen U)
+    {V : Y.Opens} (hUV : U ≤ f ⁻¹ᵁ V) (r : Γ(X, U))
+    (h : letI := (f.appLE V U hUV).hom.toAlgebra
+      Q (algebraMap Γ(Y, V) (Localization.Away r))) :
+    Q (f.appLE V (X.basicOpen r) ((X.basicOpen_le r).trans hUV)).hom := by
+  algebraize [(f.appLE V U hUV).hom]
+  have := hU.isLocalization_basicOpen r
+  convert hQ.1 _ (IsLocalization.algEquiv (.powers r) _ Γ(X, X.basicOpen r)).toRingEquiv h
+  ext
+  dsimp
+  simp only [IsScalarTower.algebraMap_apply Γ(Y, V) Γ(X, U) (Localization _),
+    IsLocalization.map_eq]
+  simp only [RingHom.algebraMap_toAlgebra, RingHomCompTriple.comp_apply,
+    ← ConcreteCategory.comp_apply, Scheme.Hom.appLE_map]
+
 /-- If `𝒪_Y(V) → 𝒪_X(U)` is of finite presentation and étale at the prime of `x`, then `f` is
 étale at `x` in the sense of Stacks: it is étale on some basic open `D(g) ∋ x` of `U`. -/
 theorem stacksEtaleAt_of_isEtaleAt {f : X ⟶ Y} {x : X} (U : X.Opens) (hU : IsAffineOpen U)
@@ -169,19 +190,9 @@ theorem stacksEtaleAt_of_isEtaleAt {f : X ⟶ Y} {x : X} (U : X.Opens) (hU : IsA
   obtain ⟨r, hrx, hr⟩ := Algebra.exists_etale_of_isEtaleAt (R := Γ(Y, V))
     (hU.primeIdealOf ⟨x, hx⟩).asIdeal
   refine ⟨_, hU.basicOpen r, V, hV, (X.basicOpen_le r).trans hUV, ?_, ?_⟩
-  · rwa [← PrimeSpectrum.mem_basicOpen, IsAffineOpen.primeIdealOf,
-      ← hU.fromSpec_preimage_basicOpen, Scheme.Hom.mem_preimage, ← Scheme.Hom.comp_apply,
-      IsAffineOpen.isoSpec_hom, IsAffineOpen.toSpecΓ_fromSpec] at hrx
-  · have := hU.isLocalization_basicOpen r
-    rw [← RingHom.etale_algebraMap] at hr
-    convert RingHom.Etale.respectsIso.1 _
-      (IsLocalization.algEquiv (.powers r) _ Γ(X, X.basicOpen r)).toRingEquiv hr
-    ext
-    dsimp
-    simp only [IsScalarTower.algebraMap_apply Γ(Y, V) Γ(X, U) (Localization _),
-      IsLocalization.map_eq]
-    simp only [RingHom.algebraMap_toAlgebra, RingHomCompTriple.comp_apply,
-      ← ConcreteCategory.comp_apply, Scheme.Hom.appLE_map]
+  · exact (SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf hU r ⟨x, hx⟩).2 hrx
+  · rw [← RingHom.etale_algebraMap] at hr
+    exact appLE_basicOpen_of_away RingHom.Etale.respectsIso hU hUV r hr
 
 /-- Regularity of `R_I` only depends on the prime ideal `I`. -/
 theorem isRegularLocalRing_atPrime_of_eq {R : Type*} [CommRing R] {I J : Ideal R}
@@ -190,6 +201,8 @@ theorem isRegularLocalRing_atPrime_of_eq {R : Type*} [CommRing R] {I J : Ideal R
   subst h
   assumption
 
+-- Needed (Mathlib v4.35): without it the `IsLocalization.AtPrime` instance for the stalk at
+-- `hU.fromSpec w'` is not found.
 set_option backward.isDefEq.respectTransparency false in
 /-- **Purity of branch locus, Stacks Lemma 58.21.4 (Tag `0BMB`).**
 
@@ -205,8 +218,8 @@ The pointwise notions are the literal Stacks definitions `StacksQuasiFiniteAt` (
 **Proof route (diverges from Stacks).** Stacks argues by induction on `d` directly on schemes,
 working étale-locally on base and target (Descent `35.23.31`, `35.31.1`; More on Morphisms
 `37.41.1`), base changing to `Spec 𝒪_{Y,y}`, and concluding with `0BMA`. Here the statement is
-reduced Zariski-locally to the affine pointwise theorem `Pcf.Stacks.zariskiNagataPurity`
-(phase 1), whose own proof runs the Stacks induction at the ring level:
+reduced Zariski-locally to the affine pointwise theorem `Pcf.Stacks.zariskiNagataPurity`,
+whose own proof runs the Stacks induction at the ring level:
 
 1. quasi-finiteness at `x` provides affine opens `x ∈ U`, `V ⊇ f(U)` with
    `R = 𝒪_Y(V) → A = 𝒪_X(U)` of finite type; `R`, `A` are Noetherian (`IsLocallyNoetherian`);

@@ -20,10 +20,10 @@ finite disjoint union of standard tamely ramified morphisms (Example 58.31.4).
 
 Three forms:
 * `tag0EYG_of_affine`: with the affine statement as the hypothesis `AbhyankarLemmaTameOver X`;
-* `tag0EYG`: unconditional, discharging it by work package `A′`'s `Pcf.Stacks.abhyankarLemma_tame`
-  (any characteristic);
-* `tag0EYG_of_natCast_isUnit`: on a `ℚ`-scheme, discharging it by phase 1's
-  `Pcf.Stacks.abhyankarLemma` (characteristic zero), independently of `A′`.
+* `tag0EYG`: unconditional, discharging it by the tame affine theorem
+  `Pcf.Stacks.abhyankarLemma_tame` (any characteristic);
+* `tag0EYG_of_natCast_isUnit`: on a `ℚ`-scheme, discharging it by the
+  characteristic-zero theorem `Pcf.Stacks.abhyankarLemma`, independently of the tame proof.
 
 ## Stacks proof step → Lean
 
@@ -40,11 +40,11 @@ Three forms:
   `chartTame_of_isTamelyRamifiedInCodimOne`; the base change to `A^{sh}` is inside the affine
   statement
 * strict henselization, normal domains, root covers, descent along `colim A_λ` → the affine
-  statement (`A′`: `Pcf.Stacks.abhyankarLemma_tame`), entering via
+  statement (`Pcf.Stacks.abhyankarLemma_tame`), entering via
   `hasLocalizedStandardCoverAt_of_tame`
 
 Route difference: Stacks proves the affine statement with `B` (the cover itself) as input; the
-affine theorem of `A′` takes the normalization `S` of `A` in `B`.
+affine theorem `Pcf.Stacks.abhyankarLemma_tame` takes the normalization `S` of `A` in `B`.
 `hasLocalizedStandardCoverAt_of_tame` bridges the two by applying it to the local ring `A_y`,
 where the normalization is finite, and
 then passing through the strict henselization (`AffineTame.lean`).
@@ -137,8 +137,8 @@ Let `X` be a locally Noetherian scheme.  Let `D ⊂ X` be an effective Cartier d
 over `X` in codimension `1`, then étale locally on `X` the morphism `Y → X` is a finite disjoint
 union of standard tamely ramified morphisms as described in Example 58.31.4.
 
-Proof: `tag0EYG_of_affine`, with the affine statement supplied by `A′`
-(`Pcf.Stacks.abhyankarLemma_tame`). -/
+Proof: `tag0EYG_of_affine`, with the affine statement supplied by
+`Pcf.Stacks.abhyankarLemma_tame`. -/
 @[stacks 0EYG]
 theorem tag0EYG (X : Scheme.{u}) [IsLocallyNoetherian X]
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
@@ -148,9 +148,9 @@ theorem tag0EYG (X : Scheme.{u}) [IsLocallyNoetherian X]
   tag0EYG_of_affine X (abhyankarLemmaTameOver_of_forall X Pcf.Stacks.abhyankarLemma_tame)
     D hD hDreg f htame
 
-/-- **Stacks Tag `0EYG` on a `ℚ`-scheme, from phase 1.**  If every positive integer is
-invertible on `X`, the conclusion of `0EYG` follows from phase 1's characteristic-zero affine
-theorem `Pcf.Stacks.abhyankarLemma`, without `A′`. -/
+/-- **Stacks Tag `0EYG` on a `ℚ`-scheme, characteristic-zero proof.**  If every positive integer
+is invertible on `X`, the conclusion of `0EYG` follows from the characteristic-zero affine
+theorem `Pcf.Stacks.abhyankarLemma`, without the tame theorem. -/
 @[stacks 0EYG "every positive integer invertible on X; proof via the characteristic-zero affine \
     theorem"]
 theorem tag0EYG_of_natCast_isUnit (X : Scheme.{u}) [IsLocallyNoetherian X]
@@ -160,11 +160,5 @@ theorem tag0EYG_of_natCast_isUnit (X : Scheme.{u}) [IsLocallyNoetherian X]
     (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) :
     IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) :=
   tag0EYG_of_affine X (abhyankarLemmaTameOver_of_natCast_isUnit X hnat) D hD hDreg f htame
-
-#print axioms exists_standardTame_of_mem
-#print axioms exists_standardTame_of_not_mem
-#print axioms tag0EYG_of_affine
-#print axioms tag0EYG
-#print axioms tag0EYG_of_natCast_isUnit
 
 end Pcf.Stacks.SchemeLevel

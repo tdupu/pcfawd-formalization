@@ -36,7 +36,6 @@ set_option linter.style.haveILetI false
 
 namespace Pcf.Stacks.SchemeLevel.AffineTame
 
-
 /-- In a discrete valuation ring, the fraction field is obtained by inverting any nonzero
 non-unit. -/
 theorem isLocalization_away_fractionRing {A : Type*} [CommRing A] [IsDomain A]
@@ -68,7 +67,6 @@ theorem isLocalization_away_fractionRing {A : Type*} [CommRing A] [IsDomain A]
   · intro u v huv
     exact ⟨0, by simpa using IsFractionRing.injective A (FractionRing A) huv⟩
 
-
 section Transfer
 
 variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra R Ra]
@@ -77,6 +75,7 @@ variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra 
   (y : Ideal R) [y.IsPrime]
 
 include Ra in
+/-- The image of `a_y` in `B_y` is a unit (`a` is already inverted in `B`). -/
 theorem isUnit_ay_by : IsUnit (algebraMap (Localization.AtPrime y) (By B y) (ay a y)) := by
   have h : IsUnit (algebraMap R B a) := by
     rw [IsScalarTower.algebraMap_apply R Ra B]
@@ -107,6 +106,7 @@ noncomputable def rpAlgebra (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     (p'.comap (algebraMap R (Localization.AtPrime y))).primeCompl
     (fun _ hx hxp ↦ hx (comap_le y p' hxp))
 
+/-- The scalar tower `R → R_y → R_𝔭` for `𝔭 = 𝔭' ∩ R`. -/
 theorem rp_isScalarTower (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     letI := rpAlgebra y p'
     IsScalarTower R (Localization.AtPrime y)
@@ -116,6 +116,7 @@ theorem rp_isScalarTower (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     (p'.comap (algebraMap R (Localization.AtPrime y))).primeCompl
     (fun _ hx hxp ↦ hx (comap_le y p' hxp))
 
+/-- `R_𝔭` is the localization of `R_y` at `𝔭'`, for `𝔭 = 𝔭' ∩ R`. -/
 theorem rp_isLocalization (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     letI := rpAlgebra y p'
     IsLocalization.AtPrime
@@ -170,6 +171,7 @@ noncomputable def sfAlgebra (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
 
 attribute [local instance] sfAlgebra
 
+/-- The algebra map `B_y → K_𝔭 ⊗_R B` on pure tensors. -/
 theorem sf_algebraMap_tmul (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     (r : Localization.AtPrime y) (b : B) :
     algebraMap (By B y) (Sf B y p') (show By B y from r ⊗ₜ[R] b) =
@@ -280,6 +282,7 @@ noncomputable def nyToCp (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
   map_zero' := Subtype.ext (map_zero _)
   map_add' x z := Subtype.ext (map_add (algebraMap (By B y) (Sf B y p')) x.1 z.1)
 
+/-- `C_𝔭` as an `N_y`-algebra, via `nyToCp`. -/
 @[instance_reducible]
 noncomputable def cpAlgebra (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     Algebra (Ny B y) (Cp B y p') :=
@@ -287,6 +290,7 @@ noncomputable def cpAlgebra (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
 
 attribute [local instance] cpAlgebra
 
+/-- `nyToCp` is the restriction of the algebra map `B_y → K_𝔭 ⊗_R B`. -/
 theorem nyToCp_val (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] (x : Ny B y) :
     ((nyToCp B y p' x : Cp B y p') : Sf B y p') = algebraMap (By B y) (Sf B y p') x.1 := rfl
 
@@ -303,6 +307,8 @@ instance cp_isScalarTower' (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     rw [RingHom.algebraMap_toAlgebra, nyToCp_val]
     exact IsScalarTower.algebraMap_apply (Localization.AtPrime y) (By B y) (Sf B y p') r
 
+/-- If `K_𝔭 ⊗_R B` is the localization of `B_y` at `𝔭'`, then `C_𝔭` is the localization of
+`N_y` at `𝔭'` (integral closure commutes with localization). -/
 theorem isLocalization_cp (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     [IsLocalization (algebraMapSubmonoid (By B y) p'.primeCompl) (Sf B y p')] :
     IsLocalization (algebraMapSubmonoid (Ny B y) p'.primeCompl) (Cp B y p') := by
@@ -311,6 +317,8 @@ theorem isLocalization_cp (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
   exact IsLocalization.integralClosure (R := Localization.AtPrime y) (S := By B y)
     (Rf := Localization.AtPrime (Pp y p')) (Sf := Sf B y p') p'.primeCompl
 
+/-- For `𝔭'` minimal over `(a_y)` in `R_y` (`a` a nonzerodivisor), `R_𝔭` has dimension one
+(Krull's principal ideal theorem). -/
 theorem rp_ringKrullDim [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
     (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     (hq : p' ∈ (Ideal.span {ay a y}).minimalPrimes) :
@@ -328,6 +336,7 @@ theorem rp_ringKrullDim [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
   rw [le_antisymm hle hge]
   rfl
 
+/-- A prime `q` of `N_y` over `𝔭'` extends to a maximal ideal of `C_𝔭`. -/
 theorem isMaximal_map_cp (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     [IsLocalization (algebraMapSubmonoid (By B y) p'.primeCompl) (Sf B y p')]
     (q : Ideal (Ny B y)) [q.IsPrime] (hq : q.under (Localization.AtPrime y) = p') :
@@ -386,7 +395,6 @@ theorem isTamelyRamifiedInCodimensionOneAlong_ny [IsNoetherianRing R]
 end Transfer
 
 section Apply
-
 
 variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra R Ra]
   [IsLocalization.Away a Ra]

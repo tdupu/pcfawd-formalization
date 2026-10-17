@@ -22,20 +22,22 @@ strict henselization,
 > `K ⊂ L ⊂ K[f^{1/e}]`. By Lemma `09EV` we conclude that `L` is equal to `K[f^{1/n}]` for some
 > divisor `n` of `e`.
 
-with Stacks' tameness input "`e` is invertible in `κ(𝔭)`" (`𝔭 = (f)`) in place of phase 1's
-characteristic-zero hypothesis "every positive integer is a unit in `A`".
+with Stacks' tameness input "`e` is invertible in `κ(𝔭)`" (`𝔭 = (f)`) in place of the
+hypothesis of the characteristic-zero proof, "every positive integer is a unit in `A`".
 
 ## Stacks proof step → Lean lemma
 
-| `0EYG` step | Lean |
-| --- | --- |
-| `0EYE` (purity) makes `N'` finite étale over `A'` | `Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain` (phase 1) |
-| `A'` strictly henselian ⇒ `Spec C` is a disjoint union of copies of `Spec A'` | `finiteEtaleLocalAlgEquivOfIsSepClosed` (phase 1; see divergence) |
-| inclusion `B ⊂ A'_{f'}`, hence `K ⊂ L ⊂ K[f^{1/e}]` | steps 3, 3' of the proof below (phase 1) |
-| "`e` is invertible in `κ(𝔭)`" | hypothesis `hEa : (E : A) ∉ (a)`, i.e. `E ∈ κ((a))^×` |
-| `09EV` ⇒ `L = K[f^{1/n}]`, `n ∣ e` | `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame` |
+* `0EYE` (purity) makes `N'` finite étale over `A'` →
+  `Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain` (characteristic-zero development)
+* `A'` strictly henselian ⇒ `Spec C` is a disjoint union of copies of `Spec A'` →
+  `finiteEtaleLocalAlgEquivOfIsSepClosed` (characteristic-zero development; see divergence)
+* inclusion `B ⊂ A'_{f'}`, hence `K ⊂ L ⊂ K[f^{1/e}]` → steps 3, 3' of the proof below
+  (characteristic-zero development)
+* "`e` is invertible in `κ(𝔭)`" → hypothesis `hEa : (E : A) ∉ (a)`, i.e. `E ∈ κ((a))^×`
+* `09EV` ⇒ `L = K[f^{1/n}]`, `n ∣ e` →
+  `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`
 
-## Divergences from Stacks (inherited from phase 1)
+## Divergences from Stacks (inherited from the characteristic-zero proof)
 
 * Stacks uses that `A'` is strictly henselian; we use only that the residue field of `A'` is
   separably closed and that finite domains over the henselian `A` are local.
@@ -74,10 +76,10 @@ unramified over `A'` at every height-one prime.  Then, assuming Zariski–Nagata
 `A' → N'`, the fraction field of `N` is `K(a^{1/n})` for a divisor `n` of `E`, where
 `K = Frac(A)`.
 
-Compared with phase 1's `exists_rootExponent_fractionRing_equiv_of_strictComponent`, the
-hypothesis "all positive integers are units in `A`" is replaced by Stacks' "`e` is invertible in
-`κ(𝔭)`" (here `(E : A) ∉ (a)`, i.e. `E ∈ κ((a))^×`), and `E ≥ 2` by `E ≥ 1`.  The proof is the
-same (steps 1–3' are phase 1's); only the `09EV` step changes, to the tame
+Compared with the characteristic-zero `exists_rootExponent_fractionRing_equiv_of_strictComponent`,
+the hypothesis "all positive integers are units in `A`" is replaced by Stacks' "`e` is invertible in
+`κ(𝔭)`" (here `(E : A) ∉ (a)`, i.e. `E ∈ κ((a))^×`), and `E ≥ 2` by `E ≥ 1`. The proof is the same
+(steps 1–3' are those of the characteristic-zero proof); only the `09EV` step changes, to the tame
 `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`. -/
 theorem exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
@@ -217,8 +219,9 @@ tame form.**  Given the normalization component data over the root cover `A[x]/(
 `E ≥ 1` a unit in `κ((a))`, and Zariski–Nagata purity for it, the fraction field of the component
 `N` is `K(a^{1/n})` for a divisor `n` of `E`.
 
-Tame replacement of phase 1's `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`
-(hypotheses `hnat`, `2 ≤ E` replaced by `1 ≤ E`, `(E : A) ∉ (a)`). -/
+Tame replacement of the characteristic-zero
+`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData` (hypotheses `hnat`, `2 ≤ E`
+replaced by `1 ≤ E`, `(E : A) ∉ (a)`). -/
 theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
     [IsNoetherianRing A] [HenselianLocalRing A] [IsSepClosed (ResidueField A)]
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
@@ -235,8 +238,5 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
     C.etaleAway C.unramified hpurity
 
 end ComponentData
-
-#print axioms exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
-#print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
 
 end Pcf.Stacks

@@ -8,6 +8,7 @@ module
 public import Pcf.Bounding.InvariantDivisorGeometry
 public import Pcf.Bounding.SmoothRegularLocal
 public import Pcf.Bounding.PrincipalQuotientRegular
+public import Pcf.Stacks.Common.AffineBasicOpen
 
 /-!
 # Finite regularity corrections on a divisor
@@ -115,10 +116,8 @@ prime ideal. -/
 theorem mem_basicOpen_iff_notMem_primeIdealOf
     {X : Scheme.{u}} (U : X.affineOpens) (f : Γ(X, U))
     (x : (U : X.Opens)) :
-    x.1 ∈ X.basicOpen f ↔ f ∉ (U.2.primeIdealOf x).asIdeal := by
-  rw [← PrimeSpectrum.mem_basicOpen, ← U.2.fromSpec_preimage_basicOpen f]
-  change x.1 ∈ X.basicOpen f ↔ U.2.fromSpec (U.2.primeIdealOf x) ∈ X.basicOpen f
-  rw [U.2.fromSpec_primeIdealOf]
+    x.1 ∈ X.basicOpen f ↔ f ∉ (U.2.primeIdealOf x).asIdeal :=
+  Pcf.Stacks.SchemeLevel.mem_basicOpen_iff_notMem_primeIdealOf U.2 f x
 
 /-- Along an ambient divisor, generic principal generation and generic smoothness
 of the divisor give a neighborhood with regular ambient and divisor stalks at every

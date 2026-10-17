@@ -14,8 +14,8 @@ public import Mathlib.RingTheory.Localization.Pi
 # The affine `0EYG` statement at a point of the divisor, from the affine hypothesis
 
 Main theorem: `Pcf.Stacks.SchemeLevel.hasLocalizedStandardCoverAt_of_tame`.  Given the affine
-hypothesis `AbhyankarLemmaTame` at the local ring `R_y` (work package `A′`, or phase 1's
-`Pcf.Stacks.abhyankarLemma` in characteristic zero), a finite étale `R_a`-algebra `B` which is
+hypothesis `AbhyankarLemmaTame` at the local ring `R_y` (`Pcf.Stacks.abhyankarLemma_tame`, or the
+characteristic-zero `Pcf.Stacks.abhyankarLemma`), a finite étale `R_a`-algebra `B` which is
 tame in codimension one along `V(a)` admits, at every `y ∈ V(a)`, a pointed étale
 neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 (`HasLocalizedStandardCoverAt`).
@@ -32,17 +32,16 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
   by a localization argument, `isTamelyRamifiedInCodimensionOneAlong_ny` (Mathlib's localization
   invariance of ramification indices).
 * Strictly henselian case `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`: the affine hypothesis
-  `AbhyankarLemmaTame` (work package `A′`).
+  `AbhyankarLemmaTame` (`Pcf.Stacks.abhyankarLemma_tame`).
 * Descend the isomorphism to some `A_λ` (Algebra, Lemma 10.127.8, Tag `05N9`) and make the `e_i`
   invertible: `exists_stage_localizedStandard`, `exists_stage_isUnit_natCast` (built on pcf's
   `exists_descendedAlgEquiv`).
 * `Spec(A_λ) → Spec(A)` is the required étale neighbourhood: `hasLocalizedStandardCoverAt_of_stage`.
 
-The differences in the second and third steps are forced by the shape of the affine hypothesis:
-like phase 1's `Pcf.Stacks.AbhyankarLemma`, it is stated for the finite normalization `S` of `R`
-in `S[1/a]`,
-whose finiteness over `R` is not available before the theorem; over the regular local ring `R_y`
-it is (Stacks Tag `032L`, `finite_ny`).
+The differences in the second and third steps are forced by the shape of the affine hypothesis: like
+the characteristic-zero `Pcf.Stacks.AbhyankarLemma`, it is stated for the finite normalization `S`
+of `R` in `S[1/a]`, whose finiteness over `R` is not available before the theorem; over the regular
+local ring `R_y` it is (Stacks Tag `032L`, `finite_ny`).
 -/
 
 @[expose] public section
@@ -458,13 +457,5 @@ theorem hasLocalizedStandardCoverAt_of_tame
   haveI : Algebra.FinitePresentation R B := Algebra.FinitePresentation.trans R Ra B
   obtain ⟨X, vX, heX, ⟨EX⟩⟩ := exists_stage_localizedStandard a B e _ heL E
   exact hasLocalizedStandardCoverAt_of_stage a ha B y hΩ X e he vX heX EX
-
-#print axioms AffineTame.finite_ny
-#print axioms AffineTame.isTamelyRamifiedInCodimensionOneAlong_ny
-#print axioms AffineTame.hasAbhyankarStandardCoverAt_ny
-#print axioms AffineTame.nonempty_localizedStandard_of_algHom
-#print axioms AffineTame.exists_stage_localizedStandard
-#print axioms AffineTame.hasLocalizedStandardCoverAt_of_stage
-#print axioms hasLocalizedStandardCoverAt_of_tame
 
 end Pcf.Stacks.SchemeLevel

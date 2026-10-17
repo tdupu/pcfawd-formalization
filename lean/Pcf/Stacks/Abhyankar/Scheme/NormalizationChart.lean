@@ -10,7 +10,7 @@ public import Pcf.Stacks.Abhyankar.Scheme.Charts
 /-!
 # The normalization of `X` in `Y` on affine charts
 
-Mathlib's relative normalization `(g : Y ⟶ X).normalization` (Stacks Section 29.53, Tag `035H`)
+Mathlib's relative normalization `(g : Y ⟶ X).normalization` (Stacks Definition 29.54.3, Tag `035H`)
 with structure morphism `π = g.fromNormalization`:
 
 * `normalizationAppAlgEquiv`: over an affine open `V ⊂ X`, `Γ(Y', π⁻¹V)` is the integral closure
@@ -43,8 +43,10 @@ instance isIso_fst_of_mono {X Y U : Scheme.{u}} (f : Y ⟶ U) (g : U ⟶ X) [Mon
   · simp
   · simp [fst_comp_eq_snd_of_mono]
 
-/-- **Stacks Tag `0EYH`, clause (1).**  For `f : Y → U ⊂ X` integral, the restriction to `U` of
-the normalization of `X` in `Y` is `Y`, over `U`. -/
+/-- **Stacks Tag `0EYH`, clause (1).**  For `f : Y → U ⊂ X` integral (with `f ≫ U.ι`
+quasi-compact and quasi-separated), the restriction to `U` of the normalization of `X` in `Y` is
+`Y`, over `U`. -/
+@[stacks 0EYH "clause (1), for any integral f : Y → U"]
 theorem exists_iso_normalization_restrict {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U)
     [IsIntegralHom f] [QuasiCompact (f ≫ U.ι)] [QuasiSeparated (f ≫ U.ι)] :
     ∃ e : Y ≅ ((f ≫ U.ι).fromNormalization ⁻¹ᵁ U).toScheme,
@@ -96,11 +98,5 @@ theorem ideal_vanishingIdeal_eq_radical {S : Scheme.{u}} (Z : TopologicalSpace.C
       fun h hs ↦ hs (Set.singleton_subset_iff.mp h)⟩
   refine (congrArg PrimeSpectrum.vanishingIdeal h).trans ?_
   rw [← PrimeSpectrum.zeroLocus_span, PrimeSpectrum.vanishingIdeal_zeroLocus_eq_radical]
-
-#print axioms fst_comp_eq_snd_of_mono
-#print axioms isIso_fst_of_mono
-#print axioms exists_iso_normalization_restrict
-#print axioms normalizationAppAlgEquiv
-#print axioms ideal_vanishingIdeal_eq_radical
 
 end Pcf.Stacks.SchemeLevel

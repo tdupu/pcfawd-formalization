@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.Polynomial.Quotient
 API for `standardRing A f e = A[x]/(x^e - f)` and `standardTameRing A f e = C_f`:
 
 * `standardTameRingEquiv`: for `f = u a` with `u` a unit, `C_f ≅ A_a[x]/(x^e - u a)`, the form
-  in which phase 1 (`localizedStandardPoly`) writes the pieces;
+  in which the characteristic-zero development (`localizedStandardPoly`) writes the pieces;
 * `standardRingOneOneEquiv`, `standardTameRingOneOneEquiv`: for `f = 1`, `e = 1` both rings are
   `A` (the pieces of a split finite étale cover, the case `x ∉ D` of the proof of `0EYG`);
 * `isStandardTameData_unit_mul`, `isStandardTameData_one_one`: the hypotheses of Example
@@ -75,11 +75,5 @@ theorem isStandardTameData_one_one [IsNoetherianRing A] : IsStandardTameData A 1
   have : Subsingleton (A ⧸ Ideal.span {(1 : A)}) := by
     rw [Ideal.span_singleton_one]; infer_instance
   infer_instance
-
-#print axioms standardTameRingEquiv
-#print axioms standardRingOneOneEquiv
-#print axioms standardTameRingOneOneEquiv
-#print axioms isStandardTameData_unit_mul
-#print axioms isStandardTameData_one_one
 
 end Pcf.Stacks.SchemeLevel

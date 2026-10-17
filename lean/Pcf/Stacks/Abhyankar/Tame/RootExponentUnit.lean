@@ -29,11 +29,12 @@ of the standard tamely ramified morphism (Stacks Tag `0EYF`).
 
 ## Stacks proof step → Lean lemma
 
-| Stacks sentence | Lean |
-| --- | --- |
-| "the ramification locus … is cut out by `n y^{n−1}`, so `n` is a unit in `A_f`" | `isUnit_natCast_localizationAway_of_etale`, Step 1 |
-| "since `f` is prime, `n = u f^s`" | Step 2 of `isUnit_natCast_of_strictRootCover_etale_away` (constant coordinate of `n m = a^k` in the power basis) and `isUnit_of_mul_eq_pow_of_not_dvd` |
-| "since `n` maps to a unit in `κ(𝔭)`, `s = 0`" | hypothesis `hna : (n : A) ∉ (a)` fed to `isUnit_of_mul_eq_pow_of_not_dvd` |
+* "the ramification locus … is cut out by `n y^{n−1}`, so `n` is a unit in `A_f`" →
+  `isUnit_natCast_localizationAway_of_etale`, Step 1
+* "since `f` is prime, `n = u f^s`" → Step 2 of `isUnit_natCast_of_strictRootCover_etale_away`
+  (constant coordinate of `n m = a^k` in the power basis) and `isUnit_of_mul_eq_pow_of_not_dvd`
+* "since `n` maps to a unit in `κ(𝔭)`, `s = 0`" → hypothesis `hna : (n : A) ∉ (a)` fed to
+  `isUnit_of_mul_eq_pow_of_not_dvd`
 
 ## Divergence from Stacks
 
@@ -292,9 +293,3 @@ end Main
 
 end Pcf.Stacks
 
-#print axioms Pcf.Stacks.isUnit_of_mul_eq_pow_of_not_dvd
-#print axioms Pcf.Stacks.isUnit_natCast_localizationAway_of_etale
-#print axioms Pcf.Stacks.isUnit_natCast_of_strictRootCover_etale_away
-
-#check @Pcf.Stacks.isUnit_natCast_localizationAway_of_etale
-#check @Pcf.Stacks.isUnit_natCast_of_strictRootCover_etale_away

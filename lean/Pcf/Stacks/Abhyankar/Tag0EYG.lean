@@ -226,14 +226,4 @@ theorem palomar_abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra
     Pcf.Palomar.AbhyankarLemma R S a :=
   abhyankarLemma R S a
 
-#print axioms henselianLocalRing_of_ringEquiv
-#print axioms PointedEtaleNeighborhood.ker_geometricPointAtAlgebra
-#print axioms hasAbhyankarStandardCoverAt_of_mem_divisor
-#print axioms abhyankarLemma
-#print axioms palomar_abhyankarLemma
-
-#check @hasAbhyankarStandardCoverAt_of_mem_divisor
-#check @abhyankarLemma
-#check @palomar_abhyankarLemma
-
 end Pcf.Stacks

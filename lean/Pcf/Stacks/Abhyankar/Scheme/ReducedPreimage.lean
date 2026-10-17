@@ -98,8 +98,4 @@ theorem isRegularScheme_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.Ide
   rw [hid] at hI
   exact IsRegularRing.of_ringEquiv (e.trans (Ideal.quotEquivOfEq hI)).symm
 
-#print axioms ideal_radical_comap_eq
-#print axioms isEffectiveCartier_radical_comap
-#print axioms isRegularScheme_radical_comap
-
 end Pcf.Stacks.SchemeLevel

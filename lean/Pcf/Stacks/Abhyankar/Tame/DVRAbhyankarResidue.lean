@@ -19,7 +19,7 @@ the adic topology.  Its proof ends (last paragraph) with two facts about the ext
 > `κ_B` which is separable over `κ_A`. Therefore `κ(𝔪)` is separable over `κ_A` [...] and we win by
 > Lemma 15.113.5.
 
-`Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd` (phase 1, `DVRAbhyankarDivisible.lean`) proves the
+`Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd` (`DVRAbhyankarDivisible.lean`) proves the
 first fact.  The characteristic-zero proof of `0EYG` obtained the second fact (separability of the
 residue extension) for free, since every algebraic extension of a field of characteristic zero is
 separable.  In the tame case the residue fields may have positive characteristic, so the second
@@ -91,7 +91,7 @@ theorem maximalIdeal_eq_span_root_of_dvd_and_isSeparable
     maximalIdeal_eq_span_root_of_dvd S T π hπ u e he heUnit d hd x hx hπ0 hgen
   refine ⟨hmax, ?_⟩
   have he0 : e ≠ 0 := by omega
-  -- `x ≠ 0` and `x ∈ 𝔪_T` (as in the phase-1 proof).
+  -- `x ≠ 0` and `x ∈ 𝔪_T` (as in the characteristic-zero proof).
   have hx0 : x ≠ 0 := by
     intro h0
     have h : algebraMap S T (u : S) * algebraMap S T π ^ e = 0 := by
@@ -261,7 +261,5 @@ theorem maximalIdeal_eq_span_root_of_dvd_and_isSeparable
   exact IsSeparable.map ψbar ψbar.toRingHom.injective (Algebra.IsSeparable.isSeparable _ w)
 
 end Divisible
-
-#print axioms maximalIdeal_eq_span_root_of_dvd_and_isSeparable
 
 end Pcf.Stacks

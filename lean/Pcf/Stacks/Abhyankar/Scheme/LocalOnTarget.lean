@@ -34,6 +34,8 @@ theorem bijective_presheaf_map_eqToHom {S : Scheme.{u}} {U V : S.Opens} (h : U =
   simp only [eqToHom_refl, op_id, CategoryTheory.Functor.map_id]
   exact Function.bijective_id
 
+-- Needed (Mathlib v4.35): instance search for `HasAffineProperty @IsFinite` /
+-- `IsZariskiLocalAtTarget @Flat` fails without it.
 set_option backward.isDefEq.respectTransparency.types false in
 /-- A morphism whose ring maps over a family of affine opens covering the target are finite, and
 whose preimages of these opens are affine, is finite. -/
@@ -48,6 +50,8 @@ theorem isFinite_of_iSup_eq_top (π : Z ⟶ X) {ι : Type*} (V : ι → X.affine
   rw [morphismRestrict_appTop]
   exact (RingHom.Finite.of_surjective _ (bijective_presheaf_map_eqToHom _).2).comp h'
 
+-- Needed (Mathlib v4.35): instance search for `HasAffineProperty @IsFinite` /
+-- `IsZariskiLocalAtTarget @Flat` fails without it.
 set_option backward.isDefEq.respectTransparency.types false in
 /-- A morphism whose ring maps over a family of affine opens covering the target are flat, and
 whose preimages of these opens are affine, is flat. -/
@@ -64,9 +68,5 @@ theorem flat_of_iSup_eq_top (π : Z ⟶ X) {ι : Type*} (V : ι → X.affineOpen
   rw [morphismRestrict_appTop]
   exact RingHom.Flat.respectsIso.1 _ (RingEquiv.ofBijective _
     (bijective_presheaf_map_eqToHom (image_morphismRestrict_preimage π (V i : X.Opens) ⊤))) h'
-
-#print axioms bijective_presheaf_map_eqToHom
-#print axioms isFinite_of_iSup_eq_top
-#print axioms flat_of_iSup_eq_top
 
 end Pcf.Stacks.SchemeLevel

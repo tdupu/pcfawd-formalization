@@ -117,9 +117,4 @@ theorem finite_etale_of_le (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
     exact RingHom.Etale.stableUnderComposition _ _
       (RingHom.Etale.of_bijective (bijective_ι_app_of_le hV)) (etale_app_of_etale f hW hZV)
 
-#print axioms hasLocalizedStandardCoverAt_chart
-#print axioms bijective_ι_app_of_le
-#print axioms exists_affine_le_complement
-#print axioms finite_etale_of_le
-
 end Pcf.Stacks.SchemeLevel

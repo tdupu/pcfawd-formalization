@@ -17,24 +17,33 @@ Over a Noetherian strictly henselian local ring `A` with a regular divisor `a`, 
 `A`-algebra `T` which is the normalization of `A` in `T[1/a]`, étale over `A` away from `a` and
 tamely ramified in codimension one, `T` is a finite product of standard root covers
 `A[x]/(x^{nᵢ} - a)` with `nᵢ` invertible in `A`.  This is the tame version of
-`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian` (phase 1, characteristic zero).
+`isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian` (characteristic zero).
 
 ## Stacks correspondence (proof of `0EYG`)
 
-| Stacks step | Lean |
-| --- | --- |
-| "`Y` is a finite disjoint union of spectra of normal domains (10.37.16). Thus we may assume `B` is a domain" | `exists_completeOrthogonalIdempotents_of_isIntegralClosure_localizationAway` (phase 1) and the per-factor theorem below |
-| "Let `e ≥ 1` be the product of the ramification indices … `e` is invertible in `κ(𝔭`)" | `exists_strictRootComponentData_tame` (`(E : A) ∉ (a)`) |
-| "`A' = A[x]/(x^e - f)` … By Abhyankar's lemma (`0BRM`) `Spec(B')` is unramified over `Spec(A')` in codimension `1`" | `StrictRootComponentData` from `exists_strictRootComponentData_tame` (`0BRM` via `HeightOneUnramified`) |
-| "By Lemma `0EYE` … finite étale `Spec(C) → Spec(A')` … `A'` strictly henselian … inclusion `B ⊂ A'_{f'}`; by `09EV`, `L = K[f^{1/n}]`, `n ∣ e`" | `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame` (with `zariskiNagataPurity`) |
-| "The normality of `B` then implies `B ≅ A_f[y]/(y^n - f)`" | `strictRootCoverEquivOfFractionRingEquiv` (phase 1, on the integral models) |
-| "the ramification locus … is cut out by `n y^{n-1}` … `n` is a unit in `A_f` … `n = u f^s` … `s = 0`" | `isUnit_natCast_of_strictRootCover_etale_away` |
+* "`Y` is a finite disjoint union of spectra of normal domains (10.37.16). Thus we may assume `B` is
+  a domain" → `exists_completeOrthogonalIdempotents_of_isIntegralClosure_localizationAway`
+  (characteristic-zero development) and the per-factor theorem below
+* "Let `e ≥ 1` be the product of the ramification indices … `e` is invertible in `κ(𝔭`)" →
+  `exists_strictRootComponentData_tame` (`(E : A) ∉ (a)`)
+* "`A' = A[x]/(x^e - f)` … By Abhyankar's lemma (`0BRM`) `Spec(B')` is unramified over `Spec(A')` in
+  codimension `1`" → `StrictRootComponentData` from `exists_strictRootComponentData_tame` (`0BRM`
+  via `HeightOneUnramified`)
+* "By Lemma `0EYE` … finite étale `Spec(C) → Spec(A')` … `A'` strictly henselian … inclusion
+  `B ⊂ A'_{f'}`; by `09EV`, `L = K[f^{1/n}]`, `n ∣ e`" →
+  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame` (with
+  `zariskiNagataPurity`)
+* "The normality of `B` then implies `B ≅ A_f[y]/(y^n - f)`" →
+  `strictRootCoverEquivOfFractionRingEquiv` (characteristic-zero development, on the integral
+  models)
+* "the ramification locus … is cut out by `n y^{n-1}` … `n` is a unit in `A_f` … `n = u f^s` …
+  `s = 0`" → `isUnit_natCast_of_strictRootCover_etale_away`
 
-Divergences from Stacks, inherited from phase 1: the integral models are compared directly instead
-of after inverting `f` (so the conclusion is the normalization form of `0EYH`); "`A'` strictly
-henselian" is used in the form "separably closed residue field and finite domains over a henselian
-ring are local"; the exponent `E` is the product of the ramification indices over the height-one
-minimal primes of `aN` (the same product as Stacks' `e`).
+Divergences from Stacks, inherited from the characteristic-zero proof: the integral models are
+compared directly instead of after inverting `f` (so the conclusion is the normalization form of
+`0EYH`); "`A'` strictly henselian" is used in the form "separably closed residue field and finite
+domains over a henselian ring are local"; the exponent `E` is the product of the ramification
+indices over the height-one minimal primes of `aN` (the same product as Stacks' `e`).
 -/
 
 @[expose] public section
@@ -57,13 +66,13 @@ variable {A T : Type u} [CommRing A] [CommRing T] [Algebra A T]
 codimension one over `A`, is isomorphic to a root cover `A[x]/(x^n - a)` with `n ≥ 1` a unit of
 `A`.
 
-Route (see the module docstring): the exponent `E` (product of the ramification indices, a unit
-of `κ((a))` by tameness) and the root-cover component with its codimension-one unramifiedness
-(`0BRM`, `exists_strictRootComponentData_tame`); `0EYE` with purity `zariskiNagataPurity`, the
-strict splitting and `09EV` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`),
-giving `Frac N ≅ K(a^{1/n})`, `n ∣ E`; normality (`strictRootCoverEquivOfFractionRingEquiv`);
-and finally `n` is a unit of `A` because `N[1/a]` is étale over `A[1/a]` and `n ∣ E` is not in
-the prime `(a)` (`isUnit_natCast_of_strictRootCover_etale_away`). -/
+Route (see the module docstring): the exponent `E` (product of the ramification indices, a unit of
+`κ((a))` by tameness) and the root-cover component with its codimension-one unramifiedness (`0BRM`,
+`exists_strictRootComponentData_tame`); `0EYE` with purity `zariskiNagataPurity`, the strict
+splitting and `09EV` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`),
+giving `Frac N ≅ K(a^{1/n})`, `n ∣ E`; normality (`strictRootCoverEquivOfFractionRingEquiv`); and
+finally `n` is a unit of `A` because `N[1/a]` is étale over `A[1/a]` and `n ∣ E` is not in the prime
+`(a)` (`isUnit_natCast_of_strictRootCover_etale_away`). -/
 theorem exists_strictRootCover_equiv_of_idempotent_factor_tame
     (a : A) (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
@@ -153,11 +162,5 @@ theorem isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
       (AlgEquiv.piCongrLeft' A (fun i ↦ StrictRootCover a (n i)) σ))
 
 end Assembly
-
-#print axioms exists_strictRootCover_equiv_of_idempotent_factor_tame
-#print axioms isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
-
-#check @exists_strictRootCover_equiv_of_idempotent_factor_tame
-#check @isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
 
 end Pcf.Stacks

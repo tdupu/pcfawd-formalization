@@ -22,7 +22,7 @@ The tame version of `StrictHeightOneUnramified.lean`.  Paragraph 4 of the proof 
 > [...] By Abhyankar's lemma (More on Algebra, Lemma 15.116.4) we see that `Spec(B')` is unramified
 > over `Spec(A')` in codimension 1.
 
-The characteristic-zero proof (phase 1) replaced "tamely ramified" by "all positive integers are
+The characteristic-zero proof replaced "tamely ramified" by "all positive integers are
 units in `A`".  Here tameness enters in the form it has on the component: for every height-one
 prime `q` of the finite normal domain `N` over `A` containing `a`, `IsTamelyRamifiedAt A N q`
 (the ramification index `e_q` of `q` over `A` is a unit in `κ(q ∩ A) = κ((a))`, and `κ(q)/κ((a))`
@@ -75,13 +75,13 @@ height-one prime containing `a` (`htame`), and `E ≥ 1` a common multiple of th
 indices over `A` of the height-one primes of `N` containing `a`.  Then every root-cover component
 pre-datum `N'` is unramified over `A' = A[x]/(x^E − a)` at each height-one prime containing `x`.
 
-This is the `hroot` input of `StrictRootComponentPreData.toDataOfRootMem`.  The route is that of
-`StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem` (phase 1), with the two
-uses of "all positive integers are units" replaced: the ramification index `e` of `q = Q' ∩ N` is a
-unit in `N_q` because tameness says `e ∈ κ(q ∩ A)ˣ`, i.e. `e ∉ q ∩ A`, hence `e ∉ q`; and the
-separability of `κ(Q')/κ((x))` comes from `κ(Q')/κ(q)` separable (the residue clause of `0BRM`,
-`maximalIdeal_eq_span_root_of_dvd_and_isSeparable`) and `κ(q)/κ((a))` separable (tameness), by
-transitivity (Stacks `0BRM`: "κ(𝔪) is separable over κ_A"). -/
+This is the `hroot` input of `StrictRootComponentPreData.toDataOfRootMem`. The route is that of
+`StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem` (characteristic-zero
+development), with the two uses of "all positive integers are units" replaced: the ramification
+index `e` of `q = Q' ∩ N` is a unit in `N_q` because tameness says `e ∈ κ(q ∩ A)ˣ`, i.e.
+`e ∉ q ∩ A`, hence `e ∉ q`; and the separability of `κ(Q')/κ((x))` comes from `κ(Q')/κ(q)` separable
+(the residue clause of `0BRM`, `maximalIdeal_eq_span_root_of_dvd_and_isSeparable`) and `κ(q)/κ((a))`
+separable (tameness), by transitivity (Stacks `0BRM`: "κ(𝔪) is separable over κ_A"). -/
 theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
@@ -271,6 +271,7 @@ def StrictRootComponentPreData.toDataOfDvd_tame
   C.toDataOfRootMem fun w hw hx ↦
     C.isUnramifiedAt_of_height_eq_one_of_root_mem_tame ha ha0 hE hdiv htame w hw hx
 
+/-- `toDataOfDvd_tame` does not change the carrier of the pre-data. -/
 @[simp]
 theorem StrictRootComponentPreData.toDataOfDvd_tame_carrier
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
@@ -342,8 +343,9 @@ ramification indices of `N` over `(a)`, which is a unit in `κ((a))` (`(E : A) �
 this point we do not know that `e` is invertible in `A/fA` or in `A`"), together with a component
 datum `StrictRootComponentData A N a E` (the `0BRM` codimension-one conclusion).
 
-Phase 1 (`exists_strictRootComponentData`) used `E = 2·∏ e_q` to have `E ≥ 2` for the
-characteristic-zero form of `09EV`; here `E = ∏ e_q`, since `2` need not be invertible. -/
+The characteristic-zero development (`exists_strictRootComponentData`) used `E = 2·∏ e_q` to have
+`E ≥ 2` for the characteristic-zero form of `09EV`; here `E = ∏ e_q`, since `2` need not be
+invertible. -/
 theorem exists_strictRootComponentData_tame
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
@@ -367,10 +369,5 @@ theorem exists_strictRootComponentData_tame
   exact ⟨E, hE, hEa, ⟨C.toDataOfDvd_tame ha ha0 hE hdiv htame⟩⟩
 
 end Main
-
-#print axioms StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
-#print axioms StrictRootComponentPreData.toDataOfDvd_tame
-#print axioms exists_common_multiple_ramificationIdx_tame
-#print axioms exists_strictRootComponentData_tame
 
 end Pcf.Stacks
