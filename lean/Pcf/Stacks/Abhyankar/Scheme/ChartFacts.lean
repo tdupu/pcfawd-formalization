@@ -37,7 +37,7 @@ variable {X Y : Scheme.{u}} {D : X.IdealSheafData}
 theorem hasLocalizedStandardCoverAt_chart [IsLocallyNoetherian X] (hA : AbhyankarLemmaTameOver X)
     (hDreg : IsRegularScheme D.subscheme)
     (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) {V : X.affineOpens} {a : Γ(X, V)}
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) {V : X.affineOpens} {a : Γ(X, V)}
     (ha : a ∈ nonZeroDivisors Γ(X, V)) (hDa : D.ideal V = Ideal.span {a}) :
     letI := ((f ≫ (complementOpen D).ι).app V.1).hom.toAlgebra
     ∀ y : PrimeSpectrum Γ(X, V), a ∈ y.asIdeal →
@@ -67,7 +67,7 @@ theorem hasLocalizedStandardCoverAt_chart [IsLocallyNoetherian X] (hA : Abhyanka
       Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := etale_app_of_etale f hW hZV
   exact hasLocalizedStandardCoverAt_of_tame a ha
     Γ(complementOpen D, (complementOpen D).ι ⁻¹ᵁ V.1) _
-    (chartTame_of_isTamelyRamifiedInCodimOne hDa f htame) y hy fun S _ _ b ↦
+    (isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne hDa f htame) y hy fun S _ _ b ↦
       hA _ S b ⟨(algebraMap Γ(X, V) _).comp (X.presheaf.map (homOfLE le_top).op).hom⟩
 
 /-- On an open `V ≤ U`, restriction `Γ(X, V) → Γ(U, U.ι⁻¹V)` is bijective. -/

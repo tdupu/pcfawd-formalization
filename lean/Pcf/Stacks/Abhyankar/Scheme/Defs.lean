@@ -34,7 +34,7 @@ and the affine statement that the scheme-level proof takes as a hypothesis.
 * `IsRegularScheme X` — Stacks Definition 28.9.1 (Tag `02IS`), verbatim: every point has an affine
   open neighbourhood whose ring of sections is Noetherian and regular (Mathlib's `IsRegularRing`
   includes Noetherianity).
-* `IsTamelyRamifiedInCodimOne U f` — the definition in the text of Stacks Section 58.31 (Tag
+* `IsTamelyRamifiedInCodimensionOne U f` — the definition in the text of Stacks Section 58.31 (Tag
   `0BSE`): for every prime divisor `Z ⊂ X` with `Z ∩ U = ∅`, with generic point `ξ`, the finite
   separable `K_ξ`-algebra `L_ξ = Γ(Y ×_X Spec K_ξ)` is tamely ramified with respect to `𝒪_{X,ξ}`
   (More on Algebra, Definition 15.113.7, Tag `09E9`, with `B`, `𝔪_i`, `e_i` as in Remark
@@ -60,12 +60,12 @@ extension).  Everything else is a quantification of it:
   of `S` minimal over `aS` above primes minimal over `(a)`; its agreement with the Stacks
   quantifier is `Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_iff` (`Tame/Defs.lean`);
 * here, `IsTamelyRamifiedOver` (Tag `09E9`, over the maximal ideals of the integral closure),
-  `IsTamelyRamifiedInCodimOne` (Tag `0BSE`, intrinsic on schemes) and its chart reading
-  `ChartTame`.
-The scheme layer passes from `IsTamelyRamifiedInCodimOne` to `ChartTame`
-(`chartTame_of_isTamelyRamifiedInCodimOne`, `TameBridge.lean`) and from `ChartTame` to the affine
+  `IsTamelyRamifiedInCodimensionOne` (Tag `0BSE`, intrinsic on schemes) and its chart reading
+  `IsTamelyRamifiedAlongDivisor`.
+The scheme layer passes from `IsTamelyRamifiedInCodimensionOne` to `IsTamelyRamifiedAlongDivisor`
+(`isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`, `TameBridge.lean`) and from `IsTamelyRamifiedAlongDivisor` to the affine
 `IsTamelyRamifiedInCodimensionOneAlong` at the local rings of a chart
-(`AffineTame.isTamelyRamifiedInCodimensionOneAlong_ny`, `AffineTameTransfer.lean`), which is the
+(`AffineTame.isTamelyRamifiedInCodimensionOneAlong_localizedNormalization`, `AffineTameTransfer.lean`), which is the
 hypothesis of `Pcf.Stacks.abhyankarLemmaTameOfFinite`.
 
 ## The affine hypothesis
@@ -79,7 +79,7 @@ layer: `R` Noetherian, `a` a nonzerodivisor with
 neighbourhood `R → R'` with `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - u_i a)`, `e_i` invertible
 (`HasAbhyankarStandardCoverAt`).  It is the characteristic-free analogue of the characteristic-zero
 `Pcf.Stacks.AbhyankarLemmaOfFinite` (whose hypothesis "every positive integer is invertible" is
-replaced by tameness), and `abhyankarLemmaTame_of_natCast_isUnit` discharges it in the
+replaced by tameness), and `abhyankarLemmaTame_of_isUnit_natCast` discharges it in the
 characteristic-zero case from `Pcf.Stacks.abhyankarLemmaOfFinite`.  It assumes `S` finite; it
 is applied only at local rings, where that finiteness is classical.  The public affine theorems
 `Pcf.Stacks.abhyankarLemmaTame` and `Pcf.Stacks.abhyankarLemma` assume only `S[1/a]` finite over
@@ -157,7 +157,7 @@ for every point `ξ ∉ U` with `dim 𝒪_{X,ξ} = 1` (the generic point of a pr
 `𝒪_{X,ξ}`. -/
 @[stacks 0BSE "definition in the text of Section 58.31; standing assumptions not part of the \
   predicate"]
-def IsTamelyRamifiedInCodimOne {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U) : Prop :=
+def IsTamelyRamifiedInCodimensionOne {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U) : Prop :=
   ∀ ξ : X, ξ ∉ U → ringKrullDim (X.presheaf.stalk ξ) = 1 →
     IsTamelyRamifiedOver (X.presheaf.stalk ξ) (genericFibreRing U f ξ)
 
@@ -208,10 +208,10 @@ def IsEtaleLocallyStandardRootCover {X Y : Scheme.{u}} (π : Y ⟶ X) : Prop :=
 /-! ### Affine charts -/
 
 /-- Tameness of a chart `Spec B → Spec R_a ⊂ Spec R` in codimension one along `V(a)`, in the form
-in which `IsTamelyRamifiedInCodimOne` reads on an affine open `Spec R` with `D = V(a)` and
+in which `IsTamelyRamifiedInCodimensionOne` reads on an affine open `Spec R` with `D = V(a)` and
 `Y = Spec B`: at every prime `𝔭 ∋ a` with `dim R_𝔭 = 1` the algebra `K_𝔭 ⊗_R B` is tamely
 ramified with respect to `R_𝔭`. -/
-def ChartTame {R : Type u} [CommRing R] (a : R) (B : Type u) [CommRing B] [Algebra R B] :
+def IsTamelyRamifiedAlongDivisor {R : Type u} [CommRing R] (a : R) (B : Type u) [CommRing B] [Algebra R B] :
     Prop :=
   ∀ p : Ideal R, (_ : p.IsPrime) → a ∈ p → ringKrullDim (Localization.AtPrime p) = 1 →
     IsTamelyRamifiedOver (Localization.AtPrime p)
@@ -242,7 +242,7 @@ def HasSplitCoverAt {R : Type u} [CommRing R] (B : Type u) [CommRing B] [Algebra
 /-- **Characteristic-zero discharge of the affine hypothesis.**  If every positive integer is
 invertible in `R`, then `AbhyankarLemmaTameOfFinite R S a` holds, by the characteristic-zero
 theorem `Pcf.Stacks.abhyankarLemmaOfFinite` (the tameness hypothesis is not needed). -/
-theorem abhyankarLemmaTame_of_natCast_isUnit (R S : Type u) [CommRing R] [CommRing S]
+theorem abhyankarLemmaTame_of_isUnit_natCast (R S : Type u) [CommRing R] [CommRing S]
     [Algebra R S] (a : R) (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
     AbhyankarLemmaTameOfFinite R S a :=
   fun hR ha hreg hfin hetale hint _ y hy ↦
@@ -259,10 +259,10 @@ def AbhyankarLemmaTameOver (X : Scheme.{u}) : Prop :=
 
 /-- If every positive integer is invertible on `X` (a `ℚ`-scheme), the affine hypothesis holds
 over `X` by the characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite`. -/
-theorem abhyankarLemmaTameOver_of_natCast_isUnit (X : Scheme.{u})
+theorem abhyankarLemmaTameOver_of_isUnit_natCast (X : Scheme.{u})
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤))) : AbhyankarLemmaTameOver X := by
   intro R S _ _ _ a ⟨φ⟩
-  refine abhyankarLemmaTame_of_natCast_isUnit R S a fun n hn ↦ ?_
+  refine abhyankarLemmaTame_of_isUnit_natCast R S a fun n hn ↦ ?_
   simpa only [map_natCast] using (hnat n hn).map φ
 
 /-- A universally quantified affine theorem (such as `Pcf.Stacks.abhyankarLemmaTameOfFinite`)

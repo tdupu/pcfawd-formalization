@@ -11,7 +11,7 @@ public import Pcf.Stacks.Abhyankar.Scheme.ChartData
 # Tame ramification in codimension one on an affine chart
 
 The definition of "`Y` is tamely ramified over `X` in codimension one" (Stacks Section 58.31,
-Tag `0BSE`; pcf `IsTamelyRamifiedInCodimOne`) is stated intrinsically: for every point `ξ ∉ U`
+Tag `0BSE`; pcf `IsTamelyRamifiedInCodimensionOne`) is stated intrinsically: for every point `ξ ∉ U`
 with `dim 𝒪_{X,ξ} = 1`, the `K_ξ`-algebra `L_ξ = Γ(Y ×_X Spec K_ξ)` is tamely ramified with
 respect to `𝒪_{X,ξ}` (Tag `09E9`).  This file identifies that condition on an affine chart
 `V = Spec R` on which `D` is cut out by `a`, where `Y` restricts to `Spec M`:
@@ -22,11 +22,11 @@ respect to `𝒪_{X,ξ}` (Tag `09E9`).  This file identifies that condition on a
 * hence `Y ×_X Spec K_ξ ≅ Spec(K_ξ ⊗_R M)` (`isPullback_tensor_fromSpec`) and
   `L_ξ ≅ K_ξ ⊗_R M ≅ Frac(R_𝔭) ⊗_R M` compatibly with the structure maps;
 * tame ramification is invariant under compatible ring isomorphisms
-  (`IsTamelyRamifiedOver.of_ringEquiv`, `IsTamelyRamifiedAt.of_ringEquiv`, via
+  (`IsTamelyRamifiedOver.of_ringEquiv`, `Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv`, via
   `ramificationIdx_eq_of_ringEquiv` for Mathlib's length-defined `Ideal.ramificationIdx` and
   `Algebra.IsSeparable.of_equiv_equiv` for residue fields).
 
-The output `chartTame_of_isTamelyRamifiedInCodimOne` is the chart form `ChartTame a M` used by the
+The output `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne` is the chart form `IsTamelyRamifiedAlongDivisor a M` used by the
 affine statement.  Stacks treats this identification as evident ("as in the discussion above")
 in the proof of Tag `0EYG`; the transport lemmas are general API for `IsTamelyRamifiedOver`.
 -/
@@ -49,7 +49,7 @@ theorem length_quotient_map_ringEquiv {A A' : Type*} [CommRing A] [CommRing A'] 
     Module.length_eq_of_surjective (S := A ⧸ I) (R := A' ⧸ I.map φ) ψ.surjective]
 
 /-- A natural number is invertible in `κ(𝔭)` iff it does not lie in `𝔭`. -/
-theorem natCast_isUnit_residueField_iff {R : Type*} [CommRing R] (p : Ideal R) [p.IsPrime]
+theorem isUnit_natCast_residueField_iff {R : Type*} [CommRing R] (p : Ideal R) [p.IsPrime]
     (n : ℕ) : IsUnit ((n : p.ResidueField)) ↔ (n : R) ∉ p := by
   rw [isUnit_iff_ne_zero, ← map_natCast (algebraMap R p.ResidueField), ne_eq,
     Ideal.algebraMap_residueField_eq_zero]
@@ -118,15 +118,15 @@ theorem ramificationIdx_eq_of_ringEquiv {q : Ideal S} {q' : Ideal S'} [q.IsPrime
 include h in
 /-- Tame ramification at a prime (`IsTamelyRamifiedAt`) is invariant under compatible ring
 isomorphisms of the base and the algebra. -/
-theorem IsTamelyRamifiedAt.of_ringEquiv {q : PrimeSpectrum S} {q' : PrimeSpectrum S'}
+theorem _root_.Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv {q : PrimeSpectrum S} {q' : PrimeSpectrum S'}
     (hq : q.asIdeal = q'.asIdeal.comap e2) (H : IsTamelyRamifiedAt R S q) :
     IsTamelyRamifiedAt R' S' q' := by
   have hp := under_eq_comap_of_ringEquiv e1 e2 h hq
   dsimp only [IsTamelyRamifiedAt] at H ⊢
   obtain ⟨H1, H2⟩ := H
   refine ⟨?_, ?_⟩
-  · rw [ramificationIdx_eq_of_ringEquiv e1 e2 h hq, natCast_isUnit_residueField_iff]
-    rw [natCast_isUnit_residueField_iff, hp, Ideal.mem_comap, map_natCast] at H1
+  · rw [ramificationIdx_eq_of_ringEquiv e1 e2 h hq, isUnit_natCast_residueField_iff]
+    rw [isUnit_natCast_residueField_iff, hp, Ideal.mem_comap, map_natCast] at H1
     exact H1
   · let _ : Algebra (Localization.AtPrime (q.asIdeal.under R))
         (Localization.AtPrime q.asIdeal) := Localization.AtPrime.algebraOfLiesOver _ _
@@ -175,19 +175,19 @@ theorem IsTamelyRamifiedOver.of_ringEquiv (H : IsTamelyRamifiedOver O L) :
       algebraMap O' (integralClosure O' L') (e1 x) := fun x ↦ Subtype.ext (h x)
   let m := m'.comap eC
   have hm : m.IsMaximal := Ideal.comap_isMaximal_of_surjective _ eC.surjective
-  exact IsTamelyRamifiedAt.of_ringEquiv e1 eC hC (q := ⟨m, hm.isPrime⟩) rfl (H m hm)
+  exact Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv e1 eC hC (q := ⟨m, hm.isPrime⟩) rfl (H m hm)
 end
 
 /-- **Tameness in codimension one on an affine chart.**  If `D` is cut out by `a` on the affine
 open `V` and `f : Y → X ∖ D` is finite and tamely ramified over `X` in codimension one (Stacks
 Section 58.31), then the chart `Γ(X, V) → Γ(Y, (f ≫ ι)⁻¹ V)` is tame in codimension one along
-`V(a)` in the sense of `ChartTame`. -/
-theorem chartTame_of_isTamelyRamifiedInCodimOne {X Y : Scheme.{u}} {D : X.IdealSheafData}
+`V(a)` in the sense of `IsTamelyRamifiedAlongDivisor`. -/
+theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : Scheme.{u}} {D : X.IdealSheafData}
     {V : X.affineOpens} {a : Γ(X, V)} (hDa : D.ideal V = Ideal.span {a})
     (f : Y ⟶ complementOpen D) [IsFinite f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) :
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
     letI := ((f ≫ (complementOpen D).ι).app V.1).hom.toAlgebra
-    ChartTame a Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := by
+    IsTamelyRamifiedAlongDivisor a Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) := by
   let _ := ((f ≫ (complementOpen D).ι).app V.1).hom.toAlgebra
   intro p hp hap hdim
   have hgV : IsAffineOpen ((f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1) :=
@@ -198,7 +198,7 @@ theorem chartTame_of_isTamelyRamifiedInCodimOne {X Y : Scheme.{u}} {D : X.IdealS
     rw [← SetLike.mem_coe, ← V.2.range_fromSpec]
     exact Set.mem_range_self pt
   let xU : V.1 := ⟨ξ, hξV⟩
-  have hprime : V.2.primeIdealOf xU = pt := IsAffineOpen.primeIdealOf_fromSpec V.2 pt
+  have hprime : V.2.primeIdealOf xU = pt := AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec V.2 pt
   let _ : Algebra Γ(X, V.1) (X.presheaf.stalk ξ) := X.presheaf.algebra_section_stalk xU
   have hloc : IsLocalization.AtPrime (X.presheaf.stalk ξ) p := by
     have := V.2.isLocalization_stalk xU

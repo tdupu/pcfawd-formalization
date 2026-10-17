@@ -26,11 +26,11 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 * Shrink to `X = Spec A`, `D = V(f)`, `Y = Spec B`: the statement itself (the affine chart is
   chosen at the scheme level).
 * Reduce to the strict henselization of `𝒪_{X,x}`: replaced.  The hypothesis is applied at `R_y`
-  (`hasAbhyankarStandardCoverAt_ny`), and the resulting étale neighbourhood is mapped into the
+  (`hasAbhyankarStandardCoverAt_localizedNormalization`), and the resulting étale neighbourhood is mapped into the
   colimit `L` of pointed étale neighbourhoods (`nonempty_localizedStandard_of_algHom`, using the
   Stacks `04GW` comparison `localColimitAtPrimeRingEquiv`).
 * `A^{sh}/fA^{sh}` regular and base change keeps tameness (Lemma 58.31.1, Tag `0EYD`): replaced
-  by a localization argument, `isTamelyRamifiedInCodimensionOneAlong_ny` (Mathlib's localization
+  by a localization argument, `isTamelyRamifiedInCodimensionOneAlong_localizedNormalization` (Mathlib's localization
   invariance of ramification indices).
 * Strictly henselian case `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`: the affine hypothesis
   `AbhyankarLemmaTameOfFinite` (`Pcf.Stacks.abhyankarLemmaTameOfFinite`).
@@ -42,7 +42,7 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 The differences in the second and third steps are forced by the shape of the affine hypothesis: like
 the characteristic-zero `Pcf.Stacks.AbhyankarLemmaOfFinite`, it is stated for the finite
 normalization `S` of `R` in `S[1/a]`, whose finiteness over `R` is not available before this
-theorem; over the regular local ring `R_y` it is (Stacks Tag `032L`, `finite_ny`).  The finiteness
+theorem; over the regular local ring `R_y` it is (Stacks Tag `032L`, `finite_localizedNormalization`).  The finiteness
 over `R` itself (first assertion of `0EYH`) is then deduced from this theorem and
 `integralClosure_finite` (`Pcf.Stacks.finite_of_isIntegralClosure_away`,
 `Pcf.Stacks.Abhyankar.FiniteNormalization`).
@@ -63,35 +63,35 @@ namespace AffineTame
 open Pcf.Stacks.PointedEtaleNeighborhood
 
 /-- `∏_j T[x]/(x^{e_j} - v_j a)`. -/
-abbrev StdC (T : Type u) [CommRing T] {ι : Type} (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
+abbrev StandardCoverProduct (T : Type u) [CommRing T] {ι : Type} (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
     Type u :=
   ∀ j, AdjoinRoot (Pcf.LocalModel.localPoly (v j) a (e j))
 
 /-- `(∏_j T[x]/(x^{e_j} - v_j a))[1/a]`. -/
-abbrev LocStdC (T : Type u) [CommRing T] {ι : Type} (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
+abbrev LocalizedStandardCoverProduct (T : Type u) [CommRing T] {ι : Type} (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
     Type u :=
-  Localization.Away (algebraMap T (StdC T v a e) a)
+  Localization.Away (algebraMap T (StandardCoverProduct T v a e) a)
 
 /-- Base change of `(∏_j T[x]/(x^{e_j} - v_j a))[1/a]` along `T → T'`. -/
-noncomputable def locStdCBaseChange {T T' : Type u} [CommRing T] [CommRing T'] [Algebra T T']
+noncomputable def localizedStandardCoverProductBaseChange {T T' : Type u} [CommRing T] [CommRing T'] [Algebra T T']
     {ι : Type} [Fintype ι] (v : ι → Tˣ) (v' : ι → T'ˣ)
     (hv : ∀ j, Units.map (algebraMap T T') (v j) = v' j) (a : T) (a' : T')
     (ha : algebraMap T T' a = a') (e : ι → ℕ) :
-    T' ⊗[T] LocStdC T v a e ≃ₐ[T'] LocStdC T' v' a' e :=
-  let c : StdC T v a e := algebraMap T (StdC T v a e) a
-  let F : T' ⊗[T] StdC T v a e ≃ₐ[T'] StdC T' v' a' e :=
+    T' ⊗[T] LocalizedStandardCoverProduct T v a e ≃ₐ[T'] LocalizedStandardCoverProduct T' v' a' e :=
+  let c : StandardCoverProduct T v a e := algebraMap T (StandardCoverProduct T v a e) a
+  let F : T' ⊗[T] StandardCoverProduct T v a e ≃ₐ[T'] StandardCoverProduct T' v' a' e :=
     (standardCoversBaseChangeEquivOfUnitEq ι v v' hv a e).trans
       (AlgEquiv.piCongrRight fun j ↦ AdjoinRoot.algEquivOfEq T' _ _ (by rw [ha]))
-  have hF : F ((1 : T') ⊗ₜ[T] c) = algebraMap T' (StdC T' v' a' e) a' := by
-    have : (1 : T') ⊗ₜ[T] c = algebraMap T' (T' ⊗[T] StdC T v a e) a' := by
+  have hF : F ((1 : T') ⊗ₜ[T] c) = algebraMap T' (StandardCoverProduct T' v' a' e) a' := by
+    have : (1 : T') ⊗ₜ[T] c = algebraMap T' (T' ⊗[T] StandardCoverProduct T v a e) a' := by
       rw [← ha]
-      change (1 : T') ⊗ₜ[T] algebraMap T (StdC T v a e) a = _
+      change (1 : T') ⊗ₜ[T] algebraMap T (StandardCoverProduct T v a e) a = _
       rw [← Algebra.TensorProduct.tmul_one_eq_one_tmul]
       rfl
     rw [this, AlgEquiv.commutes]
-  (IsLocalization.Away.tensorProductEquivTMulRight T T' c (LocStdC T v a e)).trans
+  (IsLocalization.Away.tensorProductEquivTMulRight T T' c (LocalizedStandardCoverProduct T v a e)).trans
     (IsLocalization.algEquivOfAlgEquiv (M := Submonoid.powers ((1 : T') ⊗ₜ[T] c))
-      (T := Submonoid.powers (algebraMap T' (StdC T' v' a' e) a'))
+      (T := Submonoid.powers (algebraMap T' (StandardCoverProduct T' v' a' e) a'))
       _ _ F (by rw [Submonoid.map_powers]; exact congrArg Submonoid.powers hF))
 
 variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra R Ra]
@@ -100,7 +100,7 @@ variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra 
   (y : Ideal R) [y.IsPrime]
 
 /-- A point `R'' → κ(y'')` over `R_y` for an étale neighbourhood of the closed point. -/
-theorem ker_residueField {R'' : Type u} [CommRing R''] [Algebra (Localization.AtPrime y) R'']
+theorem ker_residueField_localizedStandardCoverProduct {R'' : Type u} [CommRing R''] [Algebra (Localization.AtPrime y) R'']
     (y'' : Ideal R'') [y''.IsPrime]
     (hy'' : y''.under (Localization.AtPrime y) = maximalIdeal (Localization.AtPrime y)) :
     letI : Algebra R y''.ResidueField := ((algebraMap R'' y''.ResidueField).comp
@@ -126,43 +126,43 @@ theorem nonempty_localizedStandard_of_algHom [Module.Finite Ra B]
     {R'' : Type u} [CommRing R''] [Algebra (Localization.AtPrime y) R'']
     (ψ : R'' →ₐ[Localization.AtPrime y] L)
     {ι : Type} [Finite ι] (e : ι → ℕ) (u : ι → R''ˣ)
-    (F0 : R'' ⊗[Localization.AtPrime y] Ny B y ≃ₐ[R'']
+    (F0 : R'' ⊗[Localization.AtPrime y] LocalizedNormalization B y ≃ₐ[R'']
       ∀ j, AdjoinRoot (Pcf.LocalModel.localPoly (u j)
-        (algebraMap (Localization.AtPrime y) R'' (ay a y)) (e j))) :
+        (algebraMap (Localization.AtPrime y) R'' (localizedEquation a y)) (e j))) :
     Nonempty (L ⊗[R] B ≃ₐ[L]
-      LocStdC L (fun j ↦ Units.map ψ.toRingHom.toMonoidHom (u j)) (algebraMap R L a) e) := by
+      LocalizedStandardCoverProduct L (fun j ↦ Units.map ψ.toRingHom.toMonoidHom (u j)) (algebraMap R L a) e) := by
   letI := Fintype.ofFinite ι
   set Ry := Localization.AtPrime y
   letI : Algebra R'' L := ψ.toRingHom.toAlgebra
   haveI : IsScalarTower Ry R'' L := IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
-  have hL : algebraMap R'' L (algebraMap Ry R'' (ay a y)) = algebraMap R L a := by
+  have hL : algebraMap R'' L (algebraMap Ry R'' (localizedEquation a y)) = algebraMap R L a := by
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply]
   set v : ι → Lˣ := fun j ↦ Units.map ψ.toRingHom.toMonoidHom (u j)
   -- base change of the standard presentation to `L`
-  let G : L ⊗[R''] (R'' ⊗[Ry] Ny B y) ≃ₐ[L] StdC L v (algebraMap R L a) e :=
+  let G : L ⊗[R''] (R'' ⊗[Ry] LocalizedNormalization B y) ≃ₐ[L] StandardCoverProduct L v (algebraMap R L a) e :=
     ((Algebra.TensorProduct.congr AlgEquiv.refl F0).trans
-      (standardCoversBaseChangeEquiv ι u (algebraMap Ry R'' (ay a y)) e)).trans
+      (standardCoversBaseChangeEquiv ι u (algebraMap Ry R'' (localizedEquation a y)) e)).trans
       (AlgEquiv.piCongrRight fun j ↦ AdjoinRoot.algEquivOfEq L _ _ (by rw [hL]; rfl))
-  let F1 : L ⊗[Ry] Ny B y ≃ₐ[L] StdC L v (algebraMap R L a) e :=
-    (Algebra.TensorProduct.cancelBaseChange Ry R'' L L (Ny B y)).symm.trans G
+  let F1 : L ⊗[Ry] LocalizedNormalization B y ≃ₐ[L] StandardCoverProduct L v (algebraMap R L a) e :=
+    (Algebra.TensorProduct.cancelBaseChange Ry R'' L L (LocalizedNormalization B y)).symm.trans G
   -- localize at `a`
-  haveI := isLocalization_away_ny a Ra B y
-  let g : Ny B y := algebraMap Ry (Ny B y) (ay a y)
-  let H1 : L ⊗[Ry] By B y ≃ₐ[L] Localization.Away ((1 : L) ⊗ₜ[Ry] g) :=
-    IsLocalization.Away.tensorProductEquivTMulRight Ry L g (By B y)
+  haveI := isLocalization_away_localizedNormalization a Ra B y
+  let g : LocalizedNormalization B y := algebraMap Ry (LocalizedNormalization B y) (localizedEquation a y)
+  let H1 : L ⊗[Ry] LocalizedCover B y ≃ₐ[L] Localization.Away ((1 : L) ⊗ₜ[Ry] g) :=
+    IsLocalization.Away.tensorProductEquivTMulRight Ry L g (LocalizedCover B y)
   have hg : F1 ((1 : L) ⊗ₜ[Ry] g) =
-      algebraMap L (StdC L v (algebraMap R L a) e) (algebraMap R L a) := by
-    have : (1 : L) ⊗ₜ[Ry] g = algebraMap L (L ⊗[Ry] Ny B y) (algebraMap R L a) := by
+      algebraMap L (StandardCoverProduct L v (algebraMap R L a) e) (algebraMap R L a) := by
+    have : (1 : L) ⊗ₜ[Ry] g = algebraMap L (L ⊗[Ry] LocalizedNormalization B y) (algebraMap R L a) := by
       rw [IsScalarTower.algebraMap_apply R Ry L a]
-      change (1 : L) ⊗ₜ[Ry] algebraMap Ry (Ny B y) (ay a y) = _
+      change (1 : L) ⊗ₜ[Ry] algebraMap Ry (LocalizedNormalization B y) (localizedEquation a y) = _
       rw [← Algebra.TensorProduct.tmul_one_eq_one_tmul]
       rfl
     rw [this, AlgEquiv.commutes]
-  let H2 : Localization.Away ((1 : L) ⊗ₜ[Ry] g) ≃ₐ[L] LocStdC L v (algebraMap R L a) e :=
+  let H2 : Localization.Away ((1 : L) ⊗ₜ[Ry] g) ≃ₐ[L] LocalizedStandardCoverProduct L v (algebraMap R L a) e :=
     IsLocalization.algEquivOfAlgEquiv (M := Submonoid.powers ((1 : L) ⊗ₜ[Ry] g))
-      (T := Submonoid.powers (algebraMap L (StdC L v (algebraMap R L a) e) (algebraMap R L a)))
+      (T := Submonoid.powers (algebraMap L (StandardCoverProduct L v (algebraMap R L a) e) (algebraMap R L a)))
       _ _ F1 (by rw [Submonoid.map_powers]; exact congrArg Submonoid.powers hg)
-  let H3 : L ⊗[R] B ≃ₐ[L] L ⊗[Ry] By B y :=
+  let H3 : L ⊗[R] B ≃ₐ[L] L ⊗[Ry] LocalizedCover B y :=
     (Algebra.TensorProduct.cancelBaseChange R Ry L L B).symm
   exact ⟨H3.trans (H1.trans H2)⟩
 
@@ -203,14 +203,14 @@ theorem exists_stage_isUnit_natCast {R Ω : Type u} [CommRing R] [Field Ω] [Alg
   exact ⟨⟨_, _, h1, by rw [mul_comm]; exact h1⟩, rfl⟩
 
 /-- The localized standard covers are finitely presented over a Noetherian base. -/
-theorem locStdC_finitePresentation {T : Type u} [CommRing T] [IsNoetherianRing T]
+theorem localizedStandardCoverProduct_finitePresentation {T : Type u} [CommRing T] [IsNoetherianRing T]
     {ι : Type} [Finite ι] (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
-    Algebra.FinitePresentation T (LocStdC T v a e) := by
+    Algebra.FinitePresentation T (LocalizedStandardCoverProduct T v a e) := by
   letI := Fintype.ofFinite ι
-  haveI : Algebra.FinitePresentation (StdC T v a e) (LocStdC T v a e) :=
-    IsLocalization.Away.finitePresentation (S := LocStdC T v a e) (algebraMap T (StdC T v a e) a)
-  haveI : Algebra.FiniteType T (LocStdC T v a e) :=
-    Algebra.FiniteType.trans (S := StdC T v a e) inferInstance inferInstance
+  haveI : Algebra.FinitePresentation (StandardCoverProduct T v a e) (LocalizedStandardCoverProduct T v a e) :=
+    IsLocalization.Away.finitePresentation (S := LocalizedStandardCoverProduct T v a e) (algebraMap T (StandardCoverProduct T v a e) a)
+  haveI : Algebra.FiniteType T (LocalizedStandardCoverProduct T v a e) :=
+    Algebra.FiniteType.trans (S := StandardCoverProduct T v a e) inferInstance inferInstance
   exact Algebra.FinitePresentation.of_finiteType.mp inferInstance
 
 open CategoryTheory Limits Pcf.Stacks.EtaleDescent Pcf.Stacks.EtaleDescent.StageAlgebra
@@ -223,9 +223,9 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
     [Algebra.FinitePresentation R B] {ι : Type} [Finite ι] (e : ι → ℕ)
     (v : ι → (LocalColimit R Ω)ˣ) (he : ∀ j, IsUnit ((e j : ℕ) : LocalColimit R Ω))
     (E : LocalColimit R Ω ⊗[R] B ≃ₐ[LocalColimit R Ω]
-      LocStdC (LocalColimit R Ω) v (algebraMap R (LocalColimit R Ω) a) e) :
+      LocalizedStandardCoverProduct (LocalColimit R Ω) v (algebraMap R (LocalColimit R Ω) a) e) :
     ∃ (X : PointedEtaleNeighborhood R Ω) (vX : ι → Xˣ), (∀ j, IsUnit ((e j : ℕ) : X)) ∧
-      Nonempty (X ⊗[R] B ≃ₐ[X] LocStdC X vX (algebraMap R X a) e) := by
+      Nonempty (X ⊗[R] B ≃ₐ[X] LocalizedStandardCoverProduct X vX (algebraMap R X a) e) := by
   letI := Fintype.ofFinite ι
   classical
   let L := LocalColimit R Ω
@@ -252,7 +252,7 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
     IsScalarTower.of_algebraMap_eq (R := R) (S := X) (A := L) (fun r ↦ by
       change algebraMap R L r = (c.ι.app X).right.hom (algebraMap R X r)
       exact (congr($((c.ι.app X).w).hom r)).symm)
-  let A := LocStdC X unitX (algebraMap R X a) e
+  let A := LocalizedStandardCoverProduct X unitX (algebraMap R X a) e
   let Bs := X ⊗[R] B
   letI : CommRing Bs := by dsimp [Bs]; infer_instance
   letI : Algebra X Bs := Algebra.TensorProduct.leftAlgebra
@@ -262,7 +262,7 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
   letI : IsNoetherianRing (G.obj X) := by change IsNoetherianRing X; infer_instance
   have hA : Algebra.FinitePresentation (G.obj X) A := by
     change Algebra.FinitePresentation X A
-    exact locStdC_finitePresentation unitX _ e
+    exact localizedStandardCoverProduct_finitePresentation unitX _ e
   letI : Algebra.FinitePresentation X Bs := Algebra.FinitePresentation.baseChange X
   have hB : Algebra.FinitePresentation (G.obj X) Bs := by
     change Algebra.FinitePresentation X Bs
@@ -275,8 +275,8 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
       commutes' := fun r ↦ by
         change Algebra.TensorProduct.comm X A L (1 ⊗ₜ[X] r) = r ⊗ₜ[X] 1
         rfl }
-  let bcL : L ⊗[X] A ≃ₐ[L] LocStdC L v (algebraMap R L a) e :=
-    locStdCBaseChange unitX v hunitXL (algebraMap R X a) (algebraMap R L a)
+  let bcL : L ⊗[X] A ≃ₐ[L] LocalizedStandardCoverProduct L v (algebraMap R L a) e :=
+    localizedStandardCoverProductBaseChange unitX v hunitXL (algebraMap R X a) (algebraMap R L a)
       (IsScalarTower.algebraMap_apply R X L a).symm e
   let commB : Bs ⊗[X] L ≃ₐ[L] L ⊗[X] Bs :=
     { Algebra.TensorProduct.comm X Bs L with
@@ -311,24 +311,24 @@ theorem exists_stage_localizedStandard {R Ω : Type u} [CommRing R] [Field Ω] [
         rfl }
   let cancelStage : T ⊗[X] Bs ≃ₐ[T] T ⊗[R] B :=
     Algebra.TensorProduct.cancelBaseChange R X T T B
-  let bcT : T ⊗[X] A ≃ₐ[T] LocStdC T (fun j ↦ Units.map (algebraMap X T) (unitX j))
+  let bcT : T ⊗[X] A ≃ₐ[T] LocalizedStandardCoverProduct T (fun j ↦ Units.map (algebraMap X T) (unitX j))
       (algebraMap R T a) e :=
-    locStdCBaseChange unitX _ (fun _ ↦ rfl) (algebraMap R X a) (algebraMap R T a)
+    localizedStandardCoverProductBaseChange unitX _ (fun _ ↦ rfl) (algebraMap R X a) (algebraMap R T a)
       (IsScalarTower.algebraMap_apply R X T a).symm e
   refine ⟨P.stage.right, fun j ↦ Units.map (algebraMap X T).toMonoidHom (unitX j),
     fun j ↦ ?_, ?_⟩
   · have h := (heX j).map (algebraMap X T)
     rw [map_natCast] at h
     exact h
-  · change Nonempty (T ⊗[R] B ≃ₐ[T] LocStdC T (fun j ↦ Units.map (algebraMap X T) (unitX j))
+  · change Nonempty (T ⊗[R] B ≃ₐ[T] LocalizedStandardCoverProduct T (fun j ↦ Units.map (algebraMap X T) (unitX j))
       (algebraMap R T a) e)
     exact ⟨(((commStage.trans cancelStage).symm.trans P.equiv.symm).trans commStageA).trans bcT⟩
 /-- The localization of a finite product of standard covers is the product of the localizations. -/
-noncomputable def locStdCPiEquiv {T : Type u} [CommRing T] {ι : Type} [Fintype ι]
+noncomputable def localizedStandardCoverProductPiEquiv {T : Type u} [CommRing T] {ι : Type} [Fintype ι]
     (v : ι → Tˣ) (a : T) (e : ι → ℕ) :
-    LocStdC T v a e ≃ₐ[T] ∀ j, Localization.Away
+    LocalizedStandardCoverProduct T v a e ≃ₐ[T] ∀ j, Localization.Away
       (algebraMap T (AdjoinRoot (Pcf.LocalModel.localPoly (v j) a (e j))) a) :=
-  haveI : IsLocalization (Submonoid.powers (algebraMap T (StdC T v a e) a))
+  haveI : IsLocalization (Submonoid.powers (algebraMap T (StandardCoverProduct T v a e) a))
       (∀ j, Localization.Away
         (algebraMap T (AdjoinRoot (Pcf.LocalModel.localPoly (v j) a (e j))) a)) := by
     rw [IsLocalization.iff_map_piEvalRingHom]
@@ -336,8 +336,8 @@ noncomputable def locStdCPiEquiv {T : Type u} [CommRing T] {ι : Type} [Fintype 
     change IsLocalization (Submonoid.pi Set.univ fun j ↦ Submonoid.powers
       (algebraMap T (AdjoinRoot (Pcf.LocalModel.localPoly (v j) a (e j))) a)) _
     infer_instance
-  (IsLocalization.algEquiv (Submonoid.powers (algebraMap T (StdC T v a e) a))
-    (LocStdC T v a e) _).restrictScalars T
+  (IsLocalization.algEquiv (Submonoid.powers (algebraMap T (StandardCoverProduct T v a e) a))
+    (LocalizedStandardCoverProduct T v a e) _).restrictScalars T
 
 /-- Packaging a stage presentation as `HasLocalizedStandardCoverAt`. -/
 theorem hasLocalizedStandardCoverAt_of_stage {R Ω : Type u} [CommRing R] [Field Ω]
@@ -346,7 +346,7 @@ theorem hasLocalizedStandardCoverAt_of_stage {R Ω : Type u} [CommRing R] [Field
     (y : PrimeSpectrum R) (hΩ : RingHom.ker (algebraMap R Ω) = y.asIdeal)
     (X : PointedEtaleNeighborhood R Ω) {ι : Type} [Finite ι] (e : ι → ℕ) (he0 : ∀ j, e j ≠ 0)
     (vX : ι → Xˣ) (heX : ∀ j, IsUnit ((e j : ℕ) : X))
-    (E : X ⊗[R] B ≃ₐ[X] LocStdC X vX (algebraMap R X a) e) :
+    (E : X ⊗[R] B ≃ₐ[X] LocalizedStandardCoverProduct X vX (algebraMap R X a) e) :
     HasLocalizedStandardCoverAt a B y := by
   letI := Fintype.ofFinite ι
   classical
@@ -379,7 +379,7 @@ theorem hasLocalizedStandardCoverAt_of_stage {R Ω : Type u} [CommRing R] [Field
   refine ⟨X, inferInstance, inferInstance, inferInstance, ⟨y', hy'⟩, inferInstance,
     hmapRegular, inferInstance, Fintype.card ι, fun k ↦ e (σ.symm k), fun k ↦ vX (σ.symm k),
     fun k ↦ Nat.one_le_iff_ne_zero.mpr (he0 _), fun k ↦ heX _, ⟨?_⟩⟩
-  exact ((E.trans (locStdCPiEquiv vX (algebraMap R X a) e)).trans
+  exact ((E.trans (localizedStandardCoverProductPiEquiv vX (algebraMap R X a) e)).trans
     (standardCoversLocalizationEquiv vX (algebraMap R X a) e)).trans
     (AlgEquiv.piCongrLeft' X _ σ)
 
@@ -391,7 +391,7 @@ affine hypothesis `AbhyankarLemmaTameOfFinite`.**
 
 `R` Noetherian, `a` a nonzerodivisor with `R/(a)` regular (`D = V(a)` an effective Cartier
 divisor which is a regular scheme), `B` finite étale over `R_a` (`Y = Spec B → Spec R_a`),
-tamely ramified in codimension one along `V(a)` (`ChartTame`), and `y ∈ V(a)`: there is a pointed
+tamely ramified in codimension one along `V(a)` (`IsTamelyRamifiedAlongDivisor`), and `y ∈ V(a)`: there is a pointed
 étale neighbourhood `R → A` of `y`, `A` Noetherian, `a` a nonzerodivisor of `A` with `A/(a)`
 regular, and `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)` with `e_i ≥ 1` invertible in `A`.
 
@@ -400,9 +400,9 @@ The affine hypothesis is used only at the local ring `R_y` (argument `hA`).
 Proof route, compared with the proof of Tag `0EYG`:
 * Stacks reduces to the strict henselization and proves the strictly henselian case directly.
   Here that case is replaced by the affine hypothesis, applied at `R_y` to the normalization
-  `N_y` of `R_y` in `R_y ⊗_R B` (`hasAbhyankarStandardCoverAt_ny`).  This needs `N_y` finite
-  (Stacks Tag `032L`, via `finite_ny`), étale away from `a`, the integral closure of `R_y` in
-  `N_y[1/a]`, and tame along `V(a)` (`isTamelyRamifiedInCodimensionOneAlong_ny`, a localization
+  `N_y` of `R_y` in `R_y ⊗_R B` (`hasAbhyankarStandardCoverAt_localizedNormalization`).  This needs `N_y` finite
+  (Stacks Tag `032L`, via `finite_localizedNormalization`), étale away from `a`, the integral closure of `R_y` in
+  `N_y[1/a]`, and tame along `V(a)` (`isTamelyRamifiedInCodimensionOneAlong_localizedNormalization`, a localization
   argument replacing Stacks' Lemma 58.31.1, Tag `0EYD`, which is not needed for a localization).
 * The resulting étale neighbourhood `R''` of the closed point of `R_y` is mapped into the colimit
   `L` of pointed étale neighbourhoods of `R` at the residue field `Ω = κ(y'')` of a point of `R''`
@@ -418,19 +418,19 @@ theorem hasLocalizedStandardCoverAt_of_tame
     (Ra : Type u) [CommRing Ra] [Algebra R Ra] [IsLocalization.Away a Ra]
     (B : Type u) [CommRing B] [Algebra Ra B] [Algebra R B] [IsScalarTower R Ra B]
     [Module.Finite Ra B] [Algebra.Etale Ra B]
-    (htame : ChartTame a B) (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal)
+    (htame : IsTamelyRamifiedAlongDivisor a B) (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal)
     (hA : ∀ (S : Type u) [CommRing S] [Algebra (Localization.AtPrime y.asIdeal) S]
       (b : Localization.AtPrime y.asIdeal),
         AbhyankarLemmaTameOfFinite (Localization.AtPrime y.asIdeal) S b) :
     HasLocalizedStandardCoverAt a B y := by
   obtain ⟨R'', _, _, _, ⟨y'', hy''⟩, _, _, _, ι, _, e, u, he, heU, ⟨F0⟩⟩ :=
-    hasAbhyankarStandardCoverAt_ny a Ra B y.asIdeal ha htame hy hA
+    hasAbhyankarStandardCoverAt_localizedNormalization a Ra B y.asIdeal ha htame hy hA
   set Ry := Localization.AtPrime y.asIdeal
   let Ω := y''.asIdeal.ResidueField
   letI : Algebra R Ω :=
     ((algebraMap R'' Ω).comp ((algebraMap Ry R'').comp (algebraMap R Ry))).toAlgebra
   have hΩ : RingHom.ker (algebraMap R Ω) = y.asIdeal :=
-    ker_residueField y.asIdeal y''.asIdeal hy''
+    ker_residueField_localizedStandardCoverProduct y.asIdeal y''.asIdeal hy''
   letI : Algebra Ry Ω := atPrimeAlgebra y.asIdeal hΩ
   haveI := atPrimeAlgebra_isScalarTower y.asIdeal hΩ
   have hpt : (algebraMap R'' Ω).comp (algebraMap Ry R'') = algebraMap Ry Ω := by

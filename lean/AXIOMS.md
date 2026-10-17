@@ -108,8 +108,8 @@ the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`F
 | Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
 | The same in Mathlib vocabulary (`Etale` on an open neighbourhood) | `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBSchemeAPI.lean` | `[propext, Classical.choice, Quot.sound]` |
 | Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemmaTame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tame/Tag0EYGTame.lean`, now `abhyankarLemmaTameOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
-| Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.tag0EYG` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Stacks `0EYH` (Lemma 58.31.6), scheme level, as stated ("finite locally free" written as finite, flat, locally of finite presentation, Tag `02KB`) | `Pcf.Stacks.SchemeLevel.tag0EYH` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYH.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Stacks `0EYH` (Lemma 58.31.6), scheme level, as stated ("finite locally free" written as finite, flat, locally of finite presentation, Tag `02KB`) | `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYH.lean` | `[propext, Classical.choice, Quot.sound]` |
 
 Route divergences (each described in the docstring at the declaration):
 

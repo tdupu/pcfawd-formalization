@@ -113,16 +113,16 @@ variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra 
   [IsLocalization.Away a Ra]
   (B : Type u) [CommRing B] [Algebra Ra B] [Algebra R B] [IsScalarTower R Ra B]
 
-attribute [local instance] rpAlgebra sfAlgebra cpAlgebra
+attribute [local instance] algebraLocalizationAtContraction genericFibreAtContractionAlgebra normalizationAtContractionAlgebra
 
-/-- `B_y = R_y ⊗_R B` as a `B`-algebra (via `inclB`). -/
+/-- `B_y = R_y ⊗_R B` as a `B`-algebra (via `toLocalizedCover`). -/
 @[instance_reducible]
-noncomputable def localizedCoverAlgebra (y : Ideal R) [y.IsPrime] : Algebra B (By B y) :=
-  (inclB B y).toAlgebra
+noncomputable def localizedCoverAlgebra (y : Ideal R) [y.IsPrime] : Algebra B (LocalizedCover B y) :=
+  (toLocalizedCover B y).toAlgebra
 
 attribute [local instance] localizedCoverAlgebra
 
-instance isScalarTower_localizedCover (y : Ideal R) [y.IsPrime] : IsScalarTower R B (By B y) :=
+instance isScalarTower_localizedCover (y : Ideal R) [y.IsPrime] : IsScalarTower R B (LocalizedCover B y) :=
   IsScalarTower.of_algebraMap_eq fun r ↦ by
     change (algebraMap R (Localization.AtPrime y) r) ⊗ₜ[R] (1 : B) =
       (1 : Localization.AtPrime y) ⊗ₜ[R] algebraMap R B r
@@ -130,49 +130,49 @@ instance isScalarTower_localizedCover (y : Ideal R) [y.IsPrime] : IsScalarTower 
 
 /-- `B_y` is the localization of `B` at `R ∖ y`. -/
 theorem isLocalization_localizedCover (y : Ideal R) [y.IsPrime] :
-    IsLocalization (Algebra.algebraMapSubmonoid B y.primeCompl) (By B y) := by
+    IsLocalization (Algebra.algebraMapSubmonoid B y.primeCompl) (LocalizedCover B y) := by
   letI : Algebra B (Localization.AtPrime y ⊗[R] B) := Algebra.TensorProduct.rightAlgebra
   exact IsLocalization.tensorRight (Localization.AtPrime y) y.primeCompl
 
 /-- The map `integralClosure R B → N_y` induced by `B → B_y`. -/
 noncomputable def integralClosureToLocalizedNormalization (y : Ideal R) [y.IsPrime] :
-    integralClosure R B →+* Ny B y where
-  toFun x := ⟨algebraMap B (By B y) x.1, by
+    integralClosure R B →+* LocalizedNormalization B y where
+  toFun x := ⟨algebraMap B (LocalizedCover B y) x.1, by
     have hx : IsIntegral R x.1 := x.2
-    exact (hx.map (IsScalarTower.toAlgHom R B (By B y))).tower_top⟩
+    exact (hx.map (IsScalarTower.toAlgHom R B (LocalizedCover B y))).tower_top⟩
   map_one' := Subtype.ext (map_one _)
-  map_mul' x z := Subtype.ext (map_mul (algebraMap B (By B y)) x.1 z.1)
+  map_mul' x z := Subtype.ext (map_mul (algebraMap B (LocalizedCover B y)) x.1 z.1)
   map_zero' := Subtype.ext (map_zero _)
-  map_add' x z := Subtype.ext (map_add (algebraMap B (By B y)) x.1 z.1)
+  map_add' x z := Subtype.ext (map_add (algebraMap B (LocalizedCover B y)) x.1 z.1)
 
 /-- `N_y` as an algebra over `integralClosure R B`. -/
 @[instance_reducible]
-noncomputable def localizedNormalizationAlgebra (y : Ideal R) [y.IsPrime] : Algebra (integralClosure R B) (Ny B y) :=
+noncomputable def localizedNormalizationAlgebra (y : Ideal R) [y.IsPrime] : Algebra (integralClosure R B) (LocalizedNormalization B y) :=
   (integralClosureToLocalizedNormalization B y).toAlgebra
 
 attribute [local instance] localizedNormalizationAlgebra
 
 instance isScalarTower_localizedNormalization (y : Ideal R) [y.IsPrime] :
-    IsScalarTower (integralClosure R B) (Ny B y) (By B y) := by
+    IsScalarTower (integralClosure R B) (LocalizedNormalization B y) (LocalizedCover B y) := by
   refine ⟨fun x c s ↦ ?_⟩
-  change ((integralClosureToLocalizedNormalization B y x * c : Ny B y) : By B y) * s = (x : B) • (c * s)
+  change ((integralClosureToLocalizedNormalization B y x * c : LocalizedNormalization B y) : LocalizedCover B y) * s = (x : B) • (c * s)
   rw [Subalgebra.coe_mul, Algebra.smul_def, mul_assoc]
   rfl
 
 instance isScalarTower_integralClosure_localizedNormalization (y : Ideal R) [y.IsPrime] :
-    IsScalarTower R (integralClosure R B) (Ny B y) :=
+    IsScalarTower R (integralClosure R B) (LocalizedNormalization B y) :=
   IsScalarTower.of_algebraMap_eq fun r ↦ by
     apply Subtype.ext
-    change algebraMap R (By B y) r = algebraMap B (By B y) (algebraMap R B r)
+    change algebraMap R (LocalizedCover B y) r = algebraMap B (LocalizedCover B y) (algebraMap R B r)
     rw [← IsScalarTower.algebraMap_apply]
 
 /-- `N_y` is the localization of `integralClosure R B` at `R ∖ y` (integral closure commutes with
 localization). -/
 theorem isLocalization_localizedNormalization (y : Ideal R) [y.IsPrime] :
-    IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R B) y.primeCompl) (Ny B y) := by
+    IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R B) y.primeCompl) (LocalizedNormalization B y) := by
   haveI := isLocalization_localizedCover B y
   exact IsLocalization.integralClosure (R := R) (S := B) (Rf := Localization.AtPrime y)
-    (Sf := By B y) y.primeCompl
+    (Sf := LocalizedCover B y) y.primeCompl
 
 variable (S : Type u) [CommRing S] [Algebra R S] [Algebra S B] [IsScalarTower R S B]
 
@@ -184,45 +184,45 @@ theorem isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong [IsNoether
     (ha : a ∈ nonZeroDivisors R) [IsRegularRing (R ⧸ Ideal.span {a})]
     [IsIntegralClosure S R B] (htame : IsTamelyRamifiedInCodimensionOneAlong R S a)
     (y : Ideal R) [y.IsPrime] (hy : a ∈ y) (hdim : ringKrullDim (Localization.AtPrime y) = 1) :
-    IsTamelyRamifiedOver (Localization.AtPrime (Pp y (maximalIdeal (Localization.AtPrime y))))
-      (Sf B y (maximalIdeal (Localization.AtPrime y))) := by
+    IsTamelyRamifiedOver (Localization.AtPrime (contraction y (maximalIdeal (Localization.AtPrime y))))
+      (GenericFibreAtContraction B y (maximalIdeal (Localization.AtPrime y))) := by
   intro m hm
   set Ry := Localization.AtPrime y
   set p' : Ideal Ry := maximalIdeal Ry
-  have hPy : Pp y p' = y := IsLocalization.AtPrime.under_maximalIdeal Ry y
-  have hap' : a ∈ Pp y p' := by rw [hPy]; exact hy
-  have hdim' : ringKrullDim (Localization.AtPrime (Pp y p')) = 1 := by
+  have hPy : contraction y p' = y := IsLocalization.AtPrime.under_maximalIdeal Ry y
+  have hap' : a ∈ contraction y p' := by rw [hPy]; exact hy
+  have hdim' : ringKrullDim (Localization.AtPrime (contraction y p')) = 1 := by
     rw [ringKrullDim_atPrime_congr hPy]; exact hdim
-  haveI : IsRegularLocalRing (Localization.AtPrime (Pp y p')) :=
-    Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha (Pp y p') hap'
-  haveI : IsDomain (Localization.AtPrime (Pp y p')) :=
+  haveI : IsRegularLocalRing (Localization.AtPrime (contraction y p')) :=
+    Pcf.Stacks.isRegularLocalRing_atPrime_of_regular_principal_quotient a ha (contraction y p') hap'
+  haveI : IsDomain (Localization.AtPrime (contraction y p')) :=
     Pcf.Stacks.isDomain_of_isRegularLocalRing _
-  haveI : IsDiscreteValuationRing (Localization.AtPrime (Pp y p')) :=
+  haveI : IsDiscreteValuationRing (Localization.AtPrime (contraction y p')) :=
     Pcf.Stacks.isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim'
-  haveI := isLocalization_sf a Ra B y ha p' hap'
-  haveI := rp_isScalarTower y p'
-  haveI := rp_isLocalization y p'
-  haveI := isLocalization_cp B y p'
-  set Rp := Localization.AtPrime (Pp y p')
+  haveI := isLocalization_genericFibreAtContraction a Ra B y ha p' hap'
+  haveI := isScalarTower_localizationAtContraction y p'
+  haveI := isLocalization_localizationAtContraction y p'
+  haveI := isLocalization_normalizationAtContraction B y p'
+  set Rp := Localization.AtPrime (contraction y p')
   haveI : m.IsPrime := hm.isPrime
   haveI := hm
   -- the prime `q` of `N_y` below `m`
-  let q : Ideal (Ny B y) := m.comap (algebraMap (Ny B y) (Cp B y p'))
+  let q : Ideal (LocalizedNormalization B y) := m.comap (algebraMap (LocalizedNormalization B y) (NormalizationAtContraction B y p'))
   have hmRp : m.under Rp = maximalIdeal Rp :=
     IsLocalRing.eq_maximalIdeal
-      (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := Rp) (S := Cp B y p') m)
+      (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := Rp) (S := NormalizationAtContraction B y p') m)
   have hqy : q.under Ry = p' := by
     have : q.under Ry = (m.under Rp).under Ry := by
-      change (m.under (Ny B y)).under Ry = _
-      rw [Ideal.under_under (A := Ry) (B := Ny B y) m,
+      change (m.under (LocalizedNormalization B y)).under Ry = _
+      rw [Ideal.under_under (A := Ry) (B := LocalizedNormalization B y) m,
         Ideal.under_under (A := Ry) (B := Rp) m]
     rw [this, hmRp]
     exact IsLocalization.AtPrime.under_maximalIdeal Rp p'
-  have hmq : q.map (algebraMap (Ny B y) (Cp B y p')) = m :=
-    IsLocalization.map_under (Algebra.algebraMapSubmonoid (Ny B y) p'.primeCompl) (Cp B y p') m
+  have hmq : q.map (algebraMap (LocalizedNormalization B y) (NormalizationAtContraction B y p')) = m :=
+    IsLocalization.map_under (Algebra.algebraMapSubmonoid (LocalizedNormalization B y) p'.primeCompl) (NormalizationAtContraction B y p') m
   -- the prime `q₀` of `N = integralClosure R B` below `q`
   haveI := isLocalization_localizedNormalization B y
-  let q0 : Ideal (integralClosure R B) := q.comap (algebraMap (integralClosure R B) (Ny B y))
+  let q0 : Ideal (integralClosure R B) := q.comap (algebraMap (integralClosure R B) (LocalizedNormalization B y))
   have hq0 : q0.under R = y := by
     have : q0.under R = (q.under Ry).under R := by
       change (q.under (integralClosure R B)).under R = _
@@ -230,9 +230,9 @@ theorem isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong [IsNoether
         Ideal.under_under (A := R) (B := Ry) q]
     rw [this, hqy]
     exact hPy
-  have hqmap : q0.map (algebraMap (integralClosure R B) (Ny B y)) = q :=
+  have hqmap : q0.map (algebraMap (integralClosure R B) (LocalizedNormalization B y)) = q :=
     IsLocalization.map_under (Algebra.algebraMapSubmonoid (integralClosure R B) y.primeCompl)
-      (Ny B y) q
+      (LocalizedNormalization B y) q
   -- the prime `q₁` of `S` corresponding to `q₀`
   let e : S ≃ₐ[R] integralClosure R B := IsIntegralClosure.equiv R S B (integralClosure R B)
   let q1 : Ideal S := q0.comap (e : S →+* integralClosure R B)
@@ -254,33 +254,33 @@ theorem isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong [IsNoether
   have hS : IsTamelyRamifiedAt R S ⟨q1, inferInstance⟩ :=
     htame ⟨q1, inferInstance⟩ h1 (mem_minimalPrimes_map_of_isIntegral q1 h1)
   have hN : IsTamelyRamifiedAt R (integralClosure R B) ⟨q0, inferInstance⟩ :=
-    Pcf.Stacks.SchemeLevel.IsTamelyRamifiedAt.of_ringEquiv (RingEquiv.refl R) e.toRingEquiv
+    Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv (RingEquiv.refl R) e.toRingEquiv
       (fun x ↦ e.commutes x) (q := ⟨q1, inferInstance⟩) rfl hS
-  have hNy : IsTamelyRamifiedAt Ry (Ny B y) ⟨q, inferInstance⟩ := by
-    have := isTamelyRamifiedAt_map_of_isLocalization y Ry (Ny B y) ⟨q0, inferInstance⟩ hq0 hN
-    have heq : (⟨q, inferInstance⟩ : PrimeSpectrum (Ny B y)) =
-        ⟨q0.map (algebraMap (integralClosure R B) (Ny B y)),
-          isPrime_map y (Ny B y) q0 hq0⟩ := PrimeSpectrum.ext hqmap.symm
+  have hNy : IsTamelyRamifiedAt Ry (LocalizedNormalization B y) ⟨q, inferInstance⟩ := by
+    have := isTamelyRamifiedAt_map_of_isLocalization y Ry (LocalizedNormalization B y) ⟨q0, inferInstance⟩ hq0 hN
+    have heq : (⟨q, inferInstance⟩ : PrimeSpectrum (LocalizedNormalization B y)) =
+        ⟨q0.map (algebraMap (integralClosure R B) (LocalizedNormalization B y)),
+          isPrime_map_localizationAtPrime y (LocalizedNormalization B y) q0 hq0⟩ := PrimeSpectrum.ext hqmap.symm
     rw [heq]
     exact this
-  have := isTamelyRamifiedAt_map_of_isLocalization p' Rp (Cp B y p') ⟨q, inferInstance⟩ hqy hNy
-  have heq : (⟨m, hm.isPrime⟩ : PrimeSpectrum (Cp B y p')) =
-      ⟨q.map (algebraMap (Ny B y) (Cp B y p')), isPrime_map p' (Cp B y p') q hqy⟩ :=
+  have := isTamelyRamifiedAt_map_of_isLocalization p' Rp (NormalizationAtContraction B y p') ⟨q, inferInstance⟩ hqy hNy
+  have heq : (⟨m, hm.isPrime⟩ : PrimeSpectrum (NormalizationAtContraction B y p')) =
+      ⟨q.map (algebraMap (LocalizedNormalization B y) (NormalizationAtContraction B y p')), isPrime_map_localizationAtPrime p' (NormalizationAtContraction B y p') q hqy⟩ :=
     PrimeSpectrum.ext hmq.symm
   rw [heq]
   exact this
 
 include Ra in
-/-- **The chart `Spec B → Spec R_a ⊂ Spec R` is tame in codimension one** (`ChartTame`) when the
+/-- **The chart `Spec B → Spec R_a ⊂ Spec R` is tame in codimension one** (`IsTamelyRamifiedAlongDivisor`) when the
 normalization `S` of `R` in `B` is tamely ramified in codimension one along `V(a)`
 (`IsTamelyRamifiedInCodimensionOneAlong`): at a height-one prime `𝔭 ∋ a`, the integral closure of
 `R_𝔭` in `K_𝔭 ⊗_R B` is the localization of `S` at `𝔭`. -/
 theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong [IsNoetherianRing R]
     (ha : a ∈ nonZeroDivisors R) [IsRegularRing (R ⧸ Ideal.span {a})]
     [IsIntegralClosure S R B] (htame : IsTamelyRamifiedInCodimensionOneAlong R S a) :
-    ChartTame a B := by
+    IsTamelyRamifiedAlongDivisor a B := by
   intro p hp hap hdim
-  have hP : Pp p (maximalIdeal (Localization.AtPrime p)) = p :=
+  have hP : contraction p (maximalIdeal (Localization.AtPrime p)) = p :=
     IsLocalization.AtPrime.under_maximalIdeal (Localization.AtPrime p) p
   exact isTamelyRamifiedOver_congr B hP
     (isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong a Ra B S ha htame p hap hdim)
@@ -303,7 +303,7 @@ every prime of a finite algebra is tame in characteristic zero
 (`isTamelyRamifiedAt_of_isUnit_natCast`). -/
 theorem isTamelyRamifiedAlongDivisor_of_isUnit_natCast [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
     [IsRegularRing (R ⧸ Ideal.span {a})] [Module.Finite Ra B] [Algebra.Etale Ra B]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) : ChartTame a B := by
+    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) : IsTamelyRamifiedAlongDivisor a B := by
   intro p hp hap _
   set Rp := Localization.AtPrime p
   haveI : IsRegularLocalRing Rp :=
@@ -435,7 +435,7 @@ theorem finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor [IsNoet
     (hfin : Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S))
     (hetale : ∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal)
     [IsIntegralClosure S R (Localization.Away (algebraMap R S a))]
-    (hchart : ChartTame a (Localization.Away (algebraMap R S a)))
+    (hchart : IsTamelyRamifiedAlongDivisor a (Localization.Away (algebraMap R S a)))
     (hA : ∀ y : PrimeSpectrum R, ∀ (S' : Type u) [CommRing S']
       [Algebra (Localization.AtPrime y.asIdeal) S'] (b : Localization.AtPrime y.asIdeal),
         AbhyankarLemmaTameOfFinite (Localization.AtPrime y.asIdeal) S' b) :
@@ -470,7 +470,7 @@ theorem finite_of_isIntegralClosure_away [IsNoetherianRing R] {a : R}
 /-- **The normalization is finite, characteristic zero** (Stacks Tag `0EYH`, first assertion,
 affine form, every positive integer invertible in `R`; no tameness hypothesis is needed).  The
 local input is the characteristic-zero theorem `abhyankarLemmaOfFinite` (through
-`SchemeLevel.abhyankarLemmaTame_of_natCast_isUnit`), whose proof is the shared tame proof with
+`SchemeLevel.abhyankarLemmaTame_of_isUnit_natCast`), whose proof is the shared tame proof with
 tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`. -/
 @[stacks 0EYH "first assertion (the normalization is finite), affine form; every positive integer \
   invertible"]
@@ -485,7 +485,7 @@ theorem finite_of_isIntegralClosure_away_of_isUnit_natCast [IsNoetherianRing R] 
   haveI := etale_away hfin hetale
   exact finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor ha hfin hetale
     (isTamelyRamifiedAlongDivisor_of_isUnit_natCast a (Localization.Away a) _ ha hnat)
-    fun y S' _ _ b ↦ abhyankarLemmaTame_of_natCast_isUnit _ S' b fun n hn ↦ by
+    fun y S' _ _ b ↦ abhyankarLemmaTame_of_isUnit_natCast _ S' b fun n hn ↦ by
       simpa only [map_natCast] using (hnat n hn).map (algebraMap R (Localization.AtPrime y.asIdeal))
 
 end Finite

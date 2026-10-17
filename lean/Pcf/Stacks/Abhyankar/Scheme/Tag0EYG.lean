@@ -13,16 +13,16 @@ public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 /-!
 # Abhyankar's lemma for a regular divisor, scheme form (Stacks Lemma 58.31.5, Tag `0EYG`)
 
-`Pcf.Stacks.SchemeLevel.tag0EYG`: let `X` be a locally Noetherian scheme, `D ⊂ X` an effective
+`Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme`: let `X` be a locally Noetherian scheme, `D ⊂ X` an effective
 Cartier divisor such that `D` is a regular scheme, and `Y → X ∖ D` finite étale.  If `Y` is
 tamely ramified over `X` in codimension one, then étale locally on `X` the morphism `Y → X` is a
 finite disjoint union of standard tamely ramified morphisms (Example 58.31.4).
 
 Three forms:
-* `tag0EYG_of_affine`: with the affine statement as the hypothesis `AbhyankarLemmaTameOver X`;
-* `tag0EYG`: unconditional, discharging it by the tame affine theorem
+* `abhyankarLemma_scheme_of_abhyankarLemmaTameOver`: with the affine statement as the hypothesis `AbhyankarLemmaTameOver X`;
+* `abhyankarLemma_scheme`: unconditional, discharging it by the tame affine theorem
   `Pcf.Stacks.abhyankarLemmaTameOfFinite` (any characteristic);
-* `tag0EYG_of_natCast_isUnit`: on a `ℚ`-scheme, discharging it by the
+* `abhyankarLemma_scheme_of_isUnit_natCast`: on a `ℚ`-scheme, discharging it by the
   characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite` (whose proof is the tame proof
   with tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`).
 
@@ -33,12 +33,12 @@ Three forms:
   `IsEtaleLocallyStandardTame`;
   `exists_etale_pullback_iso_sigma`
 * "the case `x ∉ D` follows from Étale Morphisms, Lemma 41.18.3 (`04HN`) with `e = 1`, `f = 1`" →
-  `exists_standardTame_of_not_mem`, `hasSplitCoverAt_of_finite_etale`, `standardTameRingOneOneEquiv`
+  `exists_standardTame_of_notMem`, `hasSplitCoverAt_of_finite_etale`, `standardTameRingOneOneEquiv`
 * "shrinking `X` we may assume `X = Spec(A)`, `D = V(f)` with `f` a nonzerodivisor; `Y = Spec(B)` is
   affine" → `ChartData.lean`, `hasLocalizedStandardCoverAt_chart`
 * "`A/fA` is regular" (`D` regular) → `isRegularRing_quotient_of_isRegularScheme`
 * "by Lemma 58.31.1 the base change is tamely ramified in codimension 1" → on the chart:
-  `chartTame_of_isTamelyRamifiedInCodimOne`; the base change to `A^{sh}` is inside the affine
+  `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`; the base change to `A^{sh}` is inside the affine
   statement
 * strict henselization, normal domains, root covers, descent along `colim A_λ` → the affine
   statement (`Pcf.Stacks.abhyankarLemmaTameOfFinite`), entering via
@@ -66,7 +66,7 @@ variable {X Y : Scheme.{u}} {D : X.IdealSheafData}
 theorem exists_standardTame_of_mem [IsLocallyNoetherian X] (hA : AbhyankarLemmaTameOver X)
     (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) (x : X) (hxD : x ∈ D.support) :
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) (x : X) (hxD : x ∈ D.support) :
     ∃ (A : CommRingCat.{u}) (φ : Spec A ⟶ X), Etale φ ∧ x ∈ Set.range φ.base ∧
     ∃ (n : ℕ) (fs : Fin n → A) (e : Fin n → ℕ), (∀ i, IsStandardTameData A (fs i) (e i)) ∧
       ∃ ψ : pullback (f ≫ (complementOpen D).ι) φ ≅
@@ -94,7 +94,7 @@ theorem exists_standardTame_of_mem [IsLocallyNoetherian X] (hA : AbhyankarLemmaT
 
 /-- The étale-local standard tame structure at a point `x ∉ D`: Stacks' "Étale Morphisms,
 Lemma 41.18.3 (Tag `04HN`) and `e = 1`, `f = 1`". -/
-theorem exists_standardTame_of_not_mem [IsLocallyNoetherian X]
+theorem exists_standardTame_of_notMem [IsLocallyNoetherian X]
     (hD : IsEffectiveCartier D)
     (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f] (x : X) (hxD : x ∉ D.support) :
     ∃ (A : CommRingCat.{u}) (φ : Spec A ⟶ X), Etale φ ∧ x ∈ Set.range φ.base ∧
@@ -120,17 +120,17 @@ theorem exists_standardTame_of_not_mem [IsLocallyNoetherian X]
     fun _ ↦ isStandardTameData_one_one, ψ, hψ⟩
 
 /-- **Stacks Lemma 58.31.5 (Tag `0EYG`), with the affine statement as a hypothesis.**  See
-`tag0EYG` for the unconditional form. -/
-theorem tag0EYG_of_affine (X : Scheme.{u}) [IsLocallyNoetherian X]
+`abhyankarLemma_scheme` for the unconditional form. -/
+theorem abhyankarLemma_scheme_of_abhyankarLemmaTameOver (X : Scheme.{u}) [IsLocallyNoetherian X]
     (hA : AbhyankarLemmaTameOver X)
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) :
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
     IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) := by
   intro x
   by_cases hxD : x ∈ D.support
   · exact exists_standardTame_of_mem hA hD hDreg f htame x hxD
-  · exact exists_standardTame_of_not_mem hD f x hxD
+  · exact exists_standardTame_of_notMem hD f x hxD
 
 /-- **Abhyankar's lemma for a regular divisor (Stacks Lemma 58.31.5, Tag `0EYG`).**
 
@@ -139,15 +139,15 @@ Let `X` be a locally Noetherian scheme.  Let `D ⊂ X` be an effective Cartier d
 over `X` in codimension `1`, then étale locally on `X` the morphism `Y → X` is a finite disjoint
 union of standard tamely ramified morphisms as described in Example 58.31.4.
 
-Proof: `tag0EYG_of_affine`, with the affine statement supplied by
+Proof: `abhyankarLemma_scheme_of_abhyankarLemmaTameOver`, with the affine statement supplied by
 `Pcf.Stacks.abhyankarLemmaTameOfFinite`. -/
 @[stacks 0EYG]
-theorem tag0EYG (X : Scheme.{u}) [IsLocallyNoetherian X]
+theorem abhyankarLemma_scheme (X : Scheme.{u}) [IsLocallyNoetherian X]
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) :
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
     IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) :=
-  tag0EYG_of_affine X
+  abhyankarLemma_scheme_of_abhyankarLemmaTameOver X
     (abhyankarLemmaTameOver_of_forall X Pcf.Stacks.abhyankarLemmaTameOfFinite)
     D hD hDreg f htame
 
@@ -156,12 +156,12 @@ is invertible on `X`, the conclusion of `0EYG` follows from the characteristic-z
 theorem `Pcf.Stacks.abhyankarLemmaOfFinite`, without the tame theorem. -/
 @[stacks 0EYG "every positive integer invertible on X; proof via the characteristic-zero affine \
     theorem"]
-theorem tag0EYG_of_natCast_isUnit (X : Scheme.{u}) [IsLocallyNoetherian X]
+theorem abhyankarLemma_scheme_of_isUnit_natCast (X : Scheme.{u}) [IsLocallyNoetherian X]
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤)))
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimOne (complementOpen D) f) :
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
     IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) :=
-  tag0EYG_of_affine X (abhyankarLemmaTameOver_of_natCast_isUnit X hnat) D hD hDreg f htame
+  abhyankarLemma_scheme_of_abhyankarLemmaTameOver X (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
 
 end Pcf.Stacks.SchemeLevel

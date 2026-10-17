@@ -34,7 +34,7 @@ namespace Pcf.Stacks.SchemeLevel
 variable {X : Scheme.{u}}
 
 /-- `primeIdealOf` inverts `fromSpec`. -/
-theorem IsAffineOpen.primeIdealOf_fromSpec {U : X.Opens} (hU : IsAffineOpen U)
+theorem _root_.AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec {U : X.Opens} (hU : IsAffineOpen U)
     (p : PrimeSpectrum Γ(X, U)) :
     hU.primeIdealOf ⟨hU.fromSpec p,
       by rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self p⟩ = p :=
@@ -60,7 +60,7 @@ theorem isRegularRing_of_isRegularLocalRing_stalk {U : X.Opens} (hU : IsAffineOp
   intro p hp
   let x : U := ⟨hU.fromSpec ⟨p, hp⟩, by
     rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self _⟩
-  have hx : hU.primeIdealOf x = ⟨p, hp⟩ := IsAffineOpen.primeIdealOf_fromSpec hU _
+  have hx : hU.primeIdealOf x = ⟨p, hp⟩ := AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec hU _
   let _ := X.presheaf.algebra_section_stalk x
   have := hU.isLocalization_stalk x
   rw [hx] at this
