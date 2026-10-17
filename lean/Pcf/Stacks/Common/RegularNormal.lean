@@ -9,6 +9,7 @@ public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 public import Mathlib.RingTheory.Localization.AsSubring
 public import Mathlib.RingTheory.Localization.LocalizationLocalization
 public import Pcf.Stacks.Common.RegularDimensionOne
+public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Purity.NormalRing
 
 /-!
@@ -36,8 +37,8 @@ that avoids Serre's criterion and the Ext-theoretic depth API.
    `IsIntegrallyClosed.of_localization` then shows `R` is integrally closed.
 
 The local statement for a regular *local* ring `R` needs `IsRegularRing R`, which is Stacks Tag
-`0AFS` (localizations of a regular local ring are regular).  That fact is not available at the
-pinned Mathlib; it is therefore taken as the explicit hypothesis `RegularLocalRingIsRegularRing`.
+`0AFS` (localizations of a regular local ring are regular), proved in
+`Pcf.Stacks.Common.RegularLocalization` from the vendored mathlib4 PR #29802.
 -/
 
 @[expose] public section
@@ -49,14 +50,6 @@ universe u
 namespace Pcf.Stacks
 
 open IsLocalRing
-
-/-- Stacks Project Tag `0AFS` (second sentence), packaged as a hypothesis: every regular local
-ring in universe `u` is a regular ring, i.e. all its localizations at primes are regular local.
-Combined with Mathlib's `IsRegularLocalRing.of_isRegularRing_of_isLocalRing`, this is equivalent
-to "`R_𝔭` is regular local for every prime `𝔭` of a regular local ring `R`".  It is used only as
-a hypothesis argument here; it is discharged by the vendored proof of `0AFS`. -/
-def RegularLocalRingIsRegularRing : Prop :=
-  ∀ (R : Type u) [CommRing R] [IsRegularLocalRing R], IsRegularRing R
 
 section Pair
 
@@ -297,26 +290,22 @@ theorem isStacksNormalRing_of_isRegularRing (R : Type u) [CommRing R] [IsRegular
   let _ : IsRegularRing A := isRegularRing_localization_atPrime R p.asIdeal
   exact ⟨inferInstance, isIntegrallyClosed_of_isRegularRing A⟩
 
-/-- **Stacks Project Tag 0567, regular local case.** A regular local ring is integrally closed,
-given Stacks Tag `0AFS` (a regular local ring is a regular ring) as the hypothesis `h0AFS`.
+/-- **Stacks Project Tag 0567, regular local case.** A regular local ring is integrally closed.
 
-Divergence from Stacks: Tag `0567` is stated for regular rings (Tag `00OD`); a regular local
-ring is a regular ring only by Tag `0AFS`, which is not yet available here and is therefore the
-explicit hypothesis `h0AFS`.  The unconditional statement is
-`isStacksNormalRing_of_isRegularRing`. -/
-@[stacks 0567 "regular local case, assuming Tag 0AFS"]
-theorem isIntegrallyClosed_of_isRegularLocalRing (h0AFS : RegularLocalRingIsRegularRing.{u})
-    (R : Type u) [CommRing R] [IsRegularLocalRing R] : IsIntegrallyClosed R := by
-  let _ : IsRegularRing R := h0AFS R
+Tag `0567` is stated for regular rings (Tag `00OD`); a regular local ring is a regular ring by
+Tag `0AFS` (`isRegularRing_of_isRegularLocalRing`). -/
+@[stacks 0567 "regular local case"]
+theorem isIntegrallyClosed_of_isRegularLocalRing (R : Type u) [CommRing R] [IsRegularLocalRing R] :
+    IsIntegrallyClosed R := by
+  let _ : IsRegularRing R := isRegularRing_of_isRegularLocalRing R
   let _ : IsDomain R := isDomain_of_isRegularLocalRing R
   exact isIntegrallyClosed_of_isRegularRing R
 
-/-- **Stacks Project Tag 0567, regular local case**, in the Stacks normal-ring form, given Tag
-`0AFS` as the hypothesis `h0AFS`. -/
-@[stacks 0567 "regular local case, assuming Tag 0AFS"]
-theorem isStacksNormalRing_of_isRegularLocalRing (h0AFS : RegularLocalRingIsRegularRing.{u})
-    (R : Type u) [CommRing R] [IsRegularLocalRing R] : IsStacksNormalRing R := by
-  let _ : IsRegularRing R := h0AFS R
+/-- **Stacks Project Tag 0567, regular local case**, in the Stacks normal-ring form. -/
+@[stacks 0567 "regular local case"]
+theorem isStacksNormalRing_of_isRegularLocalRing (R : Type u) [CommRing R]
+    [IsRegularLocalRing R] : IsStacksNormalRing R := by
+  let _ : IsRegularRing R := isRegularRing_of_isRegularLocalRing R
   exact isStacksNormalRing_of_isRegularRing R
 
 end Regular

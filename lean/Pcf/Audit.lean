@@ -1919,7 +1919,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 -- Pcf.Stacks.Purity.Tag0BMA
 #print axioms Pcf.Stacks.finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
-#print axioms Pcf.Stacks.isIntegrallyClosed_of_isRegularLocalRing'
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two

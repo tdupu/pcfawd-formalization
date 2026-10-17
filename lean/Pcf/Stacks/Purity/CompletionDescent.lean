@@ -11,6 +11,7 @@ public import Mathlib.RingTheory.Etale.Descent
 public import Mathlib.RingTheory.Regular.Flat
 public import Pcf.Stacks.Purity.Completion
 public import Pcf.Bounding.RegularLocalDomain
+public import Pcf.Stacks.Common.RegularNormal
 
 /-!
 # Descent of punctured-spectrum purity along a faithfully flat local extension
@@ -526,29 +527,28 @@ theorem finiteNormalPuncturedEtalePurity_of_faithfullyFlat_puncturedSpectrumPuri
   haveI : Algebra.Etale A' (A' ⊗[A] B.unop) := Algebra.Etale.of_equiv eA
   exact Algebra.Etale.of_etale_tensorProduct_of_faithfullyFlat A'
 
-/-- **Completion descent, regular local form** (leaf P4b-ii of the purity run).
+/-- **Completion descent, regular local form.**
 
 For a regular local ring `A` of dimension at least two, purity for the punctured spectrum of the
 `m`-adic completion `A^∧` implies clause (2) of Stacks Tag `0BMA` for `A`.
 
 The completion facts (regularity, faithful flatness `00MC`, `m_A A^∧ = m_{A^∧}`, equal dimension
-`07NV`) come from `Pcf.Stacks.Purity.Completion`.  The one upstream input still taken as an
-explicit argument is `hP1`: regular local rings are integrally closed (Stacks `0567`, local
-case; leaf P1).
+`07NV`) come from `Pcf.Stacks.Purity.Completion`; normality of `A` and `A^∧` is Stacks `0567`
+(`isIntegrallyClosed_of_isRegularLocalRing`).
 
 Proof route diverges from Stacks (which uses Tag `0BLL`); see
 `finiteNormalPuncturedEtalePurity_of_faithfullyFlat_puncturedSpectrumPurity`. -/
 theorem finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity
     (A : Type u) [CommRing A] [IsRegularLocalRing A]
-    (hP1 : ∀ (R : Type u) [CommRing R] [IsRegularLocalRing R], IsIntegrallyClosed R)
     (hdim : 2 ≤ ringKrullDim A)
     (hpurity : PuncturedSpectrumPurity (AdicCompletion (maximalIdeal A) A)) :
     FiniteNormalPuncturedEtalePurity A := by
   letI : IsDomain A := isDomain_of_isRegularLocalRing A
-  letI : IsIntegrallyClosed A := hP1 A
+  letI : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   letI : IsDomain (AdicCompletion (maximalIdeal A) A) :=
     isDomain_of_isRegularLocalRing _
-  letI : IsIntegrallyClosed (AdicCompletion (maximalIdeal A) A) := hP1 _
+  letI : IsIntegrallyClosed (AdicCompletion (maximalIdeal A) A) :=
+    isIntegrallyClosed_of_isRegularLocalRing _
   letI : Module.FaithfullyFlat A (AdicCompletion (maximalIdeal A) A) :=
     faithfullyFlat_adicCompletion A
   exact finiteNormalPuncturedEtalePurity_of_faithfullyFlat_puncturedSpectrumPurity

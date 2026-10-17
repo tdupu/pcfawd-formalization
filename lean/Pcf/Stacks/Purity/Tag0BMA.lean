@@ -56,12 +56,6 @@ universe u
 
 namespace Pcf.Stacks
 
-/-- Regular local rings are integrally closed (Stacks `0567`, local case), packaged in the form
-consumed by the completion descent. -/
-theorem isIntegrallyClosed_of_isRegularLocalRing' (R : Type u) [CommRing R]
-    [IsRegularLocalRing R] : IsIntegrallyClosed R :=
-  isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) R
-
 /-- Clause (2) of Stacks Tag `0BMA` implies clause (1).
 
 Every finite étale cover `V` of the punctured spectrum comes from a finite torsion-free normal
@@ -91,7 +85,7 @@ theorem puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : ringKrullDim A = 2) :
     PuncturedSpectrumPurity A := by
   have : IsDomain A := isDomain_of_isRegularLocalRing A
-  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing' A
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
     (by rw [hdim]; norm_num)
     (finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
@@ -156,8 +150,7 @@ in place of `0BLL`/`0BLH`). -/
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
     FiniteNormalPuncturedEtalePurity A :=
-  finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity A
-    (fun R _ _ ↦ isIntegrallyClosed_of_isRegularLocalRing' R) hdim
+  finiteNormalPuncturedEtalePurity_of_completion_puncturedSpectrumPurity A hdim
     (puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete _
       ((ringKrullDim_adicCompletion A).symm ▸ hdim))
 
@@ -171,7 +164,7 @@ theorem puncturedSpectrumPurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
     PuncturedSpectrumPurity A := by
   have : IsDomain A := isDomain_of_isRegularLocalRing A
-  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing' A
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   exact puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity A
     (le_trans (by norm_num) hdim) (finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A hdim)
 
@@ -201,7 +194,6 @@ theorem palomar_zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Al
 #print axioms zariskiNagataPurity
 #print axioms palomar_zariskiNagataPurity
 
-#check @isIntegrallyClosed_of_isRegularLocalRing'
 #check @puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity
 #check @puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two
 #check @puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete

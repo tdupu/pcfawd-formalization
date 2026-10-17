@@ -974,14 +974,12 @@ theorem hypersurfaceFiniteEtaleLifting_of_isAdicComplete
   let I : Ideal A := Ideal.span (Set.singleton f)
   have hI : I = Ideal.span {f} := rfl
   haveI : IsDomain A := isDomain_of_isRegularLocalRing A
-  haveI hA : IsIntegrallyClosed A :=
-    isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) A
+  haveI hA : IsIntegrallyClosed A := isIntegrallyClosed_of_isRegularLocalRing A
   haveI : HenselianLocalRing A := henselianLocalRing_of_isAdicComplete A
   haveI : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (Ideal.span_singleton_ne_top hf)
   haveI hA₀reg : IsRegularLocalRing (A ⧸ I) := isRegularLocalRing_quotient_minimalGenerator hf hf2
   haveI : IsDomain (A ⧸ I) := isDomain_of_isRegularLocalRing _
-  haveI hA₀ : IsIntegrallyClosed (A ⧸ I) :=
-    isIntegrallyClosed_of_isRegularLocalRing (fun R _ _ ↦ isRegularRing_of_isRegularLocalRing R) _
+  haveI hA₀ : IsIntegrallyClosed (A ⧸ I) := isIntegrallyClosed_of_isRegularLocalRing _
   have hdim₀ : ringKrullDim (A ⧸ I) = d := ringKrullDim_quotient_minimalGenerator_eq hf hf2 d hdim
   have hdim₀' : 2 ≤ ringKrullDim (A ⧸ I) := by
     rw [hdim₀]
