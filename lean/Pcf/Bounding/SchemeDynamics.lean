@@ -443,30 +443,30 @@ noncomputable def InvariantDivisorSchemeNormalizationPCFSetup.ofActualAmbient
     [CharZero (X.presheaf.stalk (genericPoint X))]
     (A : SchemeDivisorPoint X) (hA : f A.1 = A.1)
     {PN : Type*}
-    (res : SchemeNormalizationUnnormalizedDynamics
+    (restriction : SchemeNormalizationUnnormalizedDynamics
       (pointClosureIdealSheaf A.1).subscheme PN)
-    (res_g : res.selfMap = A.invariantClosureMap f hA)
-    (sing : Set (SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme))
-    (sing_finite : sing.Finite)
+    (restriction_selfMap : restriction.selfMap = A.invariantClosureMap f hA)
+    (singularPrimes : Set (SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme))
+    (singularPrimes_finite : singularPrimes.Finite)
     (meets : SchemeDivisorPoint X →
       Set (SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme))
     (meets_finite : ∀ E, E ≠ A → (meets E).Finite)
     (localData : ∀ (m : ℕ), 1 ≤ m →
-      ∀ (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme), Q ∉ sing →
+      ∀ (Q : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme), Q ∉ singularPrimes →
       (∀ E ∈ (divisorDynamicsOfFiniteDominantNormalCharZero f).iterate m |>.branch,
         E ≠ A → Q ∉ meets E) →
       ∀ (Q' : SchemeDivisorPoint (pointClosureIdealSheaf A.1).subscheme),
-        res.toNormalizationUnnormalizedDynamics.step^[m] Q' = Q →
+        restriction.toNormalizationUnnormalizedDynamics.step^[m] Q' = Q →
         InvariantDivisorCorrectionLocalData X f A m Q Q') :
     InvariantDivisorSchemeNormalizationPCFSetup X f A hA
       (SchemeDivisorPoint X) PN where
   ambient := divisorDynamicsOfFiniteDominantNormalCharZero f
   fixedPrime := A
   fixed := Subtype.ext hA
-  restriction := res
-  restriction_selfMap := res_g
-  singularPrimes := sing
-  singularPrimes_finite := sing_finite
+  restriction := restriction
+  restriction_selfMap := restriction_selfMap
+  singularPrimes := singularPrimes
+  singularPrimes_finite := singularPrimes_finite
   meets := meets
   meets_finite := meets_finite
   localData := localData

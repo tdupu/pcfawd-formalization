@@ -92,20 +92,20 @@ a proper closed subset, and a proper closed subset of a Noetherian space contain
 finitely many primes. -/
 noncomputable def restrictionDivisorDynamicsOfPurity [NoetherianSpace B]
     (step : {s : Set B // IsProperIrreducibleClosed s} → {s : Set B // IsProperIrreducibleClosed s})
-    (ram : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ram_pos : ∀ Q, 0 < ram Q)
+    (ramificationIdx : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ramificationIdx_pos : ∀ Q, 0 < ramificationIdx Q)
     (step_surjective : Function.Surjective step) (D : PurityData B)
-    (hbranch : ∀ Q, 1 < ram Q → ((step Q : Set B) ⊆ D.nonEtale)) :
+    (hbranch : ∀ Q, 1 < ramificationIdx Q → ((step Q : Set B) ⊆ D.nonEtale)) :
     DivisorDynamics {s : Set B // IsProperIrreducibleClosed s} :=
-  divisorDynamicsOfGeometry step ram ram_pos step_surjective D.nonEtale D.nonEtale_isClosed
+  divisorDynamicsOfGeometry step ramificationIdx ramificationIdx_pos step_surjective D.nonEtale D.nonEtale_isClosed
     D.nonEtale_ne_univ hbranch
 
-@[simp] theorem restrictionDivisorDynamicsOfPurity_step [NoetherianSpace B] (step ram ram_pos step_surjective)
+@[simp] theorem restrictionDivisorDynamicsOfPurity_step [NoetherianSpace B] (step ramificationIdx ramificationIdx_pos step_surjective)
     (D : PurityData B) (hbranch) :
-    (restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective D hbranch).step = step := rfl
+    (restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective D hbranch).step = step := rfl
 
-@[simp] theorem restrictionDivisorDynamicsOfPurity_ramificationIdx [NoetherianSpace B] (step ram ram_pos step_surjective)
+@[simp] theorem restrictionDivisorDynamicsOfPurity_ramificationIdx [NoetherianSpace B] (step ramificationIdx ramificationIdx_pos step_surjective)
     (D : PurityData B) (hbranch) :
-    (restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective D hbranch).ramificationIdx = ram := rfl
+    (restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective D hbranch).ramificationIdx = ramificationIdx := rfl
 
 /-! ### The geometric input, built through it -/
 
@@ -119,28 +119,28 @@ The caller no longer supplies `step_image_ramified_finite` for the restricted sy
 noncomputable def PCFGeometry.ofPurityData [NoetherianSpace B]
     (amb : DivisorDynamics PX) (fixedPrime : PX) (fixed : amb.step fixedPrime = fixedPrime)
     (step : {s : Set B // IsProperIrreducibleClosed s} → {s : Set B // IsProperIrreducibleClosed s})
-    (ram : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ram_pos : ∀ Q, 0 < ram Q)
+    (ramificationIdx : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ramificationIdx_pos : ∀ Q, 0 < ramificationIdx Q)
     (step_surjective : Function.Surjective step) (D : PurityData B)
-    (hbranch : ∀ Q, 1 < ram Q → ((step Q : Set B) ⊆ D.nonEtale))
-    (singAmbient singSelf : Set B) (meetsSet : PX → Set B)
+    (hbranch : ∀ Q, 1 < ramificationIdx Q → ((step Q : Set B) ⊆ D.nonEtale))
+    (singAmbient singSelf : Set B) (otherBranchIntersection : PX → Set B)
     (singAmbient_isClosed : IsClosed singAmbient) (singAmbient_ne_univ : singAmbient ≠ univ)
     (singSelf_isClosed : IsClosed singSelf) (singSelf_ne_univ : singSelf ≠ univ)
-    (meetsSet_isClosed : ∀ E, E ≠ fixedPrime → IsClosed (meetsSet E))
-    (meetsSet_ne_univ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ) :
+    (otherBranchIntersection_isClosed : ∀ E, E ≠ fixedPrime → IsClosed (otherBranchIntersection E))
+    (otherBranchIntersection_ne_univ : ∀ E, E ≠ fixedPrime → otherBranchIntersection E ≠ univ) :
     PCFGeometry PX B where
   ambient := amb
   fixedPrime := fixedPrime
   fixed := fixed
-  restriction := restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective D hbranch
+  restriction := restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective D hbranch
   singAmbient := singAmbient
   singSelf := singSelf
-  otherBranchIntersection := meetsSet
+  otherBranchIntersection := otherBranchIntersection
   singAmbient_isClosed := singAmbient_isClosed
   singAmbient_ne_univ := singAmbient_ne_univ
   singSelf_isClosed := singSelf_isClosed
   singSelf_ne_univ := singSelf_ne_univ
-  otherBranchIntersection_isClosed := meetsSet_isClosed
-  otherBranchIntersection_ne_univ := meetsSet_ne_univ
+  otherBranchIntersection_isClosed := otherBranchIntersection_isClosed
+  otherBranchIntersection_ne_univ := otherBranchIntersection_ne_univ
 
 /-- **Theorem `thm:normal-invariant`, with the branch divisor's finiteness no longer assumed for the
 restricted
@@ -148,25 +148,25 @@ system.** -/
 theorem PCFGeometry.restriction_isPCF_of_purityData [NoetherianSpace B]
     (amb : DivisorDynamics PX) (fixedPrime : PX) (fixed : amb.step fixedPrime = fixedPrime)
     (step : {s : Set B // IsProperIrreducibleClosed s} → {s : Set B // IsProperIrreducibleClosed s})
-    (ram : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ram_pos : ∀ Q, 0 < ram Q)
+    (ramificationIdx : {s : Set B // IsProperIrreducibleClosed s} → ℕ) (ramificationIdx_pos : ∀ Q, 0 < ramificationIdx Q)
     (step_surjective : Function.Surjective step) (D : PurityData B)
-    (hbranch : ∀ Q, 1 < ram Q → ((step Q : Set B) ⊆ D.nonEtale))
-    (singAmbient singSelf : Set B) (meetsSet : PX → Set B)
+    (hbranch : ∀ Q, 1 < ramificationIdx Q → ((step Q : Set B) ⊆ D.nonEtale))
+    (singAmbient singSelf : Set B) (otherBranchIntersection : PX → Set B)
     (h₁ : IsClosed singAmbient) (h₂ : singAmbient ≠ univ)
     (h₃ : IsClosed singSelf) (h₄ : singSelf ≠ univ)
-    (h₅ : ∀ E, E ≠ fixedPrime → IsClosed (meetsSet E))
-    (h₆ : ∀ E, E ≠ fixedPrime → meetsSet E ≠ univ)
+    (h₅ : ∀ E, E ≠ fixedPrime → IsClosed (otherBranchIntersection E))
+    (h₆ : ∀ E, E ≠ fixedPrime → otherBranchIntersection E ≠ univ)
     (key : ∀ (m : ℕ) (Q : {s : Set B // IsProperIrreducibleClosed s}),
-      Q ∉ (PCFGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D
-        hbranch singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).singularPrimes →
+      Q ∉ (PCFGeometry.ofPurityData amb fixedPrime fixed step ramificationIdx ramificationIdx_pos step_surjective D
+        hbranch singAmbient singSelf otherBranchIntersection h₁ h₂ h₃ h₄ h₅ h₆).singularPrimes →
       (∀ E ∈ (amb.iterate m).branch, E ≠ fixedPrime →
-        Q ∉ (PCFGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D
-          hbranch singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).meets E) →
-      Q ∉ ((restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective D hbranch).iterate m).branch)
+        Q ∉ (PCFGeometry.ofPurityData amb fixedPrime fixed step ramificationIdx ramificationIdx_pos step_surjective D
+          hbranch singAmbient singSelf otherBranchIntersection h₁ h₂ h₃ h₄ h₅ h₆).meets E) →
+      Q ∉ ((restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective D hbranch).iterate m).branch)
     (hamb : amb.IsPCF) :
-    (restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective D hbranch).IsPCF :=
-  (PCFGeometry.ofPurityData amb fixedPrime fixed step ram ram_pos step_surjective D hbranch
-    singAmbient singSelf meetsSet h₁ h₂ h₃ h₄ h₅ h₆).restriction_isPCF key hamb
+    (restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective D hbranch).IsPCF :=
+  (PCFGeometry.ofPurityData amb fixedPrime fixed step ramificationIdx ramificationIdx_pos step_surjective D hbranch
+    singAmbient singSelf otherBranchIntersection h₁ h₂ h₃ h₄ h₅ h₆).restriction_isPCF key hamb
 
 /-! ### The composite over an actual algebra -/
 
@@ -183,11 +183,11 @@ noncomputable def restrictionDivisorDynamicsOfAlgebra (R S : Type*) [CommRing R]
     (hloc : ∀ x : PrimeSpectrum S, 1 ≤ primeSpectrumCodimension S x →
       (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S)
     (step : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} → {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s})
-    (ram : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} → ℕ) (ram_pos : ∀ Q, 0 < ram Q)
+    (ramificationIdx : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} → ℕ) (ramificationIdx_pos : ∀ Q, 0 < ramificationIdx Q)
     (step_surjective : Function.Surjective step)
-    (hbranch : ∀ Q, 1 < ram Q → ((step Q : Set (PrimeSpectrum S)) ⊆ nonEtaleLocus R S)) :
+    (hbranch : ∀ Q, 1 < ramificationIdx Q → ((step Q : Set (PrimeSpectrum S)) ⊆ nonEtaleLocus R S)) :
     DivisorDynamics {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} :=
-  restrictionDivisorDynamicsOfPurity step ram ram_pos step_surjective
+  restrictionDivisorDynamicsOfPurity step ramificationIdx ramificationIdx_pos step_surjective
     (purityDataOfAlgebra R S hfin hgen hloc) hbranch
 
 /-! ### The honesty check: the converse -/
@@ -203,11 +203,11 @@ hypothesis is the one the manuscript states, and that on the spectrum route its 
 component is discharged from Mathlib rather than assumed. -/
 theorem exists_nonEtale_of_branch_finite
     (step : {s : Set B // IsProperIrreducibleClosed s} → {s : Set B // IsProperIrreducibleClosed s})
-    (ram : {s : Set B // IsProperIrreducibleClosed s} → ℕ)
-    (hfin : {Q : {s : Set B // IsProperIrreducibleClosed s} | ∃ Q', step Q' = Q ∧ 1 < ram Q'}.Finite)
-    (hne : ⋃ Q ∈ {Q : {s : Set B // IsProperIrreducibleClosed s} | ∃ Q', step Q' = Q ∧ 1 < ram Q'},
+    (ramificationIdx : {s : Set B // IsProperIrreducibleClosed s} → ℕ)
+    (hfin : {Q : {s : Set B // IsProperIrreducibleClosed s} | ∃ Q', step Q' = Q ∧ 1 < ramificationIdx Q'}.Finite)
+    (hne : ⋃ Q ∈ {Q : {s : Set B // IsProperIrreducibleClosed s} | ∃ Q', step Q' = Q ∧ 1 < ramificationIdx Q'},
       (Q : Set B) ≠ univ) :
-    ∃ N : Set B, IsClosed N ∧ N ≠ univ ∧ ∀ Q, 1 < ram Q → ((step Q : Set B) ⊆ N) := by
+    ∃ N : Set B, IsClosed N ∧ N ≠ univ ∧ ∀ Q, 1 < ramificationIdx Q → ((step Q : Set B) ⊆ N) := by
   refine ⟨_, hfin.isClosed_biUnion fun Q _ => Q.2.isClosed, hne, fun Q hQ => ?_⟩
   exact subset_biUnion_of_mem (u := fun Q : {s : Set B // IsProperIrreducibleClosed s} => (Q : Set B))
     ⟨Q, rfl, hQ⟩

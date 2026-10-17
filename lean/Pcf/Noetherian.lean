@@ -59,7 +59,7 @@ open TopologicalSpace
 
 variable {X : Type*} [TopologicalSpace X]
 
-/-- `IsPrime P` says that `P` is a **prime** of the space: an irreducible closed
+/-- `IsProperIrreducibleClosed P` says that `P` is a **prime** of the space: an irreducible closed
 subset, not the whole space, and maximal with those properties.
 
 In an irreducible variety this is exactly the integral-effective-divisor convention of

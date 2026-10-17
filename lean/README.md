@@ -283,19 +283,19 @@ the authors' private research note `2026-10-07-general-theorem-fidelity.md`.
 lean/
 ├── Pcf.lean                 ← root module, imports everything
 ├── Pcf/
-│   ├── Dynamics.lean        ← sec:defs, sec:prelim: DivDyn, iterates (prop:iterates), lem:normalization
-│   ├── Unnormalized.lean    ← app:other-defs, def:pcf-unnormalized: UnnormDyn, cor:orbit-unnormalized,
-│   │                           thm:normal-invariant in 1-PCF form (PcfSetup1)
-│   ├── Restriction.lean     ← sec:main: PcfSetup, thm:normal-invariant (PCF form), descent
+│   ├── Dynamics.lean        ← sec:defs, sec:prelim: DivisorDynamics, iterates (prop:iterates), lem:normalization
+│   ├── Unnormalized.lean    ← app:other-defs, def:pcf-unnormalized: UnnormalizedDynamics, cor:orbit-unnormalized,
+│   │                           thm:normal-invariant in 1-PCF form (NonEtalePCFSetup)
+│   ├── Restriction.lean     ← sec:main: PCFSetup, thm:normal-invariant (PCF form), descent
 │   ├── AllTheWayDown.lean   ← abstract recursive descent; scheme-level one-step theorem lives below
 │   ├── Noetherian.lean      ← lem:finitely-many: primes of a Noetherian space
 │   ├── Purity.lean          ← thm:purity: local form ⟹ global form
 │   ├── NonEtaleLocus.lean   ← the non-étale locus on Spec S is closed
-│   ├── Wiring.lean          ← purity ⟹ branch_finite' for the restricted system
-│   ├── SpectrumDynamics.lean← branch_finite' fully discharged on Spec S
+│   ├── Wiring.lean          ← purity ⟹ step_image_ramified_finite for the restricted system
+│   ├── SpectrumDynamics.lean← step_image_ramified_finite fully discharged on Spec S
 │   ├── ZariskiNagata.lean   ← Stacks 0BMB restated (interderivable — discharges nothing)
 │   ├── Ramification.lean    ← thm:bounding Step 4: an isomorphism has index one
-│   ├── Geometry.lean        ← thm:bounding Step 0: Prop41Data, PcfGeometry (join to PcfSetup);
+│   ├── Geometry.lean        ← thm:bounding Step 0: BoundingCorrectionLoci, PCFGeometry (join to PCFSetup);
 │   │                           the retracted witness interfaces, retained as a record
 │   ├── LocalModel.lean      ← thm:bounding Step 3 / eq:standard-piece
 │   ├── Abhyankar.lean       ← Stacks 0EYF clauses 1–2 (Mathlib + `Pcf.LocalModel`; not load-bearing)
@@ -317,7 +317,7 @@ lean/
 │   │   ├── SchemeExtraction.lean ← finite affine preimages; canonical primes and actual-subscheme A6s
 │   │   ├── DivisorLift.lean ← `lem:lift`: divisor lying-over and finite fibres for finite maps
 │   │   ├── PeriodicLift.lean ← a periodic divisor exists in each finite invariant fibre
-│   │   ├── SchemeWiring.lean ← actual divisor `crit₁`; noncircular key1 and PCF route
+│   │   ├── SchemeWiring.lean ← actual divisor `crit₁`; noncircular notMem_nonEtaleBranch_iterate and PCF route
 │   │   ├── SchemeDynamics.lean ← actual scheme divisor dynamics and finite-type normalization wiring
 │   │   ├── NormalizationRamification.lean ← local algebra for normalization ramification
 │   │   ├── NormalizationSchemeBridge.lean ← actual finite-birational stalk square; U1 proved
@@ -340,12 +340,12 @@ lean/
 │   │   ├── PcfAllTheWayDownCharZero.lean ← manuscript-facing `cor:pcfawd` from purity and Abhyankar
 │   │   ├── AffineBridge.lean ← concrete affine `crit₁`; empty on every bounding chart
 │   │   ├── Chart.lean       ← BoundingChart; Steps 1, 2, 3–4, descent
-│   │   └── Wiring.lean      ← PcfSetupChart: key1 derived, thm:normal-invariant on this route
+│   │   └── Wiring.lean      ← PCFSetupChart: notMem_nonEtaleBranch_iterate derived, thm:normal-invariant on this route
 │   ├── Audit.lean           ← #print axioms for every headline result
 │   └── Examples/
 │       ├── Squaring.lean    ← ex:squaring, ex:squaring-P2
 │       ├── Pinched.lean     ← ex:pinched (ring level + divisorial dynamics on the nodal line)
-│       ├── CofiniteWitness.lean ← a complete PcfGeometry with genuine ramification
+│       ├── CofiniteWitness.lean ← a complete PCFGeometry with genuine ramification
 │       ├── Cusp.lean        ← ex:cusp, ex:branch-singular
 │       └── CharP.lean       ← ex:frobenius-line, ex:wild
 ├── AXIOMS.md                ← axiom census: everything assumed

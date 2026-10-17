@@ -107,7 +107,7 @@ theorem mem_minimalPrimes_map_of_isIntegral {R S : Type*} [CommRing R] [CommRing
 
 /-! ### The chart is tame: from `S` to `K_𝔭 ⊗_R B` -/
 
-section ChartTame
+section IsTamelyRamifiedAlongDivisor
 
 variable {R : Type u} [CommRing R] (a : R) (Ra : Type u) [CommRing Ra] [Algebra R Ra]
   [IsLocalization.Away a Ra]
@@ -285,7 +285,7 @@ theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong [I
   exact isTamelyRamifiedOver_congr B hP
     (isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong a Ra B S ha htame p hap hdim)
 
-end ChartTame
+end IsTamelyRamifiedAlongDivisor
 
 /-! ### The chart is tame in characteristic zero -/
 

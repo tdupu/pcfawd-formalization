@@ -673,7 +673,7 @@ too, and more besides. The comparison is the clearest way to state it:
 | --- | --- | --- |
 | `step`, `step_surjective` (lying over, B1) | supplied | supplied |
 | `ram` | **supplied by the caller** | canonical — `Ideal.ramificationIdx` at the generic point |
-| `ram_pos` | **supplied** | **proved** (`Ideal.ramificationIdx_pos`) |
+| `ramificationIdx_pos` | **supplied** | **proved** (`Ideal.ramificationIdx_pos`) |
 | ramified ⟹ non-étale | **supplied** (`hbranch`) | **proved** |
 | a `Pcf.PurityData`, including `localPurity` = Tag 0BMB | **required** | **not required at all** |
 | generic étaleness | a field of the datum | the one remaining hypothesis |
@@ -1039,7 +1039,7 @@ And, in the geometric layer, all of §`sec:bounding` except P1–P6:
 | the integral-effective-divisor convention of §`sec:intro` (prime), topologically | `Pcf.IsProperIrreducibleClosed` — **correct only in an irreducible ambient space.** In any space, "no irreducible closed set strictly between `P` and `X`" is exactly codimension one; but `Pcf.IsProperIrreducibleClosed` is stated for an arbitrary space, where it also holds of the irreducible *components*, which have codimension zero. `IrreducibleSpace` is never assumed. A variety is irreducible by the manuscript's Conventions, so this is a fidelity gap in the abstraction, not an error. |
 | primes are incomparable | `Pcf.IsProperIrreducibleClosed.eq_of_subset_of_isProperIrreducibleClosed` |
 | Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, the `Z` term | `Pcf.IsProperIrreducibleClosed.not_subset_sUnion`, `Pcf.IsProperIrreducibleClosed.inter_sUnion_ne_self` — *available, not wired in*: `BoundingCorrectionLoci` still takes `interOther_ne_univ` as a field |
-| Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` — *available, not wired in*, and weaker than it looks: `codim` there is an arbitrary `X → ℕ` unconnected to `IsPrime` or to the topology, so it also needs "`B` has codimension 1", which `IsPrime` does not supply. The two notions cannot currently be composed. |
+| Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, the `Sing(Y)` term | `Pcf.not_subset_of_two_le_codim` — *available, not wired in*, and weaker than it looks: `codim` there is an arbitrary `X → ℕ` unconnected to `IsProperIrreducibleClosed` or to the topology, so it also needs "`B` has codimension 1", which `IsProperIrreducibleClosed` does not supply. The two notions cannot currently be composed. |
 | Theorem `thm:bounding` (per-divisor form), first paragraph (finiteness) | `Pcf.finite_isProperIrreducibleClosed_subset` |
 | §`sec:defs`, finiteness of `Branch(g)` | `Pcf.PurityData.finite_isProperIrreducibleClosed_subset_nonEtale`; wired in through `Pcf.restrictionDivisorDynamicsOfPurity` (§B.6), and **fully discharged** over `Spec S` by `Pcf.divisorDynamicsOfSpectrum` (§B.7) |
 | Definition `def:crit-branch`, ramified ⟹ non-étale | `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx` — **proved** from `Ideal.ramificationIdx_eq_one`; previously a hypothesis (§B.7) |
