@@ -8,7 +8,7 @@
 version: v0.4
 
 project:
-  name: "PCF all the way down in characteristic zero, conditional on Zariski–Nagata purity and Abhyankar's lemma"
+  name: "PCF all the way down in characteristic zero"
   description: |
     A Lean 4 / Mathlib formalization of the characteristic-zero case of the
     "PCF all the way down" theorem (Corollary cor:pcfawd of the manuscript,
@@ -22,24 +22,25 @@ project:
     function field): the unique lift g of f has post-critical set
     {g^(n+1)(x) : n ≥ 0, x a codimension-one point whose stalk map has
     ramification index > 1}, and f is "normalized PCF" if this set is finite.
-    The compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` concludes
-    that a normalized-PCF f is PCF all the way down: for every depth d, f is
-    normalized PCF and, for every point y = f^r(x) with x of codimension one
-    and f^p(y) = y for some p ≥ 1, the restriction of f^p to the reduced
-    closure of y is PCF all the way down to depth d − 1. Two further compared
-    theorems, `Pcf.Palomar.existsUnique_isNormalizationLift` and
-    `Pcf.Palomar.exists_pointClosure_restriction`, show that the lift to the
-    normalization and the restrictions quantified over in these definitions
-    exist (and are unique), so the definitions are not vacuous.
+    The compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`
+    concludes that a normalized-PCF f is PCF all the way down: for every depth
+    d, f is normalized PCF and, for every point y = f^r(x) with x of
+    codimension one and f^p(y) = y for some p ≥ 1, the restriction of f^p to
+    the reduced closure of y is PCF all the way down to depth d − 1. Two
+    further compared theorems, `Pcf.Palomar.existsUnique_isNormalizationLift`
+    and `Pcf.Palomar.exists_pointClosure_restriction`, show that the lift to
+    the normalization and the restrictions quantified over in these
+    definitions exist (and are unique), so the definitions are not vacuous.
 
-    The theorem is conditional. It takes two hypotheses, each quantified over
-    all commutative rings in the working universe: an affine form of
-    Zariski–Nagata purity of the branch locus (Stacks Project Tag 0BMB), and an
-    affine form of Abhyankar's lemma for a regular divisor (Tags 0EYG/0EYH) for
-    algebras in which every positive integer is invertible. Neither is proved
-    here. No other mathematical input is assumed; the proof uses only the
-    axioms propext, Classical.choice and Quot.sound. At depth zero the
-    conclusion restates the hypothesis.
+    The theorem has no hypotheses beyond those displayed. The two classical
+    results the manuscript cites, Zariski–Nagata purity of the branch locus
+    (Stacks Project Tag 0BMB) and Abhyankar's lemma for a regular divisor
+    (Tags 0EYG/0EYH, in the case where every positive integer is invertible),
+    are proved in the submitted development in affine forms and used in the
+    proof; they are not hypotheses of the compared theorem. The proof uses
+    only the axioms propext, Classical.choice and Quot.sound. At depth zero
+    the conclusion restates the hypothesis, and the depth is not bounded by
+    the dimension of X.
   authors:
     # Confirmed by Taylor 2026-10-15: all four are authors of the formalization.
     - Taylor Dupuy
@@ -65,9 +66,9 @@ sources:
     author_endorsement: participated
     note: >
       Formalizes Theorem A / Corollary cor:pcfawd of the manuscript in its
-      characteristic-zero form, with two adaptations: Zariski–Nagata purity and
-      Abhyankar's lemma, which the manuscript cites, enter as explicit
-      hypotheses; and varieties are encoded as integral, locally Noetherian,
+      characteristic-zero form. Zariski–Nagata purity and Abhyankar's lemma,
+      which the manuscript cites, are proved in the development rather than
+      cited. Varieties are encoded as integral, locally Noetherian,
       Noetherian-space schemes locally of finite type over k, without
       separatedness, and f is not required to be a k-morphism.
   - title: "Finite ramification for preimage fields of post-critically finite morphisms"
@@ -81,9 +82,10 @@ sources:
     identifier: "https://stacks.math.columbia.edu/tag/0BMB"
     relationship: background
     note: >
-      The two results assumed as hypotheses of the compared theorem; their
-      affine statements are the hypotheses `purity` and `abhyankar` of
-      `Pcf.Palomar.pcfAllTheWayDown_charZero`.
+      The two classical results used in the proof. Affine forms of both are
+      proved in the development (`Pcf.Stacks.zariskiNagataPurity`,
+      `Pcf.Stacks.abhyankarLemma`, the latter when every positive integer is
+      invertible); they do not appear in the compared statement.
 
 automation:
   methods:
@@ -104,11 +106,17 @@ review:
   # Confirmed by Taylor 2026-10-15: agents reviewed the statements.
   status: agent-reviewed
   notes: >
-    Statement fidelity was audited by agents against the manuscript. The final
-    pass (2026-10-15, lean-fidelity skill, Claude Opus 5.5) reviewed
-    palomar/PcfChallenge.lean definition by definition against
-    the manuscript and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the
-    statement faithfully formalizes cor:pcfawd, is slightly more general (no
-    separatedness; f need not be a k-morphism), and both assumed hypotheses
-    are true statements, so it is not vacuous. See also lean/PALOMAR.md and
-    lean/AXIOMS.md.
+    Statement fidelity was audited by agents against the manuscript. The
+    2026-10-15 pass (lean-fidelity skill, Claude Opus 5.5) reviewed
+    palomar/PcfChallenge.lean definition by definition against the
+    manuscript and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the statement
+    faithfully formalizes cor:pcfawd and is slightly more general (no
+    separatedness; f need not be a k-morphism). At that time the compared
+    theorem took purity and Abhyankar's lemma as hypotheses. The 2026-10-17
+    pass (Claude Opus 5.5) checked the present Challenge: its compared
+    theorem is the reviewed statement with those two hypotheses removed, and
+    every definition it uses is textually unchanged from the reviewed
+    Challenge. The Challenge and Solution environments agree on the types and
+    definition bodies (structural hashes) of all 4976 constants the compared
+    statements depend on. No human author has reviewed the statement. See
+    also lean/PALOMAR.md and lean/AXIOMS.md.

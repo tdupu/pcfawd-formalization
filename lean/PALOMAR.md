@@ -15,7 +15,8 @@ statements delivered; all three were retracted, and the retractions are themselv
 registered here as entries 9–11.
 
 The entry actually prepared for Palomar comparison is **Entry 0**, the characteristic-zero
-theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its two non-vacuity companions. Its
+theorem `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` with its two non-vacuity
+companions. Its
 Palomar project is `palomar/` at the repository root (`PcfChallenge.lean`,
 `PcfSolution.lean`, `comparator.json`, `formalization.yaml`; see `palomar/README.md`).
 Entries 1–11 are older claims about the same development. They are kept as a claim
@@ -23,19 +24,20 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
-All values re-derived 2026-10-15 at `tdupu/pcf` commit `7f3f5b1`.
+All values re-derived 2026-10-17 at `tdupu/pcf` commit `cfcdac4` ("Compare the unconditional
+theorem in the Palomar Challenge"), before this file was edited.
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which exists but is still empty. |
+| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which carries `lean/` and `palomar/` with private files removed (`PUBLIC-RELEASE.md`). |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
-| `lean/` subtree | `f8684d02390386e9d01e5fa8a9b849995b0945cc` at `7f3f5b1`, before this file was edited. This file lives inside `lean/`, so the hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
+| `lean/` subtree | `56e8e5d1a2c0935606fe0aa73efbc69ee4c3ea4d` at `cfcdac4` (`lean/Pcf` alone: `fca7d1d254b142fe9c3ba6577ef5e8fa601144b8`; `palomar/`: `655ba995ea055da5af32ee5e8e3676aa11b3aa74`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes, and the public repository's `lean/` hash differs because private files are left out; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
-| Module system | all 178 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
-| Build | `lake build` in `lean/`: `Build completed successfully (3504 jobs)`, 0 errors. The replayed log has 172 linter and deprecation warnings, none of them errors |
-| Audit | `lean/Pcf/Audit.lean`: 1234 `#print axioms` commands covering 1233 distinct declarations (`Pcf.pointClosureSubscheme_genericPoint` is listed twice). In the build log, 1217 report `[propext, Classical.choice, Quot.sound]`, 16 report `[propext, Quot.sound]`, 1 reports `[propext]`, and none report `sorryAx` |
-| Forbidden tokens | no `sorry`, `axiom`, `admit` or `native_decide` in tracked `lean/Pcf/**/*.lean` (one prose hit, the word "admit" in a docstring of `Pcf/Stacks/Abhyankar/StrictHenselizationQuotientStandard.lean`, is not a tactic) |
+| Module system | all 242 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
+| Build | `lake build Pcf Pcf.Audit` in `lean/`: `Build completed successfully (3730 jobs)`, 0 errors, 212 linter and deprecation warnings. `lake build` in `palomar/`: `Build completed successfully (3703 jobs)`; the only `sorry` warnings are the three Challenge theorems in `PcfChallenge.lean` |
+| Audit | `lean/Pcf/Audit.lean`: the build log has 1783 `#print axioms` results for 1779 distinct declarations. 1754 report `[propext, Classical.choice, Quot.sound]`, 27 report `[propext, Quot.sound]`, 2 report `[propext]`, and none report `sorryAx` |
+| Forbidden tokens | no `sorry`, `axiom`, `admit` or `native_decide` as Lean tokens in tracked `lean/Pcf/**/*.lean`. A whole-word grep has five hits, all in prose (docstrings of `Bounding/FiniteTypeSingularLocusClosed.lean`, `Bounding/SchemeBridge.lean`, `Noetherian.lean`, `Stacks/Abhyankar/StrictHenselizationQuotientStandard.lean`, `ZariskiNagata.lean`) |
 
 The Mathlib revision was confirmed two ways: the `rev` field of the `mathlib` package in
 `lean/lake-manifest.json` (read with a JSON parser, keyed on `name`), and
@@ -45,9 +47,9 @@ attempt, on the earlier pin, read it with `grep` and got the repository's own HE
 would have frozen a wrong pin into a permanent record.
 
 The audit counts come from the build log and `grep` over `Audit.lean`. They are not
-copied from earlier records. The three `Pcf.Palomar` declarations of Entry 0 are not in
-`Audit.lean`; their axioms were printed separately (below). `Pcf.pcfAllTheWayDown_charZero`,
-which they are derived from, is in it.
+copied from earlier records. Of the three `Pcf.Palomar` declarations of Entry 0, only
+`Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` is in `Audit.lean`; the axioms of all
+three were also printed separately (below).
 
 Accompanying manuscript: `latex/paper.tex`. Assumption census: `AXIOMS.md`, beside this
 file. Statement-to-declaration map: `README.md`, likewise.
@@ -55,10 +57,10 @@ file. Statement-to-declaration map: `README.md`, likewise.
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act. Still open before any submission (from
-`palomar/README.md`): populating `tdupu/pcfawd-formalization`, getting a passing Palomar preflight
-run there, the relationship answer, and reconciling `latex/paper.tex`. Its "Formalization"
-subsubsection still says `thm:general`, `lem:covers` and the passage to the normalization
-are not formalized, which contradicts Entry 0.
+`palomar/README.md`): a passing Palomar preflight for the unconditional Challenge on
+`tdupu/pcfawd-formalization`, the relationship answer, and reconciling `latex/paper.tex`. Its
+"Formalization" subsubsection still says `thm:general`, `lem:covers` and the passage to the
+normalization are not formalized, which contradicts Entry 0.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -92,55 +94,42 @@ are not formalized, which contradicts Entry 0.
 
 ---
 
-# Entry 0 — PCF all the way down in characteristic zero (CONDITIONAL; the Palomar entry)
-
-> **Update (2026-10-16): the unconditional theorem exists.** Zariski--Nagata purity and
-> Abhyankar's lemma are now proved in this repository (`Pcf.Palomar.zariskiNagataPurity`,
-> `Pcf.Palomar.abhyankarLemma`), and `lean/Pcf/Palomar/Unconditional.lean` proves
->
-> ```
-> Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional : ∀ (k : Type u_1) [inst : Field k] [CharZero k] {X : Scheme}
->   (s : X ⟶ Spec ↧k) [LocallyOfFiniteType s] (f : X ⟶ X) [IsFinite f] [IsDominant f]
->   [inst : AlgebraicGeometry.IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace ↥X],
->   Pcf.Palomar.IsNormalizedPCF f → Pcf.Palomar.PCFAllTheWayDown f
-> 'Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional' depends on axioms: [propext, Classical.choice, Quot.sound]
-> ```
->
-> which is the statement below with the `purity` and `abhyankar` binders removed and nothing
-> else changed. **The Palomar Challenge, `comparator.json`, `formalization.yaml` and the public
-> repository `tdupu/pcfawd-formalization` have not been updated**: they still compare the
-> conditional theorem documented in this entry. Replacing them (new Challenge without the two
-> binders, new preflight, new abstract) is the next step and needs Taylor's go-ahead; no
-> submission has been made.
+# Entry 0 — PCF all the way down in characteristic zero (UNCONDITIONAL; the Palomar entry)
 
 This is the entry the Comparator configuration `palomar/comparator.json` compares. Its
 `theorem_names` are the three declarations below, and its `permitted_axioms` are
 `propext`, `Quot.sound` and `Classical.choice`. The definitions it uses
-(`Pcf.Palomar.ZariskiNagataPurity`, `AbhyankarLemma`, `IsNormalizedPCF`,
-`PCFAllTheWayDown`, …) are in `lean/Pcf/Palomar/Statement.lean`. The definitions in
-`palomar/PcfChallenge.lean` (300 lines, Mathlib imports only) are identical to it; only
+(`IsNormalizedPCF`, `PCFAllTheWayDown`, `ramificationIndexAt`, `normalization`,
+`pointClosure`, …) are in `lean/Pcf/Palomar/Statement.lean`. The definitions in
+`palomar/PcfChallenge.lean` (216 lines, Mathlib imports only) are identical to it; only
 the module docstring differs, and the Challenge adds the three theorems with `sorry`.
 `lean/Pcf/Palomar/Bridge.lean` proves each Challenge notion equivalent to the
-development's (`isNormalizedPCF_iff_scheme`, `pcfAllTheWayDown_iff_scheme`,
-`zariskiNagataPurity_iff`, `abhyankarLemma_iff`) and derives the theorem from
-`Pcf.pcfAllTheWayDown_charZero`.
+development's (`isNormalizedPCF_iff_scheme`, `pcfAllTheWayDown_iff_scheme`), and
+`lean/Pcf/Palomar/Unconditional.lean` derives the theorem from `Pcf.pcfAllTheWayDown_charZero`
+with Zariski–Nagata purity and Abhyankar's lemma supplied as proved theorems.
 
-Extracted 2026-10-15 with `lake env lean` on a scratch file importing
-`Pcf.Palomar.Bridge`. The output below is verbatim. For the first declaration Lean prints
-the `#check @…` result without the leading `@`.
+*History.* Until 2026-10-17 this entry compared `Pcf.Palomar.pcfAllTheWayDown_charZero`,
+which takes purity and Abhyankar's lemma as its first two arguments (`purity`, `abhyankar`).
+That theorem is still in `Bridge.lean`, with the Palomar forms of the two local theorems in
+`lean/Pcf/Palomar/LocalTheorems.lean`; neither is part of the Challenge any more. The
+compared statement is the earlier one with those two binders removed and nothing else
+changed. The earlier conditional Challenge passed the Palomar preflight on
+`tdupu/pcfawd-formalization` `ca90abd` (run 38939892378); that run does not cover this one.
 
-**Declaration** `Pcf.Palomar.pcfAllTheWayDown_charZero`
+Extracted 2026-10-17 with `lake env lean` in `palomar/` on scratch files importing
+`PcfSolution` and, separately, `PcfChallenge`. The `#check` output is the same text in both
+environments. The output below is the Solution's, verbatim. For the first declaration Lean
+prints the `#check @…` result without the leading `@`.
+
+**Declaration** `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`
 
 ```
-Pcf.Palomar.pcfAllTheWayDown_charZero : (∀ (R S : Type u_1) [inst : CommRing R] [inst_1 : CommRing S]
-    [inst_2 : Algebra R S], Pcf.Palomar.ZariskiNagataPurity R S) →
-  (∀ (R S : Type u_1) [inst : CommRing R] [inst_1 : CommRing S] [inst_2 : Algebra R S] (a : R),
-      Pcf.Palomar.AbhyankarLemma R S a) →
-    ∀ (k : Type u_1) [inst : Field k] [CharZero k] {X : AlgebraicGeometry.Scheme} (s : X ⟶ AlgebraicGeometry.Spec ↧k)
-      [AlgebraicGeometry.LocallyOfFiniteType s] (f : X ⟶ X) [AlgebraicGeometry.IsFinite f]
-      [AlgebraicGeometry.IsDominant f] [inst : AlgebraicGeometry.IsIntegral X] [AlgebraicGeometry.IsLocallyNoetherian X]
-      [TopologicalSpace.NoetherianSpace ↥X], Pcf.Palomar.IsNormalizedPCF f → Pcf.Palomar.PCFAllTheWayDown f
-'Pcf.Palomar.pcfAllTheWayDown_charZero' depends on axioms: [propext, Classical.choice, Quot.sound]
+Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional : ∀ (k : Type u_1) [inst : Field k] [CharZero k]
+  {X : AlgebraicGeometry.Scheme} (s : X ⟶ AlgebraicGeometry.Spec ↧k) [AlgebraicGeometry.LocallyOfFiniteType s]
+  (f : X ⟶ X) [AlgebraicGeometry.IsFinite f] [AlgebraicGeometry.IsDominant f] [inst : AlgebraicGeometry.IsIntegral X]
+  [AlgebraicGeometry.IsLocallyNoetherian X] [TopologicalSpace.NoetherianSpace ↥X],
+  Pcf.Palomar.IsNormalizedPCF f → Pcf.Palomar.PCFAllTheWayDown f
+'Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 **Declaration** `Pcf.Palomar.existsUnique_isNormalizationLift`
@@ -162,50 +151,26 @@ Pcf.Palomar.pcfAllTheWayDown_charZero : (∀ (R S : Type u_1) [inst : CommRing R
 'Pcf.Palomar.exists_pointClosure_restriction' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-For comparison, the development's theorem it is derived from, extracted the same way:
+**Statement identity check.** A scratch `run_cmd` collected every constant reachable from the
+three compared types (through types, definition bodies, inductive constructors), 4976 in all,
+25 of them in `Pcf.Palomar`, and printed the structural hash of each type and definition
+body. The two lists, from the `PcfChallenge` and `PcfSolution` environments, are identical.
+This is a scratch check, not Comparator: the local unsandboxed `lake comparator` run was not
+permitted to the agent on 2026-10-17, so Comparator itself has run only in the Palomar
+preflight (Pin, below).
 
-```
-Pcf.pcfAllTheWayDown_charZero : Pcf.PCFAllTheWayDownLocalTheorems →
-  ∀ (k : Type u_1) [inst : Field k] [inst_1 : CharZero k] {X : AlgebraicGeometry.Scheme}
-    (s : X ⟶ AlgebraicGeometry.Spec ↧k) [inst_2 : AlgebraicGeometry.LocallyOfFiniteType s] (f : X ⟶ X)
-    [inst_3 : AlgebraicGeometry.IsFinite f] [inst_4 : AlgebraicGeometry.IsDominant f]
-    [inst_5 : AlgebraicGeometry.IsIntegral X] [inst_6 : AlgebraicGeometry.IsLocallyNoetherian X]
-    [inst_7 : TopologicalSpace.NoetherianSpace ↥X],
-    Pcf.IsNormalizedPCFOfFiniteType k s f → Pcf.SchemePCFAllTheWayDown k s f
-'Pcf.pcfAllTheWayDown_charZero' depends on axioms: [propext, Classical.choice, Quot.sound]
-```
-
-**Informal claim.** Assume two statements, each for all commutative rings `R`, `S` in the
-working universe and every `R`-algebra structure on `S`:
-
-1. *(purity)* `Pcf.Palomar.ZariskiNagataPurity R S`, an affine form of Zariski–Nagata
-   purity of the branch locus (Stacks Tag 0BMB). If `R` and `S` are Noetherian and `S` is
-   of finite type over `R`, then `R → S` is étale at every prime `w` of `S` such that:
-   `S_w` is an integrally closed domain, `R_{w ∩ R}` is a regular local ring, `S` is
-   quasi-finite over `R` at `w`, `ht w = ht (w ∩ R) ≥ 1`, and `R → S` is unramified at
-   every height-one prime specializing to `w`;
-2. *(Abhyankar)* `Pcf.Palomar.AbhyankarLemma R S a` for every `a ∈ R`, an affine form of
-   Abhyankar's lemma for a regular divisor (Stacks Tags 0EYG/0EYH). Suppose `R` is
-   Noetherian, `a` is a nonzerodivisor, `R/(a)` is regular, `S` is finite over `R`, `R → S`
-   is étale at every prime of `S` not containing `a`, `S` is the integral closure of `R`
-   in `S[1/a]`, and **every positive integer is invertible in `R`**. Then every prime
-   `y ∋ a` of `R` lies under a prime of some étale `R`-algebra `R'`, where `R'` is
-   Noetherian, `a` is a nonzerodivisor in `R'`, `R'/(a)` is regular, and `R' ⊗_R S` is
-   `R'`-isomorphic to a finite product `∏ᵢ R'[z]/(z^{eᵢ} − uᵢ a)` with each `eᵢ ≥ 1`
-   invertible and each `uᵢ` a unit.
-
-Let `k` be a field of characteristic zero. Let `X` be an integral, locally Noetherian
-scheme whose underlying space is Noetherian, with a morphism `s : X → Spec k` locally of
-finite type. Let `f : X → X` be a finite, dominant morphism of schemes. Suppose `f` is
-**normalized PCF**: every lift `g` of `f` to the normalization `X̃` of `X` (Mathlib's
-normalization of `X` in its function field) is PCF. A lift satisfies `ν ∘ g = f ∘ ν` and
-maps the generic point through an endomorphism of `Spec K(X)`. `g` is PCF when the set
-`{g^{n+1}(x) : n ≥ 0, x of codimension one with ramification index of the stalk map > 1}`
-is finite. Then `f` is **PCF all the way down**: for every depth `d`, `f` is normalized PCF,
-and for every `d ≥ 1` the following also holds. Let `y = f^r(x)` with `x` of codimension
-one, and suppose `f^p(y) = y` for some `p ≥ 1`. Then every endomorphism `h` of the reduced
-closed subscheme `\overline{\{y\}}` with `h ∘ ι = ι ∘ f^p` is PCF all the way down to
-depth `d − 1`.
+**Informal claim.** Let `k` be a field of characteristic zero. Let `X` be an integral,
+locally Noetherian scheme whose underlying space is Noetherian, with a morphism
+`s : X → Spec k` locally of finite type. Let `f : X → X` be a finite, dominant morphism of
+schemes. Suppose `f` is **normalized PCF**: every lift `g` of `f` to the normalization `X̃`
+of `X` (Mathlib's normalization of `X` in its function field) is PCF. A lift satisfies
+`ν ∘ g = f ∘ ν` and maps the generic point through an endomorphism of `Spec K(X)`. `g` is PCF
+when the set `{g^{n+1}(x) : n ≥ 0, x of codimension one with ramification index of the stalk
+map > 1}` is finite. Then `f` is **PCF all the way down**: for every depth `d`, `f` is
+normalized PCF, and for every `d ≥ 1` the following also holds. Let `y = f^r(x)` with `x` of
+codimension one, and suppose `f^p(y) = y` for some `p ≥ 1`. Then every endomorphism `h` of the
+reduced closed subscheme `\overline{\{y\}}` with `h ∘ ι = ι ∘ f^p` is PCF all the way down to
+depth `d − 1`. There are no further hypotheses.
 
 The two companions show that the quantifiers in these definitions range over real maps. A
 finite dominant endomorphism of an integral scheme has **exactly one** lift to the
@@ -214,28 +179,19 @@ fixing a point `y` restricts to some endomorphism of the reduced closure of `y`
 (`exists_pointClosure_restriction`).
 
 This is the characteristic-zero form of Corollary `cor:pcfawd` of `latex/paper.tex`,
-whose first step is Theorem `thm:general`. The conjecture it settles in that case, under
-the two hypotheses, is the one quoted on page 2 of Bridy–Ingram–Jones–Juul–Levy–Manes–
-Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arXiv:1511.00194`.
+whose first step is Theorem `thm:general`. The conjecture it settles in that case is the one
+quoted on page 2 of Bridy–Ingram–Jones–Juul–Levy–Manes–Rubinstein-Salzedo–Silverman, Math.
+Res. Lett. **24** (2017) 1633–1647, `arXiv:1511.00194`.
 
 **Does not claim.**
 
-* **Purity and Abhyankar's lemma are hypotheses, not theorems of this repository.** They
-  are the first two explicit arguments and are quantified over all commutative rings of
-  the universe. `#print axioms` cannot see hypotheses, so the three standard axioms above
-  do **not** mean nothing is assumed. If either stated form were false, the theorem would
-  be vacuous. The final agent fidelity review (`palomar/formalization.yaml`,
-  `review.notes`) judged both to be true statements. That is an agent's judgement against
-  the Stacks Project, not a proof. Partial progress toward proving them is in
-  `lean/Pcf/Stacks/Purity/` and `lean/Pcf/Stacks/Abhyankar/` and is not used to discharge
-  either hypothesis.
-* **Only affine forms are assumed.** Neither hypothesis is the scheme-level statement of
-  its tag. Purity is stated at one prime of a finite-type algebra over a Noetherian ring.
-  Abhyankar is stated only at primes `y` containing `a`, after one étale base change.
-* **Abhyankar is assumed only for ℚ-algebras.** "Every positive integer is invertible in
-  `R`" replaces the tags' tameness hypothesis and is stronger. The conclusion allows units
-  `uᵢ` (0EYH has `uᵢ = 1`). Nothing here addresses tame ramification in positive
-  characteristic.
+* **Purity and Abhyankar's lemma are used in affine forms, not as their full tags.** The
+  proof uses `Pcf.Stacks.zariskiNagataPurity` (Stacks 0BMB at one prime of a finite-type
+  algebra over a Noetherian ring) and `Pcf.Stacks.abhyankarLemma` (0EYG/0EYH at primes
+  containing `a`, after one étale base change, when every positive integer is invertible).
+  Both are proved in this repository with the three standard axioms; neither is a
+  hypothesis. Nothing here is a scheme-level statement of either tag, and nothing addresses
+  tame ramification in positive characteristic.
 * **Characteristic zero only.** `[CharZero k]` is a hypothesis. Nothing is claimed in
   characteristic `p`.
 * **Depth `0` restates the hypothesis.** `PCFAllTheWayDownAtDepth 0 f` is by definition
@@ -263,10 +219,10 @@ Rubinstein-Salzedo–Silverman, Math. Res. Lett. **24** (2017) 1633–1647, `arX
   the Challenge's three theorems with the permitted axioms. The equivalence of the
   Challenge notions with the development's (`Bridge.lean`) is evidence for this file's
   reader, and the Challenge does not depend on it.
-* **Verification so far is local.** `lake comparator --paranoid` accepted the Solution
-  on macOS with no sandbox, under the default kernel, lean4lean, nanoda, con-leche and
-  con-ron (per `palomar/README.md`; not re-run for this file). It is not Palomar's Linux
-  run, and the Palomar preflight has not run, since `tdupu/pcfawd-formalization` is not populated.
+* **The manuscript is not reconciled.** The "Formalization" subsubsection of
+  `latex/paper.tex` still says `thm:general`, `lem:covers` and the passage to the
+  normalization are not formalized, which contradicts this entry. `paper.tex` is
+  hand-managed.
 * **No human author has reviewed the statement.** `review.status` is `agent-reviewed`.
 
 **Axioms.** All three: `[propext, Classical.choice, Quot.sound]`
@@ -372,11 +328,13 @@ constant term `0` — is not étale over `k`.
   stated anywhere in this repository", which is now stale. The predicate
   `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong` now exists
   (`lean/Pcf/Stacks/Abhyankar/TameRamification.lean`), and
-  `Pcf.Stacks.standardCover_isTamelyRamifiedInCodimensionOne_charZero` proves clause 3 for the
+  `Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_natCast` proves clause 3 for the
   standard cover only when every positive integer is invertible in the base. The general
   tame case is still not proved.)*
-* **This is not Abhyankar's lemma.** Tag 0EYG, the structure theorem, is not proved; an
-  affine form of it is a hypothesis of Entry 0.
+* **This is not Abhyankar's lemma.** This entry does not prove Tag 0EYG, the structure
+  theorem. *(Updated 2026-10-17: an affine form of 0EYG/0EYH for algebras in which every
+  positive integer is invertible is now proved elsewhere, `Pcf.Stacks.abhyankarLemma`, and
+  Entry 0 no longer takes it as a hypothesis.)*
 * **The separability input is Mathlib's**, not this repository's:
   `Polynomial.separable_X_pow_sub_C_unit`.
 
@@ -567,10 +525,11 @@ more faithful.
 * No author has reviewed the formalization. Compilation certifies the formal
   statements; it does not certify that they render the statements of `latex/paper.tex`.
   For Entry 0 only, an agent fidelity review (2026-10-15, recorded in
-  `palomar/formalization.yaml` `review.notes`) compared the Challenge definition by
-  definition with `latex/paper.tex` and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: faithful
-  to `cor:pcfawd`, slightly more general (no separatedness; `f` need not be a
-  `k`-morphism). No human comparison has been completed for any entry.
+  `palomar/formalization.yaml` `review.notes`) compared the then-conditional Challenge
+  definition by definition with `latex/paper.tex` and Stacks 0BMB/0EYF/0EYG/0EYH and approved
+  it: faithful to `cor:pcfawd`, slightly more general (no separatedness; `f` need not be a
+  `k`-morphism). The 2026-10-17 Challenge drops the two hypotheses and changes no
+  definition. No human comparison has been completed for any entry.
 * `latex/paper.tex` currently **contradicts Entry 0** in its "Formalization"
   subsubsection, which still lists `thm:general`, `lem:covers` and the passage to the
   normalization as not formalized, and `prop:loci-compare` and `lem:tower-unnormalized` as
