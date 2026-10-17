@@ -5,15 +5,83 @@
 | Repo | `pcf` |
 | Scope | `lean/` |
 | Status | Draft |
-| Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07` |
+| Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07`; purity and Abhyankar proved `2026-10-16` (see the first section) |
 | Manuscript | `latex/paper.tex`, cited by `\label` (the file was `pcf.tex` with different numbering when this census was first written) |
-| Toolchain | Lean `4.34.0`, Mathlib `v4.34.0` (`5ed296525643`) |
+| Toolchain | Lean `4.35.0`, Mathlib `v4.35.0` (`56a005855ea1`) since 2026-10-15 (was Lean `4.34.0`, Mathlib `5ed296525643`) |
 
 This is the *axiom census* of the formalization, in the sense used by the
 `gq2` project.  The abstract compatibility layers remain deliberately
 conditional.  The headline actual-scheme theorem constructs those layers and
 leaves only the local purity and Abhyankar packages as mathematical
 inputs beyond its stated geometric and PCF hypotheses.
+
+## 2026-10-16: purity and Abhyankar are proved; the headline assumes nothing further
+
+The two local literature inputs listed below as the "only literature packages" are no longer
+assumed. Both are theorems, quantified over all rings of the working universe exactly as the
+inputs of `Pcf.PcfAllTheWayDownLocalTheorems` and of the compared Palomar statement:
+
+| Input | Theorem | File | `#print axioms` |
+| --- | --- | --- | --- |
+| Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Stacks.palomar_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Stacks.palomar_abhyankarLemma` | `Pcf/Stacks/Abhyankar/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
+
+The headline theorems with these inputs discharged are in `Pcf/Palomar/Unconditional.lean`:
+
+* `Pcf.pcfAllTheWayDown_charZero_unconditional` (development statement);
+* `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` (the compared statement of
+  `Pcf.Palomar.pcfAllTheWayDown_charZero` with its `purity` and `abhyankar` binders removed).
+
+Both report `[propext, Classical.choice, Quot.sound]`. **For these theorems nothing is assumed
+beyond the standard axioms and the hypotheses printed in their statements** (characteristic-zero
+field, integral locally Noetherian scheme locally of finite type with Noetherian underlying
+space, finite dominant self-map, normalized PCF). The statements of `ZariskiNagataPurity` and
+`AbhyankarLemma` were not changed in this run. The conditional theorems and the structure
+`PcfAllTheWayDownLocalTheorems` remain, unchanged, so the older sections of this file still
+describe them correctly; they are now history for the headline. The modelling assumptions of §A
+and the abstract-layer fields of §B concern the legacy abstract interfaces, not the headline.
+
+The proofs were written in the run recorded in
+the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`FRAME.md`, `PLAN.md`, `STATUS.md`). Mathlib PR
+#29802 (Auslander--Buchsbaum--Serre, localization of regular local rings) is vendored, renamed,
+under `Pcf/Vendor/RegularLocalization/` and used through `Pcf/Stacks/Common/RegularLocalization.lean`
+(Stacks `0AFS`).
+
+### Proof routes that diverge from Stacks
+
+Statements carry `@[stacks]` only where they are the tag's result (with a restriction comment
+where they are a clause or case). The following proof routes differ from the Stacks proofs; each
+is recorded in the declaration's docstring.
+
+* `0BMA` (`Tag0BMA.lean`): the induction runs over complete regular local rings, and the
+  local-cohomology argument of `0BM6`/`0EKS` behind `0BLM` is replaced by an elementary formal
+  lifting (`HypersurfaceLiftingComplete.lean`, `FormalEtaleLift.lean`); `0BLM` is proved only in
+  the complete regular local case, which is all the induction uses. The passage from `A` to
+  `A^∧` replaces `0BLL`/`0BLH` by Hartogs for a regular pair plus fpqc descent of étaleness
+  (`CompletionDescent.lean`). The statement proved is clause (2) in the finite-normal form
+  `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal).
+* `09ZL` (`HenselianFiniteEtaleLift.lean`): only essential surjectivity, for henselian local
+  rings, by induction on the rank via idempotent lifting and characteristic polynomials, instead
+  of lifting to an étale algebra and cutting out a direct factor.
+* `0567` (`Common/RegularNormal.lean`): regular implies normal without Serre's criterion
+  `031S` or the Ext-theoretic depth API: an associated-prime argument reduces to regular local
+  rings of dimension one (DVRs), using `00NP` and regularity of localizations (`0AFS`).
+* `033C` (`Common/EtaleNormal.lean`): pointwise form (normality needed only at the image point).
+* `0BMB` (`Tag0BMB.lean`, `Tag0BMBLocalModel.lean`): strong induction on the height as in Stacks;
+  the final descent is done on local rings (Kähler differentials, Tor-free tensor products)
+  rather than with `02VN` on schemes.
+* `06LJ` (`StrictHenselizationCompletionFlat.lean`): the stages of the colimit are not
+  identified with strict henselizations of themselves.
+* `04GW` (`StrictHenselizationLocalize.lean`): the comparison is between pcf's colimit models at
+  `R → Ω` with kernel `p` and at `R_p`.
+* `0EYG`/`0EYH` (`Tag0EYG.lean`, `StrictGenericPresentation.lean`): the strict henselization of
+  `R` is compared with that of `R_y` (`04GW`), and the normalization step is done on integral
+  models (both are the integral closure of `A` in `K(a^{1/n})`), giving the `0EYH` form
+  directly. Any common multiple `E` of the ramification indices is used instead of their
+  product; `0BRM` is proved in the divisibility form `e ∣ E` without finiteness of the upper DVR
+  (`DVRAbhyankarDivisible.lean`); henselianity of the root cover is replaced by the two
+  consequences used (`StrictRootCover.lean`); Stacks' decomposition of `B` over `A_f` is done on
+  the integral model (`StrictNormalDecomposition.lean`, `StrictRootComponent.lean`).
 
 ## How to read `#print axioms` here
 

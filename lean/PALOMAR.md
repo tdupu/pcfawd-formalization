@@ -94,6 +94,25 @@ are not formalized, which contradicts Entry 0.
 
 # Entry 0 — PCF all the way down in characteristic zero (CONDITIONAL; the Palomar entry)
 
+> **Update (2026-10-16): the unconditional theorem exists.** Zariski--Nagata purity and
+> Abhyankar's lemma are now proved in this repository (`Pcf.Stacks.palomar_zariskiNagataPurity`,
+> `Pcf.Stacks.palomar_abhyankarLemma`), and `lean/Pcf/Palomar/Unconditional.lean` proves
+>
+> ```
+> Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional : ∀ (k : Type u_1) [inst : Field k] [CharZero k] {X : Scheme}
+>   (s : X ⟶ Spec ↧k) [LocallyOfFiniteType s] (f : X ⟶ X) [IsFinite f] [IsDominant f]
+>   [inst : AlgebraicGeometry.IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace ↥X],
+>   Pcf.Palomar.IsNormalizedPCF f → Pcf.Palomar.PCFAllTheWayDown f
+> 'Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional' depends on axioms: [propext, Classical.choice, Quot.sound]
+> ```
+>
+> which is the statement below with the `purity` and `abhyankar` binders removed and nothing
+> else changed. **The Palomar Challenge, `comparator.json`, `formalization.yaml` and the public
+> repository `tdupu/pcfawd-formalization` have not been updated**: they still compare the
+> conditional theorem documented in this entry. Replacing them (new Challenge without the two
+> binders, new preflight, new abstract) is the next step and needs Taylor's go-ahead; no
+> submission has been made.
+
 This is the entry the Comparator configuration `palomar/comparator.json` compares. Its
 `theorem_names` are the three declarations below, and its `permitted_axioms` are
 `propext`, `Quot.sound` and `Classical.choice`. The definitions it uses
