@@ -108,4 +108,12 @@ theorem isRegularRing_quotient_of_isRegularScheme {D : X.IdealSheafData}
   rw [← hDa]
   exact IsRegularRing.of_ringEquiv (D.subschemeObjIso V).commRingCatIsoToRingEquiv
 
+#print axioms mem_support_iff_of_ideal_eq
+#print axioms inf_eq_basicOpen_of_ideal_eq
+#print axioms isAffineOpen_preimage_ι_of_ideal_eq
+#print axioms isLocalization_away_of_ideal_eq
+#print axioms finite_app_of_isFinite
+#print axioms etale_app_of_etale
+#print axioms isRegularRing_quotient_of_isRegularScheme
+
 end Pcf.Stacks.SchemeLevel

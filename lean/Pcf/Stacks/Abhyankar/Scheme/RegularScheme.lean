@@ -36,14 +36,15 @@ variable {X : Scheme.{u}}
 /-- `primeIdealOf` inverts `fromSpec`. -/
 theorem IsAffineOpen.primeIdealOf_fromSpec {U : X.Opens} (hU : IsAffineOpen U)
     (p : PrimeSpectrum Γ(X, U)) :
-    hU.primeIdealOf ⟨hU.fromSpec p, by rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self p⟩ = p :=
+    hU.primeIdealOf ⟨hU.fromSpec p,
+      by rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self p⟩ = p :=
   hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf _)
 
 /-- On an affine open with regular ring of sections, the local rings are regular. -/
 theorem isRegularLocalRing_stalk_of_isRegularRing {U : X.Opens} (hU : IsAffineOpen U)
     [IsRegularRing Γ(X, U)] {x : X} (hx : x ∈ U) :
     IsRegularLocalRing (X.presheaf.stalk x) := by
-  letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
+  let _ := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
   have := hU.isLocalization_stalk ⟨x, hx⟩
   exact IsRegularLocalRing.of_ringEquiv (IsLocalization.algEquiv
     (hU.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl
@@ -60,7 +61,7 @@ theorem isRegularRing_of_isRegularLocalRing_stalk {U : X.Opens} (hU : IsAffineOp
   let x : U := ⟨hU.fromSpec ⟨p, hp⟩, by
     rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self _⟩
   have hx : hU.primeIdealOf x = ⟨p, hp⟩ := IsAffineOpen.primeIdealOf_fromSpec hU _
-  letI := X.presheaf.algebra_section_stalk x
+  let _ := X.presheaf.algebra_section_stalk x
   have := hU.isLocalization_stalk x
   rw [hx] at this
   have := h x.1 x.2
@@ -107,5 +108,14 @@ theorem IsRegularScheme.of_isOpenImmersion {Z : Scheme.{u}} (f : Z ⟶ X) [IsOpe
   refine isRegularScheme_iff.mpr ⟨isLocallyNoetherian_of_isOpenImmersion f, fun z ↦ ?_⟩
   have := hX.isRegularLocalRing_stalk (f z)
   exact IsRegularLocalRing.of_ringEquiv (asIso (f.stalkMap z)).commRingCatIsoToRingEquiv
+
+#print axioms IsAffineOpen.primeIdealOf_fromSpec
+#print axioms isRegularLocalRing_stalk_of_isRegularRing
+#print axioms isRegularRing_of_isRegularLocalRing_stalk
+#print axioms IsRegularScheme.isRegularLocalRing_stalk
+#print axioms IsRegularScheme.isLocallyNoetherian
+#print axioms isRegularScheme_iff
+#print axioms IsRegularScheme.isRegularRing
+#print axioms IsRegularScheme.of_isOpenImmersion
 
 end Pcf.Stacks.SchemeLevel

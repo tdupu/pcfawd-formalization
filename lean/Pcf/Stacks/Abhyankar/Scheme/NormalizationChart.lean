@@ -97,4 +97,10 @@ theorem ideal_vanishingIdeal_eq_radical {S : Scheme.{u}} (Z : TopologicalSpace.C
   refine (congrArg PrimeSpectrum.vanishingIdeal h).trans ?_
   rw [← PrimeSpectrum.zeroLocus_span, PrimeSpectrum.vanishingIdeal_zeroLocus_eq_radical]
 
+#print axioms fst_comp_eq_snd_of_mono
+#print axioms isIso_fst_of_mono
+#print axioms exists_iso_normalization_restrict
+#print axioms normalizationAppAlgEquiv
+#print axioms ideal_vanishingIdeal_eq_radical
+
 end Pcf.Stacks.SchemeLevel

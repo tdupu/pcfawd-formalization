@@ -83,7 +83,8 @@ theorem isEffectiveCartier_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.
 theorem isRegularScheme_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.IdealSheafData}
     (hD : IsEffectiveCartier D)
     (h : ∀ (V : X.affineOpens) (a : Γ(X, V)), a ∈ nonZeroDivisors Γ(X, V) →
-      D.ideal V = Ideal.span {a} → IsRegularRing (Γ(Y, π ⁻¹ᵁ V.1) ⧸ (Ideal.span {π.app V.1 a}).radical)) :
+      D.ideal V = Ideal.span {a} →
+        IsRegularRing (Γ(Y, π ⁻¹ᵁ V.1) ⧸ (Ideal.span {π.app V.1 a}).radical)) :
     IsRegularScheme ((D.comap π).radical).subscheme := by
   intro z
   obtain ⟨V, hyV, a, ha, hDa⟩ := hD (π ((D.comap π).radical.subschemeι z))
@@ -96,5 +97,9 @@ theorem isRegularScheme_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.Ide
       π.app V.1 a := by simp
   rw [hid] at hI
   exact IsRegularRing.of_ringEquiv (e.trans (Ideal.quotEquivOfEq hI)).symm
+
+#print axioms ideal_radical_comap_eq
+#print axioms isEffectiveCartier_radical_comap
+#print axioms isRegularScheme_radical_comap
 
 end Pcf.Stacks.SchemeLevel

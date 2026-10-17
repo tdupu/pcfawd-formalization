@@ -57,4 +57,7 @@ theorem isEffectiveCartier_iff (D : X.IdealSheafData) :
   rw [Ideal.span_singleton_one]
   exact ideal_eq_top_of_disjoint D ⟨U, hU⟩ fun y hy ↦ hUD hy
 
+#print axioms ideal_eq_top_of_disjoint
+#print axioms isEffectiveCartier_iff
+
 end Pcf.Stacks.SchemeLevel

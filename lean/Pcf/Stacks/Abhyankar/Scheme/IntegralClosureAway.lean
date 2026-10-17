@@ -59,4 +59,7 @@ theorem isIntegralClosure_localizationAway_integralClosure [Algebra.IsIntegral R
     IsLocalization.algEquiv (Submonoid.powers (algebraMap R N a)) B _
   exact IsIntegralClosure.of_algEquiv N (f.restrictScalars R) fun x ↦ (f.commutes x).symm
 
+#print axioms isLocalization_away_integralClosure
+#print axioms isIntegralClosure_localizationAway_integralClosure
+
 end Pcf.Stacks.SchemeLevel

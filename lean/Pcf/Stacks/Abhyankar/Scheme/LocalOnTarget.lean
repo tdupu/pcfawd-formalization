@@ -65,4 +65,8 @@ theorem flat_of_iSup_eq_top (π : Z ⟶ X) {ι : Type*} (V : ι → X.affineOpen
   exact RingHom.Flat.respectsIso.1 _ (RingEquiv.ofBijective _
     (bijective_presheaf_map_eqToHom (image_morphismRestrict_preimage π (V i : X.Opens) ⊤))) h'
 
+#print axioms bijective_presheaf_map_eqToHom
+#print axioms isFinite_of_iSup_eq_top
+#print axioms flat_of_iSup_eq_top
+
 end Pcf.Stacks.SchemeLevel

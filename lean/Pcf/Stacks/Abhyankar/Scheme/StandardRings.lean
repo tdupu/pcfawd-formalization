@@ -76,4 +76,10 @@ theorem isStandardTameData_one_one [IsNoetherianRing A] : IsStandardTameData A 1
     rw [Ideal.span_singleton_one]; infer_instance
   infer_instance
 
+#print axioms standardTameRingEquiv
+#print axioms standardRingOneOneEquiv
+#print axioms standardTameRingOneOneEquiv
+#print axioms isStandardTameData_unit_mul
+#print axioms isStandardTameData_one_one
+
 end Pcf.Stacks.SchemeLevel

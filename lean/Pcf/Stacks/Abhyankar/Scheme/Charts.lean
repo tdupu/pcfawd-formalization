@@ -162,4 +162,11 @@ theorem exists_etale_pullback_iso_sigma {X Z : Scheme.{u}} (h : Z ⟶ X) {V : X.
     change hV.fromSpec (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, V) A)) y') = x
     rw [hc, hV.fromSpec_primeIdealOf]
 
+#print axioms isPullback_fromSpec_app
+#print axioms isPullback_tensor_fromSpec
+#print axioms isIso_sigmaDesc_fin
+#print axioms exists_pullback_iso_sigma
+#print axioms mem_basicOpen_iff_notMem_primeIdealOf
+#print axioms exists_etale_pullback_iso_sigma
+
 end Pcf.Stacks.SchemeLevel

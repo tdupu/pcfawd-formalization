@@ -244,4 +244,10 @@ theorem abhyankarLemmaTameOver_of_forall (X : Scheme.{u})
       AbhyankarLemmaTame R S a) : AbhyankarLemmaTameOver X :=
   fun R S _ _ _ a _ ↦ h R S a
 
+#print axioms specFractionFieldToScheme
+#print axioms genericFibreRing
+#print axioms abhyankarLemmaTame_of_natCast_isUnit
+#print axioms abhyankarLemmaTameOver_of_natCast_isUnit
+#print axioms abhyankarLemmaTameOver_of_forall
+
 end Pcf.Stacks.SchemeLevel
