@@ -59,7 +59,10 @@ is recorded in the declaration's docstring.
   the complete regular local case, which is all the induction uses. The passage from `A` to
   `A^∧` replaces `0BLL`/`0BLH` by Hartogs for a regular pair plus fpqc descent of étaleness
   (`CompletionDescent.lean`). The statement proved is clause (2) in the finite-normal form
-  `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal).
+  `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal); the torsion-free
+  hypothesis is a necessary repair, since literal clause (2) admits `B = A × κ(𝔪)`, which is
+  finite, normal and étale over the punctured spectrum (its `κ(𝔪)` factor lies over the closed
+  point) but not flat, hence not étale, over `A`.
 * `09ZL` (`HenselianFiniteEtaleLift.lean`): only essential surjectivity, for henselian local
   rings, by induction on the rank via idempotent lifting and characteristic polynomials, instead
   of lifting to an étale algebra and cutting out a direct factor.
