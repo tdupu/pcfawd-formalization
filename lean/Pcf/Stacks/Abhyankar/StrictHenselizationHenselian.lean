@@ -33,14 +33,12 @@ variable {R Ω : Type u} [CommRing R] [IsLocalRing R] [Field Ω]
   [IsScalarTower R (IsLocalRing.ResidueField R) Ω]
   [IsSepClosure (IsLocalRing.ResidueField R) Ω]
 
-abbrev A := LocalColimit R Ω
-
 /-- The residue-field equivalence sends the residue of an element from a pointed etale stage to
 the value of that element at the chosen geometric point. -/
 theorem residueFieldAlgEquiv_residue_toLocalColimitAlgHom
     (X : PointedEtaleNeighborhood R Ω) (x : X) :
     residueFieldAlgEquiv (R := R) (Ω := Ω)
-        (IsLocalRing.residue (A (R := R) (Ω := Ω))
+        (IsLocalRing.residue (LocalColimit R Ω)
           (toLocalColimitAlgHom (R := R) (Ω := Ω) X x)) =
       X.point x := by
   change residuePoint (R := R) (Ω := Ω) (Field.toIsField Ω)
@@ -64,8 +62,8 @@ theorem residueFieldAlgEquiv_residue_toLocalColimitAlgHom
 /-- A monic polynomial with a simple residue root descends to a pointed etale stage, where the
 chosen geometric point is a simple root of the descended polynomial. -/
 theorem exists_stage_polynomial_with_simple_point
-    (f : (A (R := R) (Ω := Ω))[X]) (hf : f.Monic)
-    (a₀ : IsLocalRing.ResidueField (A (R := R) (Ω := Ω)))
+    (f : (LocalColimit R Ω)[X]) (hf : f.Monic)
+    (a₀ : IsLocalRing.ResidueField (LocalColimit R Ω))
     (ha₀ : aeval a₀ f = 0) (hda₀ : aeval a₀ f.derivative ≠ 0) :
     ∃ (X : PointedEtaleNeighborhood R Ω) (F : X[X]),
       F.map (toLocalColimitAlgHom (R := R) (Ω := Ω) X).toRingHom = f ∧
@@ -74,30 +72,30 @@ theorem exists_stage_polynomial_with_simple_point
       F.derivative.eval₂ X.point.toRingHom
         (residueFieldAlgEquiv (R := R) (Ω := Ω) a₀) ≠ 0 := by
   change f.eval₂
-    (algebraMap (A (R := R) (Ω := Ω))
-      (IsLocalRing.ResidueField (A (R := R) (Ω := Ω)))) a₀ = 0 at ha₀
+    (algebraMap (LocalColimit R Ω)
+      (IsLocalRing.ResidueField (LocalColimit R Ω))) a₀ = 0 at ha₀
   change f.derivative.eval₂
-    (algebraMap (A (R := R) (Ω := Ω))
-      (IsLocalRing.ResidueField (A (R := R) (Ω := Ω)))) a₀ ≠ 0 at hda₀
+    (algebraMap (LocalColimit R Ω)
+      (IsLocalRing.ResidueField (LocalColimit R Ω))) a₀ ≠ 0 at hda₀
   let e := residueFieldAlgEquiv (R := R) (Ω := Ω)
   let z : Ω := e a₀
   obtain ⟨X, hX⟩ := exists_stage_containing_finite_localColimit_set
-    (R := R) (Ω := Ω) (f.coeffs : Set (A (R := R) (Ω := Ω))) (Set.toFinite _)
+    (R := R) (Ω := Ω) (f.coeffs : Set (LocalColimit R Ω)) (Set.toFinite _)
   let q := toLocalColimitAlgHom (R := R) (Ω := Ω) X
   have hlifts : f ∈ Polynomial.lifts q.toRingHom :=
     (Polynomial.lifts_iff_coeffs_subset_range f).mpr hX
   obtain ⟨F, hF, -, hFmonic⟩ :=
     Polynomial.lifts_and_natDegree_eq_and_monic hlifts hf
-  let ρ : A (R := R) (Ω := Ω) →+* Ω :=
-    e.toRingHom.comp (IsLocalRing.residue (A (R := R) (Ω := Ω)))
+  let ρ : LocalColimit R Ω →+* Ω :=
+    e.toRingHom.comp (IsLocalRing.residue (LocalColimit R Ω))
   have hρq : ρ.comp q.toRingHom = X.point.toRingHom := by
     apply RingHom.ext
     intro x
     exact residueFieldAlgEquiv_residue_toLocalColimitAlgHom (R := R) (Ω := Ω) X x
   have hfΩ : f.eval₂ ρ z = 0 := by
     have h := Polynomial.hom_eval₂ f
-      (algebraMap (A (R := R) (Ω := Ω))
-        (IsLocalRing.ResidueField (A (R := R) (Ω := Ω))))
+      (algebraMap (LocalColimit R Ω)
+        (IsLocalRing.ResidueField (LocalColimit R Ω)))
       e.toRingHom a₀
     rw [ha₀, map_zero] at h
     simpa [ρ, z] using h.symm
@@ -107,12 +105,12 @@ theorem exists_stage_polynomial_with_simple_point
     apply e.injective
     calc
       e (f.derivative.eval₂
-          (algebraMap (A (R := R) (Ω := Ω))
-            (IsLocalRing.ResidueField (A (R := R) (Ω := Ω)))) a₀) =
+          (algebraMap (LocalColimit R Ω)
+            (IsLocalRing.ResidueField (LocalColimit R Ω))) a₀) =
           f.derivative.eval₂ ρ z := by
         exact Polynomial.hom_eval₂ f.derivative
-          (algebraMap (A (R := R) (Ω := Ω))
-            (IsLocalRing.ResidueField (A (R := R) (Ω := Ω))))
+          (algebraMap (LocalColimit R Ω)
+            (IsLocalRing.ResidueField (LocalColimit R Ω)))
           e.toRingHom a₀
       _ = 0 := hzero
       _ = e 0 := (map_zero e).symm
@@ -184,11 +182,11 @@ theorem exists_root_refinement (X : PointedEtaleNeighborhood R Ω) (F : X[X])
 /-- The simple-root lifting clause for the local colimit.  This is clause 2 of
 `HenselianLocalRing.TFAE`. -/
 theorem exists_root_lifting_simple_residue_root
-    (f : (A (R := R) (Ω := Ω))[X]) (hf : f.Monic)
-    (a₀ : IsLocalRing.ResidueField (A (R := R) (Ω := Ω)))
+    (f : (LocalColimit R Ω)[X]) (hf : f.Monic)
+    (a₀ : IsLocalRing.ResidueField (LocalColimit R Ω))
     (ha₀ : aeval a₀ f = 0) (hda₀ : aeval a₀ f.derivative ≠ 0) :
-    ∃ a : A (R := R) (Ω := Ω),
-      f.IsRoot a ∧ IsLocalRing.residue (A (R := R) (Ω := Ω)) a = a₀ := by
+    ∃ a : LocalColimit R Ω,
+      f.IsRoot a ∧ IsLocalRing.residue (LocalColimit R Ω) a = a₀ := by
   obtain ⟨X, F, hF, hFmonic, hroot, hderiv⟩ :=
     exists_stage_polynomial_with_simple_point (R := R) (Ω := Ω) f hf a₀ ha₀ hda₀
   let z : Ω := residueFieldAlgEquiv (R := R) (Ω := Ω) a₀
@@ -196,7 +194,7 @@ theorem exists_root_lifting_simple_residue_root
     exists_root_refinement (R := R) (Ω := Ω) X F hFmonic z hroot hderiv
   let qX := toLocalColimitAlgHom (R := R) (Ω := Ω) X
   let qN := toLocalColimitAlgHom (R := R) (Ω := Ω) N
-  let a : A (R := R) (Ω := Ω) := qN n
+  let a : LocalColimit R Ω := qN n
   have hnat : qN.comp j.hom = qX :=
     toLocalColimitAlgHom_naturality (R := R) (Ω := Ω) j
   have hFa : F.eval₂ qX.toRingHom a = 0 := by
@@ -213,7 +211,7 @@ theorem exists_root_lifting_simple_residue_root
   · let e := residueFieldAlgEquiv (R := R) (Ω := Ω)
     apply e.injective
     calc
-      e (IsLocalRing.residue (A (R := R) (Ω := Ω)) a) = N.point n := by
+      e (IsLocalRing.residue (LocalColimit R Ω) a) = N.point n := by
         exact residueFieldAlgEquiv_residue_toLocalColimitAlgHom
           (R := R) (Ω := Ω) N n
       _ = z := hnpoint
@@ -221,15 +219,15 @@ theorem exists_root_lifting_simple_residue_root
 
 /-- The local colimit of pointed etale neighbourhoods is henselian. -/
 theorem localColimit_henselianLocalRing :
-    HenselianLocalRing (A (R := R) (Ω := Ω)) := by
-  apply ((HenselianLocalRing.TFAE (A (R := R) (Ω := Ω))).out 2 1).mp
+    HenselianLocalRing (LocalColimit R Ω) := by
+  apply ((HenselianLocalRing.TFAE (LocalColimit R Ω)).out 2 1).mp
   intro f hf a₀ ha₀ hda₀
   exact exists_root_lifting_simple_residue_root
     (R := R) (Ω := Ω) f hf a₀ ha₀ hda₀
 
 /-- The localized filtered colimit of pointed etale neighbourhoods is strictly henselian. -/
 instance localColimit_strictlyHenselianLocalRing :
-    StrictlyHenselianLocalRing (A (R := R) (Ω := Ω)) where
+    StrictlyHenselianLocalRing (LocalColimit R Ω) where
   toHenselianLocalRing := localColimit_henselianLocalRing (R := R) (Ω := Ω)
   isSepClosed_residueField := residueField_isSepClosed (R := R) (Ω := Ω)
 

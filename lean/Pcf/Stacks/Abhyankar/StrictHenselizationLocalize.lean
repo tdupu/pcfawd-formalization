@@ -229,12 +229,6 @@ theorem exists_localizationBaseChange_refinement (X : PointedEtaleNeighborhood S
   exact homToOfEtaleAlgebra (S ⊗[R] (Y : Type u)) (baseChangePoint (S := S) Y) raw hraw
 
 
-/-- `isUnit_of_mul_isUnit_right`, stated over a commutative ring so that the instance path is
-fixed when the ambient ring is a tensor product. -/
-theorem isUnit_of_mul_isUnit_right_of_commRing {A : Type*} [CommRing A] {a b : A}
-    (h : IsUnit (a * b)) : IsUnit b :=
-  isUnit_of_mul_isUnit_right h
-
 include M in
 /-- Every element of `S ⊗[R] B` becomes a pure tensor `1 ⊗ b` after multiplication by an element
 of `M`: the scalar extension to `S = M⁻¹ R` is the localization of `B` at the image of `M`. -/
@@ -337,7 +331,7 @@ theorem exists_localizationBaseChange_equalizing_refinement
     rw [map_mul] at hm'
     obtain ⟨a, ha⟩ : ∃ a, a * k (1 - d) = (1 : S) ⊗ₜ[R] h.hom y := ⟨_, hm'⟩
     rw [← ha] at hu
-    exact isUnit_of_mul_isUnit_right_of_commRing (A := TensorProduct R S Y') hu
+    exact isUnit_of_mul_isUnit_right (M := TensorProduct R S Y') hu
   have hkdzero : k d = 0 := by
     apply hcompunit.mul_left_cancel
     change k (1 - d) * k d = k (1 - d) * 0

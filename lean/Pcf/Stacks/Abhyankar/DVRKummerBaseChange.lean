@@ -540,12 +540,12 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
   let ePolynomial :
       AdjoinRoot (Pcf.LocalModel.localPoly
           (1 : Kˣ) (algebraMap S K (algebraMap R S pi)) exponent) ≃ₐ[K]
-        AdjoinRoot (Abhyankar.ramifiedPoly
+        AdjoinRoot (Pcf.LocalModel.localPoly
           unitK ((piK : K) ^ exponent) exponent) :=
     AdjoinRoot.algEquivOfEq K _ _ <| by
-      simp [Pcf.LocalModel.localPoly, Abhyankar.ramifiedPoly, hfactorK]
+      simp [Pcf.LocalModel.localPoly, hfactorK]
   let eSubstitution :
-      AdjoinRoot (Abhyankar.ramifiedPoly
+      AdjoinRoot (Pcf.LocalModel.localPoly
           unitK ((piK : K) ^ exponent) exponent) ≃ₐ[K]
         AdjoinRoot (Abhyankar.kummerPoly unitK exponent) :=
     Abhyankar.substEquiv unitK piK exponent

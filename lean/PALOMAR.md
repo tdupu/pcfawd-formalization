@@ -354,7 +354,7 @@ merely its proof.
 
 ```
 ∀ {k : Type u_1} [inst : Field k] (u : kˣ) {e : ℕ},
-  2 ≤ e → ¬Algebra.Etale k (AdjoinRoot (Abhyankar.ramifiedPoly u 0 e))
+  2 ≤ e → ¬Algebra.Etale k (AdjoinRoot (Pcf.LocalModel.localPoly u 0 e))
 ```
 
 **Informal claim.** For `e ≥ 2`, the algebra `k[y]/(yᵉ)` — the ramified model with

@@ -8,6 +8,7 @@ module
 public import Mathlib.FieldTheory.Separable
 public import Mathlib.RingTheory.Etale.StandardEtale
 public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Pcf.LocalModel
 
 /-!
 # Abhyankar's lemma: the standard tamely ramified local model
@@ -90,6 +91,8 @@ unit constant term (`u` invertible) are exactly the two hypotheses that make `c`
 -/
 
 @[expose] public section
+
+open Pcf.LocalModel (localPoly)
 
 namespace Abhyankar
 
@@ -242,22 +245,9 @@ theorem finrank [Nontrivial R] (u : Rˣ) {e : ℕ} (he : e ≠ 0) :
   rw [(AdjoinRoot.powerBasis' (kummerPoly_monic u he)).finrank,
     AdjoinRoot.powerBasis'_dim, kummerPoly, natDegree_X_pow_sub_C]
 
-/-- The **ramified local model** `X ^ e - u * a`, with `a` the local equation of the
-divisor. This is `Pcf.LocalModel.localPoly`; it is restated here so that this file
-depends on nothing outside Mathlib. -/
-noncomputable def ramifiedPoly (u : Rˣ) (a : R) (e : ℕ) : R[X] := X ^ e - C ((u : R) * a)
-
 theorem kummerPoly_eq_ramifiedPoly (u : Rˣ) (e : ℕ) :
-    kummerPoly u e = ramifiedPoly u 1 e := by
-  rw [kummerPoly, ramifiedPoly, mul_one]
-
-theorem ramifiedPoly_root_pow (u : Rˣ) (a : R) (e : ℕ) :
-    AdjoinRoot.root (ramifiedPoly u a e) ^ e
-      = algebraMap R (AdjoinRoot (ramifiedPoly u a e)) ((u : R) * a) := by
-  have h : aeval (AdjoinRoot.root (ramifiedPoly u a e)) (ramifiedPoly u a e) = 0 := by
-    rw [AdjoinRoot.aeval_eq, AdjoinRoot.mk_self]
-  rw [ramifiedPoly, map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at h
-  exact h
+    kummerPoly u e = localPoly u 1 e := by
+  rw [kummerPoly, localPoly, mul_one]
 
 /-! ### Both hypotheses are necessary
 
@@ -279,17 +269,17 @@ which for `e ≥ 2` has the nonzero nilpotent `y`, so it is not étale over `k`.
 
 This is the statement the `u : Rˣ` type ascription of `Abhyankar.kummerPoly` cannot make:
 there `u = 0` is impossible by typing, so nothing is being assumed and nothing could be
-dropped. The honest form uses `Abhyankar.ramifiedPoly`, whose constant term `a` is an
+dropped. The honest form uses `Pcf.LocalModel.localPoly`, whose constant term `a` is an
 unconstrained ring element. -/
 theorem not_etale_of_not_isUnit {k : Type*} [Field k] (u : kˣ) {e : ℕ} (he : 2 ≤ e) :
-    ¬ Algebra.Etale k (AdjoinRoot (ramifiedPoly u (0 : k) e)) := by
-  have hpoly : ramifiedPoly u (0 : k) e = X ^ e := by
-    rw [ramifiedPoly, mul_zero, map_zero, sub_zero]
+    ¬ Algebra.Etale k (AdjoinRoot (localPoly u (0 : k) e)) := by
+  have hpoly : localPoly u (0 : k) e = X ^ e := by
+    rw [localPoly, mul_zero, map_zero, sub_zero]
   refine not_etale_of_not_isReduced fun hred => ?_
-  have hnil : AdjoinRoot.root (ramifiedPoly u (0 : k) e) ^ e = 0 := by
-    have h := ramifiedPoly_root_pow u (0 : k) e
+  have hnil : AdjoinRoot.root (localPoly u (0 : k) e) ^ e = 0 := by
+    have h := Pcf.LocalModel.root_pow_eq u (0 : k) e
     rwa [mul_zero, map_zero] at h
-  have hzero : AdjoinRoot.root (ramifiedPoly u (0 : k) e) = 0 := hred.eq_zero _ ⟨e, hnil⟩
+  have hzero : AdjoinRoot.root (localPoly u (0 : k) e) = 0 := hred.eq_zero _ ⟨e, hnil⟩
   rw [AdjoinRoot.root, AdjoinRoot.mk_eq_zero, hpoly] at hzero
   have hdvd := Polynomial.degree_le_of_dvd hzero X_ne_zero
   rw [degree_X_pow, degree_X] at hdvd
@@ -336,32 +326,32 @@ substitution `x = t * y` converts the ramified equation into the Kummer equation
 /-- **The Abhyankar substitution** `x ↦ t * y`, from the ramified model
 `R[x]/(x ^ e - u * t ^ e)` to its Kummer normalization `R[y]/(y ^ e - u)`. -/
 noncomputable def subst (u : Rˣ) (t : R) (e : ℕ) :
-    AdjoinRoot (ramifiedPoly u (t ^ e) e) →ₐ[R] AdjoinRoot (kummerPoly u e) :=
+    AdjoinRoot (localPoly u (t ^ e) e) →ₐ[R] AdjoinRoot (kummerPoly u e) :=
   AdjoinRoot.liftAlgHom _ (Algebra.ofId R _)
     (algebraMap R (AdjoinRoot (kummerPoly u e)) t * AdjoinRoot.root (kummerPoly u e)) <| by
       change aeval (algebraMap R (AdjoinRoot (kummerPoly u e)) t
-        * AdjoinRoot.root (kummerPoly u e)) (ramifiedPoly u (t ^ e) e) = 0
-      rw [ramifiedPoly, map_sub, aeval_X_pow, aeval_C, mul_pow, root_pow, sub_eq_zero,
+        * AdjoinRoot.root (kummerPoly u e)) (localPoly u (t ^ e) e) = 0
+      rw [localPoly, map_sub, aeval_X_pow, aeval_C, mul_pow, root_pow, sub_eq_zero,
         map_mul, map_pow]
       ring
 
 @[simp] theorem subst_root (u : Rˣ) (t : R) (e : ℕ) :
-    subst u t e (AdjoinRoot.root (ramifiedPoly u (t ^ e) e))
+    subst u t e (AdjoinRoot.root (localPoly u (t ^ e) e))
       = algebraMap R (AdjoinRoot (kummerPoly u e)) t * AdjoinRoot.root (kummerPoly u e) := by
   simp [subst]
 
 /-- The inverse substitution `y ↦ t⁻¹ * x`, available when `t` is a unit. -/
 noncomputable def substInv (u : Rˣ) (t : Rˣ) (e : ℕ) :
-    AdjoinRoot (kummerPoly u e) →ₐ[R] AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e) :=
+    AdjoinRoot (kummerPoly u e) →ₐ[R] AdjoinRoot (localPoly u ((t : R) ^ e) e) :=
   AdjoinRoot.liftAlgHom _ (Algebra.ofId R _)
-    (algebraMap R (AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e)) ((t⁻¹ : Rˣ) : R)
-      * AdjoinRoot.root (ramifiedPoly u ((t : R) ^ e) e)) <| by
-      set T := AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e)
+    (algebraMap R (AdjoinRoot (localPoly u ((t : R) ^ e) e)) ((t⁻¹ : Rˣ) : R)
+      * AdjoinRoot.root (localPoly u ((t : R) ^ e) e)) <| by
+      set T := AdjoinRoot (localPoly u ((t : R) ^ e) e)
       change aeval (algebraMap R T ((t⁻¹ : Rˣ) : R)
-        * AdjoinRoot.root (ramifiedPoly u ((t : R) ^ e) e)) (kummerPoly u e) = 0
+        * AdjoinRoot.root (localPoly u ((t : R) ^ e) e)) (kummerPoly u e) = 0
       have h1 : algebraMap R T ((t⁻¹ : Rˣ) : R) * algebraMap R T ((t : Rˣ) : R) = 1 := by
         rw [← map_mul]; simp
-      rw [kummerPoly, map_sub, aeval_X_pow, aeval_C, mul_pow, ramifiedPoly_root_pow,
+      rw [kummerPoly, map_sub, aeval_X_pow, aeval_C, mul_pow, Pcf.LocalModel.root_pow_eq,
         sub_eq_zero, map_mul, map_pow]
       calc algebraMap R T ((t⁻¹ : Rˣ) : R) ^ e
               * (algebraMap R T ((u : Rˣ) : R) * algebraMap R T ((t : Rˣ) : R) ^ e)
@@ -372,8 +362,8 @@ noncomputable def substInv (u : Rˣ) (t : Rˣ) (e : ℕ) :
 
 @[simp] theorem substInv_root (u : Rˣ) (t : Rˣ) (e : ℕ) :
     substInv u t e (AdjoinRoot.root (kummerPoly u e))
-      = algebraMap R (AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e)) ((t⁻¹ : Rˣ) : R)
-          * AdjoinRoot.root (ramifiedPoly u ((t : R) ^ e) e) := by
+      = algebraMap R (AdjoinRoot (localPoly u ((t : R) ^ e) e)) ((t⁻¹ : Rˣ) : R)
+          * AdjoinRoot.root (localPoly u ((t : R) ^ e) e) := by
   simp [substInv]
 
 /-- When the divisor equation is a perfect `e`-th power `t ^ e` with `t` a unit, the
@@ -388,7 +378,7 @@ the statement that actually corresponds to inverting `f`, see
 earlier version of this file mislabelled the lemma below; an adversarial review caught
 it. -/
 noncomputable def substEquiv (u : Rˣ) (t : Rˣ) (e : ℕ) :
-    AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e) ≃ₐ[R] AdjoinRoot (kummerPoly u e) :=
+    AdjoinRoot (localPoly u ((t : R) ^ e) e) ≃ₐ[R] AdjoinRoot (kummerPoly u e) :=
   AlgEquiv.ofAlgHom (subst u (t : R) e) (substInv u t e)
     (by
       ext
@@ -407,7 +397,7 @@ noncomputable def substEquiv (u : Rˣ) (t : Rˣ) (e : ℕ) :
 `Abhyankar.substEquiv`. Superseded by `Abhyankar.etale_ramifiedPoly_general`, which drops
 the `e`-th power hypothesis; retained because it is the one place `substEquiv` is used. -/
 theorem etale_ramifiedPoly (u : Rˣ) (t : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
-    Algebra.Etale R (AdjoinRoot (ramifiedPoly u ((t : R) ^ e) e)) :=
+    Algebra.Etale R (AdjoinRoot (localPoly u ((t : R) ^ e) e)) :=
   haveI := etale u he hu
   .of_equiv (substEquiv u t e).symm
 
@@ -417,9 +407,9 @@ power hypothesis — the ramified model `R[x]/(x ^ e - u * a)` is étale over `R
 
 The proof is that `x ^ e - u * a` is itself a Kummer polynomial for the unit `u * a`. -/
 theorem etale_ramifiedPoly_general (u : Rˣ) (a : Rˣ) {e : ℕ} (he : e ≠ 0)
-    (hu : IsUnit ((e : R))) : Algebra.Etale R (AdjoinRoot (ramifiedPoly u (a : R) e)) := by
-  have h : ramifiedPoly u (a : R) e = kummerPoly (u * a) e := by
-    rw [ramifiedPoly, kummerPoly, Units.val_mul]
+    (hu : IsUnit ((e : R))) : Algebra.Etale R (AdjoinRoot (localPoly u (a : R) e)) := by
+  have h : localPoly u (a : R) e = kummerPoly (u * a) e := by
+    rw [localPoly, kummerPoly, Units.val_mul]
   rw [h]
   exact etale (u * a) he hu
 

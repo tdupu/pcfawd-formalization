@@ -1676,7 +1676,6 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_mem_mul_eq_one_tmul
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_mem_mul_eq_zero_of_one_tmul_eq_zero
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.isUnit_algebraMap_colimit_of_mem
-#print axioms Pcf.Stacks.PointedEtaleNeighborhood.isUnit_of_mul_isUnit_right_of_commRing
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimitAtPrimeRingEquiv_algebraMap
 #print axioms
   Pcf.Stacks.PointedEtaleNeighborhood.localColimitBaseChangeRingHom_bijective_of_isLocalization
