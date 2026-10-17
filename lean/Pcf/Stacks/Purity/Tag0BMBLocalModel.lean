@@ -12,6 +12,7 @@ public import Mathlib.RingTheory.IntegralClosure.GoingDown
 public import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
 public import Mathlib.RingTheory.Smooth.Fiber
 public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Pcf.Stacks.Common.EtaleNormal
 public import Pcf.Stacks.Common.EtaleRegular
 public import Pcf.Stacks.Common.RegularLocalization
 public import Pcf.Stacks.Common.RegularNormal
@@ -126,14 +127,6 @@ theorem mem_minimalPrimes_of_quasiFiniteAt
   have hunder : Q.under R = P.under R :=
     le_antisymm (Ideal.comap_mono hQP) (Ideal.map_le_iff_le_comap.mp hpQ)
   exact (Algebra.QuasiFiniteAt.eq_of_le_of_under_eq hQP hunder).symm.le
-
-/-- A flat algebra preserves heights at every point where it is quasi-finite.  In particular an
-étale algebra preserves heights. -/
-theorem height_eq_height_under_of_flat_of_quasiFiniteAt
-    [IsNoetherianRing R] [IsNoetherianRing S] [Module.Flat R S]
-    (P : Ideal S) [P.IsPrime] [Algebra.QuasiFiniteAt R P] :
-    P.height = (P.under R).height :=
-  height_eq_height_under_of_mem_minimalPrimes P (mem_minimalPrimes_of_quasiFiniteAt P)
 
 /-- A finite extension of Noetherian domains with normal base preserves heights. -/
 theorem height_eq_height_under_of_finite_of_isIntegrallyClosed
@@ -697,7 +690,6 @@ theorem hasZariskiNagataPurityAt_of_lowerHeight
 #print axioms height_le_height_under_of_mem_minimalPrimes
 #print axioms height_eq_height_under_of_mem_minimalPrimes
 #print axioms mem_minimalPrimes_of_quasiFiniteAt
-#print axioms height_eq_height_under_of_flat_of_quasiFiniteAt
 #print axioms height_eq_height_under_of_finite_of_isIntegrallyClosed
 #print axioms formallyEtale_localization_atPrime
 #print axioms faithfullyFlat_localization_atPrime
