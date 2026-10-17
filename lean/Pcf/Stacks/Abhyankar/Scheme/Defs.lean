@@ -15,6 +15,7 @@ public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
 public import Mathlib.RingTheory.AdjoinRoot
 public import Pcf.Stacks.Abhyankar.Tag0EYG
 public import Pcf.Stacks.Abhyankar.TameRamification
+public import Pcf.Stacks.Abhyankar.Tame.Defs
 
 /-!
 # Scheme-level vocabulary for Stacks Tags `0EYG` and `0EYH`
@@ -52,8 +53,9 @@ and the affine statement that the scheme-level proof takes as a hypothesis.
 
 ## The affine hypothesis
 
-`AbhyankarLemmaTame R S a` is the affine statement proved by work package `A′` (Abhyankar's lemma
-in any characteristic, tame in codimension one): `R` Noetherian, `a` a nonzerodivisor with
+`Pcf.Stacks.AbhyankarLemmaTame R S a` (defined in `Pcf.Stacks.Abhyankar.Tame.Defs`, proved by
+work package `A′` as `Pcf.Stacks.abhyankarLemma_tame`) is the affine statement used by the scheme
+layer: `R` Noetherian, `a` a nonzerodivisor with
 `R/(a)` regular, `S` finite over `R`, étale away from `a`, the integral closure of `R` in
 `S[1/a]`, tamely ramified in codimension one along `V(a)` (pcf's
 `IsTamelyRamifiedInCodimensionOneAlong`), imply at every `y ∈ V(a)` a pointed étale
@@ -209,27 +211,6 @@ def HasSplitCoverAt {R : Type u} [CommRing R] (B : Type u) [CommRing B] [Algebra
     ∃ n : ℕ, Nonempty (A ⊗[R] B ≃ₐ[A] (Fin n → A))
 
 /-! ### The affine hypothesis (work package `A′`) -/
-
-/-- **The affine Abhyankar lemma, tame case** (the statement proved by work package `A′`).
-
-`R` Noetherian, `a` a nonzerodivisor with `R/(a)` regular, `S` finite over `R`, étale at every
-prime not containing `a`, the integral closure of `R` in `S[1/a]`, and tamely ramified in
-codimension one along `V(a)`; then at every `y ∈ V(a)` there is a pointed étale neighbourhood
-`R → R'` with `R'` Noetherian, `a` a nonzerodivisor with `R'/(a)` regular, and
-`R' ⊗_R S ≅ ∏_i R'[x]/(x^{e_i} - u_i a)`, `u_i` units, `e_i ≥ 1` invertible in `R'`
-(`HasAbhyankarStandardCoverAt`).
-
-This is phase 1's `Pcf.Stacks.AbhyankarLemma` with the hypothesis "every positive integer is
-invertible in `R`" replaced by `IsTamelyRamifiedInCodimensionOneAlong R S a`. -/
-def AbhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=
-  IsNoetherianRing R →
-  a ∈ nonZeroDivisors R →
-  IsRegularRing (R ⧸ Ideal.span {a}) →
-  Module.Finite R S →
-  (∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal) →
-  IsIntegralClosure S R (Localization.Away (algebraMap R S a)) →
-  IsTamelyRamifiedInCodimensionOneAlong R S a →
-  ∀ y : PrimeSpectrum R, a ∈ y.asIdeal → HasAbhyankarStandardCoverAt R S a y
 
 /-- **Characteristic-zero discharge of the affine hypothesis.**  If every positive integer is
 invertible in `R`, then `AbhyankarLemmaTame R S a` holds, by phase 1's unconditional

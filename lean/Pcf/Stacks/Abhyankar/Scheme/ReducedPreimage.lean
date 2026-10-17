@@ -52,19 +52,19 @@ theorem ideal_radical_comap_eq (π : Y ⟶ X) {D : X.IdealSheafData} {V : X.affi
 /-- **Effective Cartier divisor criterion for `π⁻¹(D)_red`.** -/
 theorem isEffectiveCartier_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.IdealSheafData}
     (hD : IsEffectiveCartier D)
-    (h : ∀ (V : X.affineOpens) (a : Γ(X, V)), D.ideal V = Ideal.span {a} →
-      ∀ Q : PrimeSpectrum Γ(Y, π ⁻¹ᵁ V.1), π.app V.1 a ∈ Q.asIdeal →
+    (h : ∀ (V : X.affineOpens) (a : Γ(X, V)), a ∈ nonZeroDivisors Γ(X, V) →
+      D.ideal V = Ideal.span {a} → ∀ Q : PrimeSpectrum Γ(Y, π ⁻¹ᵁ V.1), π.app V.1 a ∈ Q.asIdeal →
         ∃ g : Γ(Y, π ⁻¹ᵁ V.1), g ∉ Q.asIdeal ∧
           ∃ t : Γ(Y, Y.basicOpen g), t ∈ nonZeroDivisors Γ(Y, Y.basicOpen g) ∧
             (Ideal.span {Y.presheaf.map (homOfLE (Y.basicOpen_le g)).op (π.app V.1 a)}).radical =
               Ideal.span {t}) :
     IsEffectiveCartier (D.comap π).radical := by
   intro y
-  obtain ⟨V, hyV, a, -, hDa⟩ := hD (π y)
+  obtain ⟨V, hyV, a, ha, hDa⟩ := hD (π y)
   have hpre : IsAffineOpen (π ⁻¹ᵁ V.1) := V.2.preimage π
   let Q := hpre.primeIdealOf ⟨y, hyV⟩
   by_cases hyD : π.app V.1 a ∈ Q.asIdeal
-  · obtain ⟨g, hgQ, t, ht, hrad⟩ := h V a hDa Q hyD
+  · obtain ⟨g, hgQ, t, ht, hrad⟩ := h V a ha hDa Q hyD
     let W : Y.affineOpens := ⟨Y.basicOpen g, hpre.basicOpen g⟩
     have hyW : y ∈ W.1 := by
       have := (mem_basicOpen_iff_notMem_primeIdealOf hpre g ⟨y, hyV⟩).mpr hgQ
@@ -82,15 +82,15 @@ theorem isEffectiveCartier_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.
 /-- **Regularity criterion for `π⁻¹(D)_red`.** -/
 theorem isRegularScheme_radical_comap (π : Y ⟶ X) [IsAffineHom π] {D : X.IdealSheafData}
     (hD : IsEffectiveCartier D)
-    (h : ∀ (V : X.affineOpens) (a : Γ(X, V)), D.ideal V = Ideal.span {a} →
-      IsRegularRing (Γ(Y, π ⁻¹ᵁ V.1) ⧸ (Ideal.span {π.app V.1 a}).radical)) :
+    (h : ∀ (V : X.affineOpens) (a : Γ(X, V)), a ∈ nonZeroDivisors Γ(X, V) →
+      D.ideal V = Ideal.span {a} → IsRegularRing (Γ(Y, π ⁻¹ᵁ V.1) ⧸ (Ideal.span {π.app V.1 a}).radical)) :
     IsRegularScheme ((D.comap π).radical).subscheme := by
   intro z
-  obtain ⟨V, hyV, a, -, hDa⟩ := hD (π ((D.comap π).radical.subschemeι z))
+  obtain ⟨V, hyV, a, ha, hDa⟩ := hD (π ((D.comap π).radical.subschemeι z))
   let W : Y.affineOpens := ⟨π ⁻¹ᵁ V.1, V.2.preimage π⟩
   refine ⟨⟨(D.comap π).radical.subschemeι ⁻¹ᵁ W.1, W.2.preimage _⟩, hyV, ?_⟩
   have hI := ideal_radical_comap_eq π hDa W le_rfl
-  have := h V a hDa
+  have := h V a ha hDa
   have e := ((D.comap π).radical.subschemeObjIso W).commRingCatIsoToRingEquiv
   have hid : Y.presheaf.map (homOfLE (le_refl (W : Y.Opens))).op (π.app V.1 a) =
       π.app V.1 a := by simp
