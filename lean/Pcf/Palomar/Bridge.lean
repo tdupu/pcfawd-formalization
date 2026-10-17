@@ -7,6 +7,7 @@ module
 
 public import Pcf.Palomar.Statement
 public import Pcf.Bounding.PcfAllTheWayDownCharZero
+public import Pcf.Stacks.Abhyankar.FiniteNormalization
 
 /-!
 # Bridge from the Palomar statement surface to the development
@@ -243,10 +244,24 @@ theorem zariskiNagataPurity_iff (R S : Type u) [CommRing R] [CommRing S] [Algebr
       hw.target_isRegular, hw.quasiFinite, hw.equalDimension, hw.positiveDimension,
       hw.unramifiedCodimensionOne⟩
 
-/-- The compact Abhyankar statement is the development's. -/
+/-- The compact Abhyankar statement is equivalent to the development's.  The compact one assumes
+the normalization `S` finite over `R`; the development's assumes only `S[1/a]` finite over
+`R[1/a]` and the two agree because the normalization is then finite
+(`Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit`, Stacks `0EYH`). -/
 theorem abhyankarLemma_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
-    AbhyankarLemma R S a ↔ Stacks.AbhyankarLemma R S a :=
-  Iff.rfl
+    AbhyankarLemma R S a ↔ Stacks.AbhyankarLemma R S a := by
+  constructor
+  · intro h hR ha hreg hfin hetale hint hnat y hy
+    haveI := hR
+    haveI := hreg
+    haveI := hint
+    exact h hR ha hreg
+      (Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit ha hfin hetale hnat)
+      hetale hint hnat y hy
+  · intro h hR ha hreg hfin hetale hint hnat y hy
+    haveI := hfin
+    exact h hR ha hreg (Module.Finite.base_change R (Localization.Away a) S) hetale hint hnat
+      y hy
 
 /-! ## The compared theorem -/
 

@@ -38,21 +38,31 @@ conclusion.  The proof follows the Stacks dependency chain below.
 `Pcf.Abhyankar` proves the finite-free and étale-away-from-the-divisor parts of `0EYF`.
 The statement in this file is proved downstream (this file cannot import the proof without an
 import cycle): `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` in
-`Pcf.Stacks.Abhyankar.Tag0EYG`, with axioms `[propext, Classical.choice, Quot.sound]`. That
-module is imported by the root module `Pcf`.
+`Pcf.Stacks.Abhyankar.FiniteNormalization`, with axioms `[propext, Classical.choice, Quot.sound]`.
+That module is imported by the root module `Pcf`.
+
+## The normalization is not assumed finite
+
+`AbhyankarLemma` assumes `Y = Spec S[1/a] → X ∖ D` finite étale (`R[1/a] ⊗_R S` finite over
+`R[1/a]`) and that `S` is the normalization of `R` in `S[1/a]`; the finiteness of `S` over `R` is
+the first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away` and its
+characteristic-zero form), from the scheme-level layer's affine normalization results.  The proofs
+of `0EYG` themselves are carried out for a finite normalization (`AbhyankarLemmaOfFinite`,
+`Pcf.Stacks.abhyankarLemma_of_finite`; `Pcf.Stacks.AbhyankarLemmaTameOfFinite`,
+`Pcf.Stacks.abhyankarLemma_tame_of_finite`).
 
 ## The three layers
 
-* **Characteristic zero, affine** (phase 1): `Pcf.Stacks.abhyankarLemma` in
-  `Pcf.Stacks.Abhyankar.Tag0EYG`, for this statement `AbhyankarLemma`, which assumes every
-  positive integer invertible in `R`.  It is the input of the PCFAWD headline.
-* **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemma_tame` in
-  `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame` (directory `Abhyankar/Tame/`), for
+* **Characteristic zero, affine** (phase 1): `Pcf.Stacks.abhyankarLemma` (from
+  `Pcf.Stacks.abhyankarLemma_of_finite` in `Pcf.Stacks.Abhyankar.Tag0EYG`), for this statement
+  `AbhyankarLemma`, which assumes every positive integer invertible in `R`.  It is the input of
+  the PCFAWD headline.
+* **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemma_tame` (from
+  `Pcf.Stacks.abhyankarLemma_tame_of_finite` in `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame`, directory
+  `Abhyankar/Tame/`), for
   `Pcf.Stacks.AbhyankarLemmaTame`, whose hypothesis is the tag's "tamely ramified in
-  codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  The
-  two affine theorems share one proof: the characteristic-zero theorem supplies tameness from
-  "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`)
-  and then uses the same lemmas (see `Tame/Defs.lean`, "Shared lemmas").
+  codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  It is a
+  second, independent proof; the characteristic-zero theorem is not derived from it.
 * **Scheme level** (phase 2): `Pcf.Stacks.SchemeLevel.tag0EYG` and
   `Pcf.Stacks.SchemeLevel.tag0EYH` (directory `Abhyankar/Scheme/`), the statements of Stacks
   Lemmas 58.31.5 and 58.31.6 for a locally Noetherian scheme, an effective Cartier divisor that
@@ -95,15 +105,38 @@ def HasAbhyankarStandardCoverAt
 /-- **Abhyankar's lemma for a regular divisor, Stacks Tags 0EYG and 0EYH**, in the
 affine characteristic-zero form used by the manuscript.
 
-`R` is Noetherian, `a` cuts out a regular effective Cartier divisor, `S` is finite and
-étale away from that divisor, and `S` is the indicated integral closure.  Requiring every
-positive integer to be invertible is stronger than the tag's codimension-one tame
-ramification hypothesis; consequently this implication is weaker than the full tag.  Units
-in the standard equations and restriction to points on the divisor also weaken only the
-conclusion.
+`R` is Noetherian, `a` cuts out a regular effective Cartier divisor, `R[1/a] ⊗_R S = S[1/a]` is
+finite over `R[1/a]` and `S` is étale away from that divisor (`Y = Spec S[1/a] → X ∖ D` finite
+étale, the hypothesis of the tags), and `S` is the integral closure of `R` in `S[1/a]` (the
+normalization `Y'` of `X` in `Y`).  The finiteness of `S` over `R` is not assumed: it is the
+first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away`).
+Requiring every positive integer to be invertible is stronger than the tag's codimension-one tame
+ramification hypothesis; consequently this implication is weaker than the full tag.  Units in the
+standard equations and restriction to points on the divisor also weaken only the conclusion.
 
-It is proved as `Pcf.Stacks.abhyankarLemma` in `Pcf.Stacks.Abhyankar.Tag0EYG`. -/
+Divergence from the tags: the hypothesis "finite over `R[1/a]`" cannot be dropped.  Pcf's
+`Algebra.IsEtaleAt` is formal étaleness of the local rings, which does not imply finite type: for
+`R = ℚ[t]_{(t)}`, `a = t` and `S` the integral closure of `R` in `ℚ(ζ_{ℓ^∞})(t)`, every other
+hypothesis holds, `S` is not finite over `R`, and the conclusion fails.
+
+It is proved as `Pcf.Stacks.abhyankarLemma` in `Pcf.Stacks.Abhyankar.FiniteNormalization`. -/
 def AbhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=
+  IsNoetherianRing R →
+  a ∈ nonZeroDivisors R →
+  IsRegularRing (R ⧸ Ideal.span {a}) →
+  Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S) →
+  (∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal) →
+  IsIntegralClosure S R (Localization.Away (algebraMap R S a)) →
+  (∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) →
+  ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
+    HasAbhyankarStandardCoverAt R S a y
+
+/-- `Pcf.Stacks.AbhyankarLemma` with the normalization `S` assumed finite over `R` (the form in
+which the characteristic-zero proof `Pcf.Stacks.abhyankarLemma_of_finite` is carried out).  The
+public statement `AbhyankarLemma` assumes only `S[1/a]` finite over `R[1/a]` and derives this
+finiteness (Stacks `0EYH`). -/
+def AbhyankarLemmaOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+    Prop :=
   IsNoetherianRing R →
   a ∈ nonZeroDivisors R →
   IsRegularRing (R ⧸ Ideal.span {a}) →

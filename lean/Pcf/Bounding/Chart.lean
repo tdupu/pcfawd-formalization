@@ -196,8 +196,10 @@ theorem isEtaleAt_of_notMem (w : PrimeSpectrum S) (hw : algebraMap R S a ∉ w.a
 `Pcf.Stacks.AbhyankarLemma` are discharged by the chart and by Step 1. -/
 theorem exists_standardPieces (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal) :
     Stacks.HasAbhyankarStandardCoverAt R S a y :=
-  h.abhyankar h.noetherian_base h.nonZeroDivisor h.regular_divisor h.finite
-    h.isEtaleAt_of_notMem h.normalization h.tame y hy
+  haveI := h.finite
+  h.abhyankar h.noetherian_base h.nonZeroDivisor h.regular_divisor
+    (Module.Finite.base_change R (Localization.Away a) S) h.isEtaleAt_of_notMem h.normalization
+    h.tame y hy
 
 /-! ### Steps 3–4: the base-changed restriction is étale everywhere -/
 

@@ -24,7 +24,7 @@ inputs of `Pcf.PcfAllTheWayDownLocalTheorems` and of the compared Palomar statem
 | Input | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
 | Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Stacks.palomar_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Stacks.palomar_abhyankarLemma` | `Pcf/Stacks/Abhyankar/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Stacks.palomar_abhyankarLemma` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tag0EYG.lean`, now `abhyankarLemma_of_finite`) | `[propext, Classical.choice, Quot.sound]` |
 
 The headline theorems with these inputs discharged are in `Pcf/Palomar/Unconditional.lean`:
 
@@ -104,7 +104,7 @@ the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`F
 | --- | --- | --- | --- |
 | Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
 | The same in Mathlib vocabulary (`Etale` on an open neighbourhood) | `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBSchemeAPI.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemma_tame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/Tame/Tag0EYGTame.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemma_tame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tame/Tag0EYGTame.lean`, now `abhyankarLemma_tame_of_finite`) | `[propext, Classical.choice, Quot.sound]` |
 | Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.tag0EYG` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
 | Stacks `0EYH` (Lemma 58.31.6), scheme level, as stated ("finite locally free" written as finite, flat, locally of finite presentation, Tag `02KB`) | `Pcf.Stacks.SchemeLevel.tag0EYH` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYH.lean` | `[propext, Classical.choice, Quot.sound]` |
 
@@ -122,6 +122,38 @@ Route divergences (each described in the docstring at the declaration):
 * `0EYH` scheme level: the étale-local facts are descended explicitly on affine charts
   (faithfully flat descent of finiteness and flatness, descent of principality and regularity),
   which Stacks leaves implicit (module docstring of `Scheme/Tag0EYH.lean`).
+
+### Phase 3 (2026-10-17): the normalization is proved finite
+
+`Module.Finite R S` (the normalization `S` finite over `R`) is no longer a hypothesis of
+`Pcf.Stacks.AbhyankarLemma` or `Pcf.Stacks.AbhyankarLemmaTame`.  It is replaced by the hypothesis
+of Stacks `0EYG` itself, `Y = Spec S[1/a] → X ∖ D` finite: `Module.Finite R[1/a] (R[1/a] ⊗_R S)`.
+The finiteness of `S` (first assertion of `0EYH`) is proved:
+
+| Claim | Theorem | File | `#print axioms` |
+| --- | --- | --- | --- |
+| The normalization is finite, tame case (`0EYH`, first assertion, affine) | `Pcf.Stacks.finite_of_isIntegralClosure_away` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` | `[propext, Classical.choice, Quot.sound]` |
+| The same, every positive integer invertible (no tameness; does not use the tame proof) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit` | same | `[propext, Classical.choice, Quot.sound]` |
+| `0EYG`/`0EYH` affine, normalization not assumed finite | `Pcf.Stacks.abhyankarLemma`, `Pcf.Stacks.abhyankarLemma_tame` | same | `[propext, Classical.choice, Quot.sound]` |
+
+The previous statements are kept as `Pcf.Stacks.AbhyankarLemmaOfFinite` and
+`Pcf.Stacks.AbhyankarLemmaTameOfFinite`, proved by `Pcf.Stacks.abhyankarLemma_of_finite`
+(`Tag0EYG.lean`) and `Pcf.Stacks.abhyankarLemma_tame_of_finite` (`Tame/Tag0EYGTame.lean`); the
+scheme layer applies them at local rings.  The Palomar statement `Pcf.Palomar.AbhyankarLemma`
+still assumes the normalization finite (it is `AbhyankarLemmaOfFinite`); `Pcf.Palomar.abhyankarLemma_iff`
+now proves its equivalence with `Pcf.Stacks.AbhyankarLemma` using the finiteness theorem, and the
+headline statements are unchanged.
+
+`Module.Finite R S` could not simply be dropped: pcf's `Algebra.IsEtaleAt` is formal étaleness of
+the local rings and does not give finite type.  For `R = ℚ[t]_{(t)}`, `a = t`, and `S` the integral
+closure of `R` in `ℚ(ζ_{ℓ^∞})(t)`, every other hypothesis holds and `S` is not finite over `R`; the
+conclusion would make `S` finite by faithfully flat descent, so the statement would be false.
+
+Route: `S[1/a]` is finite étale over `R[1/a]` (`etale_away`); the tameness of `S` is read on the
+chart `Spec S[1/a] → Spec R[1/a]` (`chartTame_of_isTamelyRamifiedInCodimensionOneAlong`, via the
+localization invariance of tameness, `isTamelyRamifiedAt_map_of_isLocalization`); then the
+scheme layer's `hasLocalizedStandardCoverAt_of_tame` and `integralClosure_finite` give the
+normalization finite, as in the Stacks proof of `0EYH` (étale-local structure from `0EYG`).
 
 ## How to read `#print axioms` here
 

@@ -16,7 +16,7 @@ public import Mathlib.RingTheory.Localization.AtPrime.Extension
 
 Setting: `R` Noetherian, `a ∈ R` a nonzerodivisor with `R/(a)` regular, `B` finite étale over
 `R_a`, `y ∈ V(a)`.  This file prepares the application of the affine hypothesis
-`AbhyankarLemmaTame` at the local ring `R_y`:
+`AbhyankarLemmaTameOfFinite` at the local ring `R_y`:
 
 * `By B y = R_y ⊗_R B` and `Ny B y`, the integral closure of `R_y` in `B_y`;
 * `isLocalization_away_ny`, `isIntegralClosure_ny`: `B_y = N_y[1/a]` and `N_y` is the integral
@@ -32,13 +32,14 @@ Setting: `R` Noetherian, `a ∈ R` a nonzerodivisor with `R/(a)` regular, `B` fi
 ## Relation to the Stacks proof of Tag `0EYG`
 
 Stacks reduces to the strict henselization and works with `B` itself.  Here the affine
-hypothesis (`Pcf.Stacks.AbhyankarLemmaTame`) is stated, like the characteristic-zero
-`Pcf.Stacks.AbhyankarLemma`, for the
+hypothesis (`Pcf.Stacks.AbhyankarLemmaTameOfFinite`) is stated, like the characteristic-zero
+`Pcf.Stacks.AbhyankarLemmaOfFinite`, for the
 *normalization* `S` of `R` in `S[1/a]` and requires `S` finite.  The normalization of `R` in `B`
 need not be known to be finite a priori, so the route differs from Stacks: we apply the hypothesis
 at the regular local ring `R_y`, where finiteness of the normalization is the classical fact
 that the integral closure of a Noetherian normal domain in a finite separable extension is finite
-(Stacks Tag `032L`), and descend afterwards (see `AffineTame.lean`).
+(Stacks Tag `032L`), and descend afterwards (see `AffineTame.lean`).  The finiteness of `S` over
+`R` itself is a consequence (`Pcf.Stacks.finite_of_isIntegralClosure_away`).
 -/
 
 @[expose] public section
@@ -391,6 +392,57 @@ theorem isTamelyRamifiedAt_of_isLocalization (q : PrimeSpectrum S) (hq : q.asIde
       (RingEquiv.ofBijective e₂ hb₂).apply_symm_apply _
     rw [h₂]
     exact (congrArg (fun f ↦ f x) key)
+
+/-- Conversely, tameness at a prime `q` of `S` over `p` gives tameness at `q S_p` (the same
+residue-field comparison and Mathlib's localization invariance of ramification indices). -/
+theorem isTamelyRamifiedAt_map_of_isLocalization (q : PrimeSpectrum S)
+    (hq : q.asIdeal.under R = p) (h : IsTamelyRamifiedAt R S q) :
+    IsTamelyRamifiedAt Rₚ Sₚ ⟨q.asIdeal.map (algebraMap S Sₚ), isPrime_map p Sₚ q.asIdeal hq⟩ := by
+  haveI : q.asIdeal.LiesOver p := ⟨hq.symm⟩
+  set m : Ideal Sₚ := q.asIdeal.map (algebraMap S Sₚ) with hm
+  haveI : m.IsPrime := isPrime_map p Sₚ q.asIdeal hq
+  have hidx : m.ramificationIdx Rₚ = q.asIdeal.ramificationIdx R :=
+    IsLocalization.AtPrime.ramificationIdx_map_eq_ramificationIdx p Rₚ Sₚ q.asIdeal
+  obtain ⟨h1, h2⟩ := h
+  have hmq : q.asIdeal = m.comap (algebraMap S Sₚ) := (comap_map p Sₚ q.asIdeal hq).symm
+  have hP0 : q.asIdeal.under R = (m.under Rₚ).comap (algebraMap R Rₚ) := by
+    change q.asIdeal.comap (algebraMap R S) =
+      (m.comap (algebraMap Rₚ Sₚ)).comap (algebraMap R Rₚ)
+    rw [Ideal.comap_comap, ← IsScalarTower.algebraMap_eq, IsScalarTower.algebraMap_eq R S Sₚ,
+      ← Ideal.comap_comap, ← hmq]
+  let e₁ := Ideal.ResidueField.map (q.asIdeal.under R) (m.under Rₚ) (algebraMap R Rₚ) hP0
+  let e₂ := Ideal.ResidueField.map q.asIdeal m (algebraMap S Sₚ) hmq
+  have hb₁ : Function.Bijective e₁ :=
+    (RingHom.surjectiveOnStalks_of_isLocalization p.primeCompl Rₚ).residueFieldMap_bijective
+      _ _ hP0
+  have hb₂ : Function.Bijective e₂ :=
+    (RingHom.surjectiveOnStalks_of_isLocalization (algebraMapSubmonoid S p.primeCompl)
+      Sₚ).residueFieldMap_bijective _ _ hmq
+  refine ⟨?_, ?_⟩
+  · change IsUnit ((m.ramificationIdx Rₚ : ℕ) : (m.under Rₚ).ResidueField)
+    rw [hidx]
+    simpa using h1.map e₁
+  · letI : Algebra (Localization.AtPrime (m.under Rₚ)) (Localization.AtPrime m) :=
+      Localization.AtPrime.algebraOfLiesOver _ _
+    letI : Algebra (Localization.AtPrime (q.asIdeal.under R)) (Localization.AtPrime q.asIdeal) :=
+      Localization.AtPrime.algebraOfLiesOver _ _
+    refine Algebra.IsSeparable.of_equiv_equiv (RingEquiv.ofBijective e₁ hb₁)
+      (RingEquiv.ofBijective e₂ hb₂) ?_
+    apply Ideal.ResidueField.ringHom_ext
+    ext r
+    simp only [RingHom.comp_apply, RingHom.coe_coe, RingEquiv.ofBijective_apply]
+    have hA : ∀ x, algebraMap (q.asIdeal.under R).ResidueField q.asIdeal.ResidueField x =
+        Ideal.ResidueField.map (q.asIdeal.under R) q.asIdeal (algebraMap R S) rfl x :=
+      fun _ ↦ rfl
+    have hB : ∀ x, algebraMap (m.under Rₚ).ResidueField m.ResidueField x =
+        Ideal.ResidueField.map (m.under Rₚ) m (algebraMap Rₚ Sₚ) rfl x :=
+      fun _ ↦ rfl
+    rw [hA, hB]
+    simp only [e₁, e₂, Ideal.ResidueField.map_algebraMap]
+    rw [← IsScalarTower.algebraMap_apply R Rₚ Sₚ,
+      ← IsScalarTower.algebraMap_apply R Sₚ m.ResidueField]
+    rw [← IsScalarTower.algebraMap_apply R S Sₚ,
+      ← IsScalarTower.algebraMap_apply R Sₚ m.ResidueField]
 
 end TameLocalization
 

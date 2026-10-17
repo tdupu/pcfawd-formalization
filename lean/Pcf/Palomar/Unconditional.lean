@@ -7,7 +7,7 @@ module
 
 public import Pcf.Palomar.Bridge
 public import Pcf.Stacks.Purity.Tag0BMA
-public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Abhyankar.FiniteNormalization
 
 /-!
 # PCF all the way down in characteristic zero, unconditionally
@@ -19,8 +19,10 @@ The two local theorems that `Pcf.pcfAllTheWayDown_charZero` and
   `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`, with Palomar form
   `Pcf.Stacks.palomar_zariskiNagataPurity` (`Pcf/Stacks/Purity/Tag0BMA.lean`);
 * Abhyankar's lemma for a regular divisor (Stacks `0EYG`/`0EYH`, all positive integers
-  invertible): `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`, with
-  Palomar form `Pcf.Stacks.palomar_abhyankarLemma` (`Pcf/Stacks/Abhyankar/Tag0EYG.lean`).
+  invertible): `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`
+  (`Pcf/Stacks/Abhyankar/FiniteNormalization.lean`; the normalization is proved finite), with
+  Palomar form `Pcf.Stacks.palomar_abhyankarLemma` (`Pcf/Stacks/Abhyankar/Tag0EYG.lean`; the
+  Palomar statement assumes the normalization finite).
 
 This file discharges those inputs:
 

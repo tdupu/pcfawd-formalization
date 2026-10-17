@@ -91,11 +91,18 @@ public import Pcf.Stacks.Abhyankar.StrictNormalizationColimit
 public import Pcf.Stacks.Abhyankar.StrictRootComponent
 public import Pcf.Stacks.Abhyankar.StrictRootCover
 public import Pcf.Stacks.Abhyankar.Tag0EYG
+public import Pcf.Stacks.Abhyankar.Tame.ComponentClassification
+public import Pcf.Stacks.Abhyankar.Tame.DVRAbhyankarResidue
 public import Pcf.Stacks.Abhyankar.Tame.Defs
+public import Pcf.Stacks.Abhyankar.Tame.GenericPresentation
+public import Pcf.Stacks.Abhyankar.Tame.HeightOneUnramified
+public import Pcf.Stacks.Abhyankar.Tame.KummerClassification
 public import Pcf.Stacks.Abhyankar.Tame.RootExponentUnit
+public import Pcf.Stacks.Abhyankar.Tame.StandardDescent
 public import Pcf.Stacks.Abhyankar.Tame.StrictBaseChangeTame
 public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 public import Pcf.Stacks.Abhyankar.Scheme.Tag0EYH
+public import Pcf.Stacks.Abhyankar.FiniteNormalization
 public import Pcf.Stacks.Abhyankar.Scheme.EffectiveCartier
 public import Pcf.Stacks.Common.EtaleNormal
 public import Pcf.Stacks.Common.RegularLocalization
@@ -557,9 +564,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_units
 #print axioms
   Pcf.Stacks.EtaleDescent.StageAlgebra.EquivalenceDescent.exists_stage_standardTameCover_of_limit_equiv
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtale_standardTameCover_of_strict
 #print axioms Pcf.Stacks.isRegularLocalRing_of_flat_of_formallyUnramified
 #print axioms Pcf.Stacks.isRegularRing_of_etale
 #print axioms Pcf.Stacks.quotient_span_isRegularRing_of_etale
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.presentationModelEquiv
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_common_refinement
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_equalizing_refinement
@@ -711,6 +722,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms Pcf.Stacks.algebraMap_normalizationEquivStandardCoversOfLocalizedPresentation
 #print axioms Pcf.Stacks.dvrRootFractionPowerEquiv
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding
 #print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_localizedPresentation
 #print axioms Pcf.Stacks.strictStandardPresentation_of_localizedPresentation
 #print axioms
@@ -850,6 +862,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.dvrRootFraction_power_adjoin_finrank
 #print axioms Pcf.Stacks.dvrRootFraction_power_relative_finrank
 #print axioms Pcf.Stacks.radical_pow_relative_finrank_mem
+#print axioms Pcf.Stacks.dvrRootFraction_intermediate_eq_power
 #print axioms Pcf.Stacks.dvrRootFractionRing_intermediate_eq_power
 #print axioms Pcf.LocalModel.radical_span_algebraMap_eq_span_root
 #print axioms Pcf.LocalModel.quotientMap_bijective
@@ -1586,6 +1599,8 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.abhyankarLemma
 #print axioms Pcf.Stacks.palomar_abhyankarLemma
 #print axioms Pcf.Stacks.abhyankarLemma_tame
+#print axioms Pcf.Stacks.finite_of_isIntegralClosure_away
+#print axioms Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit
 #print axioms Pcf.Stacks.SchemeLevel.tag0EYG
 #print axioms Pcf.Stacks.SchemeLevel.tag0EYH
 #print axioms Pcf.pcfAllTheWayDownLocalTheorems
@@ -1602,10 +1617,14 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 -- Pcf.Stacks.Abhyankar.StrictComponentClassification
 #print axioms Pcf.Stacks.AlgHom.extendScalarsOfIsFractionRing_apply
 #print axioms Pcf.Stacks.charZero_of_forall_nat_isUnit
+#print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictComponent
 #print axioms Pcf.Stacks.rootPoly_fractionRing_irreducible
 
 -- Pcf.Stacks.Abhyankar.StrictGenericPresentation
 #print axioms Pcf.Stacks.exists_mul_eq_strictRootCoverToRootFractionField
+#print axioms Pcf.Stacks.exists_strictRootCover_equiv_of_idempotent_factor
+#print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
 #print axioms Pcf.Stacks.strictRootCoverToRootFractionField_root
 
 -- Pcf.Stacks.Abhyankar.StrictHeightOneTransport
@@ -1620,6 +1639,8 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.StrictRootComponentData.towerComponent
 #print axioms Pcf.Stacks.StrictRootComponentData.towerRoot
 #print axioms Pcf.Stacks.StrictRootComponentData.unramified
+#print axioms Pcf.Stacks.exists_common_multiple_ramificationIdx
+#print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 #print axioms Pcf.Stacks.forall_height_one_isUnramifiedAt_of_root_mem
 #print axioms Pcf.Stacks.isUnramifiedAt_of_isEtaleAt
 #print axioms Pcf.Stacks.mem_minimalPrimes_span_of_height_eq_one
@@ -1629,7 +1650,10 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.StrictRootComponentPreData.exists_aeval_eq
 #print axioms Pcf.Stacks.StrictRootComponentPreData.exists_aeval_mul_eq_aeval_of_generic
 #print axioms Pcf.Stacks.StrictRootComponentPreData.faithfulSMul_component
+#print axioms Pcf.Stacks.StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
+#print axioms Pcf.Stacks.StrictRootComponentPreData.toDataOfDvd_carrier
 #print axioms Pcf.Stacks.exists_aeval_eq_of_mem_adjoin
+#print axioms Pcf.Stacks.exists_strictRootComponentData
 
 -- Pcf.Stacks.Abhyankar.StrictHenselizationCompletionFlat
 #print axioms Pcf.Stacks.Module.Flat.of_forall_exists_flat_algebra
@@ -2060,33 +2084,31 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Examples.Pinched.nodeUnnormDyn_pcf
 
 
--- shared lemmas (formerly Pcf.Stacks.Abhyankar.Tame.ComponentClassification), now in
--- Pcf.Stacks.Abhyankar.StrictComponentClassification and .StrictHeightOneTransport
+-- Pcf.Stacks.Abhyankar.Tame.ComponentClassification
 #print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictComponent_tame
 #print axioms Pcf.Stacks.exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
 
--- shared (formerly Tame.DVRAbhyankarResidue), now in Pcf.Stacks.Abhyankar.DVRAbhyankarDivisible
+-- Pcf.Stacks.Abhyankar.Tame.DVRAbhyankarResidue
 #print axioms Pcf.Stacks.maximalIdeal_eq_span_root_of_dvd_and_isSeparable
 
 -- Pcf.Stacks.Abhyankar.Tame.Defs
 #print axioms Pcf.Stacks.AbhyankarLemma.of_tame
+#print axioms Pcf.Stacks.AbhyankarLemmaOfFinite.of_tame
 #print axioms Pcf.Stacks.isUnit_natCast_residueField_iff
 #print axioms Pcf.Stacks.mem_minimalPrimes_span_singleton_iff_height_eq_one
 #print axioms Pcf.Stacks.isTamelyRamifiedInCodimensionOneAlong_iff
 
--- shared (formerly Tame.GenericPresentation), now in Pcf.Stacks.Abhyankar.StrictGenericPresentation
+-- Pcf.Stacks.Abhyankar.Tame.GenericPresentation
 #print axioms Pcf.Stacks.exists_strictRootCover_equiv_of_idempotent_factor_tame
 #print axioms Pcf.Stacks.isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
 
--- shared (formerly Tame.HeightOneUnramified), now in Pcf.Stacks.Abhyankar.StrictHeightOneUnramified
--- and .StrictHeightOneTransport
+-- Pcf.Stacks.Abhyankar.Tame.HeightOneUnramified
 #print axioms Pcf.Stacks.StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
 #print axioms Pcf.Stacks.StrictRootComponentPreData.toDataOfDvd_tame_carrier
 #print axioms Pcf.Stacks.exists_common_multiple_ramificationIdx_tame
 #print axioms Pcf.Stacks.exists_strictRootComponentData_tame
 
--- shared (formerly Tame.KummerClassification), now in Pcf.Stacks.Abhyankar.KummerNormDescent,
--- .KummerIntermediateEquiv and .StrictComponentClassification
+-- Pcf.Stacks.Abhyankar.Tame.KummerClassification
 #print axioms Pcf.Stacks.dvrRootFraction_intermediate_eq_power_tame
 #print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_tame
 #print axioms Pcf.Stacks.exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame
@@ -2096,7 +2118,7 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Stacks.isUnit_natCast_localizationAway_of_etale
 #print axioms Pcf.Stacks.isUnit_natCast_of_strictRootCover_etale_away
 
--- shared (formerly Tame.StandardDescent), now in Pcf.Stacks.Abhyankar.StrictStandardConclusion
+-- Pcf.Stacks.Abhyankar.Tame.StandardDescent
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_stage_natCast_isUnit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_pointedEtale_standardTameCover_of_strict_tame
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_tame
@@ -2118,8 +2140,26 @@ computation behind it is not formalized. -/
 
 -- Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 #print axioms Pcf.Stacks.hasAbhyankarStandardCoverAt_of_mem_divisor_tame
-#print axioms Pcf.Stacks.abhyankarLemma_tame
+#print axioms Pcf.Stacks.abhyankarLemma_tame_of_finite
 #print axioms Pcf.Stacks.abhyankarLemma_of_tame
+
+-- Pcf.Stacks.Abhyankar.Tag0EYG (finite-normalization form)
+#print axioms Pcf.Stacks.abhyankarLemma_of_finite
+
+-- Pcf.Stacks.Abhyankar.FiniteNormalization (Stacks `0EYH`: the normalization is finite; the
+-- public theorems and the two finiteness theorems are in the headline block)
+#print axioms Pcf.Stacks.finite_of_isIntegralClosure_away_of_chartTame
+#print axioms Pcf.Stacks.finite_away_of_finite_tensor
+#print axioms Pcf.Stacks.formallyEtale_away
+#print axioms Pcf.Stacks.etale_away
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.chartTame_of_isTamelyRamifiedInCodimensionOneAlong
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.chartTame_of_natCast_isUnit
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_by
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_ny
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedOver_congr
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.ringKrullDim_atPrime_congr
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.mem_minimalPrimes_map_of_isIntegral
 
 /-! ## Scheme-level Abhyankar (phase 2, A″, Stacks `0EYG`/`0EYH`)
 
@@ -2171,6 +2211,7 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_tensor
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isPrime_map
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAt_of_isLocalization
+#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAt_map_of_isLocalization
 
 -- Pcf.Stacks.Abhyankar.Scheme.AffineTameTransfer
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.comap_le

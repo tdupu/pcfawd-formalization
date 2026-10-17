@@ -15,7 +15,7 @@ along `V(a)` in the chart form `ChartTame a B` (the form in which the scheme-lev
 Stacks Section 58.31, Tag `0BSE`, reads on an affine open), then the normalization `N_y` of the
 local ring `R_y` in `R_y ⊗_R B` satisfies pcf's affine predicate
 `IsTamelyRamifiedInCodimensionOneAlong (R_y) (N_y) a`, the tameness hypothesis of the affine
-statement `AbhyankarLemmaTame`.
+statement `AbhyankarLemmaTameOfFinite`.
 
 For a prime `q` of `N_y` over a height-one prime `𝔭' ∋ a` of `R_y` with `𝔭 = 𝔭' ∩ R`:
 `R_𝔭` is a discrete valuation ring (`00NU` with `00PD`), `K_𝔭 = R_𝔭[1/a]`
@@ -407,7 +407,7 @@ theorem hasAbhyankarStandardCoverAt_ny [IsNoetherianRing R] (ha : a ∈ nonZeroD
     [IsRegularRing (R ⧸ Ideal.span {a})] [Module.Finite Ra B] [Algebra.Etale Ra B]
     (htame : ChartTame a B) (hy : a ∈ y)
     (hA : ∀ (S : Type u) [CommRing S] [Algebra (Localization.AtPrime y) S]
-      (b : Localization.AtPrime y), AbhyankarLemmaTame (Localization.AtPrime y) S b) :
+      (b : Localization.AtPrime y), AbhyankarLemmaTameOfFinite (Localization.AtPrime y) S b) :
     HasAbhyankarStandardCoverAt (Localization.AtPrime y) (Ny B y) (ay a y)
       ⟨maximalIdeal (Localization.AtPrime y), inferInstance⟩ := by
   haveI : IsRegularLocalRing (Localization.AtPrime y) :=
