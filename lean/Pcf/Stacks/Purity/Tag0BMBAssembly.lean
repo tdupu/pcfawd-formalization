@@ -44,6 +44,12 @@ namespace Pcf.Stacks
 
 /-- The corrected affine form of clause (2) of Stacks Tag `0BMA`.
 
+Divergence from Stacks: the literal clause (2) (any finite `A → B` with `B` normal, étale over the
+punctured spectrum, is étale) is false, since `B = A × κ(𝔪)` is finite, normal, étale over the
+punctured spectrum `U` (the `κ(𝔪)` factor lies over the closed point, so `Spec B ×_X U = U`), but
+not flat over `A` when `dim A ≥ 2`.  The hypothesis "`B` torsion-free over `A`" (no component of
+`Spec B` over the closed point) is added; it is what the Stacks proof uses.
+
 The target category is the literal finite, torsion-free, Stacks-normal category of Tag `0BM9`.
 The conclusion says that such an algebra is finite etale when its spectrum is etale over the
 punctured spectrum. -/

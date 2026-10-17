@@ -60,9 +60,16 @@ is recorded in the declaration's docstring.
   `A^∧` replaces `0BLL`/`0BLH` by Hartogs for a regular pair plus fpqc descent of étaleness
   (`CompletionDescent.lean`). The statement proved is clause (2) in the finite-normal form
   `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal); the torsion-free
-  hypothesis is a necessary repair, since literal clause (2) admits `B = A × κ(𝔪)`, which is
-  finite, normal and étale over the punctured spectrum (its `κ(𝔪)` factor lies over the closed
-  point) but not flat, hence not étale, over `A`.
+  hypothesis is a necessary repair (**divergence from Stacks**): Stacks' literal clause (2) says
+  any finite `A → B` with `B` normal inducing a finite étale morphism on punctured spectra is
+  étale, which is false as stated, since `B = A × κ(𝔪)` is finite and normal (a product of
+  normal domains) and, its `κ(𝔪)` factor lying over the closed point, restricts to `U → U` on the
+  punctured spectrum (étale), but is not flat over `A` (`κ(𝔪)` is not flat as `dim A ≥ 2`),
+  hence not étale. The Lean statement adds "`B` torsion-free over `A`" (equivalently, no
+  component of `Spec B` lies over the closed point), which is exactly what Stacks' proof uses.
+  Proof fidelity: the phase-1 proof of `0BMA` does not follow the Stacks proof (see above); that of
+  `0BMB` follows it only up to its `0BMA` input.
+  Erratum drafted in the authors' private research note `2026-10-16-purity-abhyankar-completion/ERRATUM-0BMA.md`.
 * `09ZL` (`HenselianFiniteEtaleLift.lean`): only essential surjectivity, for henselian local
   rings, by induction on the rank via idempotent lifting and characteristic polynomials, instead
   of lifting to an étale algebra and cutting out a direct factor.

@@ -138,15 +138,28 @@ theorem puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
 of dimension `≥ 2`, every finite, torsion-free, Stacks-normal `A`-algebra which is étale over the
 punctured spectrum is étale.
 
-Divergence from Stacks: the statement is clause (2) with "finite `A → B`, `B` normal" made
-precise as `FiniteNormalPuncturedEtalePurity` (finite, torsion-free, Stacks-normal), the target
-category of Tag `0BM9`.
+Divergence from Stacks (deliberate, statement-level): Stacks' literal clause (2) says that any
+finite `A → B` with `B` normal which induces a finite étale morphism on punctured spectra is
+étale.  This is false as stated.  Take `B = A × κ(𝔪)`: it is finite over `A` and normal (a product
+of normal domains), and the `κ(𝔪)` factor lies over the closed point, so `Spec B` restricted to
+the punctured spectrum `U` is `U → U`, which is étale.  But `κ(𝔪)` is not flat over `A` (as
+`dim A ≥ 2`), so `B` is not flat, hence not étale.  The Lean statement therefore adds the
+hypothesis "`B` is torsion-free over `A`" (equivalently, no irreducible component of `Spec B` lies
+over the closed point), which is exactly what the Stacks proof uses (it takes `B` to be the global
+sections `Γ(V, 𝒪_V)` of a cover of `U`, as in Tag `0BM9`).  See `ERRATUM-0BMA.md` in the run
+directory.
+
+Concretely, "finite `A → B`, `B` normal" is made precise as `FiniteNormalPuncturedEtalePurity`
+(finite, torsion-free, Stacks-normal), the target category of Tag `0BM9`.
+
+Follows the Stacks proof of `0BMA`? No (phase-1 proof, not re-proved): the Stacks proof is by
+induction on `d` for `A` itself using `0BLL`/`0BLH` and `0BM6`/`0EKS`; this proof does not follow it.
 
 Proof route diverges from Stacks: clause (1) is proved for the completion `A^∧` (complete case
 above, using the elementary formal lifting in place of `0BM6`/`0EKS`), and clause (2) for `A`
 then follows by completion descent (Hartogs for a regular pair plus fpqc descent of étaleness,
 in place of `0BLL`/`0BLH`). -/
-@[stacks 0BMA "clause (2), finite-normal form"]
+@[stacks 0BMA "clause (2), with B torsion-free over A added: the literal clause (2) is false for B = A × κ(𝔪)"]
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing
     (A : Type u) [CommRing A] [IsRegularLocalRing A] (hdim : 2 ≤ ringKrullDim A) :
     FiniteNormalPuncturedEtalePurity A :=
@@ -173,7 +186,10 @@ theorem puncturedSpectrumPurity_of_isRegularLocalRing
 This discharges the two inputs of `zariskiNagataPurity_of_inputs`: `033C` by
 `IsStacksNormalRing.of_etale` and `0BMA` by
 `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`.
-Proof route diverges from Stacks inside `0BMA`; see that theorem. -/
+Follows the Stacks proof of `0BMB`? Only partly: the height induction and reduction are as in
+Stacks (the descent is done on local rings rather than with `02VN`), but the `0BMA` input it uses
+is not proved by the Stacks proof (completion descent and an elementary formal lifting replace
+`0BLL`/`0BLH` and `0BM6`/`0EKS`); see that theorem and `AXIOMS.md`. -/
 @[stacks 0BMB "affine, pointwise"]
 theorem zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
     ZariskiNagataPurity R S :=
