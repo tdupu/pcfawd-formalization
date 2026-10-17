@@ -32,8 +32,8 @@ a chain
 
 in which **each arrow is a theorem**. That is not the same as saying nothing is assumed:
 the *inputs* to the chain — generic étaleness, Zariski–Nagata purity itself,
-`ramified_subset_nonEtale`, and the bounding conclusion `key` — remain hypotheses
-here, and are listed in `lean/AXIOMS.md`; `key` is derived from charts in
+the hypothesis `hbranch`, and the bounding conclusion (the explicit argument `key`) — remain
+hypotheses here, and are listed in `lean/AXIOMS.md`; `key` is derived from charts in
 `Pcf/Bounding/Wiring.lean`. What changes is that `step_image_ramified_finite`, previously a field on
 both routes, is no longer among them, and that its closedness input is supplied by Mathlib.
 
@@ -45,7 +45,7 @@ all.
 
 `step_image_ramified_finite` is not removed for free. It is traded for
 
-* `ramified_subset_nonEtale` — every prime over which the restriction ramifies lies in the
+* `hbranch` — every prime over which the restriction ramifies lies in the
   non-étale locus, which is Definition `def:crit-branch` read in the direction the argument needs;
 * `PurityData.nonEtale_ne_univ` — the morphism is generically étale (separability);
 * Noetherianness of the base.

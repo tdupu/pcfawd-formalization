@@ -79,7 +79,7 @@ layer: `R` Noetherian, `a` a nonzerodivisor with
 neighbourhood `R → R'` with `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - u_i a)`, `e_i` invertible
 (`HasAbhyankarStandardCoverAt`).  It is the characteristic-free analogue of the characteristic-zero
 `Pcf.Stacks.AbhyankarLemmaOfFinite` (whose hypothesis "every positive integer is invertible" is
-replaced by tameness), and `abhyankarLemmaTame_of_isUnit_natCast` discharges it in the
+replaced by tameness), and `abhyankarLemmaTameOfFinite_of_isUnit_natCast` discharges it in the
 characteristic-zero case from `Pcf.Stacks.abhyankarLemmaOfFinite`.  It assumes `S` finite; it
 is applied only at local rings, where that finiteness is classical.  The public affine theorems
 `Pcf.Stacks.abhyankarLemmaTame` and `Pcf.Stacks.abhyankarLemma` assume only `S[1/a]` finite over
@@ -125,22 +125,22 @@ noncomputable def specFractionFieldToScheme (X : Scheme.{u}) (ξ : X) :
     (FractionRing (X.presheaf.stalk ξ)))) ≫ X.fromSpecStalk ξ
 
 /-- The ring `L_ξ = Γ(Y ×_X Spec K_ξ)` of Stacks Section 58.31 for `f : Y → U ⊂ X`. -/
-noncomputable def genericFibreRing {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U) (ξ : X) :
+noncomputable def genericFiberRing {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U) (ξ : X) :
     CommRingCat.{u} :=
   Γ(pullback (f ≫ U.ι) (specFractionFieldToScheme X ξ), ⊤)
 
 /-- `L_ξ` as a `K_ξ`-algebra, via the second projection `Y ×_X Spec K_ξ → Spec K_ξ`. -/
-noncomputable instance genericFibreRing.algebraFractionRing {X Y : Scheme.{u}} (U : X.Opens)
+noncomputable instance genericFiberRing.algebraFractionRing {X Y : Scheme.{u}} (U : X.Opens)
     (f : Y ⟶ U) (ξ : X) :
-    Algebra (FractionRing (X.presheaf.stalk ξ)) (genericFibreRing U f ξ) :=
+    Algebra (FractionRing (X.presheaf.stalk ξ)) (genericFiberRing U f ξ) :=
   ((pullback.snd (f ≫ U.ι) (specFractionFieldToScheme X ξ)).appTop.hom.comp
     (Scheme.ΓSpecIso (CommRingCat.of (FractionRing (X.presheaf.stalk ξ)))).inv.hom).toAlgebra
 
 /-- `L_ξ` as an `𝒪_{X,ξ}`-algebra, through `𝒪_{X,ξ} → K_ξ`. -/
-noncomputable instance genericFibreRing.algebraStalk {X Y : Scheme.{u}} (U : X.Opens)
+noncomputable instance genericFiberRing.algebraStalk {X Y : Scheme.{u}} (U : X.Opens)
     (f : Y ⟶ U) (ξ : X) :
-    Algebra (X.presheaf.stalk ξ) (genericFibreRing U f ξ) :=
-  ((algebraMap (FractionRing (X.presheaf.stalk ξ)) (genericFibreRing U f ξ)).comp
+    Algebra (X.presheaf.stalk ξ) (genericFiberRing U f ξ) :=
+  ((algebraMap (FractionRing (X.presheaf.stalk ξ)) (genericFiberRing U f ξ)).comp
     (algebraMap (X.presheaf.stalk ξ) (FractionRing (X.presheaf.stalk ξ)))).toAlgebra
 
 /-- **Tamely ramified with respect to `A`** (Stacks Definition 15.113.7, Tag `09E9`, with the
@@ -159,7 +159,7 @@ for every point `ξ ∉ U` with `dim 𝒪_{X,ξ} = 1` (the generic point of a pr
   predicate"]
 def IsTamelyRamifiedInCodimensionOne {X Y : Scheme.{u}} (U : X.Opens) (f : Y ⟶ U) : Prop :=
   ∀ ξ : X, ξ ∉ U → ringKrullDim (X.presheaf.stalk ξ) = 1 →
-    IsTamelyRamifiedOver (X.presheaf.stalk ξ) (genericFibreRing U f ξ)
+    IsTamelyRamifiedOver (X.presheaf.stalk ξ) (genericFiberRing U f ξ)
 
 /-! ### Standard tamely ramified morphisms (Stacks Example 58.31.4, Tag `0EYF`) -/
 
@@ -243,8 +243,8 @@ def HasSplitCoverAt {R : Type u} [CommRing R] (B : Type u) [CommRing B] [Algebra
 /-- **Characteristic-zero discharge of the affine hypothesis.**  If every positive integer is
 invertible in `R`, then `AbhyankarLemmaTameOfFinite R S a` holds, by the characteristic-zero
 theorem `Pcf.Stacks.abhyankarLemmaOfFinite` (the tameness hypothesis is not needed). -/
-theorem abhyankarLemmaTame_of_isUnit_natCast (R S : Type u) [CommRing R] [CommRing S]
-    [Algebra R S] (a : R) (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
+theorem _root_.Pcf.Stacks.abhyankarLemmaTameOfFinite_of_isUnit_natCast (R S : Type u)
+    [CommRing R] [CommRing S] [Algebra R S] (a : R) (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
     AbhyankarLemmaTameOfFinite R S a :=
   fun hR ha hreg hfin hetale hint _ y hy ↦
     Pcf.Stacks.abhyankarLemmaOfFinite R S a hR ha hreg hfin hetale hint hnat y hy
@@ -263,7 +263,7 @@ over `X` by the characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite`.
 theorem abhyankarLemmaTameOver_of_isUnit_natCast (X : Scheme.{u})
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤))) : AbhyankarLemmaTameOver X := by
   intro R S _ _ _ a ⟨φ⟩
-  refine abhyankarLemmaTame_of_isUnit_natCast R S a fun n hn ↦ ?_
+  refine abhyankarLemmaTameOfFinite_of_isUnit_natCast R S a fun n hn ↦ ?_
   simpa only [map_natCast] using (hnat n hn).map φ
 
 /-- A universally quantified affine theorem (such as `Pcf.Stacks.abhyankarLemmaTameOfFinite`)

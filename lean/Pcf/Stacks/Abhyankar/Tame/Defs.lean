@@ -14,14 +14,15 @@ public import Mathlib.RingTheory.Ideal.MinimalPrime.Localization
 /-!
 # Abhyankar's lemma for a regular divisor, tame case (Stacks Tags `0EYG`, `0EYH`): statement
 
-This directory (`Pcf.Stacks.Abhyankar.Tame`) contains the second, general proof of Abhyankar's lemma
-for a regular divisor: the hypothesis "every positive integer is invertible" of
-`Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by the hypothesis of Stacks Tag `0EYG`
-itself, "`Y` is tamely ramified over `X` in codimension `1`" (Stacks `0BSE`, Section 58.31, with
-More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic.  There is one proof:
-the characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite` derives tameness from "every
-positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) and
-then runs through the same lemmas as `Pcf.Stacks.abhyankarLemmaTameOfFinite` (see "Shared
+This directory (`Pcf.Stacks.Abhyankar.Tame`) contains the tame statement of Abhyankar's lemma for a
+regular divisor and its proof, shared with the characteristic-zero theorem: the hypothesis "every
+positive integer is invertible" of `Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by
+the hypothesis of Stacks Tag `0EYG` itself, "`Y` is tamely ramified over `X` in codimension `1`"
+(Stacks `0BSE`, Section 58.31, with More on Algebra Definition 15.113.7 = Tag `09E9`), in any
+characteristic.  There is one proof: the characteristic-zero theorem
+`Pcf.Stacks.abhyankarLemmaOfFinite` derives tameness from "every positive integer is invertible"
+(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) and then runs through the same lemmas as
+`Pcf.Stacks.abhyankarLemmaTameOfFinite` (see "Shared
 lemmas" below); the public `Pcf.Stacks.abhyankarLemma` and `Pcf.Stacks.abhyankarLemmaTame`
 (`Pcf.Stacks.Abhyankar.FiniteNormalization`) add the finiteness of the normalization.
 
@@ -43,8 +44,8 @@ writing `Y ×_U Spec K_ξ = Spec L_ξ`, each field factor of `L_ξ` is tamely ra
 `𝔪_i` its maximal ideals, either `char κ_A = 0`, or `char κ_A = p > 0`, every `κ(𝔪_i)/κ_A` is
 separable and every ramification index `e_i` is prime to `p`.
 
-Affine translation, `X = Spec R`, `D = V(a)`, `U = Spec R[1/a]`, `Y = Spec S[1/a]`, `S` finite
-over `R` and the integral closure of `R` in `S[1/a]`:
+Affine translation, `X = Spec R`, `D = V(a)`, `U = Spec R[1/a]`, `Y = Spec S[1/a]`, `S` the
+integral closure of `R` in `S[1/a]`:
 * the prime divisors `Z ⊆ D` are the height-one primes `p` of `R` containing `a`; `R_p` is a DVR
   automatically here (`R_p/(a)` is regular local of dimension `0`);
 * `B = ∏ᵢ Bᵢ` is `S_p` (integral closure commutes with localization), its maximal ideals are the
@@ -122,9 +123,6 @@ Steps stated with the tame hypothesis (Stacks' own; in characteristic zero it al
 * `Tame/StrictBaseChangeTame`: the affine `0EYD` (58.31.1) transport of tameness from `S/R` to
   the components of `Rˢʰ ⊗_R S` over `Rˢʰ`;
 * `Tame/Tag0EYGTame`: the main theorem `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`.
-
-(The `_tame` suffixes record the history: these lemmas replaced characteristic-zero versions that
-assumed `∀ n ≠ 0, IsUnit (n : R)` or `CharZero`.)
 -/
 
 @[expose] public section
@@ -147,7 +145,7 @@ Comparison with the tags (the remaining restrictions are those of `Pcf.Stacks.Ab
 * affine form `X = Spec R`, `D = V(a)`, `a` a nonzerodivisor with `R ⧸ (a)` regular;
 * `Y = Spec S[1/a] → X ∖ D` finite étale (`R[1/a] ⊗_R S` finite over `R[1/a]`, `S` étale away
   from `a`), and the input is the normalization `S` of `R` in `Y` (`IsIntegralClosure`), whose
-  finiteness over `R` is the first assertion of `0EYH` and is proved, not assumed
+  finiteness over `R` is part of the first assertion of `0EYH` and is proved, not assumed
   (`Pcf.Stacks.finite_of_isIntegralClosure_away`);
 * the conclusion is the `0EYH` local-structure form at the points of `D`: an étale
   neighbourhood `R → R'` over `y`, `R'` Noetherian, `a` a nonzerodivisor of `R'` with
@@ -180,24 +178,6 @@ def AbhyankarLemmaTameOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra
   IsTamelyRamifiedInCodimensionOneAlong R S a →
   ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
     HasAbhyankarStandardCoverAt R S a y
-
-/-- The tame statement implies the characteristic-zero statement `Pcf.Stacks.AbhyankarLemma`: if
-every positive integer is a unit, `S` is tamely ramified in codimension one
-(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) once `S` is finite; the finiteness of
-`S` is supplied by `hfin` (in practice `Pcf.Stacks.finite_of_isIntegralClosure_away`). -/
-theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
-    {a : R}
-    (h : AbhyankarLemmaTame R S a)
-    (hfin : IsNoetherianRing R → a ∈ nonZeroDivisors R → IsRegularRing (R ⧸ Ideal.span {a}) →
-      Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S) →
-      (∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal) →
-      IsIntegralClosure S R (Localization.Away (algebraMap R S a)) →
-      (∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) → Module.Finite R S) :
-    AbhyankarLemma R S a := by
-  intro hR ha hreg hfinA hetale hint hnat y hy
-  haveI := hfin hR ha hreg hfinA hetale hint hnat
-  exact h hR ha hreg hfinA hetale hint
-    (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 /-- The finite-normalization forms: the tame statement implies the characteristic-zero one. -/
 theorem AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite {R S : Type u} [CommRing R]

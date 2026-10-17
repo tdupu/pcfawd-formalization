@@ -6,7 +6,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Bounding.Chart
-public import Pcf.Bounding.FibreProduct
+public import Pcf.Bounding.FiberProduct
 public import Pcf.NormalizationDynamics
 public import Pcf.Unnormalized
 

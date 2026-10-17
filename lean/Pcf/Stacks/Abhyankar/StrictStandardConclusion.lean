@@ -28,8 +28,8 @@ descent supplies one pointed étale stage, which is packaged as the conclusion
 the strict henselization by the strict-local presentation itself, and "after increasing `λ` a bit
 more" is carried out by `exists_stage_isUnit_natCast`, which descends the inverse of each `e_i` to
 a stage and then the identity `e_i · e_i⁻¹ = 1` to a further stage
-(`exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero`).  Both proofs of `0EYG` in pcf use
-this file.
+(`exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero`).  Both theorems for `0EYG` in pcf
+(tame and characteristic zero) use this file through their shared proof.
 
 ## Correspondence with the Stacks proof
 

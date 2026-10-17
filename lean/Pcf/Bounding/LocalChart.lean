@@ -7,7 +7,7 @@ module
 
 public import Pcf.Bounding.Chart
 public import Pcf.Bounding.Divisors
-public import Pcf.Bounding.FibreProduct
+public import Pcf.Bounding.FiberProduct
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.Etale.Field
 

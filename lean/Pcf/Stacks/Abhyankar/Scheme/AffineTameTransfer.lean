@@ -20,7 +20,7 @@ statement `AbhyankarLemmaTameOfFinite`.
 For a prime `q` of `N_y` over a height-one prime `𝔭' ∋ a` of `R_y` with `𝔭 = 𝔭' ∩ R`:
 `R_𝔭` is a discrete valuation ring (`00NU` with `00PD`), `K_𝔭 = R_𝔭[1/a]`
 (`isLocalization_away_fractionRing`), so `K_𝔭 ⊗_R B` is the localization of `B_y` at `𝔭'ᶜ`
-(`isLocalization_genericFibreAtContraction`), the integral closure `C_𝔭` of `R_𝔭` in it is the
+(`isLocalization_genericFiberAtContraction`), the integral closure `C_𝔭` of `R_𝔭` in it is the
 localization of `N_y` (Mathlib's `IsLocalization.integralClosure`;
 `isLocalization_normalizationAtContraction`), `q C_𝔭` is a maximal ideal
 (`isMaximal_map_normalizationAtContraction`), and tameness at `q C_𝔭` (given by
@@ -156,7 +156,7 @@ abbrev FractionFieldAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPr
   FractionRing (Localization.AtPrime (contraction y p'))
 
 /-- `K_𝔭 ⊗_R B`. -/
-abbrev GenericFibreAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] : Type u :=
+abbrev GenericFiberAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] : Type u :=
     FractionFieldAtContraction y p' ⊗[R] B
 
 instance isScalarTower_fractionFieldAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
@@ -172,42 +172,42 @@ instance isScalarTower_fractionFieldAtContraction (p' : Ideal (Localization.AtPr
 
 /-- The algebra structure `B_y = R_y ⊗_R B → K_𝔭 ⊗_R B`. -/
 @[instance_reducible]
-noncomputable def genericFibreAtContractionAlgebra (p' : Ideal (Localization.AtPrime y))
+noncomputable def genericFiberAtContractionAlgebra (p' : Ideal (Localization.AtPrime y))
     [p'.IsPrime] :
-    Algebra (LocalizedCover B y) (GenericFibreAtContraction B y p') :=
+    Algebra (LocalizedCover B y) (GenericFiberAtContraction B y p') :=
   (Algebra.TensorProduct.map
       (IsScalarTower.toAlgHom R (Localization.AtPrime y) (FractionFieldAtContraction y p'))
-    (AlgHom.id R B) : Localization.AtPrime y ⊗[R] B →ₐ[R] GenericFibreAtContraction B y
+    (AlgHom.id R B) : Localization.AtPrime y ⊗[R] B →ₐ[R] GenericFiberAtContraction B y
         p').toRingHom.toAlgebra
 
-attribute [local instance] genericFibreAtContractionAlgebra
+attribute [local instance] genericFiberAtContractionAlgebra
 
 /-- The algebra map `B_y → K_𝔭 ⊗_R B` on pure tensors. -/
-theorem genericFibreAtContraction_algebraMap_tmul (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
+theorem genericFiberAtContraction_algebraMap_tmul (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     (r : Localization.AtPrime y) (b : B) :
-    algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p')
+    algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p')
         (show LocalizedCover B y from r ⊗ₜ[R] b) =
       algebraMap (Localization.AtPrime y) (FractionFieldAtContraction y p') r ⊗ₜ[R] b :=
   Algebra.TensorProduct.map_tmul _ _ r b
 
-instance isScalarTower_genericFibreAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
+instance isScalarTower_genericFiberAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     :
     IsScalarTower (Localization.AtPrime y) (LocalizedCover B y)
-        (GenericFibreAtContraction B y p') :=
+        (GenericFiberAtContraction B y p') :=
   IsScalarTower.of_algebraMap_eq fun r ↦ by
     change algebraMap (Localization.AtPrime y) (FractionFieldAtContraction y p') r ⊗ₜ[R] (1 : B) =
-      algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p') (r ⊗ₜ[R] (1 : B))
-    rw [genericFibreAtContraction_algebraMap_tmul]
+      algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p') (r ⊗ₜ[R] (1 : B))
+    rw [genericFiberAtContraction_algebraMap_tmul]
 
 include Ra in
 /-- If `R_𝔭` is a DVR and `a ∈ 𝔭`, then `K_𝔭 ⊗_R B` is the localization of `B_y` at `𝔭'ᶜ`
 (inverting `a` is already done in `B`, and `K_𝔭 = R_𝔭[1/a]`). -/
-theorem isLocalization_genericFibreAtContraction (ha : a ∈ nonZeroDivisors R)
+theorem isLocalization_genericFiberAtContraction (ha : a ∈ nonZeroDivisors R)
     (p' : Ideal (Localization.AtPrime y))
     [p'.IsPrime] (hap : a ∈ contraction y p') [IsDomain (Localization.AtPrime (contraction y p'))]
     [IsDiscreteValuationRing (Localization.AtPrime (contraction y p'))] :
     IsLocalization (algebraMapSubmonoid (LocalizedCover B y) p'.primeCompl)
-        (GenericFibreAtContraction B y p') := by
+        (GenericFiberAtContraction B y p') := by
   set Ry := Localization.AtPrime y
   haveI := isScalarTower_localizationAtContraction y p'
   haveI := isLocalization_localizationAtContraction y p'
@@ -261,12 +261,12 @@ theorem isLocalization_genericFibreAtContraction (ha : a ∈ nonZeroDivisors R)
             by
           rw [map_mul]
           linear_combination (↑u⁻¹ : LocalizedCover B y) * this.symm
-  let E0 : (LocalizedCover B y ⊗[Ry] K) ≃+* GenericFibreAtContraction B y p' :=
+  let E0 : (LocalizedCover B y ⊗[Ry] K) ≃+* GenericFiberAtContraction B y p' :=
     (Algebra.TensorProduct.comm Ry (LocalizedCover B y) K).toRingEquiv.trans
       (Algebra.TensorProduct.cancelBaseChange R Ry K K B).toRingEquiv
   have hE0 : ∀ x : LocalizedCover B y, E0
       (algebraMap (LocalizedCover B y) (LocalizedCover B y ⊗[Ry] K) x) =
-      algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p') x := by
+      algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p') x := by
     intro x
     change Localization.AtPrime y ⊗[R] B at x
     induction x using TensorProduct.inductionOn with
@@ -274,21 +274,21 @@ theorem isLocalization_genericFibreAtContraction (ha : a ∈ nonZeroDivisors R)
       change E0
           (algebraMap (LocalizedCover B y) _
               ((show LocalizedCover B y from x) + (show LocalizedCover B y from z))) =
-        algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p')
+        algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p')
             ((show LocalizedCover B y from x) + (show LocalizedCover B y from z))
       rw [map_add, map_add, hx, hz, map_add]
     | tmul r b =>
-      rw [genericFibreAtContraction_algebraMap_tmul]
+      rw [genericFiberAtContraction_algebraMap_tmul]
       change Algebra.TensorProduct.cancelBaseChange R Ry K K B
         ((1 : K) ⊗ₜ[Ry] (show LocalizedCover B y from r ⊗ₜ[R] b)) = _
       rw [Algebra.TensorProduct.cancelBaseChange_tmul, Algebra.smul_def, mul_one]
-  let E : (LocalizedCover B y ⊗[Ry] K) ≃ₐ[LocalizedCover B y] GenericFibreAtContraction B y p' :=
+  let E : (LocalizedCover B y ⊗[Ry] K) ≃ₐ[LocalizedCover B y] GenericFiberAtContraction B y p' :=
       AlgEquiv.ofRingEquiv (f := E0) hE0
   exact IsLocalization.isLocalization_of_algEquiv _ E
 
 /-- `C_𝔭`, the integral closure of `R_𝔭` in `K_𝔭 ⊗_R B`. -/
 abbrev NormalizationAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] : Type u :=
-  integralClosure (Localization.AtPrime (contraction y p')) (GenericFibreAtContraction B y p')
+  integralClosure (Localization.AtPrime (contraction y p')) (GenericFiberAtContraction B y p')
 
 instance isScalarTower_localizationAtContraction_fractionField (p' : Ideal (Localization.AtPrime y))
     [p'.IsPrime] :
@@ -302,16 +302,16 @@ instance isScalarTower_localizationAtContraction_fractionField (p' : Ideal (Loca
 noncomputable def localizedNormalizationToNormalizationAtContraction
     (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime] :
     LocalizedNormalization B y →+* NormalizationAtContraction B y p' where
-  toFun x := ⟨algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p') x.1, by
+  toFun x := ⟨algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p') x.1, by
     have hx : IsIntegral (Localization.AtPrime y) x.1 := x.2
     exact (hx.map (IsScalarTower.toAlgHom (Localization.AtPrime y) (LocalizedCover B y)
-      (GenericFibreAtContraction B y p'))).tower_top⟩
+      (GenericFiberAtContraction B y p'))).tower_top⟩
   map_one' := Subtype.ext (map_one _)
   map_mul' x z := Subtype.ext
-      (map_mul (algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p')) x.1 z.1)
+      (map_mul (algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p')) x.1 z.1)
   map_zero' := Subtype.ext (map_zero _)
   map_add' x z := Subtype.ext
-      (map_add (algebraMap (LocalizedCover B y) (GenericFibreAtContraction B y p')) x.1 z.1)
+      (map_add (algebraMap (LocalizedCover B y) (GenericFiberAtContraction B y p')) x.1 z.1)
 
 /-- `C_𝔭` as an `N_y`-algebra, via `localizedNormalizationToNormalizationAtContraction`. -/
 @[instance_reducible]
@@ -327,21 +327,21 @@ attribute [local instance] normalizationAtContractionAlgebra
 theorem localizedNormalizationToNormalizationAtContraction_val (p' : Ideal (Localization.AtPrime y))
     [p'.IsPrime] (x : LocalizedNormalization B y) :
     ((localizedNormalizationToNormalizationAtContraction B y p' x : NormalizationAtContraction B y
-        p') : GenericFibreAtContraction B y p') = algebraMap (LocalizedCover B y)
-            (GenericFibreAtContraction B y p') x.1 := rfl
+        p') : GenericFiberAtContraction B y p') = algebraMap (LocalizedCover B y)
+            (GenericFiberAtContraction B y p') x.1 := rfl
 
 instance isScalarTower_normalizationAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     :
     IsScalarTower (LocalizedNormalization B y) (NormalizationAtContraction B y p')
-        (GenericFibreAtContraction B y p') := by
+        (GenericFiberAtContraction B y p') := by
   refine ⟨fun x c s ↦ ?_⟩
   change ((localizedNormalizationToNormalizationAtContraction B y p' x * c :
-      NormalizationAtContraction B y p') : GenericFibreAtContraction B y p') * s =
+      NormalizationAtContraction B y p') : GenericFiberAtContraction B y p') * s =
           (x : LocalizedCover B y) • (c * s)
   rw [Subalgebra.coe_mul, localizedNormalizationToNormalizationAtContraction_val, Algebra.smul_def,
       mul_assoc]
 
-instance isScalarTower_normalizationAtContraction_genericFibre (p' : Ideal (Localization.AtPrime y))
+instance isScalarTower_normalizationAtContraction_genericFiber (p' : Ideal (Localization.AtPrime y))
     [p'.IsPrime] :
     IsScalarTower (Localization.AtPrime y) (LocalizedNormalization B y)
         (NormalizationAtContraction B y p') :=
@@ -349,19 +349,19 @@ instance isScalarTower_normalizationAtContraction_genericFibre (p' : Ideal (Loca
     apply Subtype.ext
     rw [RingHom.algebraMap_toAlgebra, localizedNormalizationToNormalizationAtContraction_val]
     exact IsScalarTower.algebraMap_apply (Localization.AtPrime y) (LocalizedCover B y)
-        (GenericFibreAtContraction B y p') r
+        (GenericFiberAtContraction B y p') r
 
 /-- If `K_𝔭 ⊗_R B` is the localization of `B_y` at `𝔭'`, then `C_𝔭` is the localization of
 `N_y` at `𝔭'` (integral closure commutes with localization). -/
 theorem isLocalization_normalizationAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     [IsLocalization (algebraMapSubmonoid (LocalizedCover B y) p'.primeCompl)
-        (GenericFibreAtContraction B y p')] :
+        (GenericFiberAtContraction B y p')] :
     IsLocalization (algebraMapSubmonoid (LocalizedNormalization B y) p'.primeCompl)
         (NormalizationAtContraction B y p') := by
   haveI := isScalarTower_localizationAtContraction y p'
   haveI := isLocalization_localizationAtContraction y p'
   exact IsLocalization.integralClosure (R := Localization.AtPrime y) (S := LocalizedCover B y)
-    (Rf := Localization.AtPrime (contraction y p')) (Sf := GenericFibreAtContraction B y p')
+    (Rf := Localization.AtPrime (contraction y p')) (Sf := GenericFiberAtContraction B y p')
         p'.primeCompl
 
 /-- For `𝔭'` minimal over `(a_y)` in `R_y` (`a` a nonzerodivisor), `R_𝔭` has dimension one
@@ -386,7 +386,7 @@ theorem ringKrullDim_localizationAtContraction [IsNoetherianRing R] (ha : a ∈ 
 /-- A prime `q` of `N_y` over `𝔭'` extends to a maximal ideal of `C_𝔭`. -/
 theorem isMaximal_map_normalizationAtContraction (p' : Ideal (Localization.AtPrime y)) [p'.IsPrime]
     [IsLocalization (algebraMapSubmonoid (LocalizedCover B y) p'.primeCompl)
-        (GenericFibreAtContraction B y p')]
+        (GenericFiberAtContraction B y p')]
     (q : Ideal (LocalizedNormalization B y)) [q.IsPrime]
         (hq : q.under (Localization.AtPrime y) = p') :
     haveI := isLocalization_normalizationAtContraction B y p'
@@ -439,7 +439,7 @@ theorem isTamelyRamifiedInCodimensionOneAlong_localizedNormalization [IsNoetheri
   haveI : IsDiscreteValuationRing (Localization.AtPrime (contraction y p')) :=
     Pcf.Stacks.isDiscreteValuationRing_of_isRegularLocalRing_of_ringKrullDim_eq_one _ hdim
   have ht := htame (contraction y p') inferInstance hap hdim
-  haveI := isLocalization_genericFibreAtContraction a Ra B y ha p' hap
+  haveI := isLocalization_genericFiberAtContraction a Ra B y ha p' hap
   haveI := isScalarTower_localizationAtContraction y p'
   haveI := isLocalization_localizationAtContraction y p'
   haveI := isLocalization_normalizationAtContraction B y p'

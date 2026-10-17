@@ -5,7 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Abhyankar
+public import Pcf.Kummer
 public import Pcf.LocalModel
 public import Pcf.Stacks.Abhyankar.TameRamification
 
@@ -88,7 +88,7 @@ theorem standardCover_finrank [Nontrivial R] (u : Rˣ) (a : R) {e : ℕ} (he : 1
 This does not compute the ramification index as `e`; it proves the exact tameness predicate
 because the PCFAWD hypothesis makes every positive ramification index invertible in every
 residue field, while finite residue extensions in characteristic zero are separable. -/
-theorem standardCover_isTamelyRamifiedInCodimensionOne_charZero
+theorem isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_natCast
     (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
     (hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
     IsTamelyRamifiedInCodimensionOneAlong R
@@ -100,6 +100,6 @@ theorem standardCover_isTamelyRamifiedInCodimensionOne_charZero
 
 #print axioms localizedStandardCover_etale
 #print axioms standardCover_free
-#print axioms standardCover_isTamelyRamifiedInCodimensionOne_charZero
+#print axioms isTamelyRamifiedInCodimensionOneAlong_adjoinRoot_localPoly_of_isUnit_natCast
 
 end Pcf.Stacks

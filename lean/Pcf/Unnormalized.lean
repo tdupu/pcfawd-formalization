@@ -62,7 +62,7 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
 ## Fidelity caveats
 
 * The carrier `P` is a single type of "primes", used both for the ramification index
-  (`ram`, computed on the normalization, assumption A1) and for the unnormalized loci
+  (`ramificationIdx`, computed on the normalization, assumption A1) and for the unnormalized loci
   (`crit₀`, `crit₁`, which live on `A` itself). When `A` is regular in codimension one
   the two sets of primes coincide; in general `ν : Ã → A` is only finite-to-one on
   primes, and this layer does not model `ν`. The existing `PCFSetup` already makes the
@@ -271,8 +271,9 @@ namespace NonEtalePCFSetup
 
 variable {PX : Type u} {PA : Type v} (S : NonEtalePCFSetup PX PA)
 
-/-- The underlying `Pcf.PCFSetup`: `key` follows from `notMem_nonEtaleBranch_iterate` and
-Proposition `prop:loci-compare`(2), and for `m = 0` from `branch(g⁰) = ∅`. -/
+/-- The underlying `Pcf.PCFSetup`: `notMem_branch_iterate` follows from
+`notMem_nonEtaleBranch_iterate` and Proposition `prop:loci-compare`(2), and for `m = 0` from
+`branch(g⁰) = ∅`. -/
 def toPCFSetup : PCFSetup PX PA where
   ambient := S.ambient
   fixedPrime := S.fixedPrime

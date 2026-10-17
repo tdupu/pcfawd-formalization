@@ -33,8 +33,9 @@ domain component `N` of the normalization, tamely ramified in codimension one, h
   finite product `∏ A[x]/(x^{nᵢ} - a)`, i.e. the `hstrict` input of
   `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict`.
 
-Both proofs of `0EYG` in pcf use these lemmas: the characteristic-zero one supplies the tameness
-hypothesis from "every positive integer is a unit" (`isTamelyRamifiedAt_of_isUnit_natCast`).
+Both theorems for `0EYG` in pcf (tame and characteristic zero) use these lemmas through their
+shared proof; the characteristic-zero one supplies the tameness hypothesis from "every positive
+integer is a unit" (`isTamelyRamifiedAt_of_isUnit_natCast`).
 
 ## Stacks correspondence (proof of `0EYG`)
 

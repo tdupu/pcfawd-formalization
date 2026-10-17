@@ -10,7 +10,7 @@ public import Pcf.NonEtaleLocus
 public import Pcf.ZariskiNagata
 public import Pcf.Ramification
 public import Pcf.LocalModel
-public import Pcf.Abhyankar
+public import Pcf.Kummer
 public import Pcf.Geometry
 public import Pcf.Wiring
 public import Pcf.AllTheWayDown
@@ -83,7 +83,7 @@ public import Pcf.Bounding.LocalStructure
 public import Pcf.Bounding.Pieces
 public import Pcf.Bounding.Reduced
 public import Pcf.Bounding.Chart
-public import Pcf.Bounding.FibreProduct
+public import Pcf.Bounding.FiberProduct
 public import Pcf.Bounding.Divisors
 public import Pcf.Bounding.LocalChart
 public import Pcf.Bounding.SchemeBridge

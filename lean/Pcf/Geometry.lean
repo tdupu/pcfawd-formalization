@@ -9,7 +9,7 @@ public import Pcf.Noetherian
 public import Pcf.Purity
 public import Pcf.Ramification
 public import Pcf.LocalModel
-public import Pcf.Abhyankar
+public import Pcf.Kummer
 public import Pcf.Restriction
 
 /-!

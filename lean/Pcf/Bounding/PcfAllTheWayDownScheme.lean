@@ -162,7 +162,7 @@ theorem isNormalizedPCFOfFiniteType_iff
 
 /-- The invariant-divisor theorem stated directly for normalized PCF of its
 actual restriction morphism. -/
-theorem invariantDivisor_isNormalizedPCFOfFiniteType
+theorem invariantDivisor_isNormalizedPCF_of_finiteType
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (f : X ⟶ X) [IsFinite f] [IsDominant f]
@@ -214,7 +214,7 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
       (divisorDynamicsOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).IsPCF := by
     rw [divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate]
     exact (DivisorDynamics.isPCF_iterate_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
-  have hpcfB := invariantDivisor_isNormalizedPCFOfFiniteType k sN
+  have hpcfB := invariantDivisor_isNormalizedPCF_of_finiteType k sN
     (End.of F ^ (p * c)).asHom B hF (cover (p * c) B) hpcfPower
   let g := A.invariantClosureMap (End.of f ^ p).asHom hA
   let gB := B.invariantClosureMap (End.of F ^ (p * c)).asHom hF
@@ -308,7 +308,7 @@ theorem pcfAllTheWayDown_scheme
 #print axioms schemeAffineAlgebraOfField
 #print axioms schemeAffineAlgebraOfField_finiteType
 #print axioms isNormalizedPCFOfFiniteType_iff
-#print axioms invariantDivisor_isNormalizedPCFOfFiniteType
+#print axioms invariantDivisor_isNormalizedPCF_of_finiteType
 #print axioms periodicDivisor_isNormalizedPCFOfFiniteType
 #print axioms schemeDivisorIterateOfFiniteType
 #print axioms schemeDivisorIterateOfFiniteType_val

@@ -34,7 +34,7 @@ states them as `Prop`s about **arbitrary commutative rings**, in the
 commutative-algebra language of one affine chart, so that `Pcf/Bounding/Chart.lean` can take
 them as hypotheses and *derive* the bounding theorem. The finite-presentation case of Tag
 036W needed by the chart is **proved below**; Tag 01JT is stated here and **proved** in
-`Pcf/Bounding/FibreProduct.lean`; Tag 033B is **proved** directly, for a domain base, in
+`Pcf/Bounding/FiberProduct.lean`; Tag 033B is **proved** directly, for a domain base, in
 `Pcf/Bounding/Reduced.lean`.
 
 ## Design rule
@@ -215,7 +215,7 @@ image of a point of the fibre product. Below: `X = Spec S`, `Y = Spec T`, `S = S
 
 **Verdict: weaker** (the existence half of the bijection, for affine schemes).
 
-**Status: proved**, in `Pcf/Bounding/FibreProduct.lean` (`Pcf.Stacks.existsPrimeOverBoth`),
+**Status: proved**, in `Pcf/Bounding/FiberProduct.lean` (`Pcf.Stacks.existsPrimeOverBoth`),
 from Mathlib's `AlgebraicGeometry.Scheme.Pullback.exists_preimage_pullback` and
 `AlgebraicGeometry.pullbackSpecIso`. It is kept as a named `Prop` so that
 `Pcf.BoundingChart.isEtaleAt_restriction` can be stated without importing the scheme

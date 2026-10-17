@@ -45,8 +45,8 @@ The differences in the second and third steps are forced by the shape of the aff
 the characteristic-zero `Pcf.Stacks.AbhyankarLemmaOfFinite`, it is stated for the finite
 normalization `S` of `R` in `S[1/a]`, whose finiteness over `R` is not available before this
 theorem; over the regular local ring `R_y` it is (Stacks Tag `032L`,
-`finite_localizedNormalization`). The finiteness over `R` itself (first assertion of `0EYH`) is then
-deduced from this theorem and `integralClosure_finite`
+`finite_localizedNormalization`). The finiteness over `R` itself (part of the first assertion of
+`0EYH`) is then deduced from this theorem and `integralClosure_finite`
 (`Pcf.Stacks.finite_of_isIntegralClosure_away`, `Pcf.Stacks.Abhyankar.FiniteNormalization`).
 -/
 

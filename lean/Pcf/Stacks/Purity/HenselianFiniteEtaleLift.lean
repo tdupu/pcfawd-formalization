@@ -289,7 +289,7 @@ def tensorAdjoinRootEquiv (f : R[X]) :
 
 end AdjoinRoot
 
-section Fibre
+section Fiber
 
 variable {R : Type u} [CommRing R] {C : Type v} [CommRing C] [Algebra R C]
 
@@ -307,7 +307,7 @@ theorem etale_quotient_map [Algebra.Etale R C] (I : Ideal R) :
       exact e₀.symm.commutes r)
   exact Algebra.Etale.of_equiv e
 
-end Fibre
+end Fiber
 
 section Monogenic
 
@@ -319,7 +319,7 @@ variable {C : Type v} [CommRing C] [Algebra R C] [Module.Finite R C] [Module.Fre
 /-- If the closed fibre of a finite free algebra over a local ring is a finite separable field
 extension of the residue field, the algebra is `R[X]/(χ)` for a monic `χ` coprime to its
 derivative.  No henselian hypothesis is needed. -/
-theorem exists_adjoinRoot_algEquiv_of_closedFibre_field
+theorem exists_adjoinRoot_algEquiv_of_closedFiber_field
     {K : Type*} [Field K] [Algebra (R ⧸ maximalIdeal R) K]
     [Module.Finite (R ⧸ maximalIdeal R) K] [Algebra.IsSeparable (R ⧸ maximalIdeal R) K]
     (ψ : (C ⧸ ((maximalIdeal R).map (algebraMap R C) : Ideal C)) ≃ₐ[R ⧸ maximalIdeal R]
@@ -508,7 +508,7 @@ theorem HasFiniteEtaleLift.of_adjoinRoot [IsLocalRing A] (hI : I ≤ maximalIdea
       (by rw [Ideal.Quotient.algebraMap_eq]; exact hχmap)).trans e)
 
 /-- A finite algebra over a local ring with zero closed fibre is zero (Nakayama). -/
-theorem subsingleton_of_subsingleton_closedFibre {R C : Type*} [CommRing R] [IsLocalRing R]
+theorem subsingleton_of_subsingleton_closedFiber {R C : Type*} [CommRing R] [IsLocalRing R]
     [CommRing C] [Algebra R C] [Module.Finite R C]
     (h : Subsingleton (C ⧸ ((maximalIdeal R).map (algebraMap R C) : Ideal C))) :
     Subsingleton C := by
@@ -614,7 +614,7 @@ theorem hasFiniteEtaleLift_of_finrank_eq (hI : I ≤ maximalIdeal A) (n : ℕ) :
     rcases isEmpty_or_nonempty J with hJe | hJn
     · -- the closed fibre is zero
       haveI : Subsingleton (C ⧸ mC) := eK.toEquiv.subsingleton
-      haveI : Subsingleton C := subsingleton_of_subsingleton_closedFibre (R := R₀) ‹_›
+      haveI : Subsingleton C := subsingleton_of_subsingleton_closedFiber (R := R₀) ‹_›
       haveI : Subsingleton (AdjoinRoot (1 : R₀[X])) := by
         change Subsingleton (R₀[X] ⧸ Ideal.span {(1 : R₀[X])})
         exact Ideal.Quotient.subsingleton_iff.mpr (by simp)
@@ -631,7 +631,7 @@ theorem hasFiniteEtaleLift_of_finrank_eq (hI : I ≤ maximalIdeal A) (n : ℕ) :
         AlgEquiv.ofRingEquiv (f := eK.toRingEquiv.trans (RingEquiv.piUnique K)) (by
           intro x
           simp)
-      obtain ⟨χ, hχm, hχc, ⟨φ⟩⟩ := exists_adjoinRoot_algEquiv_of_closedFibre_field ψ
+      obtain ⟨χ, hχm, hχc, ⟨φ⟩⟩ := exists_adjoinRoot_algEquiv_of_closedFiber_field ψ
       exact HasFiniteEtaleLift.of_adjoinRoot hI χ hχm hχc φ
 
 /-- **Stacks Tag `09ZL`, essential surjectivity, henselian local case.**  For a henselian local
@@ -733,14 +733,14 @@ end Scheme
 #print axioms etale_adjoinRoot_of_isCoprime_derivative
 #print axioms tensorAdjoinRootEquiv
 #print axioms etale_quotient_map
-#print axioms exists_adjoinRoot_algEquiv_of_closedFibre_field
+#print axioms exists_adjoinRoot_algEquiv_of_closedFiber_field
 #print axioms BoolFamily.etale
 #print axioms BoolFamily.piAlgEquiv
 #print axioms etale_prod
 #print axioms HasFiniteEtaleLift.of_algEquiv
 #print axioms HasFiniteEtaleLift.prod
 #print axioms HasFiniteEtaleLift.of_adjoinRoot
-#print axioms subsingleton_of_subsingleton_closedFibre
+#print axioms subsingleton_of_subsingleton_closedFiber
 #print axioms hasFiniteEtaleLift_of_finrank_eq
 #print axioms exists_finite_etale_lift_of_henselianLocalRing
 #print axioms restrictFiniteEtaleToHypersurface_essSurj

@@ -32,9 +32,27 @@ The proof has three layers:
 
 **This development machine-checks the divisorial dynamics, the affine-chart proof of the
 bounding theorem, and the one-divisor geometric theorem `thm:general`, including a
-nonnormal ambient scheme.**  The final theorem is conditional on local Zariski–Nagata
-purity and the Abhyankar package.  Stacks Tag 00NP, the local-domain consequence of
-regularity needed after Abhyankar, is proved in Lean.  Concretely:
+nonnormal ambient scheme.**  Local Zariski–Nagata purity (Stacks `0BMB`) and Abhyankar's
+lemma for a regular divisor (Stacks `0EYG`/`0EYH`) are **proved** (2026-10-16/17), so the
+characteristic-zero headline `Pcf.pcfAllTheWayDown_charZero_unconditional` (and its compared
+form `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`, in `Pcf/Palomar/Unconditional.lean`)
+assumes nothing beyond its stated geometric and PCF hypotheses; `#print axioms` gives
+`[propext, Classical.choice, Quot.sound]`.  The proved local inputs are:
+
+* purity: `Pcf.Stacks.zariskiNagataPurity` (affine, `Pcf/Stacks/Purity/Tag0BMA.lean`), and at
+  scheme level `Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity` (Stacks' pointwise notions)
+  and `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` (Mathlib vocabulary);
+* Abhyankar: `Pcf.Stacks.abhyankarLemma` (every positive integer invertible) and
+  `Pcf.Stacks.abhyankarLemmaTame` (tamely ramified in codimension one, any characteristic), both
+  affine with the normalization proved finite (`Pcf/Stacks/Abhyankar/FiniteNormalization.lean`),
+  and at scheme level `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` (`0EYG`) and
+  `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` (`0EYH`).
+
+Their restrictions relative to the tags are recorded in [AXIOMS.md](AXIOMS.md), first
+section.  The older theorems that take purity and Abhyankar as hypotheses
+(`Pcf.pcfAllTheWayDown_charZero`, `Pcf.PCFAllTheWayDownLocalTheorems`) are kept unchanged.
+Stacks Tag 00NP, the local-domain consequence of regularity needed after Abhyankar, is proved
+in Lean.  Concretely:
 
 * Everything in layer 1 that is a statement about sets of divisors, their pushforward and
   ramification indices is **proved**: `prop:iterates`, the orbit characterization of PCF,
@@ -205,8 +223,9 @@ regularity needed after Abhyankar, is proved in Lean.  Concretely:
   iterate index with the actual lifted scheme iterate.
 * Theorem `thm:bounding` is **derived** on an affine chart (`Pcf/Bounding/Chart.lean`,
   `Pcf.BoundingChart.isEtaleAt_restriction`): from Zariski–Nagata purity (Stacks 0BMB) and
-  Abhyankar's lemma (Stacks 0EYG/0EYH), each an explicit hypothesis isolated in the
-  TauCeti-facing modules `Pcf/Stacks/Purity.lean` and `Pcf/Stacks/Abhyankar.lean`, through
+  Abhyankar's lemma (Stacks 0EYG/0EYH), each an explicit hypothesis on this route, stated in the
+  TauCeti-facing modules `Pcf/Stacks/Purity.lean` and `Pcf/Stacks/Abhyankar.lean` and proved
+  under `Pcf/Stacks/Purity/` and `Pcf/Stacks/Abhyankar/`, through
   the manuscript's Steps 1–4 — the five local
   purity hypotheses are packaged as `Pcf.Stacks.ZariskiNagataPurityHypothesesAt`, and
   `Pcf.Stacks.HasZariskiNagataPurityAt` makes the cover étale at that point; Abhyankar gives the named
@@ -217,7 +236,7 @@ regularity needed after Abhyankar, is proved in Lean.  Concretely:
   (`Pcf/Bounding/LocalStructure.lean`); étaleness descends. All three standard facts the
   manuscript cites in passing are proved in the form used here: étale algebras over a domain
   are reduced (033B, `Pcf/Bounding/Reduced.lean`), points of fibre products exist (01JT,
-  `Pcf/Bounding/FibreProduct.lean`), and the finite-presentation pointwise case of étaleness
+  `Pcf/Bounding/FiberProduct.lean`), and the finite-presentation pointwise case of étaleness
   being étale-local on the source (036W, `Pcf.Stacks.etaleLocalOnSource`). The former fields
   `PcfGeometry.standardForm` and `Prop41Data.standardForm` (a `KummerWitness`, equivalent to
   the conclusion) are **removed**; `PCFSetup.notMem_branch_iterate`/`NonEtalePCFSetup.notMem_nonEtaleBranch_iterate` remain the *interface*
@@ -254,7 +273,8 @@ regularity needed after Abhyankar, is proved in Lean.  Concretely:
   every depth.  The source-facing proposition is `Pcf.SchemePCFAllTheWayDown`, and
   `Pcf.pcfAllTheWayDown_charZero` proves it from ambient normalized PCF and a single
   `Pcf.PCFAllTheWayDownLocalTheorems` package.  That package contains only the
-  universe-wide statements of Zariski--Nagata purity and Abhyankar's lemma;
+  universe-wide statements of Zariski--Nagata purity and Abhyankar's lemma, both now proved
+  (`Pcf.pcfAllTheWayDown_charZero_unconditional` discharges the package);
   `Pcf.schemePCFCoveringAtDepthOfLocalTheorems` constructs the entire recursive local
   covering tree, so callers no longer supply it.  The equality clause of
   `prop:loci-compare`(3) and the general composite
@@ -298,17 +318,30 @@ lean/
 │   ├── Geometry.lean        ← thm:bounding Step 0: BoundingCorrectionLoci, PCFGeometry (join to PCFSetup);
 │   │                           the retracted witness interfaces, retained as a record
 │   ├── LocalModel.lean      ← thm:bounding Step 3 / eq:standard-piece
-│   ├── Abhyankar.lean       ← Stacks 0EYF clauses 1–2 (Mathlib + `Pcf.LocalModel`; not load-bearing)
-│   ├── Stacks/              ← exact theorem boundaries and tag-by-tag proof spines
-│   │   ├── Purity.lean      ← Tag 0BMB target, with 0BMA dependency map
-│   │   └── Abhyankar.lean   ← Tags 0EYG/0EYH target and local standard-cover interface
+│   ├── Kummer.lean          ← Stacks 0EYF clauses 1–2 (namespace `Pcf.Kummer`) (Mathlib + `Pcf.LocalModel`; not load-bearing)
+│   ├── Stacks/              ← exact theorem boundaries and their proofs, tag by tag
+│   │   ├── Purity.lean      ← Tag 0BMB statement `ZariskiNagataPurity`, with 0BMA dependency map
+│   │   ├── Purity/          ← purity PROVED: Tag0BMA.lean (`zariskiNagataPurity`), Tag0BMB*.lean,
+│   │   │                       Tag0BMBScheme.lean / Tag0BMBSchemeAPI.lean (scheme level), Hartogs,
+│   │   │                       completion and fpqc descent, henselian lifting
+│   │   ├── Abhyankar.lean   ← Tags 0EYG/0EYH statement `AbhyankarLemma` and standard-cover interface
+│   │   ├── Abhyankar/       ← Abhyankar PROVED
+│   │   │   ├── Tag0EYG.lean ← `abhyankarLemmaOfFinite` (characteristic zero, normalization finite)
+│   │   │   ├── FiniteNormalization.lean ← normalization finite; `abhyankarLemma`, `abhyankarLemmaTame`
+│   │   │   ├── Tame/        ← tame statement `AbhyankarLemmaTame`, shared proof `abhyankarLemmaTameOfFinite`
+│   │   │   ├── Scheme/      ← scheme level: Tag0EYG.lean (`abhyankarLemma_scheme`),
+│   │   │   │                   Tag0EYH.lean (`abhyankarLemma_normalization`), charts, descent
+│   │   │   └── Strict*, Kummer*, DVR*, StandardCover* ← strict henselization, Kummer theory, 0BRM, 0EYF
+│   │   └── Common/          ← shared regularity/normality lemmas (0567, 033C, 0AFS)
+│   ├── Palomar/             ← compared statement and `pcfAllTheWayDown_charZero_unconditional`
+│   ├── Vendor/              ← vendored Mathlib PR #29802 (localization of regular local rings)
 │   ├── Bounding/            ← thm:bounding DERIVED from purity and Abhyankar (2026-10-04)
 │   │   ├── Stacks.lean      ← supporting Tags 036W and 01JT; imports the theorem boundaries above
 │   │   ├── StandardPiece.lean ← Step 3 completed: √(aC) = (z), R/(a) → C/(z) bijective
 │   │   ├── LocalStructure.lean ← Steps 3–4 glue: going down, components, local ring = A_𝔮
 │   │   ├── Pieces.lean      ← finite products: the piece through a point
 │   │   ├── Reduced.lean     ← Tag 033B proved (étale over a domain is reduced)
-│   │   ├── FibreProduct.lean ← Tag 01JT proved (points of Spec of a tensor product)
+│   │   ├── FiberProduct.lean ← Tag 01JT proved (points of Spec of a tensor product)
 │   │   ├── Divisors.lean    ← height-one primes, pushforward, ramification, affine `DivisorDynamics`
 │   │   ├── LocalChart.lean   ← two-dimensional stalk chart; regularity promoted and bounding derived
 │   │   ├── SchemeBridge.lean ← quotient-stalk coordinates, affine presentations, actual stalk maps
@@ -357,8 +390,8 @@ lean/
 
 The manuscript's `sec:prelim` depends on a variety only through the set of its integral
 effective divisors ("primes"), their pushforward along `g`, and the ramification index at
-each. `Pcf.DivisorDynamics` packages exactly that. The `m`-th iterate `D.iter m` has `step := stepᵐ`
-and `ram := ∏_{i<m} ram (stepⁱ ·)`, which builds the tower formula of `lem:tower` into the
+each. `Pcf.DivisorDynamics` packages exactly that. The `m`-th iterate `D.iterate m` has `step := stepᵐ`
+and `ramificationIdx := ∏_{i<m} ramificationIdx (stepⁱ ·)`, which builds the tower formula of `lem:tower` into the
 definition; `prop:iterates` then becomes a theorem about finite products and forward orbits.
 `Pcf.UnnormalizedDynamics` adds the two unnormalized critical predicates `crit₀(gᵐ)`, `crit₁(gᵐ)` *as
 data indexed by `m`*, because `lem:tower-unnormalized` gives only one-sided inclusions, which
@@ -385,7 +418,7 @@ notion, with the identification itself an assumption); **not formalized**.
 | `def:pcf` | `Pcf.DivisorDynamics.postcriticalSet`, `Pcf.DivisorDynamics.IsPCF`, `Pcf.DivisorDynamics.isPCF_iff_forall_orbit_finite` | modelled; orbit characterization proved |
 | `lem:restriction` | — | not formalized (`step : P → P` presupposes it, assumption A1) |
 | `def:pcfawd` | `Pcf.SchemePCFAllTheWayDown`; supporting definitions `Pcf.SchemePCFAllTheWayDownAtDepth`, `Pcf.SchemePCFDescentBranch` | the actual-scheme recursive property is formalized on the actual reduced divisor closures and return maps; actual branches are bounded by `topologicalKrullDim X` |
-| `conj:pcfawd` / `cor:pcfawd` | `Pcf.pcfAllTheWayDown_charZero`; supporting theorem `Pcf.schemePCFAllTheWayDown_of_cover_to_dimension` | **proved at scheme level relative only to** the universe-wide Zariski--Nagata purity and Abhyankar statements in `Pcf.PCFAllTheWayDownLocalTheorems`; the recursive covering tree and every descendant PCF conclusion are constructed |
+| `conj:pcfawd` / `cor:pcfawd` | `Pcf.pcfAllTheWayDown_charZero`; supporting theorem `Pcf.schemePCFAllTheWayDown_of_cover_to_dimension` | **proved at scheme level**: `Pcf.pcfAllTheWayDown_charZero` takes the universe-wide purity and Abhyankar statements (`Pcf.PCFAllTheWayDownLocalTheorems`) as hypotheses, and `Pcf.pcfAllTheWayDown_charZero_unconditional` discharges them with the proved theorems; the recursive covering tree and every descendant PCF conclusion are constructed |
 | `prop:pcf-equiv` (1)⟺(2) | `Pcf.DivisorDynamics.isPCF_iff_forall_orbit_finite` | proved in the form "every branch prime has *finite orbit*"; the paper's word "preperiodic" (`∃ r s, fʳ⁺ˢ(D) = fʳ(D)`) is not stated, and (3) is not stated |
 | `lem:tower` | `Pcf.DivisorDynamics.iterateRamificationIdx_add`, `Pcf.DivisorDynamics.branch_iterate`; actual-stalk route `Pcf.schemeDivisorRamificationIdx_comp`, `Pcf.divisorDynamicsOfFiniteDominantNormal_iterateRamificationIdx` | the abstract product identity is proved from the definition; for actual finite dominant normal scheme dynamics, stalk ramification is proved multiplicative and `iterateRamificationIdx` is identified with the actual iterate's ramification index |
 | `prop:iterates` (1) | `Pcf.DivisorDynamics.mem_branch_iterate_iff` | proved |
@@ -410,15 +443,15 @@ notion, with the identification itself an assumption); **not formalized**.
 | `thm:bounding`, Step 4 (descent, 036W) | `Pcf.Stacks.etaleLocalOnSource` | **proved** in the finite-presentation pointwise form used by the chart, by shrinking the open image to a basic open and descending flatness and formal unramifiedness through a faithfully flat localization |
 | `thm:bounding`, étale conclusion for the dynamics | `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate`; structural route `Pcf.SchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate`; completed invariant-divisor route `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.notMem_nonEtaleBranch_iterate` | the legacy abstract route uses circular A6; the structural scheme route fixes `crit₁` to the actual stalk locus; the completed route also identifies the actual invariant-divisor restriction and its iterates and constructs the structural chart from literal Step 0 data, purity and Abhyankar, with no conclusion-shaped field |
 | `thm:bounding`, `e > 1` conclusion (`branch(g) ⊆ Σ`) | `Pcf.PCFSetup.notMem_branch_iterate`, via `Pcf.NonEtalePCFSetup.toPCFSetup` | derived from `notMem_nonEtaleBranch_iterate` and `prop:loci-compare`(2) |
-| `thm:bounding`, Steps 1–2 inputs | `Pcf.Stacks.ZariskiNagataPurity`, `Pcf.Stacks.AbhyankarLemma`; also the older `Pcf.PurityData.localPurity`, `Pcf.AbstractZariskiNagataPurity` | **assumed**; local ⟹ global purity is proved (`Pcf.PurityData.codim_eq_one`), as are Tag 0EYF (1)–(2) and Tag 00NP (`Pcf.Stacks.isDomain_of_isRegularLocalRing`) |
+| `thm:bounding`, Steps 1–2 inputs | `Pcf.Stacks.ZariskiNagataPurity`, `Pcf.Stacks.AbhyankarLemma`; also the older `Pcf.PurityData.localPurity`, `Pcf.AbstractZariskiNagataPurity` | **proved**: `Pcf.Stacks.zariskiNagataPurity`, `Pcf.Stacks.abhyankarLemma` (the older `Pcf.PurityData.localPurity`, `Pcf.AbstractZariskiNagataPurity` remain hypotheses of the legacy interfaces); local ⟹ global purity is proved (`Pcf.PurityData.codim_eq_one`), as are Tag 0EYF (1)–(2) and Tag 00NP (`Pcf.Stacks.isDomain_of_isRegularLocalRing`) |
 | `thm:bounding`, Step 4's final inference | `Pcf.Ramification.ramificationIdx_eq_one_of_bijective` | proved |
 | `ex:cusp` | `Pcf.Examples.Cusp.*` | parametrization, Jacobian `2u`, `k[t]` is the normalization, `B ∩ Z = {0}` proved; `branch(g) = ∅` and the new sentence `branch₀(g) = {(0,0)}` **not formalized** |
 | `ex:branch-singular` | `Pcf.Examples.Cusp.coneParam`, `coneMap_restrict` | parametrization and restriction proved; normality, étaleness off the vertex, `branch(g) = {o}` not formalized |
 | `thm:normal-invariant` (1-PCF) | `Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF`; `Pcf.PCFSetupChart.restriction_isNonEtaleBranchPCF`; `Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF`; `Pcf.SchemeNormalizationPCFSetupChart.restriction_isNonEtaleBranchPCF`; `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.restriction_isNonEtaleBranchPCF` | proved from `notMem_nonEtaleBranch_iterate`, `singularPrimes_finite`, `meets_finite`, PCF-ness of `f`; the final route uses the actual invariant-divisor restriction and derives its chart from literal Step 0 data plus G1/G2 |
 | `cor:normal-invariant-pcf` | `Pcf.NormalizationPCFSetup.normalized_isPCF`, `Pcf.NormalizationPCFSetupChart.normalized_isPCF`, `Pcf.SchemeNormalizationPCFSetupChart.normalized_isPCF`, `Pcf.InvariantDivisorSchemeNormalizationPCFSetup.normalized_isPCF`; older one-carrier forms `Pcf.NonEtalePCFSetup.restriction_isPCF`, `Pcf.PCFSetup.restriction_isPCF` | the two-carrier theorem transfers finiteness through explicit finite normalization fibers; the final actual-invariant-divisor route constructs the former A6s chart instead of assuming it |
 | `cor:normal-preperiodic` | `Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF_of_iterate`, `Pcf.PCFSetup.restriction_isPCF_of_iterate`, `Pcf.isPCF_restriction_of_periodic` | proved in the form "ambient system is `fˢ` and `B` is `fˢ`-invariant"; the reduction `B = fʳ(A)` is left to the supplier of the `PCFSetup` |
-| `thm:general` (= `thm:A`) | `Pcf.pcfAllTheWayDown_scheme` | **proved at scheme level** for the manuscript's normalized-PCF definition, conditional only on the standing geometric/PCF hypotheses, local purity, and Abhyankar; normality of the ambient scheme is not assumed |
-| `cor:pcfawd` | `Pcf.pcfAllTheWayDown_charZero`; supporting declarations `Pcf.schemePCFAllTheWayDownAtDepth_of_cover`, `Pcf.schemePCFAllTheWayDown_of_cover_to_dimension` | the characteristic-zero theorem has the manuscript's geometric and PCF hypotheses plus only universal purity and Abhyankar; recursive actual-scheme assembly and the numerical `≤ topologicalKrullDim X` termination bound are proved |
+| `thm:general` (= `thm:A`) | `Pcf.pcfAllTheWayDown_scheme` | **proved at scheme level** for the manuscript's normalized-PCF definition, conditional only on the standing geometric/PCF hypotheses and the local purity and Abhyankar statements, which are now proved theorems (see `cor:pcfawd`); normality of the ambient scheme is not assumed |
+| `cor:pcfawd` | `Pcf.pcfAllTheWayDown_charZero`; supporting declarations `Pcf.schemePCFAllTheWayDownAtDepth_of_cover`, `Pcf.schemePCFAllTheWayDown_of_cover_to_dimension` | the characteristic-zero theorem has the manuscript's geometric and PCF hypotheses plus only universal purity and Abhyankar, which `Pcf.pcfAllTheWayDown_charZero_unconditional` discharges; recursive actual-scheme assembly and the numerical `≤ topologicalKrullDim X` termination bound are proved |
 | `def:pcf-unnormalized` | `Pcf.NormalizationUnnormalizedDynamics.nonUnramifiedPostcriticalSet/nonEtalePostcriticalSet`, `Pcf.NormalizationUnnormalizedDynamics.IsNonUnramifiedBranchPCF/IsNonEtaleBranchPCF`; legacy `Pcf.UnnormalizedDynamics` | modelled on the corrected two-carrier abstraction; the legacy one-carrier type embeds by the identity normalization map |
 | `prop:loci-compare` (1) | `Pcf.UnnormalizedDynamics.nonEtaleLocus_finite`; actual route `Pcf.SchemeNormalizationUnnormalizedDynamics.nonEtaleLocus_finite` | **assumed** on legacy abstract interfaces; **proved on the actual-scheme route** from finite dominance, local finite presentation, integrality, Noetherianity, and characteristic zero at the generic stalk; generic formal étaleness is derived |
 | `prop:loci-compare` (2) | `mem_nonUnramifiedLocus_of_one_lt_ramificationIdx`, `nonUnramifiedLocus_subset_nonEtaleLocus` and their branch/PC consequences | U1 remains a field of abstract/generic interfaces but is **proved for actual finite birational normalizations** by `mem_schemeDivisorNonUnramifiedLocus_of_one_lt_ramificationIdx_of_birational`; U2 is proved from the actual stalk maps. The consequences for `branch`, `PC` and `i`-PCF are proved. |
@@ -433,11 +466,11 @@ notion, with the identification itself an assumption); **not formalized**.
 | `ex:pinched`, `g` not `0`-PCF, not `1`-PCF | `Pcf.Examples.Pinched.nonUnramifiedPostcriticalSet_infinite`, `nonEtalePostcriticalSet_infinite`; instance `nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF/1` | proved **given `o ∈ crit₀(g)`** as a hypothesis (or stipulated in the instance); the fibre-length computation is **not formalized** |
 | `ex:pinched`, pushout, variety, normalization, finiteness of `f`, `f` not flat at `o`, `PC(f)` | — | not formalized |
 | `ex:squaring` | `Pcf.Examples.squaringProjectiveLine` | proved on the modelled system |
-| `ex:squaring-P2` | `Pcf.Examples.diagonalSquaring` | proved on a reduced ambient model (see that file's caveat); `key` **proved** there, so `PCFSetup` is inhabited |
+| `ex:squaring-P2` | `Pcf.Examples.diagonalSquaring` | proved on a reduced ambient model (see that file's caveat); `notMem_branch_iterate` **proved** there, so `PCFSetup` is inhabited |
 | `ex:wild` | `Pcf.Examples.CharP.orbit_infinite` | the critical orbit of `h(t) = t^{p+1} + c` is infinite: proved; the geometry of `F` not formalized |
 | `ex:frobenius-line` | `Pcf.Examples.CharP.restriction_eq_frobenius`, `derivative_charPoly_ne_zero` | concrete identities proved; "index one but not étale" not formalized |
-| `thm:purity` (Stacks 0BMB) | `Pcf.Stacks.ZariskiNagataPurity`, with pointwise inputs `Pcf.Stacks.ZariskiNagataPurityHypothesesAt` and conclusion `Pcf.Stacks.HasZariskiNagataPurityAt`; `Pcf.AbstractZariskiNagataPurity`, `Pcf.PurityData.localPurity` are older restatements | **statement formalized, theorem assumed**; faithful to the affine case of the tag (§G) |
-| `thm:abhyankar` (Stacks 0EYG + 0EYH) | `Pcf.Stacks.AbhyankarLemma`, with conclusion `Pcf.Stacks.HasAbhyankarStandardCoverAt` and standard-cover product `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers` | **statement formalized, theorem assumed**; weaker than the tags (characteristic zero in place of tameness; units `uᵢ` allowed; points of `D` only) |
+| `thm:purity` (Stacks 0BMB) | `Pcf.Stacks.ZariskiNagataPurity`, with pointwise inputs `Pcf.Stacks.ZariskiNagataPurityHypothesesAt` and conclusion `Pcf.Stacks.HasZariskiNagataPurityAt`; `Pcf.AbstractZariskiNagataPurity`, `Pcf.PurityData.localPurity` are older restatements | **proved**: `Pcf.Stacks.zariskiNagataPurity` (affine), `Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity` and `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` (scheme level); faithful to the tag (AXIOMS.md, first section and §G) |
+| `thm:abhyankar` (Stacks 0EYG + 0EYH) | `Pcf.Stacks.AbhyankarLemma`, with conclusion `Pcf.Stacks.HasAbhyankarStandardCoverAt` and standard-cover product `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers` | **proved**: `Pcf.Stacks.abhyankarLemma`, weaker than the tags (characteristic zero in place of tameness; units `uᵢ` allowed; points of `D` only); the tame form `Pcf.Stacks.abhyankarLemmaTame` (`Pcf.Stacks.AbhyankarLemmaTame`); scheme level `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` (0EYG as stated) and `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` (0EYH, finite locally free as finite + flat + locally of finite presentation) |
 | Stacks 00NP | `Pcf.Stacks.isDomain_of_isRegularLocalRing` | **proved** by cotangent-space induction, prime avoidance, Krull intersection, and Nakayama; this removes the former local-domain clause from `Pcf.Stacks.AbhyankarLemma` |
 | `lem:jacobian`, `ex:basilica`, `ex:dupont`, `ex:loci-compared`, `rem:why-normalized`, `q:singularPrimes-B` | — | not formalized |
 

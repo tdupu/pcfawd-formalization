@@ -5,7 +5,7 @@ Authors: Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
-public import Pcf.Abhyankar
+public import Pcf.Kummer
 public import Pcf.Stacks.Abhyankar.DVRAbhyankar
 public import Pcf.Stacks.Abhyankar.KummerClauses
 public import Pcf.Stacks.Abhyankar.StandardCoverBaseChange

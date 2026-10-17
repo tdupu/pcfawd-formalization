@@ -239,7 +239,7 @@ theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : 
       hom_inv_id := by rw [← Scheme.Hom.comp_appTop, Iso.inv_hom_id]; rfl
       inv_hom_id := by rw [← Scheme.Hom.comp_appTop, Iso.hom_inv_id]; rfl }
   let E := (Γψ ≪≫ Scheme.ΓSpecIso _).commRingCatIsoToRingEquiv
-  have hE : ∀ k : K, E (algebraMap K (genericFibreRing (complementOpen D) f ξ) k) =
+  have hE : ∀ k : K, E (algebraMap K (genericFiberRing (complementOpen D) f ξ) k) =
       algebraMap K _ k := by
     intro k
     have key : (Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫
@@ -251,7 +251,7 @@ theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : 
         Scheme.ΓSpecIso_naturality, Iso.inv_hom_id_assoc]
     exact congr($key k)
   let M := Γ(Y, (f ≫ (complementOpen D).ι) ⁻¹ᵁ V.1)
-  let E' : genericFibreRing (complementOpen D) f ξ ≃+* K ⊗[Γ(X, V.1)] M := E
+  let E' : genericFiberRing (complementOpen D) f ξ ≃+* K ⊗[Γ(X, V.1)] M := E
   let K' := FractionRing (Localization.AtPrime p)
   let eKr : K ≃+* K' := IsLocalization.ringEquivOfRingEquiv K K' e1.toRingEquiv
     (MulEquivClass.map_nonZeroDivisors e1.toRingEquiv)
@@ -264,7 +264,7 @@ theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : 
   let E2 : K ⊗[Γ(X, V.1)] M ≃+* K' ⊗[Γ(X, V.1)] M :=
     (Algebra.TensorProduct.congr eK (AlgEquiv.refl : M ≃ₐ[Γ(X, V.1)] M)).toRingEquiv
   refine IsTamelyRamifiedOver.of_ringEquiv e1.toRingEquiv (E'.trans E2) (fun x ↦ ?_) H
-  change E2 (E (algebraMap K (genericFibreRing (complementOpen D) f ξ)
+  change E2 (E (algebraMap K (genericFiberRing (complementOpen D) f ξ)
     (algebraMap O K x))) = _
   rw [hE, Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.algebraMap_apply]
   change Algebra.TensorProduct.congr eK AlgEquiv.refl (_ ⊗ₜ 1) = _

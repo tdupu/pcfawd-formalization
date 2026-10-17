@@ -26,9 +26,7 @@ and étale locally on `X`, `Y' → X` is a finite disjoint union of `Spec(A[x]/(
 with `A` Noetherian, `f` a nonzerodivisor with `A/fA` regular, `e ≥ 1` invertible in `A`.
 
 Forms: `abhyankarLemma_normalization_of_abhyankarLemmaTameOver` (affine statement as hypothesis),
-`abhyankarLemma_normalization` (unconditional, via `Pcf.Stacks.abhyankarLemmaTameOfFinite`),
-`abhyankarLemma_normalization_of_isUnit_natCast` (on a `ℚ`-scheme, via the characteristic-zero
-`Pcf.Stacks.abhyankarLemmaOfFinite`).
+and `abhyankarLemma_normalization` (unconditional, via `Pcf.Stacks.abhyankarLemmaTameOfFinite`).
 
 ## Stacks proof step → Lean
 
@@ -370,23 +368,5 @@ theorem abhyankarLemma_normalization (X : Scheme.{u}) [IsLocallyNoetherian X]
   abhyankarLemma_normalization_of_abhyankarLemmaTameOver X
     (abhyankarLemmaTameOver_of_forall X Pcf.Stacks.abhyankarLemmaTameOfFinite)
     D hD hDreg f htame
-
-/-- **Stacks Tag `0EYH` on a `ℚ`-scheme, characteristic-zero proof** (from
-`Pcf.Stacks.abhyankarLemmaOfFinite`, without the tame theorem). -/
-@[stacks 0EYH "every positive integer invertible on X; proof via the characteristic-zero affine \
-    theorem; finite locally free stated as finite + flat + locally of finite presentation (02KB)"]
-theorem abhyankarLemma_normalization_of_isUnit_natCast (X : Scheme.{u}) [IsLocallyNoetherian X]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤)))
-    (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
-    {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
-    let π := (f ≫ (complementOpen D).ι).fromNormalization
-    (IsFinite π ∧ Flat π ∧ LocallyOfFinitePresentation π) ∧
-    (∃ e : Y ≅ (π ⁻¹ᵁ complementOpen D).toScheme, e.hom ≫ (π ∣_ complementOpen D) = f) ∧
-    IsEffectiveCartier (D.comap π).radical ∧
-    IsRegularScheme (D.comap π).radical.subscheme ∧
-    IsEtaleLocallyStandardRootCover π :=
-  abhyankarLemma_normalization_of_abhyankarLemmaTameOver X
-      (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
 
 end Pcf.Stacks.SchemeLevel

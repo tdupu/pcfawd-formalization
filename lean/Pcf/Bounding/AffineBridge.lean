@@ -7,7 +7,7 @@ module
 
 public import Pcf.Bounding.Chart
 public import Pcf.Bounding.Divisors
-public import Pcf.Bounding.FibreProduct
+public import Pcf.Bounding.FiberProduct
 
 /-!
 # The bounding chart on the concrete affine divisor carrier

@@ -49,7 +49,8 @@ Combined with `forall_height_one_isUnramifiedAt_of_root_mem` (étale away from `
 `StrictRootComponentData` (`StrictRootComponentPreData.toDataOfRootMem`).
 
 In characteristic zero (every positive integer a unit of `A`) the tameness hypothesis always holds
-(`isTamelyRamifiedAt_of_isUnit_natCast`), so these lemmas serve both proofs of `0EYG` in pcf.
+(`isTamelyRamifiedAt_of_isUnit_natCast`), so these lemmas serve both theorems for `0EYG` in pcf
+(tame and characteristic zero), which share one proof.
 
 ## Main statements
 

@@ -18,14 +18,13 @@ effective Cartier divisor such that `D` is a regular scheme, and `Y → X ∖ D`
 tamely ramified over `X` in codimension one, then étale locally on `X` the morphism `Y → X` is a
 finite disjoint union of standard tamely ramified morphisms (Example 58.31.4).
 
-Three forms:
+Two forms:
 * `abhyankarLemma_scheme_of_abhyankarLemmaTameOver`: with the affine statement as the hypothesis
   `AbhyankarLemmaTameOver X`;
 * `abhyankarLemma_scheme`: unconditional, discharging it by the tame affine theorem
-  `Pcf.Stacks.abhyankarLemmaTameOfFinite` (any characteristic);
-* `abhyankarLemma_scheme_of_isUnit_natCast`: on a `ℚ`-scheme, discharging it by the
-  characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite` (whose proof is the tame proof
-  with tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`).
+  `Pcf.Stacks.abhyankarLemmaTameOfFinite` (any characteristic; on a `ℚ`-scheme the
+  characteristic-zero affine theorem is the same tame proof, with tameness supplied by
+  `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`).
 
 ## Stacks proof step → Lean
 
@@ -152,19 +151,5 @@ theorem abhyankarLemma_scheme (X : Scheme.{u}) [IsLocallyNoetherian X]
   abhyankarLemma_scheme_of_abhyankarLemmaTameOver X
     (abhyankarLemmaTameOver_of_forall X Pcf.Stacks.abhyankarLemmaTameOfFinite)
     D hD hDreg f htame
-
-/-- **Stacks Tag `0EYG` on a `ℚ`-scheme, characteristic-zero proof.**  If every positive integer
-is invertible on `X`, the conclusion of `0EYG` follows from the characteristic-zero affine
-theorem `Pcf.Stacks.abhyankarLemmaOfFinite`, without the tame theorem. -/
-@[stacks 0EYG "every positive integer invertible on X; proof via the characteristic-zero affine \
-    theorem"]
-theorem abhyankarLemma_scheme_of_isUnit_natCast (X : Scheme.{u}) [IsLocallyNoetherian X]
-    (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤)))
-    (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
-    {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
-    IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) :=
-  abhyankarLemma_scheme_of_abhyankarLemmaTameOver X
-      (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
 
 end Pcf.Stacks.SchemeLevel

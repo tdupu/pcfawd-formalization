@@ -72,7 +72,7 @@ faithfully to the Stacks Project in `Pcf/Bounding/Stacks.lean`.
 
 Besides the chart, `isEtaleAt_restriction` takes only
 `Pcf.Stacks.ExistsPrimeOverBoth` (Tag 01JT). It is **proved** in
-`Pcf/Bounding/FibreProduct.lean` and remains a parameter here only to keep the scheme library
+`Pcf/Bounding/FiberProduct.lean` and remains a parameter here only to keep the scheme library
 out of this file. The finite-presentation case of Tag 036W needed here is
 `Pcf.Stacks.etaleLocalOnSource`. Tag 033B, reducedness of étale base change, is proved in
 `Pcf/Bounding/Reduced.lean` for a domain base, which is all Step 3 needs. See
@@ -495,7 +495,7 @@ canonical map `R/(a) → S/𝔭`, is étale at every prime of `S/𝔭`.
 Steps 1–2 produce the étale neighbourhood `R'` and the standard pieces
 (`Pcf.BoundingChart.exists_standardPieces`); Steps 3–4 show the base change of `g` to `R'`
 is étale at every point (`Pcf.BoundingChart.isEtaleAt_quot_of_pieces`); the point `ξ` of
-`A ∩ V` lifts to the base change by Tag 01JT (`hF3`, proved in `Pcf/Bounding/FibreProduct.lean`
+`A ∩ V` lifts to the base change by Tag 01JT (`hF3`, proved in `Pcf/Bounding/FiberProduct.lean`
 and supplied by the wiring); and étaleness descends by the proved finite-presentation case
 of Tag 036W. Reducedness of the
 base change, Tag 033B, is proved in `Pcf/Bounding/Reduced.lean` and used inside Step 3.

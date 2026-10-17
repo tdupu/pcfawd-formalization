@@ -717,8 +717,10 @@ theorem integralClosure_finite_and_flat (ha : a ∈ nonZeroDivisors R)
       (fun x => TensorProduct.mk R (Localization.Away x.1) N 1) hflat'
 
 include Ra in
-/-- **The normalization is finite** (first assertion of Stacks Tag `0EYH`, affine form). -/
-@[stacks 0EYH "first assertion (finite), affine form, from the étale-local standard structure"]
+/-- **The normalization is finite** (finiteness part of the first assertion of Stacks Tag `0EYH`,
+affine form). -/
+@[stacks 0EYH "finiteness part of the first assertion, affine form, from the étale-local standard \
+  structure"]
 theorem integralClosure_finite (ha : a ∈ nonZeroDivisors R)
     (hloc : ∀ y : PrimeSpectrum R, a ∈ y.asIdeal → HasLocalizedStandardCoverAt a B y) :
     Module.Finite R (integralClosure R B) :=

@@ -46,8 +46,8 @@ and on the retained three the map is the identity (each coordinate line is fixed
 ramification index `2` (the diagonal squaring map is doubly ramified along each `Hᵢ`).
 
 This truncation is legitimate *for the purpose at hand* because `Pcf.PCFSetup` consults
-the ambient system only through `amb.branch` (inside the field `key`) and `amb.pcSet`
-(inside `Pcf.PCFSetup.bound`), and both of those sets are faithfully reproduced by
+the ambient system only through `amb.branch` (inside the field `notMem_branch_iterate`) and
+`amb.pcSet` (inside `Pcf.PCFSetup.bound`), and both of those sets are faithfully reproduced by
 `coordLines`: `coordLines.branch = coordLines.pcSet = Set.univ = {H₀, H₁, H₂}`, which is
 the correct answer for `P²`. It is **not** claimed that `coordLines` models `P²`; it is
 only claimed that it agrees with `P²` on the two invariants that Theorem `thm:normal-invariant`
@@ -281,7 +281,8 @@ omit [IsAlgClosed K] in
 so `Σ` has no singular contribution and `singularPrimes = ∅`; the intersection contribution is
 `meets 1 ∪ meets 2 = {∞, 0}`.
 
-The field `key` — Theorem `thm:bounding`, which is an *assumption* in `Pcf.Restriction` — is
+The field `notMem_branch_iterate` — Theorem `thm:bounding`, which is an *assumption* in
+`Pcf.Restriction` — is
 **proved** here, so this witness carries no hidden geometric input. -/
 noncomputable def diagonalSquaring (K : Type u) [Field K] [IsAlgClosed K] :
     PCFSetup (Fin 3) (Option K) where

@@ -35,7 +35,7 @@ conclusion.  The proof follows the Stacks dependency chain below.
 * `09EV`: classification of intermediate fields in the Kummer extension;
 * `03GV`: normalization commutes with the étale base change used by `0EYH`.
 
-`Pcf.Abhyankar` proves the finite-free and étale-away-from-the-divisor parts of `0EYF`.
+`Pcf.Kummer` proves the finite-free and étale-away-from-the-divisor parts of `0EYF`.
 The statement in this file is proved downstream (this file cannot import the proof without an
 import cycle): `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` in
 `Pcf.Stacks.Abhyankar.FiniteNormalization`, with axioms `[propext, Classical.choice, Quot.sound]`.
@@ -45,9 +45,9 @@ That module is imported by the root module `Pcf`.
 
 `AbhyankarLemma` assumes `Y = Spec S[1/a] → X ∖ D` finite étale (`R[1/a] ⊗_R S` finite over
 `R[1/a]`) and that `S` is the normalization of `R` in `S[1/a]`; the finiteness of `S` over `R` is
-the first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away` and its
-characteristic-zero form), from the scheme-level layer's affine normalization results.  The proofs
-of `0EYG` themselves are carried out for a finite normalization (`AbhyankarLemmaOfFinite`,
+part of the first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away`
+and its characteristic-zero form), from the scheme-level layer's affine normalization results.  The
+proofs of `0EYG` themselves are carried out for a finite normalization (`AbhyankarLemmaOfFinite`,
 `Pcf.Stacks.abhyankarLemmaOfFinite`; `Pcf.Stacks.AbhyankarLemmaTameOfFinite`,
 `Pcf.Stacks.abhyankarLemmaTameOfFinite`).
 
@@ -111,16 +111,18 @@ affine characteristic-zero form used by the manuscript.
 `R` is Noetherian, `a` cuts out a regular effective Cartier divisor, `R[1/a] ⊗_R S = S[1/a]` is
 finite over `R[1/a]` and `S` is étale away from that divisor (`Y = Spec S[1/a] → X ∖ D` finite
 étale, the hypothesis of the tags), and `S` is the integral closure of `R` in `S[1/a]` (the
-normalization `Y'` of `X` in `Y`).  The finiteness of `S` over `R` is not assumed: it is the
-first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away`).
+normalization `Y'` of `X` in `Y`).  The finiteness of `S` over `R` is not assumed: it is part of
+the first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away`).
 Requiring every positive integer to be invertible is stronger than the tag's codimension-one tame
 ramification hypothesis; consequently this implication is weaker than the full tag.  Units in the
 standard equations and restriction to points on the divisor also weaken only the conclusion.
 
-Divergence from the tags: the hypothesis "finite over `R[1/a]`" cannot be dropped.  Pcf's
-`Algebra.IsEtaleAt` is formal étaleness of the local rings, which does not imply finite type: for
-`R = ℚ[t]_{(t)}`, `a = t` and `S` the integral closure of `R` in `ℚ(ζ_{ℓ^∞})(t)`, every other
-hypothesis holds, `S` is not finite over `R`, and the conclusion fails.
+Encoding note: the tags assume `Y → X ∖ D` finite étale, and this statement keeps that as two
+hypotheses, "`S[1/a]` finite over `R[1/a]`" and Mathlib's `Algebra.IsEtaleAt` (formal étaleness of
+the local rings `S_w`) at every `w ∌ a`.  Both are needed: formal étaleness does not imply finite
+type.  For a prime `ℓ`, `R = ℚ[t]_{(t)}`, `a = t` and `S` the integral closure of `R` in
+`ℚ(ζ_{ℓ^∞})(t)`, every hypothesis except the finiteness one holds, `S` is not finite over `R`, and
+the conclusion fails.
 
 It is proved as `Pcf.Stacks.abhyankarLemma` in `Pcf.Stacks.Abhyankar.FiniteNormalization`. -/
 def AbhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=

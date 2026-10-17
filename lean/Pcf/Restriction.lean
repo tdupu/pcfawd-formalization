@@ -58,8 +58,8 @@ restriction `g = f|_A : A → A`.
   subsets of `A`, hence `singularPrimes_finite`.
 * `meets E` is the set of primes of `A` contained in `A ∩ E`; again by
   Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` this is finite whenever `E ≠ A`.
-* `key` is Theorem `thm:bounding` (per-divisor form) applied to the iterate `f^m`, for every `m`:
-  away from
+* `notMem_branch_iterate` is Theorem `thm:bounding` (per-divisor form) applied to the iterate
+  `f^m`, for every `m`: away from
   `Sing(X)`, `Sing(A)` and the other components of `Branch(f^m)`, the restriction
   `g^m` is unramified in codimension one.
 
