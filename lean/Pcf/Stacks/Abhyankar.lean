@@ -17,9 +17,7 @@ public import Pcf.LocalModel
 # Abhyankar's lemma for a regular divisor: TauCeti-facing statement
 
 This module isolates the affine statement used by PCFAWD and the standard-cover object in its
-conclusion.  A future TauCeti implementation should prove this statement by following the
-Stacks dependency chain, rather than keeping it as a field or replacing it by a
-conclusion-shaped witness.
+conclusion.  The proof follows the Stacks dependency chain below.
 
 ## Stacks proof spine
 
@@ -86,7 +84,7 @@ ramification hypothesis; consequently this implication is weaker than the full t
 in the standard equations and restriction to points on the divisor also weaken only the
 conclusion.
 
-This is an honest theorem target, but remains unproved in this repository. -/
+It is proved as `Pcf.Stacks.abhyankarLemma` in `Pcf.Stacks.Abhyankar.Tag0EYG`. -/
 def AbhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=
   IsNoetherianRing R →
   a ∈ nonZeroDivisors R →

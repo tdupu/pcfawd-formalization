@@ -195,8 +195,10 @@ two differences: the strict henselization of `R` is compared to that of `R_y` (S
 `localColimitAtPrimeRingEquiv`), and the normalization step is carried out on the integral
 models (`strictRootCoverEquivOfFractionRingEquiv`) rather than over `A_f`, which gives the
 `0EYH` conclusion directly. -/
-@[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points of D",
-  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D"]
+@[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
+    of D; standard pieces R'[x]/(x^e - u_i a) with units u_i",
+  stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D; \
+    standard pieces R'[x]/(x^e - u_i a) with units u_i"]
 theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemma R S a := by
   intro _ ha hreg hfin hetale hint hnat y hy

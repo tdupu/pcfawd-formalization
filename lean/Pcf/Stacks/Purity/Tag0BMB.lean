@@ -22,9 +22,10 @@ This file assembles the affine pointwise form of purity of the branch locus,
 
 Heights are finite because the source is Noetherian.
 
-Two upstream inputs remain explicit hypotheses: `EtaleNormalAscent` (Stacks Tag `033C`) and
+The reduction takes two inputs as hypotheses: `EtaleNormalAscent` (Stacks Tag `033C`) and
 finite normal punctured-spectrum étale purity for regular local rings of dimension at least two
-(Stacks Tag `0BMA`). They are discharged at integration.
+(Stacks Tag `0BMA`). Both are proved, and the unconditional theorem is
+`Pcf.Stacks.zariskiNagataPurity` in `Pcf.Stacks.Purity.Tag0BMA`.
 -/
 
 @[expose] public section
@@ -33,7 +34,7 @@ universe u
 
 namespace Pcf.Stacks
 
-/-- **Zariski--Nagata purity, Stacks Tag `0BMB`**, affine pointwise form.
+/-- **Zariski--Nagata purity (Stacks Tag `0BMB`), affine pointwise form, from its inputs.**
 
 For a finite-type map `R → S` of Noetherian rings and `w ∈ Spec S` with `S_w` a normal domain,
 `R_{w ∩ R}` regular, `R → S` quasi-finite at `w`, `dim S_w = dim R_{w ∩ R} ≥ 1`, and `R → S`
@@ -46,9 +47,8 @@ from `DimensionOne` and the inductive step from `Tag0BMBLocalModel`.
 
 The hypotheses `h033C` (Stacks Tag `033C`, normality ascends along étale maps, in the form
 `EtaleNormalAscent`) and `h0BMA` (Stacks Tag `0BMA`, finite normal punctured étale purity over
-regular local rings of dimension `≥ 2`) are upstream leaves; they are discharged at
-integration. -/
-@[stacks 0BMB "affine, pointwise"]
+regular local rings of dimension `≥ 2`) are both proved; `zariskiNagataPurity` (in
+`Pcf.Stacks.Purity.Tag0BMA`) discharges them and carries the Stacks `0BMB` attribute. -/
 theorem zariskiNagataPurity_of_inputs
     (h033C : EtaleNormalAscent.{u})
     (h0BMA : ∀ (A : Type u) [CommRing A] [IsRegularLocalRing A],

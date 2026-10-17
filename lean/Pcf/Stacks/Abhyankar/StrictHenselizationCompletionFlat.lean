@@ -576,7 +576,8 @@ completion of a free module over that stage, Tags `07QM`, `06LE`), and flatness 
 gives flatness over the filtered colimit (Algebra Lemma `10.39.6`, via the equational criterion).
 Divergence from Stacks: the stages are not identified with strict henselizations of themselves;
 the free-completion argument is applied directly to the flat local map from each stage. -/
-@[stacks 06LJ "part (c), the strict henselization `R^sh → (R^sh)^∧` is flat"]
+@[stacks 06LJ "part (c), strict case, for the pcf colimit model `LocalColimit R Ω` of `R^sh`, \
+  Ω any field over κ(𝔪): it is flat into its completion"]
 theorem localColimit_completion_flat :
     Module.Flat (LocalColimit R Ω)
       (AdicCompletion (IsLocalRing.maximalIdeal (LocalColimit R Ω)) (LocalColimit R Ω)) := by
@@ -593,7 +594,8 @@ theorem localColimit_completion_flat :
 
 /-- **Stacks Tag `06LJ`, `R ⇒ Rˢʰ`.**  The strict henselization of a Noetherian local ring is
 Noetherian.  This discharges `hflat` in `localColimit_isNoetherianRing_of_completion`. -/
-@[stacks 06LJ "the implication (1) ⇒ (3): `R` Noetherian implies `R^sh` Noetherian"]
+@[stacks 06LJ "the implication (1) ⇒ (3), for the pcf colimit model `LocalColimit R Ω` of \
+  `R^sh`, Ω any field over κ(𝔪): `R` Noetherian implies it is Noetherian"]
 instance localColimit_isNoetherianRing : IsNoetherianRing (LocalColimit R Ω) :=
   localColimit_isNoetherianRing_of_completion localColimit_completion_flat
 
@@ -605,7 +607,8 @@ theorem ringKrullDim_localColimit_eq :
 
 /-- The completion of the strict henselization of a Noetherian local ring is Noetherian
 (Stacks Tag `06LJ` part (a), strict case). -/
-@[stacks 06LJ "part (a), strict case: `(R^sh)^∧` is Noetherian"]
+@[stacks 06LJ "part (a), strict case, for the pcf colimit model `LocalColimit R Ω` of `R^sh`, \
+  Ω any field over κ(𝔪): its completion is Noetherian"]
 theorem localColimit_completion_isNoetherianRing :
     IsNoetherianRing
       (AdicCompletion (IsLocalRing.maximalIdeal (LocalColimit R Ω)) (LocalColimit R Ω)) :=

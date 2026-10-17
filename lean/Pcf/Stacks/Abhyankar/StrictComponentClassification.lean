@@ -123,7 +123,8 @@ a unit in its residue field, then `M ≅ K(π^{1/d})` for a divisor `d` of `n`.
 
 This is `exists_dvrRootFractionPowerEquiv_of_embedding` transported from `FractionRing B` to any
 field `K` with `IsFractionRing B K`. -/
-@[stacks 09EV "clause (6), intermediate fields of the tame radical extension"]
+@[stacks 09EV "clause (6), intermediate fields of the tame radical extension, \
+  B of characteristic zero"]
 theorem exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing
     {B : Type u} [CommRing B] [IsDomain B] [IsDiscreteValuationRing B] [CharZero B]
     (K : Type u) [Field K] [Algebra B K] [IsFractionRing B K]
