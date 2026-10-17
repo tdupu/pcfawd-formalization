@@ -45,7 +45,9 @@ pullback to the punctured spectrum.
 
 Divergence from Stacks (see `FiniteNormalPuncturedEtalePurity` and Tag `0BMA`, clause (2)): the
 literal clause (2) is false for `B = A × κ(𝔪)` (finite, normal, étale over the punctured spectrum,
-not flat), so `B` torsion-free over `A` is part of the property.  Torsion-freeness is essential here: without it one could add
+not flat), so `B` torsion-free over `A` is part of the property.
+
+Torsion-freeness is essential here: without it one could add
 a normal factor supported only at the closed point, which restriction to the punctured spectrum
 would forget.  Equivalently, this condition forces every component relevant to this category to
 dominate the base. -/
