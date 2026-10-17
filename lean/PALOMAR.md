@@ -1,4 +1,4 @@
-# Palomar registry entries — `tdupu/pcf`
+# Palomar registry entries — `tdupu/pcfawd-formalization`
 
 Prepared for submission to the [Palomar registry](https://palomar-registry.org/),
 which records a claim about **one exact version** of a repository: the formal
@@ -24,16 +24,16 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
-All values re-derived 2026-10-17 at `tdupu/pcf` commit `8455068` ("Remove duplicate propositions
-from the Lean development"), before this file was edited. The Challenge and the dependencies of
-the three compared statements are unchanged from `cfcdac4`, where they were first derived (same
+All values re-derived 2026-10-17 at commit `c1e944e` ("Remove duplicate propositions from the
+Lean development"), before this file was edited. The Challenge and the dependencies of the three
+compared statements are unchanged from `156bee7`, where they were first derived (same
 structural hashes for all 4976 constants; see Entry 0).
 
 | Field | Value |
 | --- | --- |
-| Repository | `github.com/tdupu/pcf` (private). Palomar accepts only public repositories, so the submission is to come from the public repository `tdupu/pcfawd-formalization`, which carries `lean/` and `palomar/` with private files removed (`PUBLIC-RELEASE.md`). |
+| Repository | `github.com/tdupu/pcfawd-formalization` (public; Palomar accepts only public repositories) |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
-| `lean/` subtree | `0be84ea7bb849e466d0db799ec77a42e7b3d51a8` at `8455068` (`lean/Pcf` alone: `b958c48da7f9b7a10ea467e21973a18d395f9edf`; `palomar/`: `208ed3185fa3cdf094e87c164f4649a5bf792d5e`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes, and the public repository's `lean/` hash differs because private files are left out; recompute with `git rev-parse HEAD:lean` |
+| `lean/` subtree | `0bd280470476f4da968fa59cb1e68708291679e0` at `c1e944e` (`lean/Pcf` alone: `b958c48da7f9b7a10ea467e21973a18d395f9edf`; `palomar/`: `eb91320b9bb9d073dbaa202ec83572e19c76b21e`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
 | Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
 | Module system | all 238 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
@@ -58,10 +58,9 @@ file. Statement-to-declaration map: `README.md`, likewise.
 
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
-separate, explicitly authorized act. Still open before any submission (from
-`palomar/README.md`): the relationship answer, and the authors' hand review of the revised
-"Formalization" subsubsection of `latex/paper.tex` (`af86252`). (The Palomar preflight for the
-unconditional Challenge passed on `tdupu/pcfawd-formalization` `2f33fee`, run 39037647205.)
+separate, explicitly authorized act. Still open before any submission: the relationship
+answer, and the authors' review of the manuscript's revised account of the formalization. The
+manuscript is not part of this repository.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
