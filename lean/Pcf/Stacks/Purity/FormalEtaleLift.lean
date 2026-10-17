@@ -574,34 +574,6 @@ section Tower
 
 variable {A : Type u} [CommRing A] {C : Type w} [CommRing C] [Algebra A C]
 
-/-- The `A`-algebra map between quotients of `C` by nested ideals. -/
-def quotFactorₐ {I J : Ideal C} (h : I ≤ J) : (C ⧸ I) →ₐ[A] C ⧸ J :=
-  Ideal.Quotient.liftₐ I (Ideal.Quotient.mkₐ A J)
-    (fun _ ha ↦ Ideal.Quotient.eq_zero_iff_mem.mpr (h ha))
-
-@[simp]
-theorem quotFactorₐ_mk {I J : Ideal C} (h : I ≤ J) (c : C) :
-    quotFactorₐ (A := A) h (Ideal.Quotient.mk I c) = Ideal.Quotient.mk J c :=
-  rfl
-
-theorem quotFactorₐ_surjective {I J : Ideal C} (h : I ≤ J) :
-    Function.Surjective (quotFactorₐ (A := A) h) := by
-  intro z
-  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective z
-  exact ⟨Ideal.Quotient.mk I c, quotFactorₐ_mk h c⟩
-
-theorem quotFactorₐ_comp_quotFactorₐ {I J K : Ideal C} (hIJ : I ≤ J) (hJK : J ≤ K) :
-    (quotFactorₐ (A := A) hJK).comp (quotFactorₐ hIJ) = quotFactorₐ (hIJ.trans hJK) := by
-  apply AlgHom.ext
-  intro c
-  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective c
-  rfl
-
-theorem quotFactorₐ_self {I : Ideal C} (c : C ⧸ I) :
-    quotFactorₐ (A := A) (le_refl I) c = c := by
-  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective c
-  rfl
-
 variable (f : A)
 
 /-- `C / f^(n+1) C` maps onto `C / f C`. -/
@@ -620,14 +592,14 @@ theorem span_pow_succ_le_of_le {m n : ℕ} (h : m ≤ n) :
   Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow _ (by omega))
 
 /-- The kernel of `C / f^(n+1) C → C / f C` is nilpotent. -/
-theorem isNilpotent_ker_quotFactorₐ_span_pow (n : ℕ) :
-    IsNilpotent (RingHom.ker (quotFactorₐ (A := A) (span_pow_succ_le (C := C) f (n := n)))) := by
+theorem isNilpotent_ker_factorₐ_span_pow (n : ℕ) :
+    IsNilpotent (RingHom.ker (Ideal.Quotient.factorₐ A (span_pow_succ_le (C := C) f (n := n)))) := by
   set I := Ideal.span {algebraMap A C f ^ (n + 1)}
-  have hle : RingHom.ker (quotFactorₐ (A := A) (span_pow_succ_le (C := C) f (n := n))) ≤
+  have hle : RingHom.ker (Ideal.Quotient.factorₐ A (span_pow_succ_le (C := C) f (n := n))) ≤
       Ideal.span {Ideal.Quotient.mk I (algebraMap A C f)} := by
     intro z hz
     obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective z
-    rw [RingHom.mem_ker, quotFactorₐ_mk, Ideal.Quotient.eq_zero_iff_mem,
+    rw [RingHom.mem_ker, Ideal.Quotient.factorₐ_apply_mk, Ideal.Quotient.eq_zero_iff_mem,
       Ideal.mem_span_singleton'] at hz
     obtain ⟨a, rfl⟩ := hz
     rw [map_mul, Ideal.mem_span_singleton']
@@ -654,23 +626,23 @@ variable {B : Type v} [CommRing B] [Algebra A B]
 `B → C` when `C` is `(f)`-adically complete. -/
 theorem exists_algHom_of_compatible_of_isAdicComplete [IsAdicComplete (Ideal.span {f}) C]
     (φ : ∀ n : ℕ, B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f ^ (n + 1)})
-    (hcompat : ∀ n, (quotFactorₐ (A := A) (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) =
+    (hcompat : ∀ n, (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) =
       φ n) :
     ∃ Φ : B →ₐ[A] C, ∀ n,
       (Ideal.Quotient.mkₐ A (Ideal.span {algebraMap A C f ^ (n + 1)})).comp Φ = φ n := by
   -- compatibility across several levels
   have hdown : ∀ m n (h : m ≤ n) (b : B),
-      quotFactorₐ (A := A) (span_pow_succ_le_of_le (C := C) f h) (φ n b) = φ m b := by
+      Ideal.Quotient.factorₐ A (span_pow_succ_le_of_le (C := C) f h) (φ n b) = φ m b := by
     intro m n h b
     induction n, h using Nat.le_induction with
-    | base => exact quotFactorₐ_self _
+    | base => exact DFunLike.congr_fun (Ideal.Quotient.factorₐ_refl _) _
     | succ n hmn ih =>
-      have h2 : quotFactorₐ (A := A) (span_pow_succ_succ_le (C := C) f n) (φ (n + 1) b) =
+      have h2 : Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n) (φ (n + 1) b) =
           φ n b := AlgHom.congr_fun (hcompat n) b
-      calc quotFactorₐ (A := A) (span_pow_succ_le_of_le (C := C) f (Nat.le_succ_of_le hmn))
+      calc Ideal.Quotient.factorₐ A (span_pow_succ_le_of_le (C := C) f (Nat.le_succ_of_le hmn))
             (φ (n + 1) b)
-          = quotFactorₐ (A := A) (span_pow_succ_le_of_le (C := C) f hmn)
-              (quotFactorₐ (A := A) (span_pow_succ_succ_le (C := C) f n) (φ (n + 1) b)) := by
+          = Ideal.Quotient.factorₐ A (span_pow_succ_le_of_le (C := C) f hmn)
+              (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n) (φ (n + 1) b)) := by
             obtain ⟨c, hc⟩ := Ideal.Quotient.mk_surjective (φ (n + 1) b)
             rw [← hc]
             rfl
@@ -683,7 +655,7 @@ theorem exists_algHom_of_compatible_of_isAdicComplete [IsAdicComplete (Ideal.spa
     have hsmod : ∀ m n (h : m ≤ n),
         Ideal.Quotient.mk (Ideal.span {algebraMap A C f ^ (m + 1)}) (s n) = φ m b := by
       intro m n h
-      rw [← hdown m n h b, ← hs n, quotFactorₐ_mk]
+      rw [← hdown m n h b, ← hs n, Ideal.Quotient.factorₐ_apply_mk]
     have hcauchy : ∀ {m n}, m ≤ n → s m ≡ s n [SMOD (Ideal.span {f} ^ m • ⊤ : Submodule A C)] := by
       intro m n h
       rw [SModEq.sub_mem, mem_span_pow_smul_top_iff]
@@ -779,10 +751,10 @@ theorem exists_algHom_lift_of_isAdicComplete (f : A) [IsAdicComplete (Ideal.span
     (φ₀ : B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f}) :
     ∃ φ : B →ₐ[A] C, (Ideal.Quotient.mkₐ A (Ideal.span {algebraMap A C f})).comp φ = φ₀ := by
   let π : ∀ n : ℕ, (C ⧸ Ideal.span {algebraMap A C f ^ (n + 1)}) →ₐ[A]
-      C ⧸ Ideal.span {algebraMap A C f} := fun n ↦ quotFactorₐ (span_pow_succ_le f)
-  have hπsurj : ∀ n, Function.Surjective (π n) := fun n ↦ quotFactorₐ_surjective _
+      C ⧸ Ideal.span {algebraMap A C f} := fun n ↦ Ideal.Quotient.factorₐ A (span_pow_succ_le f (n := n))
+  have hπsurj : ∀ n, Function.Surjective (π n) := fun n ↦ Ideal.Quotient.factor_surjective (span_pow_succ_le f (n := n))
   have hπnil : ∀ n, IsNilpotent (RingHom.ker (π n)) := fun n ↦
-    isNilpotent_ker_quotFactorₐ_span_pow f n
+    isNilpotent_ker_factorₐ_span_pow f n
   -- the lifts at each level
   have hlift : ∀ n, ∃ φ : B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f ^ (n + 1)},
       (π n).comp φ = φ₀ := fun n ↦
@@ -790,12 +762,12 @@ theorem exists_algHom_lift_of_isAdicComplete (f : A) [IsAdicComplete (Ideal.span
   choose φ hφ using hlift
   -- compatibility by uniqueness
   have hcompat : ∀ n,
-      (quotFactorₐ (A := A) (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) = φ n := by
+      (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) = φ n := by
     intro n
     apply algHom_lift_unique_of_formallyUnramified (π n) (hπnil n) (hx n)
     rw [hφ n, ← AlgHom.comp_assoc]
-    have : (π n).comp (quotFactorₐ (A := A) (span_pow_succ_succ_le (C := C) f n)) = π (n + 1) :=
-      quotFactorₐ_comp_quotFactorₐ _ _
+    have : (π n).comp (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n)) = π (n + 1) :=
+      Ideal.Quotient.factorₐ_comp A _ _
     rw [this, hφ (n + 1)]
   obtain ⟨Φ, hΦ⟩ := exists_algHom_of_compatible_of_isAdicComplete f φ hcompat
   refine ⟨Φ, ?_⟩
