@@ -75,6 +75,7 @@ theorem span_singleton_isPrime_of_quotient_isDomain (a : A)
 
 variable [IsRegularLocalRing A]
 
+omit [IsRegularLocalRing A] in
 /-- In a regular local ring, a divisor with regular quotient is a prime element: `A ⧸ (a)` is a
 regular local ring, hence a domain (Stacks `00NP`). -/
 theorem divisorPrime_isPrime (a : A) [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
@@ -419,6 +420,7 @@ theorem strictRootCover_isLocalHom [Nontrivial A] (hE : 1 ≤ E) :
   AdjoinRoot.isLocalHom_of_monic_of_degree_pos (Pcf.LocalModel.localPoly_monic 1 a hE)
     (strictRootCover_degree_pos a hE)
 
+omit [IsNoetherianRing A] in
 /-- The root lies in every maximal ideal of the root cover when `a` lies in the maximal ideal of
 `A`. -/
 theorem strictRoot_mem_of_isMaximal (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E)
@@ -429,12 +431,14 @@ theorem strictRoot_mem_of_isMaximal (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E)
   exact map_maximalIdeal_le_of_isMaximal_of_isIntegral A (StrictRootCover a E) I
     (Ideal.mem_map_of_mem _ ha)
 
+omit [IsNoetherianRing A] in
 theorem strictRoot_mem_jacobson (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E) :
     Ideal.span ({strictRoot a E} : Set (StrictRootCover a E)) ≤ Ideal.jacobson ⊥ := by
   rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.jacobson, Ideal.mem_sInf]
   rintro I ⟨-, hI⟩
   exact strictRoot_mem_of_isMaximal a ha hE I
 
+omit [IsNoetherianRing A] in
 /-- `A' ⧸ (x) ≅ A ⧸ (a)` is local, so the root cover is local. -/
 theorem strictRootCover_isLocalRing (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E) :
     IsLocalRing (StrictRootCover a E) := by
@@ -453,12 +457,14 @@ theorem strictRootCover_isLocalRing (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E) :
       (Pcf.LocalModel.quotientRootEquiv 1 a hE).symm.surjective
   exact isLocalRing_of_quotient_of_le_jacobson _ (strictRoot_mem_jacobson a ha hE)
 
+omit [IsNoetherianRing A] in
 theorem strictRoot_mem_maximalIdeal (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E) :
     letI := strictRootCover_isLocalRing a ha hE
     strictRoot a E ∈ maximalIdeal (StrictRootCover a E) := by
   letI := strictRootCover_isLocalRing a ha hE
   exact strictRoot_mem_of_isMaximal a ha hE _
 
+omit [IsNoetherianRing A] in
 /-- The root cover has the same residue field as the base: every element of `A[x] ⧸ (x^E − a)`
 is congruent to a constant modulo the maximal ideal, which contains `x`. -/
 theorem strictRootCover_residueField_bijective (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E) :
@@ -481,6 +487,7 @@ theorem strictRootCover_residueField_bijective (ha : a ∈ maximalIdeal A) (hE :
   rw [← neg_mem_iff, neg_sub, this]
   exact Ideal.mul_mem_right _ _ (strictRoot_mem_maximalIdeal a ha hE)
 
+omit [IsNoetherianRing A] in
 /-- The residue field of the root cover is separably closed when that of the base is. -/
 theorem strictRootCover_residueField_isSepClosed (ha : a ∈ maximalIdeal A) (hE : 1 ≤ E)
     [IsSepClosed (ResidueField A)] :
@@ -491,11 +498,13 @@ theorem strictRootCover_residueField_isSepClosed (ha : a ∈ maximalIdeal A) (hE
   exact IsSepClosed.of_ringEquiv
     (RingEquiv.ofBijective _ (strictRootCover_residueField_bijective a ha hE))
 
+omit [IsNoetherianRing A] [IsLocalRing A] in
 /-- The root is a nonzerodivisor of the root cover when `a` is one in `A`. -/
 theorem strictRoot_mem_nonZeroDivisors (hE : 1 ≤ E) (ha0 : a ∈ nonZeroDivisors A) :
     strictRoot a E ∈ nonZeroDivisors (StrictRootCover a E) :=
   Pcf.LocalModel.root_mem_nonZeroDivisors 1 a hE ha0
 
+omit [IsNoetherianRing A] [IsLocalRing A] in
 /-- `A' ⧸ (x) ≅ A ⧸ (a)` is regular local when `A ⧸ (a)` is. -/
 theorem strictRootCover_quotient_isRegularLocalRing (hE : 1 ≤ E)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
@@ -527,6 +536,7 @@ theorem strictRootCover_isIntegrallyClosed (ha : a ∈ maximalIdeal A) (hE : 1 �
   have := strictRootCover_isDomain a ha hE ha0
   isIntegrallyClosed_of_isRegularRing (StrictRootCover a E)
 
+omit [IsNoetherianRing A] [IsLocalRing A] in
 /-- The root generates a prime ideal of the root cover. -/
 theorem strictRootCover_span_root_isPrime (hE : 1 ≤ E)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))] :
@@ -537,6 +547,7 @@ theorem strictRootCover_span_root_isPrime (hE : 1 ≤ E)
     isDomain_of_isRegularLocalRing _
   exact Ideal.Quotient.isDomain_iff_prime _ |>.mp inferInstance
 
+omit [IsNoetherianRing A] [IsLocalRing A] in
 /-- The prime `(x)` of the root cover lies over the prime `(a)` of the base. -/
 theorem strictRootCover_span_root_under (hE : 1 ≤ E) :
     (Ideal.span ({strictRoot a E} : Set (StrictRootCover a E))).under A =
@@ -575,6 +586,7 @@ theorem strictRootCover_localization_span_root_isDiscreteValuationRing
   exact divisorLocalization_isDiscreteValuationRing _ (strictRoot_mem_maximalIdeal a ha hE)
     (nonZeroDivisors.ne_zero (strictRoot_mem_nonZeroDivisors a hE ha0))
 
+omit [IsNoetherianRing A] [IsLocalRing A] in
 /-- The quotient of the root cover by `(x)` is a regular ring; this is the
 `[IsRegularRing (A' ⧸ (x))]` input of Tag `0EYE` over the root cover. -/
 theorem strictRootCover_quotient_isRegularRing (hE : 1 ≤ E)

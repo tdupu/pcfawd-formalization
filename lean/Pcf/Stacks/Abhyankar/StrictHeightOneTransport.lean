@@ -213,7 +213,7 @@ variable {A N a E}
 Given the normalization component data over the root cover and Zariski–Nagata purity for it,
 the fraction field of the component `N` is `K(a^{1/n})` for a divisor `n` of `E`. -/
 theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
-    [IsNoetherianRing A] [IsLocalRing A] [HenselianLocalRing A] [IsSepClosed (ResidueField A)]
+    [IsNoetherianRing A] [HenselianLocalRing A] [IsSepClosed (ResidueField A)]
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : A)) (hE : 2 ≤ E)

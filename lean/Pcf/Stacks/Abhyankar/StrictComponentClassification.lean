@@ -192,6 +192,9 @@ theorem rootPoly_fractionRing_irreducible (ha : a ∈ maximalIdeal A) (ha0 : a �
     simp [dvrRootPoly, ← IsScalarTower.algebraMap_apply]
   rwa [hmap] at hirr
 
+-- `[IsLocalRing A]` is a section variable (needed for `ResidueField A` in the lemmas above that
+-- omit `[HenselianLocalRing A]`), so the overlap with `[HenselianLocalRing A]` is intended.
+set_option linter.overlappingInstances false in
 /-- **Per-component classification in the strictly henselian case of Stacks Tag `0EYG`.**
 
 Let `A` be a Noetherian henselian local ring with separably closed residue field, `a ∈ 𝔪_A` a

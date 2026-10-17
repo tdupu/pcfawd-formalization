@@ -112,8 +112,7 @@ theorem Algebra.isEtaleAt_of_puncturedSpectrum_pullback_etale
 regular system of parameters is used only to rule out a zero discriminant from the height-one
 unit tests. -/
 theorem exists_prime_height_one_of_isRegularLocalRing_dimension_two
-    (R : Type u) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
-    [IsRegularLocalRing R] (hdim : ringKrullDim R = 2) :
+    (R : Type u) [CommRing R] [IsRegularLocalRing R] (hdim : ringKrullDim R = 2) :
     ∃ p : Ideal R, p.IsPrime ∧ p.height = 1 := by
   letI : IsDomain R := isDomain_of_isRegularLocalRing R
   obtain ⟨x, y, hspan, hx, _⟩ :=
@@ -154,8 +153,7 @@ The `IsIntegrallyClosed R` argument holds for every regular local ring (Stacks `
 `isIntegrallyClosed_of_isRegularLocalRing`); callers supply it, as in
 `puncturedSpectrumPurity_of_isRegularLocalRing_dimension_two`. -/
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
-    (R : Type u) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
-    [IsRegularLocalRing R] [IsIntegrallyClosed R] (hdim : ringKrullDim R = 2) :
+    (R : Type u) [CommRing R] [IsRegularLocalRing R] [IsIntegrallyClosed R] (hdim : ringKrullDim R = 2) :
     FiniteNormalPuncturedEtalePurity R := by
   intro B hB
   let S : Type u := B.unop

@@ -70,6 +70,7 @@ theorem strictRootCoverToRootFractionField_root :
       AdjoinRoot.root (dvrRootPoly (algebraMap A (FractionRing A) a) n) := by
   simp [strictRootCoverToRootFractionField, strictRoot, AdjoinRoot.liftAlgHom]
 
+omit [IsDomain A] in
 /-- Every element of `K(a^{1/n})` becomes integral (in the image of the root cover) after
 multiplication by a nonzero element of `A`. -/
 theorem exists_mul_eq_strictRootCoverToRootFractionField (ℓ : rootFractionField a n) :

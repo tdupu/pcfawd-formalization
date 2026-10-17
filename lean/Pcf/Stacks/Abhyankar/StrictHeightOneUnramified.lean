@@ -138,6 +138,7 @@ theorem StrictRootComponentPreData.exists_aeval_eq (C : StrictRootComponentPreDa
     ∃ P : N[X], aeval (algebraMap (StrictRootCover a E) C.carrier (strictRoot a E)) P = z :=
   exists_aeval_eq_of_mem_adjoin _ hz
 
+omit [IsNoetherianRing A] in
 /-- Every element of the localization of the component at a prime is a quotient of polynomials
 in the root with coefficients in `N`. -/
 theorem StrictRootComponentPreData.exists_aeval_mul_eq_aeval_of_generic (hE : 1 ≤ E)

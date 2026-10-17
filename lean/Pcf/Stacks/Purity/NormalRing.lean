@@ -14,7 +14,8 @@ public import Mathlib.RingTheory.Spectrum.Prime.RingHom
 # The Stacks notion of a normal ring
 
 Stacks Definition 10.37.11 (Tag `00GV`, in Section `037B`) defines a normal ring by requiring
-every localization at a prime ideal to be a normal domain.  This differs from Mathlib's `IsIntegrallyClosed` for rings with zero divisors.
+every localization at a prime ideal to be a normal domain.  This differs from Mathlib's
+`IsIntegrallyClosed` for rings with zero divisors.
 The distinction matters in Tag `0BM9`, where the finite normal algebra need not be connected.
 
 This file records the literal local definition.  It also proves compatibility with Mathlib's

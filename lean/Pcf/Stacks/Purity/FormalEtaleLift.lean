@@ -593,7 +593,8 @@ theorem span_pow_succ_le_of_le {m n : ℕ} (h : m ≤ n) :
 
 /-- The kernel of `C / f^(n+1) C → C / f C` is nilpotent. -/
 theorem isNilpotent_ker_factorₐ_span_pow (n : ℕ) :
-    IsNilpotent (RingHom.ker (Ideal.Quotient.factorₐ A (span_pow_succ_le (C := C) f (n := n)))) := by
+    IsNilpotent
+      (RingHom.ker (Ideal.Quotient.factorₐ A (span_pow_succ_le (C := C) f (n := n)))) := by
   set I := Ideal.span {algebraMap A C f ^ (n + 1)}
   have hle : RingHom.ker (Ideal.Quotient.factorₐ A (span_pow_succ_le (C := C) f (n := n))) ≤
       Ideal.span {Ideal.Quotient.mk I (algebraMap A C f)} := by
@@ -626,8 +627,8 @@ variable {B : Type v} [CommRing B] [Algebra A B]
 `B → C` when `C` is `(f)`-adically complete. -/
 theorem exists_algHom_of_compatible_of_isAdicComplete [IsAdicComplete (Ideal.span {f}) C]
     (φ : ∀ n : ℕ, B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f ^ (n + 1)})
-    (hcompat : ∀ n, (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) =
-      φ n) :
+    (hcompat : ∀ n,
+      (Ideal.Quotient.factorₐ A (span_pow_succ_succ_le (C := C) f n)).comp (φ (n + 1)) = φ n) :
     ∃ Φ : B →ₐ[A] C, ∀ n,
       (Ideal.Quotient.mkₐ A (Ideal.span {algebraMap A C f ^ (n + 1)})).comp Φ = φ n := by
   -- compatibility across several levels
@@ -751,8 +752,10 @@ theorem exists_algHom_lift_of_isAdicComplete (f : A) [IsAdicComplete (Ideal.span
     (φ₀ : B →ₐ[A] C ⧸ Ideal.span {algebraMap A C f}) :
     ∃ φ : B →ₐ[A] C, (Ideal.Quotient.mkₐ A (Ideal.span {algebraMap A C f})).comp φ = φ₀ := by
   let π : ∀ n : ℕ, (C ⧸ Ideal.span {algebraMap A C f ^ (n + 1)}) →ₐ[A]
-      C ⧸ Ideal.span {algebraMap A C f} := fun n ↦ Ideal.Quotient.factorₐ A (span_pow_succ_le f (n := n))
-  have hπsurj : ∀ n, Function.Surjective (π n) := fun n ↦ Ideal.Quotient.factor_surjective (span_pow_succ_le f (n := n))
+      C ⧸ Ideal.span {algebraMap A C f} := fun n ↦
+    Ideal.Quotient.factorₐ A (span_pow_succ_le f (n := n))
+  have hπsurj : ∀ n, Function.Surjective (π n) := fun n ↦
+    Ideal.Quotient.factor_surjective (span_pow_succ_le f (n := n))
   have hπnil : ∀ n, IsNilpotent (RingHom.ker (π n)) := fun n ↦
     isNilpotent_ker_factorₐ_span_pow f n
   -- the lifts at each level
