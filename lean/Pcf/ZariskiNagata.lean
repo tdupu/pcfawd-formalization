@@ -31,10 +31,10 @@ Hypotheses (1), (2), (3) and half of (4) are missing from the field above, so th
 applies at points where Tag 0BMB does not: it is a strictly stronger assumption.
 
 **This file does not remove that gap.** `Pcf.AbstractZariskiNagataPurity` below states Tag 0BMB with
-all five hypotheses present, and `Pcf.PurityData.ofAbstractZariskiNagataPurity` derives `localPurity`
-from it — but the hypotheses are bare `X → Prop` and `X → ℕ` fields with no content, and
-`Pcf.PurityData.toAbstractZariskiNagataPurity` builds a `AbstractZariskiNagataPurity` from *any* `PurityData` by
-instantiating them at `True`. The composite is the identity, definitionally:
+all five hypotheses present, and `Pcf.PurityData.ofAbstractZariskiNagataPurity` derives
+`localPurity` from it — but the hypotheses are bare `X → Prop` and `X → ℕ` fields with no content,
+and `Pcf.PurityData.toAbstractZariskiNagataPurity` builds a `AbstractZariskiNagataPurity` from *any*
+`PurityData` by instantiating them at `True`. The composite is the identity, definitionally:
 `Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity`.
 
 So the two are **interderivable**, and the assumption has not been reduced or made more
@@ -61,7 +61,8 @@ codimension at least two. This was found by the same adversarial review.
 
 * `Pcf.AbstractZariskiNagataPurity` — Tag 0BMB with every hypothesis present, as a *statement*.
 * `Pcf.PurityData.ofAbstractZariskiNagataPurity` — `localPurity` derived from it.
-* `Pcf.PurityData.toAbstractZariskiNagataPurity` and `Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity` —
+* `Pcf.PurityData.toAbstractZariskiNagataPurity` and
+  `Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity` —
   **the refutation**: the derivation above discharges nothing, because the converse
   construction exists and the roundtrip is the identity.
 * `Pcf.localPurity_of_codim_le_one` — purity is free below codimension two.
@@ -128,10 +129,11 @@ verifies all four in a single sentence in Step 1 of the proof of Theorem `thm:bo
 Note the quantifier: they are required at *every* point, and `hdim` asks for global
 equidimensionality, which is more than §`sec:bounding` uses. But this does **not** make the
 resulting
-assumption weaker than the old field: by `Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity`
-the two are interderivable, so nothing has been given up and nothing gained. An earlier
-version of this docstring said the requirement was "much less than the previous field,
-which required none of them"; that is false and is retracted. -/
+assumption weaker than the old field: by
+`Pcf.PurityData.ofAbstractZariskiNagataPurity_toAbstractZariskiNagataPurity` the two are
+interderivable, so nothing has been given up and nothing gained. An earlier version of this
+docstring said the requirement was "much less than the previous field, which required none of them";
+that is false and is retracted. -/
 noncomputable def PurityData.ofAbstractZariskiNagataPurity (Z : AbstractZariskiNagataPurity X)
     (hnormal : ∀ x, Z.normal x) (hregular : ∀ x, Z.regularBelow x)
     (hqf : ∀ x, Z.quasiFinite x) (hdim : ∀ x, Z.codim x = Z.codimTarget x)
@@ -151,7 +153,8 @@ noncomputable def PurityData.ofAbstractZariskiNagataPurity (Z : AbstractZariskiN
     (PurityData.ofAbstractZariskiNagataPurity Z hnormal hregular hqf hdim hclosed hne hgen).codim
       = Z.codim := rfl
 
-@[simp] theorem PurityData.ofAbstractZariskiNagataPurity_nonEtale (Z : AbstractZariskiNagataPurity X)
+@[simp] theorem PurityData.ofAbstractZariskiNagataPurity_nonEtale
+    (Z : AbstractZariskiNagataPurity X)
     (hnormal hregular hqf hdim hclosed hne hgen) :
     (PurityData.ofAbstractZariskiNagataPurity Z hnormal hregular hqf hdim hclosed hne hgen).nonEtale
       = Z.nonEtale := rfl
@@ -170,7 +173,8 @@ theorem codim_eq_one [T0Space X] (Z : AbstractZariskiNagataPurity X)
     (hclosed : IsClosed Z.nonEtale) (hne : Z.nonEtale ≠ univ)
     (hgen : ∀ x, Z.codim x = 0 → closure ({x} : Set X) = univ)
     {E₀ : Set X}
-    (hE₀ : (PurityData.ofAbstractZariskiNagataPurity Z hnormal hregular hqf hdim hclosed hne hgen).IsComponent E₀)
+    (hE₀ : (PurityData.ofAbstractZariskiNagataPurity Z hnormal hregular hqf hdim hclosed hne
+        hgen).IsComponent E₀)
     {η : X} (hη : closure ({η} : Set X) = E₀) : Z.codim η = 1 :=
   PurityData.codim_eq_one hE₀ hη
 
@@ -184,9 +188,10 @@ These two declarations are the reason the claims retracted above cannot be made.
 hypothesis predicates at `True`, taking `codimTarget := codim`, and taking the
 non-unramified locus to be the non-étale locus.
 
-Nothing in `AbstractZariskiNagataPurity` prevents this: its predicates are bare `X → Prop` fields tied
-to no morphism, no local ring and no scheme. -/
-def PurityData.toAbstractZariskiNagataPurity (D : PurityData X) : AbstractZariskiNagataPurity X where
+Nothing in `AbstractZariskiNagataPurity` prevents this: its predicates are bare `X → Prop` fields
+tied to no morphism, no local ring and no scheme. -/
+def PurityData.toAbstractZariskiNagataPurity (D : PurityData X) : AbstractZariskiNagataPurity X
+    where
   codim := D.codim
   codimTarget := D.codim
   normal := fun _ => True

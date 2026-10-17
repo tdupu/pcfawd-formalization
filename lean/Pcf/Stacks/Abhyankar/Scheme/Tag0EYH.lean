@@ -25,9 +25,10 @@ Morphisms, Lemma 29.49.2, Tag `02KB`), with
 and étale locally on `X`, `Y' → X` is a finite disjoint union of `Spec(A[x]/(x^e - f)) → Spec(A)`
 with `A` Noetherian, `f` a nonzerodivisor with `A/fA` regular, `e ≥ 1` invertible in `A`.
 
-Forms: `abhyankarLemma_normalization_of_abhyankarLemmaTameOver` (affine statement as hypothesis), `abhyankarLemma_normalization` (unconditional, via
-`Pcf.Stacks.abhyankarLemmaTameOfFinite`), `abhyankarLemma_normalization_of_isUnit_natCast` (on a `ℚ`-scheme, via the
-characteristic-zero `Pcf.Stacks.abhyankarLemmaOfFinite`).
+Forms: `abhyankarLemma_normalization_of_abhyankarLemmaTameOver` (affine statement as hypothesis),
+`abhyankarLemma_normalization` (unconditional, via `Pcf.Stacks.abhyankarLemmaTameOfFinite`),
+`abhyankarLemma_normalization_of_isUnit_natCast` (on a `ℚ`-scheme, via the characteristic-zero
+`Pcf.Stacks.abhyankarLemmaOfFinite`).
 
 ## Stacks proof step → Lean
 
@@ -75,10 +76,12 @@ theorem isRegularRing_of_subsingleton (A : Type*) [CommRing A] [Subsingleton A] 
 
 /-- Chart-level algebra for `0EYH` on an affine open `V` with `D ∩ V = V(a)`, for the
 normalization `π : Y' → X` of `X` in `Y`. -/
-theorem normalization_appTop_algEquiv_standardCovers_of_chart [IsLocallyNoetherian X] (hA : AbhyankarLemmaTameOver X)
+theorem normalization_appTop_algEquiv_standardCovers_of_chart [IsLocallyNoetherian X]
+    (hA : AbhyankarLemmaTameOver X)
     (hDreg : IsRegularScheme D.subscheme)
     (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
-    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) {V : X.affineOpens} {a : Γ(X, V)}
+    (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) {V : X.affineOpens}
+        {a : Γ(X, V)}
     (ha : a ∈ nonZeroDivisors Γ(X, V)) (hDa : D.ideal V = Ideal.span {a}) :
     letI := ((f ≫ (complementOpen D).ι).fromNormalization.app V.1).hom.toAlgebra
     ((f ≫ (complementOpen D).ι).fromNormalization.app V.1).hom.Finite ∧
@@ -288,7 +291,8 @@ theorem exists_rootCover_of_mem [IsLocallyNoetherian X] (hA : AbhyankarLemmaTame
   have hy : a ∈ (V.2.primeIdealOf ⟨x, hxV⟩).asIdeal := by
     have := (mem_support_iff_of_ideal_eq hDa hxV).mp hxD
     rwa [mem_basicOpen_iff_notMem_primeIdealOf V.2 a ⟨x, hxV⟩, not_not] at this
-  obtain ⟨-, -, -, -, hstr⟩ := normalization_appTop_algEquiv_standardCovers_of_chart hA hDreg f htame ha hDa
+  obtain ⟨-, -, -, -, hstr⟩ := normalization_appTop_algEquiv_standardCovers_of_chart hA hDreg f
+      htame ha hDa
   let _ : Algebra Γ(X, V) Γ((f ≫ (complementOpen D).ι).normalization,
       (f ≫ (complementOpen D).ι).fromNormalization ⁻¹ᵁ V.1) :=
     ((f ≫ (complementOpen D).ι).fromNormalization.app V.1).hom.toAlgebra
@@ -303,7 +307,8 @@ theorem exists_rootCover_of_mem [IsLocallyNoetherian X] (hA : AbhyankarLemmaTame
 
 /-- **Stacks Lemma 58.31.6 (Tag `0EYH`), with the affine statement as a hypothesis.**  See
 `abhyankarLemma_normalization` for the unconditional form. -/
-theorem abhyankarLemma_normalization_of_abhyankarLemmaTameOver (X : Scheme.{u}) [IsLocallyNoetherian X]
+theorem abhyankarLemma_normalization_of_abhyankarLemmaTameOver (X : Scheme.{u})
+    [IsLocallyNoetherian X]
     (hA : AbhyankarLemmaTameOver X)
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
@@ -337,9 +342,9 @@ theorem abhyankarLemma_normalization_of_abhyankarLemmaTameOver (X : Scheme.{u}) 
 
 /-- **The normalization addendum to Abhyankar's lemma (Stacks Lemma 58.31.6, Tag `0EYH`).**
 
-In the situation of Lemma 58.31.5 (`abhyankarLemma_scheme`) the normalization of `X` in `Y` is a finite
-locally free morphism `π : Y' → X` (here: finite, flat and locally of finite presentation, which
-is "finite locally free" by Tag `02KB`) such that
+In the situation of Lemma 58.31.5 (`abhyankarLemma_scheme`) the normalization of `X` in `Y` is a
+finite locally free morphism `π : Y' → X` (here: finite, flat and locally of finite presentation,
+which is "finite locally free" by Tag `02KB`) such that
 1. the restriction of `Y'` to `X ∖ D` is isomorphic to `Y`,
 2. `D' = π⁻¹(D)_red` is an effective Cartier divisor on `Y'`, and
 3. `D'` is a regular scheme.
@@ -381,6 +386,7 @@ theorem abhyankarLemma_normalization_of_isUnit_natCast (X : Scheme.{u}) [IsLocal
     IsEffectiveCartier (D.comap π).radical ∧
     IsRegularScheme (D.comap π).radical.subscheme ∧
     IsEtaleLocallyStandardRootCover π :=
-  abhyankarLemma_normalization_of_abhyankarLemmaTameOver X (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
+  abhyankarLemma_normalization_of_abhyankarLemmaTameOver X
+      (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
 
 end Pcf.Stacks.SchemeLevel

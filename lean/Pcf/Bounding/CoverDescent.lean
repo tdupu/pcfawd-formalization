@@ -196,8 +196,10 @@ noncomputable def schemeRamifiedCover
     rintro p ⟨q, hqp, hq⟩
     exact ⟨q, mem_schemeDivisorNonEtaleLocus_of_one_lt_ramificationIdx π q hq, hqp⟩
   ram_comp q := by
-    change schemeDivisorRamificationIdx f (q.mapFiniteDominantNormal π) * schemeDivisorRamificationIdx π q =
-      schemeDivisorRamificationIdx π (q.mapFiniteDominantNormal g) * schemeDivisorRamificationIdx g q
+    change schemeDivisorRamificationIdx f (q.mapFiniteDominantNormal π) *
+        schemeDivisorRamificationIdx π q =
+      schemeDivisorRamificationIdx π (q.mapFiniteDominantNormal g) * schemeDivisorRamificationIdx g
+          q
     rw [← schemeDivisorRamificationIdx_comp π f, ← schemeDivisorRamificationIdx_comp g π, hcomm]
 
 /-- Scheme-level `lem:covers` for normal schemes, with the finiteness of the

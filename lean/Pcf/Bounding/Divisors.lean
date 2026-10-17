@@ -58,8 +58,8 @@ abbrev HeightOnePrime (A : Type*) [CommRing A] :=
   {p : PrimeSpectrum A // p.asIdeal.height = 1}
 
 /-- The codimension-one non-étale locus of an actual affine morphism.  Unlike the
-`UnnormalizedDynamics.nonEtaleLocus` field of the abstract dynamics, this set is defined directly from the
-localized ring map. -/
+`UnnormalizedDynamics.nonEtaleLocus` field of the abstract dynamics, this set is defined directly
+from the localized ring map. -/
 def affineNonEtaleLocus (R S : Type*) [CommRing R] [CommRing S] [Algebra R S] :
     Set (HeightOnePrime S) :=
   {q | ¬ Algebra.IsEtaleAt R q.1.asIdeal}
@@ -1014,8 +1014,8 @@ theorem heightOneRamificationIdx_pos (Q : HeightOnePrime S) :
 omit [Module.Finite R S] in
 /-- Ramification indices at codimension-one primes multiply in a tower when the
 localized upper extension is flat.  This is the geometric tower identity behind
-the product used by `DivisorDynamics.iterateRamificationIdx`; unlike that product identity, this theorem
-is about Mathlib's actual local ramification index. -/
+the product used by `DivisorDynamics.iterateRamificationIdx`; unlike that product identity, this
+theorem is about Mathlib's actual local ramification index. -/
 theorem heightOneRamificationIdx_tower {T : Type*} [CommRing T] [Algebra R T] [Algebra S T]
     [IsScalarTower R S T] (Q : HeightOnePrime S) (P : HeightOnePrime T)
     [P.1.asIdeal.LiesOver Q.1.asIdeal]
@@ -1288,7 +1288,8 @@ theorem divisorDynamicsOfFiniteNormalSelfAlgebra_step
 @[simp]
 theorem divisorDynamicsOfFiniteNormalSelfAlgebra_ramificationIdx
     (hgen : nonEtaleLocus R R ≠ Set.univ) (Q : HeightOnePrime R) :
-    (divisorDynamicsOfFiniteNormalSelfAlgebra hgen).ramificationIdx Q = heightOneRamificationIdx (R := R) Q :=
+    (divisorDynamicsOfFiniteNormalSelfAlgebra hgen).ramificationIdx Q = heightOneRamificationIdx
+        (R := R) Q :=
   rfl
 
 /-- The abstract branch set of the canonical affine divisor dynamics is exactly the

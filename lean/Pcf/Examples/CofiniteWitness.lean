@@ -14,12 +14,12 @@ public import Mathlib.Topology.Irreducible
 /-!
 # A concrete, genuinely ramified witness for `Pcf.PCFGeometry`
 
-`Pcf/Geometry.lean` derives Theorem `thm:normal-invariant` (`Pcf.PCFGeometry.restriction_isPCF`) from a
-structure `Pcf.PCFGeometry PX B` together with the bounding conclusion `key` as an explicit
-argument. A reader is entitled to ask whether that structure is inhabited at all, and — more
-sharply — whether it is inhabited by anything in which the *restricted* system actually
-ramifies. If the only models had `res.branch = ∅`, Theorem `thm:normal-invariant` would be
-true but empty on this route.
+`Pcf/Geometry.lean` derives Theorem `thm:normal-invariant` (`Pcf.PCFGeometry.restriction_isPCF`)
+from a structure `Pcf.PCFGeometry PX B` together with the bounding conclusion `key` as an explicit
+argument. A reader is entitled to ask whether that structure is inhabited at all, and — more sharply
+— whether it is inhabited by anything in which the *restricted* system actually ramifies. If the
+only models had `res.branch = ∅`, Theorem `thm:normal-invariant` would be true but empty on this
+route.
 
 This file answers both questions with a single compiling instance.
 
@@ -35,7 +35,8 @@ description (`CofiniteTopology.isClosed_iff`) and its Noetherianness
 
 * `Pcf.Examples.isClosed_cofiniteNat_iff` — the closed sets are exactly the finite sets and
   the whole space.
-* `Pcf.Examples.isProperIrreducibleClosed_iff_singleton` — `Pcf.IsProperIrreducibleClosed s ↔ ∃ x, s = {x}`. So the primes of
+* `Pcf.Examples.isProperIrreducibleClosed_iff_singleton` —
+  `Pcf.IsProperIrreducibleClosed s ↔ ∃ x, s = {x}`. So the primes of
   this toy "variety" are its points, and there are plenty of them.
 * `Pcf.Examples.noetherianSpace_cofiniteNat` — the space is Noetherian, which is the hypothesis
   `Pcf.PCFGeometry.restriction_isPCF` needs.
@@ -44,10 +45,12 @@ description (`CofiniteTopology.isClosed_iff`) and its Noetherianness
   step and ramification index `2` at the prime `{0}` and `1` elsewhere; the correction
   locus `singAmbient` is `{0}`, so the ramified prime sits inside it, exactly as
   Theorem `thm:bounding` permits.
-* `Pcf.Examples.restrictionDynamics_branch` — the restricted branch divisor is `{{0}}`, in particular
+* `Pcf.Examples.restrictionDynamics_branch` — the restricted branch divisor is `{{0}}`, in
+  particular
   **nonempty** (`Pcf.Examples.restrictionDynamics_branch_nonempty`). The witness is therefore not
   ramification-free.
-* `Pcf.Examples.restrictionDynamics_isPCF` — `res.PCF`, obtained by *applying* `Pcf.PCFGeometry.restriction_isPCF`
+* `Pcf.Examples.restrictionDynamics_isPCF` — `res.PCF`, obtained by *applying*
+  `Pcf.PCFGeometry.restriction_isPCF`
   to the instance, not by reproving it.
 
 ## What is **not** established
@@ -110,7 +113,8 @@ theorem subsingleton_of_isIrreducible_of_finite {s : Set CofiniteNat} (hirr : Is
 /-! ### Step 2: the primes are the points -/
 
 /-- **Step 2, one direction.** Every singleton is a prime of `CofiniteNat`. -/
-theorem isProperIrreducibleClosed_singleton (x : CofiniteNat) : Pcf.IsProperIrreducibleClosed ({x} : Set CofiniteNat) where
+theorem isProperIrreducibleClosed_singleton (x : CofiniteNat) : Pcf.IsProperIrreducibleClosed
+    ({x} : Set CofiniteNat) where
   irreducible := isIrreducible_singleton
   isClosed := isClosed_cofiniteNat_iff.mpr (Or.inr (Set.finite_singleton x))
   ne_univ := ne_univ_of_finite (Set.finite_singleton x)
@@ -123,16 +127,19 @@ theorem isProperIrreducibleClosed_singleton (x : CofiniteNat) : Pcf.IsProperIrre
 
 /-- **Step 2, the other direction.** Every prime of `CofiniteNat` is a singleton: it is closed
 and proper, hence finite, and finite irreducible sets are subsingletons. -/
-theorem eq_singleton_of_isProperIrreducibleClosed {s : Set CofiniteNat} (hs : Pcf.IsProperIrreducibleClosed s) : ∃ x, s = {x} := by
+theorem eq_singleton_of_isProperIrreducibleClosed {s : Set CofiniteNat}
+    (hs : Pcf.IsProperIrreducibleClosed s) : ∃ x, s = {x} := by
   obtain ⟨x, hx⟩ := hs.nonempty
   refine ⟨x, ?_⟩
   have hfin := finite_of_isClosed_of_ne_univ hs.isClosed hs.ne_univ
   exact (subsingleton_of_isIrreducible_of_finite hs.irreducible hfin).eq_singleton_of_mem hx
 
-/-- **Step 2.** The primes of `CofiniteNat`, in the sense of `Pcf.IsProperIrreducibleClosed`, are exactly its
-points. In particular there are infinitely many of them. -/
-theorem isProperIrreducibleClosed_iff_singleton {s : Set CofiniteNat} : Pcf.IsProperIrreducibleClosed s ↔ ∃ x, s = {x} :=
-  ⟨eq_singleton_of_isProperIrreducibleClosed, by rintro ⟨x, rfl⟩; exact isProperIrreducibleClosed_singleton x⟩
+/-- **Step 2.** The primes of `CofiniteNat`, in the sense of `Pcf.IsProperIrreducibleClosed`, are
+exactly its points. In particular there are infinitely many of them. -/
+theorem isProperIrreducibleClosed_iff_singleton {s : Set CofiniteNat} :
+    Pcf.IsProperIrreducibleClosed s ↔ ∃ x, s = {x} :=
+  ⟨eq_singleton_of_isProperIrreducibleClosed,
+      by rintro ⟨x, rfl⟩; exact isProperIrreducibleClosed_singleton x⟩
 
 /-! ### Step 3: Noetherianness -/
 
@@ -148,7 +155,8 @@ theorem noetherianSpace_cofiniteNat : NoetherianSpace CofiniteNat := inferInstan
 def zeroPoint : CofiniteNat := CofiniteTopology.of 0
 
 /-- The prime `{0}` of `CofiniteNat`. -/
-def zeroPrime : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} := ⟨{zeroPoint}, isProperIrreducibleClosed_singleton zeroPoint⟩
+def zeroPrime : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} :=
+    ⟨{zeroPoint}, isProperIrreducibleClosed_singleton zeroPoint⟩
 
 @[simp] theorem zeroPrime_coe : (zeroPrime : Set CofiniteNat) = {zeroPoint} := rfl
 
@@ -170,24 +178,32 @@ theorem ambientDynamics_isPCF : ambientDynamics.IsPCF := Set.toFinite _
 
 /-- The ramification index of the restricted system: `2` at the prime `{0}`, `1`
 elsewhere. -/
-noncomputable def restrictionRamificationIdx (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : ℕ :=
+noncomputable def restrictionRamificationIdx
+    (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : ℕ :=
   letI := Classical.propDecidable ((Q : Set CofiniteNat) = {zeroPoint})
   if (Q : Set CofiniteNat) = {zeroPoint} then 2 else 1
 
-theorem restrictionRamificationIdx_of_eq {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}} (h : (Q : Set CofiniteNat) = {zeroPoint}) :
+theorem restrictionRamificationIdx_of_eq
+    {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
+        (h : (Q : Set CofiniteNat) = {zeroPoint}) :
     restrictionRamificationIdx Q = 2 := by
   simp [restrictionRamificationIdx, h]
 
-theorem restrictionRamificationIdx_of_ne {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}} (h : (Q : Set CofiniteNat) ≠ {zeroPoint}) :
+theorem restrictionRamificationIdx_of_ne
+    {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
+        (h : (Q : Set CofiniteNat) ≠ {zeroPoint}) :
     restrictionRamificationIdx Q = 1 := by
   simp [restrictionRamificationIdx, h]
 
-theorem restrictionRamificationIdx_pos (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : 0 < restrictionRamificationIdx Q := by
+theorem restrictionRamificationIdx_pos
+    (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : 0 < restrictionRamificationIdx
+        Q := by
   by_cases h : (Q : Set CofiniteNat) = {zeroPoint}
   · simp [restrictionRamificationIdx_of_eq h]
   · simp [restrictionRamificationIdx_of_ne h]
 
-theorem eq_zeroPrime_of_one_lt_restrictionRamificationIdx {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
+theorem eq_zeroPrime_of_one_lt_restrictionRamificationIdx
+    {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
     (h : 1 < restrictionRamificationIdx Q) : Q = zeroPrime := by
   by_cases hQ : (Q : Set CofiniteNat) = {zeroPoint}
   · exact Subtype.ext hQ
@@ -197,7 +213,8 @@ theorem eq_zeroPrime_of_one_lt_restrictionRamificationIdx {Q : {s : Set Cofinite
 /-- The restricted system `g = f|_A`: identity step on the primes of `CofiniteNat`, with
 ramification index `2` at `{0}`. The branch set is the singleton `{{0}}`, so
 `step_image_ramified_finite` holds. -/
-noncomputable def restrictionDynamics : DivisorDynamics {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} where
+noncomputable def restrictionDynamics : DivisorDynamics
+    {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} where
   step := id
   ramificationIdx := restrictionRamificationIdx
   ramificationIdx_pos := restrictionRamificationIdx_pos
@@ -210,19 +227,24 @@ noncomputable def restrictionDynamics : DivisorDynamics {s : Set CofiniteNat // 
 
 @[simp] theorem restrictionDynamics_step : restrictionDynamics.step = id := rfl
 
-@[simp] theorem restrictionDynamics_ramificationIdx : restrictionDynamics.ramificationIdx = restrictionRamificationIdx := rfl
+@[simp] theorem restrictionDynamics_ramificationIdx : restrictionDynamics.ramificationIdx =
+    restrictionRamificationIdx := rfl
 
 /-- Away from `{0}` the restricted system is unramified, in every iterate: the step map is
 the identity, so the tower product is a product of copies of `1`. -/
-theorem restrictionDynamics_iterateRamificationIdx_eq_one (m : ℕ) {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
-    (h : (Q : Set CofiniteNat) ≠ {zeroPoint}) : restrictionDynamics.iterateRamificationIdx m Q = 1 := by
+theorem restrictionDynamics_iterateRamificationIdx_eq_one (m : ℕ)
+    {Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}}
+    (h : (Q : Set CofiniteNat) ≠ {zeroPoint}) : restrictionDynamics.iterateRamificationIdx m Q =
+        1 := by
   refine Finset.prod_eq_one fun i _ => ?_
-  rw [restrictionDynamics_step, Function.iterate_id, id_eq, restrictionDynamics_ramificationIdx, restrictionRamificationIdx_of_ne h]
+  rw [restrictionDynamics_step, Function.iterate_id, id_eq, restrictionDynamics_ramificationIdx,
+      restrictionRamificationIdx_of_ne h]
 
 /-- The bounding conclusion for the witness: away from the prime `{0}` (which lies in
 `singAmbient`) every iterate of the restricted system is unramified, so no good prime is a
 branch prime. -/
-theorem notMem_branch_iterate_restrictionDynamics (m : ℕ) (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s})
+theorem notMem_branch_iterate_restrictionDynamics (m : ℕ)
+    (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s})
     (hsa : ¬ ((Q : Set CofiniteNat) ⊆ ({zeroPoint} : Set CofiniteNat))) :
     Q ∉ (restrictionDynamics.iterate m).branch := by
   rintro ⟨Q', hQ', hram⟩
@@ -232,7 +254,8 @@ theorem notMem_branch_iterate_restrictionDynamics (m : ℕ) (Q : {s : Set Cofini
   have hne : (Q' : Set CofiniteNat) ≠ {zeroPoint} := by
     rw [hQeq]
     exact fun h => hsa (le_of_eq h)
-  rw [DivisorDynamics.iterate_ramificationIdx, restrictionDynamics_iterateRamificationIdx_eq_one m hne] at hram
+  rw [DivisorDynamics.iterate_ramificationIdx, restrictionDynamics_iterateRamificationIdx_eq_one m
+      hne] at hram
   exact absurd hram (by omega)
 
 /-- **The witness.** A `Pcf.PCFGeometry` on the cofinite space, with a trivial ambient
@@ -266,7 +289,8 @@ theorem restrictionDynamics_branch : restrictionDynamics.branch = {zeroPrime} :=
     have h : Q' = zeroPrime := eq_zeroPrime_of_one_lt_restrictionRamificationIdx hram
     rw [Set.mem_singleton_iff, ← hQ', h, restrictionDynamics_step, id_eq]
   · rintro rfl
-    exact ⟨zeroPrime, rfl, by rw [restrictionDynamics_ramificationIdx, restrictionRamificationIdx_of_eq rfl]; omega⟩
+    exact ⟨zeroPrime, rfl,
+        by rw [restrictionDynamics_ramificationIdx, restrictionRamificationIdx_of_eq rfl]; omega⟩
 
 /-- **The restricted system really ramifies.** This is what makes the witness
 non-vacuous. -/
@@ -274,14 +298,17 @@ theorem restrictionDynamics_branch_nonempty : restrictionDynamics.branch.Nonempt
   ⟨zeroPrime, by rw [restrictionDynamics_branch]; rfl⟩
 
 /-- **The payoff.** The restricted system is post-critically finite, obtained by *applying*
-Theorem `thm:normal-invariant` (`Pcf.PCFGeometry.restriction_isPCF`) to the witness — not by reproving it.
+Theorem `thm:normal-invariant` (`Pcf.PCFGeometry.restriction_isPCF`) to the witness — not by
+reproving it.
 
 Together with `Pcf.Examples.restrictionDynamics_branch_nonempty` this says: `Pcf.PCFGeometry` is
 inhabited, the inhabitant has a nonempty restricted branch divisor, and Theorem
 `thm:normal-invariant` fires on
 it. -/
 theorem restrictionDynamics_isPCF : restrictionDynamics.IsPCF :=
-  cofiniteGeometry.restriction_isPCF (fun m Q hs _ => notMem_branch_iterate_restrictionDynamics m Q fun h => hs (Or.inl h)) ambientDynamics_isPCF
+  cofiniteGeometry.restriction_isPCF
+      (fun m Q hs _ => notMem_branch_iterate_restrictionDynamics m Q fun h => hs (Or.inl h))
+          ambientDynamics_isPCF
 
 #print axioms isProperIrreducibleClosed_iff_singleton
 #print axioms noetherianSpace_cofiniteNat
@@ -294,12 +321,13 @@ theorem restrictionDynamics_isPCF : restrictionDynamics.IsPCF :=
 
 `Pcf/Wiring.lean` routes the geometric input to Theorem `thm:normal-invariant` through a
 `Pcf.PurityData`, so
-that `Pcf.DivisorDynamics.step_image_ramified_finite` for the restricted system is *proved* rather than supplied.
-This section exhibits an inhabitant of that route, so the wiring is not vacuous.
+that `Pcf.DivisorDynamics.step_image_ramified_finite` for the restricted system is *proved* rather
+than supplied. This section exhibits an inhabitant of that route, so the wiring is not vacuous.
 
-`restrictionDynamics` above supplies `step_image_ramified_finite` by hand. `restrictionDynamicsOfPurity` below does not: it is
-built by `Pcf.restrictionDivisorDynamicsOfPurity`, whose `step_image_ramified_finite` comes from the non-étale locus
-being a proper closed subset of a Noetherian space. -/
+`restrictionDynamics` above supplies `step_image_ramified_finite` by hand.
+`restrictionDynamicsOfPurity` below does not: it is built by
+`Pcf.restrictionDivisorDynamicsOfPurity`, whose `step_image_ramified_finite` comes from the
+non-étale locus being a proper closed subset of a Noetherian space. -/
 
 /-- A purity datum on `CofiniteNat` with non-étale locus `{0}`.
 
@@ -317,31 +345,39 @@ noncomputable def cofinitePurityData : PurityData CofiniteNat :=
 @[simp] theorem cofinitePurityData_nonEtale : cofinitePurityData.nonEtale = {zeroPoint} := rfl
 
 /-- Ramified primes of the restricted system land in the non-étale locus. -/
-theorem restrictionRamificationIdx_branch_subset (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) (h : 1 < restrictionRamificationIdx Q) :
-    ((id Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : Set CofiniteNat) ⊆ cofinitePurityData.nonEtale := by
+theorem restrictionRamificationIdx_branch_subset
+    (Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s})
+        (h : 1 < restrictionRamificationIdx Q) :
+    ((id Q : {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s}) : Set CofiniteNat) ⊆
+        cofinitePurityData.nonEtale := by
   rw [cofinitePurityData_nonEtale, id_eq, eq_zeroPrime_of_one_lt_restrictionRamificationIdx h]
   exact le_of_eq zeroPrime_coe
 
 /-- The restricted system with `step_image_ramified_finite` **proved** from the purity datum. -/
-noncomputable def restrictionDynamicsOfPurity : DivisorDynamics {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} :=
-  restrictionDivisorDynamicsOfPurity id restrictionRamificationIdx restrictionRamificationIdx_pos Function.surjective_id cofinitePurityData
+noncomputable def restrictionDynamicsOfPurity : DivisorDynamics
+    {s : Set CofiniteNat // Pcf.IsProperIrreducibleClosed s} :=
+  restrictionDivisorDynamicsOfPurity id restrictionRamificationIdx restrictionRamificationIdx_pos
+      Function.surjective_id cofinitePurityData
     restrictionRamificationIdx_branch_subset
 
 @[simp] theorem restrictionDynamicsOfPurity_step : restrictionDynamicsOfPurity.step = id := rfl
 
-@[simp] theorem restrictionDynamicsOfPurity_ramificationIdx : restrictionDynamicsOfPurity.ramificationIdx = restrictionRamificationIdx := rfl
+@[simp] theorem restrictionDynamicsOfPurity_ramificationIdx :
+    restrictionDynamicsOfPurity.ramificationIdx = restrictionRamificationIdx := rfl
 
-/-- It is the same system as `restrictionDynamics`: only the *provenance* of `step_image_ramified_finite` differs,
-and `DivisorDynamics` is a structure whose proof fields are propositions. -/
+/-- It is the same system as `restrictionDynamics`: only the *provenance* of
+`step_image_ramified_finite` differs, and `DivisorDynamics` is a structure whose proof fields are
+propositions. -/
 theorem restrictionDynamicsOfPurity_branch : restrictionDynamicsOfPurity.branch = {zeroPrime} := by
   rw [show restrictionDynamicsOfPurity.branch = restrictionDynamics.branch from rfl]
   exact restrictionDynamics_branch
 
 /-- **The payoff.** The restricted system is post-critically finite, obtained by applying
-`Pcf.PCFGeometry.restriction_isPCF` to a `Pcf.PCFGeometry` whose restricted system's branch-finiteness
-was derived from purity rather than assumed. -/
+`Pcf.PCFGeometry.restriction_isPCF` to a `Pcf.PCFGeometry` whose restricted system's
+branch-finiteness was derived from purity rather than assumed. -/
 theorem restrictionDynamicsOfPurity_isPCF : restrictionDynamicsOfPurity.IsPCF := by
-  refine PCFGeometry.restriction_isPCF_of_purityData ambientDynamics () rfl id restrictionRamificationIdx restrictionRamificationIdx_pos
+  refine PCFGeometry.restriction_isPCF_of_purityData ambientDynamics () rfl id
+      restrictionRamificationIdx restrictionRamificationIdx_pos
     Function.surjective_id cofinitePurityData restrictionRamificationIdx_branch_subset {zeroPoint} ∅
     (fun _ => ∅)
     (isClosed_cofiniteNat_iff.mpr (Or.inr (Set.finite_singleton zeroPoint)))

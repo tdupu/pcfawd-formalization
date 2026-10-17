@@ -77,8 +77,9 @@ lemmas are shared by both theorems: reduction to the strict henselization at `κ
 decomposition into normal domains, root cover, `0BRM`, `0EYE` with Zariski–Nagata purity, strict
 splitting, `09EV`, the exponent is a unit, descent to an étale stage.  The divergences from the
 Stacks proof are recorded there and at the shared lemmas.  The scheme-level statements of the
-tags are `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` and `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization`
-(`Scheme/Tag0EYG.lean`, `Scheme/Tag0EYH.lean`). -/
+tags are `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` and
+`Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` (`Scheme/Tag0EYG.lean`,
+`Scheme/Tag0EYH.lean`). -/
 @[stacks 0EYG "affine; all positive integers invertible; normalization (0EYH) form at points \
     of D, normalization assumed finite over R; pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \
@@ -93,7 +94,8 @@ theorem abhyankarLemmaOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra
 
 /-- The Palomar-facing form `Pcf.Palomar.AbhyankarLemma` (definitionally
 `Pcf.Stacks.AbhyankarLemmaOfFinite`: the Palomar statement assumes the normalization finite). -/
-theorem _root_.Pcf.Palomar.abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+theorem _root_.Pcf.Palomar.abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
+    (a : R) :
     Pcf.Palomar.AbhyankarLemma R S a :=
   abhyankarLemmaOfFinite R S a
 

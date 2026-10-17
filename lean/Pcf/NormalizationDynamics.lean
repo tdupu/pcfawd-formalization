@@ -15,12 +15,12 @@ normalization, where ramification indices are defined by DVRs, and divisors on t
 nonnormal scheme, where the loci `crit₀` and `crit₁` live.  This file separates those
 carriers.
 
-`Pcf.NormalizationUnnormalizedDynamics PN PU` has a normalized divisor system on `PN`, an unnormalized
-pushforward on `PU`, and a finite-fiber normalization map `PN → PU` intertwining the two
-pushforwards.  The comparison between normalized ramification and `crit₀` is stated only
-after applying this map.  Consequently finiteness of the unnormalized postcritical set implies
-finiteness of the normalized postcritical set by finite fibers; no identification or injectivity
-of the two divisor carriers is used.
+`Pcf.NormalizationUnnormalizedDynamics PN PU` has a normalized divisor system on `PN`, an
+unnormalized pushforward on `PU`, and a finite-fiber normalization map `PN → PU` intertwining the
+two pushforwards. The comparison between normalized ramification and `crit₀` is stated only after
+applying this map. Consequently finiteness of the unnormalized postcritical set implies finiteness
+of the normalized postcritical set by finite fibers; no identification or injectivity of the two
+divisor carriers is used.
 
 This is the corrected abstract target for the normalization part of `HANDOFF.md` §9.  Constructing
 the normalization map from a finite morphism still requires proving that the image of a
@@ -53,7 +53,8 @@ structure NormalizationUnnormalizedDynamics (PN : Type u) (PU : Type v) where
   /-- `crit₁ m` is the codimension-one non-étale locus of the unnormalized iterate. -/
   nonEtaleLocus : ℕ → Set PU
   /-- Normalized ramification maps into the unnormalized non-unramified locus. -/
-  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx : ∀ m Q, 1 < normalized.iterateRamificationIdx m Q → normalization Q ∈ nonUnramifiedLocus m
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx : ∀ m Q, 1 < normalized.iterateRamificationIdx m
+      Q → normalization Q ∈ nonUnramifiedLocus m
   /-- Unramifiedness follows from étaleness. -/
   nonUnramifiedLocus_subset_nonEtaleLocus : ∀ m, nonUnramifiedLocus m ⊆ nonEtaleLocus m
   /-- The codimension-one non-étale locus has finitely many components. -/
@@ -61,7 +62,8 @@ structure NormalizationUnnormalizedDynamics (PN : Type u) (PU : Type v) where
   /-- Non-unramifiedness persists in a tower. -/
   nonUnramifiedLocus_tower : ∀ n, nonUnramifiedLocus 1 ⊆ nonUnramifiedLocus (n + 1)
   /-- Non-étaleness in the first map of a tower persists in one of the two factors. -/
-  nonEtaleLocus_tower : ∀ n, ∀ Q ∈ nonEtaleLocus 1, Q ∈ nonEtaleLocus (n + 1) ∨ step Q ∈ nonEtaleLocus n
+  nonEtaleLocus_tower : ∀ n, ∀ Q ∈ nonEtaleLocus 1, Q ∈ nonEtaleLocus (n + 1) ∨ step Q ∈
+      nonEtaleLocus n
 
 namespace NormalizationUnnormalizedDynamics
 
@@ -113,11 +115,13 @@ theorem normalization_image_branch_iterate_subset_nonUnramifiedBranch (m : ℕ) 
 theorem normalization_image_branch_subset_nonUnramifiedBranch :
     D.normalization '' D.normalized.branch ⊆ D.nonUnramifiedBranch 1 := by
   rintro _ ⟨Q, ⟨Q', hstep, hram⟩, rfl⟩
-  refine ⟨D.normalization Q', D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx 1 Q' (by simpa using hram), ?_⟩
+  refine ⟨D.normalization Q', D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx 1 Q'
+      (by simpa using hram), ?_⟩
   simpa only [Function.iterate_one, D.normalization_step] using congr_arg D.normalization hstep
 
 /-- `branch₀` is contained in `branch₁`. -/
-theorem nonUnramifiedBranch_subset_nonEtaleBranch (m : ℕ) : D.nonUnramifiedBranch m ⊆ D.nonEtaleBranch m :=
+theorem nonUnramifiedBranch_subset_nonEtaleBranch (m : ℕ) : D.nonUnramifiedBranch m ⊆
+    D.nonEtaleBranch m :=
   Set.image_mono (D.nonUnramifiedLocus_subset_nonEtaleLocus m)
 
 theorem nonEtaleBranch_finite (m : ℕ) : (D.nonEtaleBranch m).Finite :=
@@ -142,25 +146,29 @@ theorem postcriticalSet_subset_normalization_preimage_nonUnramifiedPostcriticalS
   exact D.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet ⟨Q, hQ, rfl⟩
 
 /-- `PC₀ ⊆ PC₁` on the unnormalized carrier. -/
-theorem nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet : D.nonUnramifiedPostcriticalSet ⊆ D.nonEtalePostcriticalSet :=
+theorem nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet : D.nonUnramifiedPostcriticalSet
+    ⊆ D.nonEtalePostcriticalSet :=
   Set.iUnion_mono fun _ => Set.image_mono (D.nonUnramifiedBranch_subset_nonEtaleBranch 1)
 
 /-- A `1`-PCF unnormalized system is `0`-PCF. -/
-theorem isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) : D.IsNonUnramifiedBranchPCF :=
+theorem isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) :
+    D.IsNonUnramifiedBranchPCF :=
   h.subset D.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
 
 /-- A `0`-PCF unnormalized system has PCF normalized dynamics.
 
 Finite fibers are the essential replacement for the former definitional identification of the
 two divisor carriers. -/
-theorem normalized_isPCF_of_isNonUnramifiedBranchPCF (h : D.IsNonUnramifiedBranchPCF) : D.normalized.IsPCF := by
+theorem normalized_isPCF_of_isNonUnramifiedBranchPCF (h : D.IsNonUnramifiedBranchPCF) :
+    D.normalized.IsPCF := by
   have hpre : (D.normalization ⁻¹' D.nonUnramifiedPostcriticalSet).Finite :=
     h.preimage' fun Q _ => D.normalization_finite_fiber Q
   exact hpre.subset D.postcriticalSet_subset_normalization_preimage_nonUnramifiedPostcriticalSet
 
 /-- A `1`-PCF unnormalized system has PCF normalized dynamics. -/
 theorem normalized_isPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) : D.normalized.IsPCF :=
-  D.normalized_isPCF_of_isNonUnramifiedBranchPCF (D.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF h)
+  D.normalized_isPCF_of_isNonUnramifiedBranchPCF
+      (D.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF h)
 
 /-- Non-unramifiedness propagates along the unnormalized orbit. -/
 theorem orbit_unnormalized_zero (n : ℕ) {Q : PU} (hQ : Q ∈ D.nonUnramifiedLocus 1) :
@@ -196,7 +204,8 @@ theorem isNonEtaleBranchPCF_of_nonEtaleBranch_subset {Sig : Set PU} (hfin : Sig.
 /-- The old one-carrier abstraction embeds into the two-carrier abstraction by the identity
 normalization map.  This is a compatibility adapter, not the geometric construction needed for a
 nonnormal scheme. -/
-def ofUnnormalizedDynamics {P : Type w} (U : UnnormalizedDynamics P) : NormalizationUnnormalizedDynamics P P where
+def ofUnnormalizedDynamics {P : Type w} (U : UnnormalizedDynamics P) :
+    NormalizationUnnormalizedDynamics P P where
   normalized := U.toDivisorDynamics
   step := U.step
   normalization := id
@@ -205,7 +214,8 @@ def ofUnnormalizedDynamics {P : Type w} (U : UnnormalizedDynamics P) : Normaliza
     simpa only [Set.preimage_id] using (Set.finite_singleton Q)
   nonUnramifiedLocus := U.nonUnramifiedLocus
   nonEtaleLocus := U.nonEtaleLocus
-  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx := U.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx :=
+      U.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx
   nonUnramifiedLocus_subset_nonEtaleLocus := U.nonUnramifiedLocus_subset_nonEtaleLocus
   nonEtaleLocus_finite := U.nonEtaleLocus_finite
   nonUnramifiedLocus_tower := U.nonUnramifiedLocus_tower
@@ -218,8 +228,8 @@ end NormalizationUnnormalizedDynamics
 /-- The data of Theorem `thm:normal-invariant` with normalized divisors (`PN`) and divisors of the
 possibly nonnormal restriction (`PA`) kept separate.
 
-The field `notMem_nonEtaleBranch_iterate` is the étale conclusion of the bounding theorem.  `Bounding/Wiring.lean`
-replaces it by chart data. -/
+The field `notMem_nonEtaleBranch_iterate` is the étale conclusion of the bounding theorem.
+`Bounding/Wiring.lean` replaces it by chart data. -/
 structure NormalizationPCFSetup (PX : Type u) (PN : Type v) (PA : Type w) where
   /-- The ambient normalized divisorial system. -/
   ambient : DivisorDynamics PX
@@ -268,11 +278,14 @@ theorem nonEtaleBranch_iterate_subset_bound (m : ℕ) (hm : 1 ≤ m) :
 
 /-- The unnormalized restriction is `1`-PCF. -/
 theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonEtaleBranchPCF :=
-  S.restriction.isNonEtaleBranchPCF_of_nonEtaleBranch_subset (S.bound_finite h) S.nonEtaleBranch_iterate_subset_bound
+  S.restriction.isNonEtaleBranchPCF_of_nonEtaleBranch_subset (S.bound_finite h)
+      S.nonEtaleBranch_iterate_subset_bound
 
 /-- The unnormalized restriction is `0`-PCF. -/
-theorem restriction_isNonUnramifiedBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonUnramifiedBranchPCF :=
-  S.restriction.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF (S.restriction_isNonEtaleBranchPCF h)
+theorem restriction_isNonUnramifiedBranchPCF (h : S.ambient.IsPCF) :
+    S.restriction.IsNonUnramifiedBranchPCF :=
+  S.restriction.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF
+      (S.restriction_isNonEtaleBranchPCF h)
 
 /-- **Theorem `thm:normal-invariant`, with distinct divisor carriers.**
 

@@ -13,10 +13,11 @@ public import Pcf.Unnormalized
 /-!
 # Wiring the derived bounding theorem into Theorem `thm:normal-invariant`
 
-`Pcf/Unnormalized.lean` proves Theorem `thm:normal-invariant` (`Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF`) from
-the structure `Pcf.NonEtalePCFSetup`, whose field `notMem_nonEtaleBranch_iterate` is the **conclusion** of Theorem
-`thm:bounding` for every iterate `fᵐ`: a prime `Q` of `A` outside `Σₘ` is not in
-`branch₁(gᵐ)`. `Pcf/Bounding/Chart.lean` now **derives** that conclusion on an affine chart:
+`Pcf/Unnormalized.lean` proves Theorem `thm:normal-invariant`
+(`Pcf.NonEtalePCFSetup.restriction_isNonEtaleBranchPCF`) from the structure `Pcf.NonEtalePCFSetup`,
+whose field `notMem_nonEtaleBranch_iterate` is the **conclusion** of Theorem `thm:bounding` for
+every iterate `fᵐ`: a prime `Q` of `A` outside `Σₘ` is not in `branch₁(gᵐ)`.
+`Pcf/Bounding/Chart.lean` now **derives** that conclusion on an affine chart:
 `Pcf.BoundingChart.isEtaleAt_restriction`. This file connects the two.
 
 ## The link, and what it is
@@ -36,17 +37,18 @@ charts, together with the manuscript's choice of the chart `U` avoiding `Σ` (St
 modelling identification of the same kind as A1–A5, and like them it is the trust boundary
 of the abstraction.
 
-**What the link does and does not buy, stated exactly.** Given `chart`, `notMem_nonEtaleBranch_iterate` is a theorem
-(`Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate`): the chart's restriction *is* étale at `ξ` by
-`Pcf.BoundingChart.isEtaleAt_restriction`, so `Q' ∉ crit₁(gᵐ)`. Conversely, a supplier of the
-data who already knows `notMem_nonEtaleBranch_iterate` could discharge `chart` with a trivial chart (the identity cover
-`ℚ[x] → ℚ[x]`, `a = x`) for every `Q'`, since `BoundingChart` is satisfiable by such a cover.
-So **relative to the derived theorem, A6 is exactly as strong as `notMem_nonEtaleBranch_iterate`**; the abstract
-framework cannot do better, because nothing in `PA` ties a prime to a ring. What has changed
-is *where the mathematics lives*: the content of Theorem `thm:bounding` — purity, Abhyankar,
-Step 3, Step 4 — is now machine-checked on every chart, and the only thing left to the
-supplier is the identification of the abstract primes with points of actual charts. Before
-this file, the supplier was asked for the conclusion itself.
+**What the link does and does not buy, stated exactly.** Given `chart`,
+`notMem_nonEtaleBranch_iterate` is a theorem (`Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate`):
+the chart's restriction *is* étale at `ξ` by `Pcf.BoundingChart.isEtaleAt_restriction`, so
+`Q' ∉ crit₁(gᵐ)`. Conversely, a supplier of the data who already knows
+`notMem_nonEtaleBranch_iterate` could discharge `chart` with a trivial chart (the identity cover
+`ℚ[x] → ℚ[x]`, `a = x`) for every `Q'`, since `BoundingChart` is satisfiable by such a cover. So
+**relative to the derived theorem, A6 is exactly as strong as `notMem_nonEtaleBranch_iterate`**; the
+abstract framework cannot do better, because nothing in `PA` ties a prime to a ring. What has
+changed is *where the mathematics lives*: the content of Theorem `thm:bounding` — purity, Abhyankar,
+Step 3, Step 4 — is now machine-checked on every chart, and the only thing left to the supplier is
+the identification of the abstract primes with points of actual charts. Before this file, the
+supplier was asked for the conclusion itself.
 
 The finite-presentation case of `Pcf.Stacks.EtaleLocalOnSource` (Tag 036W) and Tags 033B
 and 01JT are theorems (`Pcf.Stacks.etaleLocalOnSource`,
@@ -54,9 +56,13 @@ and 01JT are theorems (`Pcf.Stacks.etaleLocalOnSource`,
 
 ## Main results
 
-* `Pcf.PCFSetupChart` — `Pcf.NonEtalePCFSetup` with `notMem_nonEtaleBranch_iterate` replaced by the chart link.
-* `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` — the conclusion of Theorem `thm:bounding`, **derived**.
-* `Pcf.PCFSetupChart.toNonEtalePCFSetup`, `restriction_isNonEtaleBranchPCF`, `restriction_isNonUnramifiedBranchPCF`, `restriction_isPCF`, `restriction_isNonEtaleBranchPCF_of_iterate` —
+* `Pcf.PCFSetupChart` — `Pcf.NonEtalePCFSetup` with `notMem_nonEtaleBranch_iterate` replaced by the
+  chart link.
+* `Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` — the conclusion of Theorem `thm:bounding`,
+  **derived**.
+* `Pcf.PCFSetupChart.toNonEtalePCFSetup`, `restriction_isNonEtaleBranchPCF`,
+  `restriction_isNonUnramifiedBranchPCF`, `restriction_isPCF`,
+  `restriction_isNonEtaleBranchPCF_of_iterate` —
   Theorem `thm:normal-invariant` and Corollaries `cor:normal-invariant-pcf`,
   `cor:normal-preperiodic` on this route.
 -/
@@ -68,9 +74,9 @@ universe u v w x
 namespace Pcf
 
 /-- The data of Theorem `thm:normal-invariant`, with the bounding theorem supplied **as
-charts** rather than as its conclusion. Compared with `Pcf.NonEtalePCFSetup`, the field `notMem_nonEtaleBranch_iterate` is
-replaced by `chart`; see the module docstring for what `chart` asserts and for its exact
-logical relation to `notMem_nonEtaleBranch_iterate`. -/
+charts** rather than as its conclusion. Compared with `Pcf.NonEtalePCFSetup`, the field
+`notMem_nonEtaleBranch_iterate` is replaced by `chart`; see the module docstring for what `chart`
+asserts and for its exact logical relation to `notMem_nonEtaleBranch_iterate`. -/
 structure PCFSetupChart (PX : Type u) (PA : Type v) where
   /-- The ambient system `f` on the primes of the normal variety `X`. -/
   ambient : DivisorDynamics PX
@@ -129,7 +135,8 @@ def toNonEtalePCFSetup : NonEtalePCFSetup PX PA where
   notMem_nonEtaleBranch_iterate := S.notMem_nonEtaleBranch_iterate
 
 @[simp] theorem toNonEtalePCFSetup_ambient : S.toNonEtalePCFSetup.ambient = S.ambient := rfl
-@[simp] theorem toNonEtalePCFSetup_restriction : S.toNonEtalePCFSetup.restriction = S.restriction := rfl
+@[simp] theorem toNonEtalePCFSetup_restriction : S.toNonEtalePCFSetup.restriction = S.restriction :=
+    rfl
 
 /-- **Theorem `thm:normal-invariant`**, with the bounding theorem derived from purity and
 Abhyankar's lemma on charts. If `f` is PCF then `g = f|_A` is `1`-PCF. -/
@@ -137,7 +144,8 @@ theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.Is
   S.toNonEtalePCFSetup.restriction_isNonEtaleBranchPCF h
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is `0`-PCF. -/
-theorem restriction_isNonUnramifiedBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonUnramifiedBranchPCF :=
+theorem restriction_isNonUnramifiedBranchPCF (h : S.ambient.IsPCF) :
+    S.restriction.IsNonUnramifiedBranchPCF :=
   S.toNonEtalePCFSetup.restriction_isNonUnramifiedBranchPCF h
 
 /-- **Corollary `cor:normal-invariant-pcf`**: `g` is PCF. -/
@@ -202,8 +210,10 @@ def toNormalizationPCFSetup : NormalizationPCFSetup PX PN PA where
   meets_finite := S.meets_finite
   notMem_nonEtaleBranch_iterate := S.notMem_nonEtaleBranch_iterate
 
-@[simp] theorem toNormalizationPCFSetup_ambient : S.toNormalizationPCFSetup.ambient = S.ambient := rfl
-@[simp] theorem toNormalizationPCFSetup_restriction : S.toNormalizationPCFSetup.restriction = S.restriction := rfl
+@[simp] theorem toNormalizationPCFSetup_ambient : S.toNormalizationPCFSetup.ambient = S.ambient :=
+    rfl
+@[simp] theorem toNormalizationPCFSetup_restriction : S.toNormalizationPCFSetup.restriction =
+    S.restriction := rfl
 
 /-- The unnormalized restriction is `1`-PCF on the chart route. -/
 theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.IsNonEtaleBranchPCF :=

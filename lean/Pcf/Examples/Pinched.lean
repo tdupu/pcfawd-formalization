@@ -51,12 +51,16 @@ glued to a node `o`), and the restriction `g = f|_B` is `p(z) ↦ p(z²)`.
 * `Pcf.Examples.Pinched.NodalLinePoint` — the closed points of `B`: `k` with `2 ∼ −2`.
 * `Pcf.Examples.Pinched.nodeDivisorDynamics` — the normalized system of `g`: `step = (·)²`,
   `ram = 2` at `0` and `1` elsewhere. Its branch locus and postcritical set are `{0}`
-  (`nodeDivisorDynamics_branch`, `nodeDivisorDynamics_postcriticalSet`), so `g` is PCF (`nodeDivisorDynamics_isPCF`).
-* `Pcf.Examples.Pinched.nonUnramifiedPostcriticalSet_infinite` — for **any** `Pcf.UnnormalizedDynamics` on `Pts k` whose
+  (`nodeDivisorDynamics_branch`, `nodeDivisorDynamics_postcriticalSet`), so `g` is PCF
+  (`nodeDivisorDynamics_isPCF`).
+* `Pcf.Examples.Pinched.nonUnramifiedPostcriticalSet_infinite` — for **any**
+  `Pcf.UnnormalizedDynamics` on `Pts k` whose
   step is the squaring map and whose `crit₀(g)` contains the node `o`, the
   `0`-postcritical set is infinite; so is the `1`-postcritical set
-  (`nonEtalePostcriticalSet_infinite`). This isolates exactly the manuscript's input "`o ∈ crit₀(g)`".
-* `Pcf.Examples.Pinched.nodeUnnormalizedDynamics` — a `Pcf.UnnormalizedDynamics` satisfying those hypotheses,
+  (`nonEtalePostcriticalSet_infinite`). This isolates exactly the manuscript's input
+  "`o ∈ crit₀(g)`".
+* `Pcf.Examples.Pinched.nodeUnnormalizedDynamics` — a `Pcf.UnnormalizedDynamics` satisfying those
+  hypotheses,
   with `crit₀(gᵐ) = crit₁(gᵐ) = {o, 0}` for `m ≥ 1` *stipulated*, so that the hypotheses
   are consistent and `nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF` is a genuine instance.
 
@@ -64,7 +68,8 @@ glued to a node `o`), and the restriction `g = f|_B` is `p(z) ↦ p(z²)`.
 
 * That `o ∈ crit₀(g)`: the fibre `g⁻¹(Q)` over `z = 4` is a local Artinian ring of length
   two. The length computation, the snake-lemma argument, the non-reducedness of the fibre
-  and the Singular check are not formalized; `nonUnramifiedLocus` is stipulated in `nodeUnnormalizedDynamics`
+  and the Singular check are not formalized; `nonUnramifiedLocus` is stipulated in
+  `nodeUnnormalizedDynamics`
   and a hypothesis in `nonUnramifiedPostcriticalSet_infinite`.
 * The Ferrand pushout, that `X` is a variety, that `ν` is the normalization, that `X` is
   regular in codimension one, that `f` is finite and surjective, and that `B` is an
@@ -197,8 +202,10 @@ theorem evalNegTwoOne_eq_zero_of_mem {x : MvPolynomial (Fin 2) k} (hx : x ∈ gl
 theorem glueIdeal_le_adjoin : (glueIdeal k : Set (MvPolynomial (Fin 2) k)) ⊆
     Algebra.adjoin k (pinchedGenerators k) := by
   set A := Algebra.adjoin k (pinchedGenerators k) with hA
-  have hw : (X 1 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [pinchedGenerators])
-  have hz2 : (X 0 ^ 2 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin (by simp [pinchedGenerators])
+  have hw : (X 1 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin
+      (by simp [pinchedGenerators])
+  have hz2 : (X 0 ^ 2 : MvPolynomial (Fin 2) k) ∈ A := Algebra.subset_adjoin
+      (by simp [pinchedGenerators])
   have hzw : (X 0 * (X 1 - 1) : MvPolynomial (Fin 2) k) ∈ A :=
     Algebra.subset_adjoin (by simp [pinchedGenerators])
   have hz3 : (X 0 ^ 3 - 4 * X 0 : MvPolynomial (Fin 2) k) ∈ A :=
@@ -268,7 +275,8 @@ theorem adjoin_pinchedGenerators_eq : Algebra.adjoin k (pinchedGenerators k) = p
   obtain ⟨a, ha⟩ := sub_C_mem_glueIdeal k hh
   have : h = C a + (h - C a) := by ring
   rw [this]
-  exact (Algebra.adjoin k (pinchedGenerators k)).add_mem ((Algebra.adjoin k (pinchedGenerators k)).algebraMap_mem a)
+  exact (Algebra.adjoin k (pinchedGenerators k)).add_mem
+      ((Algebra.adjoin k (pinchedGenerators k)).algebraMap_mem a)
     (glueIdeal_le_adjoin k ha)
 
 end Generation
@@ -368,7 +376,8 @@ def squaringStep : NodalLinePoint k → NodalLinePoint k :=
 
 @[simp] theorem squaringStep_point (a : k) : squaringStep k (point k a) = point k (a ^ 2) := rfl
 
-theorem squaringStep_iterate_point (n : ℕ) (a : k) : (squaringStep k)^[n] (point k a) = point k (a ^ 2 ^ n) := by
+theorem squaringStep_iterate_point (n : ℕ) (a : k) : (squaringStep k)^[n] (point k a) = point k
+    (a ^ 2 ^ n) := by
   induction n with
   | zero => simp only [Function.iterate_zero, id, pow_zero, pow_one]
   | succ n ih => rw [Function.iterate_succ_apply', ih, squaringStep_point, ← pow_mul, pow_succ]
@@ -418,18 +427,23 @@ theorem squaringStep_iterate_eq_zero_iff (i : ℕ) (a : k) :
 /-- **Example `ex:pinched`, abstract form.** For any unnormalized divisorial dynamics on
 the points of `B` whose step is `z ↦ z²` and whose `crit₀(g)` contains the node `o`, the
 `0`-postcritical set is infinite: it contains the orbit `4, 16, 256, …` of `g(o) = 4`. -/
-theorem nonUnramifiedPostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k)) (hstep : U.step = squaringStep k)
+theorem nonUnramifiedPostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k))
+    (hstep : U.step = squaringStep k)
     (hnode : node k ∈ U.nonUnramifiedLocus 1) : U.nonUnramifiedPostcriticalSet.Infinite := by
-  have horb : Set.range (fun n : ℕ => point k ((4 : k) ^ 2 ^ n)) ⊆ U.nonUnramifiedPostcriticalSet := by
+  have horb : Set.range (fun n : ℕ => point k ((4 : k) ^ 2 ^ n)) ⊆ U.nonUnramifiedPostcriticalSet :=
+      by
     rintro _ ⟨n, rfl⟩
-    refine U.mem_nonUnramifiedPostcriticalSet_iff.mpr ⟨n, U.step (node k), ⟨node k, hnode, by simp⟩, ?_⟩
+    refine U.mem_nonUnramifiedPostcriticalSet_iff.mpr
+        ⟨n, U.step (node k), ⟨node k, hnode, by simp⟩, ?_⟩
     rw [hstep, squaringStep_node, squaringStep_iterate_point]
   exact (Set.infinite_range_of_injective (point_four_pow_injective k)).mono horb
 
 /-- The `1`-postcritical set is infinite as well. -/
-theorem nonEtalePostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k)) (hstep : U.step = squaringStep k)
+theorem nonEtalePostcriticalSet_infinite (U : UnnormalizedDynamics (NodalLinePoint k))
+    (hstep : U.step = squaringStep k)
     (hnode : node k ∈ U.nonUnramifiedLocus 1) : U.nonEtalePostcriticalSet.Infinite :=
-  (nonUnramifiedPostcriticalSet_infinite k U hstep hnode).mono U.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
+  (nonUnramifiedPostcriticalSet_infinite k U hstep hnode).mono
+      U.nonUnramifiedPostcriticalSet_subset_nonEtalePostcriticalSet
 
 variable [DecidableEq k]
 
@@ -443,9 +457,11 @@ noncomputable def nodeRamificationIdx : NodalLinePoint k → ℕ :=
       have hb' : b ≠ 0 := fun h => by simp [h] at hb
       simp [ha', hb']
 
-@[simp] theorem nodeRamificationIdx_point (a : k) : nodeRamificationIdx k (point k a) = if a = 0 then 2 else 1 := rfl
+@[simp] theorem nodeRamificationIdx_point (a : k) : nodeRamificationIdx k (point k a) = if a = 0
+    then 2 else 1 := rfl
 
-theorem one_lt_nodeRamificationIdx_iff (Q : NodalLinePoint k) : 1 < nodeRamificationIdx k Q ↔ Q = point k 0 := by
+theorem one_lt_nodeRamificationIdx_iff (Q : NodalLinePoint k) : 1 < nodeRamificationIdx k Q ↔ Q =
+    point k 0 := by
   induction Q using Quotient.inductionOn with
   | h a =>
     change 1 < nodeRamificationIdx k (point k a) ↔ point k a = point k 0
@@ -460,7 +476,9 @@ noncomputable def nodeDivisorDynamics : DivisorDynamics (NodalLinePoint k) where
   ramificationIdx := nodeRamificationIdx k
   ramificationIdx_pos Q := by
     induction Q using Quotient.inductionOn with
-    | h a => change 0 < nodeRamificationIdx k (point k a); rw [nodeRamificationIdx_point]; split_ifs <;> norm_num
+    | h a =>
+      change 0 < nodeRamificationIdx k (point k a)
+      rw [nodeRamificationIdx_point]; split_ifs <;> norm_num
   step_surjective := squaringStep_surjective k
   step_image_ramified_finite := by
     refine (Set.finite_singleton (point k 0)).subset ?_
@@ -484,7 +502,8 @@ theorem nodeDivisorDynamics_branch : (nodeDivisorDynamics k).branch = {point k 0
     simp
 
 /-- `PC(g) = {0}`: the normalized postcritical set of `g` is a single fixed point. -/
-theorem nodeDivisorDynamics_postcriticalSet : (nodeDivisorDynamics k).postcriticalSet = {point k 0} := by
+theorem nodeDivisorDynamics_postcriticalSet : (nodeDivisorDynamics k).postcriticalSet =
+    {point k 0} := by
   ext Q
   rw [DivisorDynamics.mem_postcriticalSet_iff, nodeDivisorDynamics_branch]
   constructor
@@ -502,8 +521,9 @@ theorem nodeDivisorDynamics_isPCF : (nodeDivisorDynamics k).IsPCF := by
 
 /-- The unnormalized critical loci of `gᵐ`, **stipulated** as `{o, 0}` for `m ≥ 1` and `∅`
 for `m = 0`. The manuscript computes `o ∈ crit₀(g)` by a fibre-length argument that is
-not formalized here; this instance only shows that the hypotheses of `nonUnramifiedPostcriticalSet_infinite`
-are consistent with every field of `Pcf.UnnormalizedDynamics`. -/
+not formalized here; this instance only shows that the hypotheses of
+`nonUnramifiedPostcriticalSet_infinite` are consistent with every field of
+`Pcf.UnnormalizedDynamics`. -/
 def nodeCriticalLocus (m : ℕ) : Set (NodalLinePoint k) := if m = 0 then ∅ else {node k, point k 0}
 
 /-- A `Pcf.UnnormalizedDynamics` on the points of `B` with the stipulated critical loci. -/
@@ -522,7 +542,8 @@ noncomputable def nodeUnnormalizedDynamics : UnnormalizedDynamics (NodalLinePoin
       change (squaringStep k)^[i] (point k a) = point k 0 at hgt
       rw [squaringStep_iterate_eq_zero_iff] at hgt
       subst hgt
-      simp only [nodeCriticalLocus, Nat.pos_iff_ne_zero.mp (lt_of_le_of_lt (Nat.zero_le i) hi), ite_false]
+      simp only
+          [nodeCriticalLocus, Nat.pos_iff_ne_zero.mp (lt_of_le_of_lt (Nat.zero_le i) hi), ite_false]
       exact Or.inr rfl
   nonUnramifiedLocus_subset_nonEtaleLocus _ := le_rfl
   nonEtaleLocus_finite m := by
@@ -538,19 +559,25 @@ noncomputable def nodeUnnormalizedDynamics : UnnormalizedDynamics (NodalLinePoin
 
 theorem nodeUnnormalizedDynamics_step : (nodeUnnormalizedDynamics k).step = squaringStep k := rfl
 
-theorem node_mem_nonUnramifiedLocus : node k ∈ (nodeUnnormalizedDynamics k).nonUnramifiedLocus 1 := by
+theorem node_mem_nonUnramifiedLocus : node k ∈ (nodeUnnormalizedDynamics k).nonUnramifiedLocus 1 :=
+    by
   simp [nodeUnnormalizedDynamics, nodeCriticalLocus]
 
 /-- **Example `ex:pinched`**: `g` is not `0`-PCF (given `o ∈ crit₀(g)`)… -/
-theorem nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF : ¬ (nodeUnnormalizedDynamics k).IsNonUnramifiedBranchPCF :=
-  nonUnramifiedPostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k) (node_mem_nonUnramifiedLocus k)
+theorem nodeUnnormalizedDynamics_not_isNonUnramifiedBranchPCF : ¬
+    (nodeUnnormalizedDynamics k).IsNonUnramifiedBranchPCF :=
+  nonUnramifiedPostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k)
+      (node_mem_nonUnramifiedLocus k)
 
 /-- …nor `1`-PCF… -/
-theorem nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF : ¬ (nodeUnnormalizedDynamics k).IsNonEtaleBranchPCF :=
-  nonEtalePostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k) (node_mem_nonUnramifiedLocus k)
+theorem nodeUnnormalizedDynamics_not_isNonEtaleBranchPCF : ¬
+    (nodeUnnormalizedDynamics k).IsNonEtaleBranchPCF :=
+  nonEtalePostcriticalSet_infinite k _ (nodeUnnormalizedDynamics_step k)
+      (node_mem_nonUnramifiedLocus k)
 
 /-- …although it is PCF: `PC(g) = {0}` while `PC₀(g) ⊇ {4, 16, 256, …}`. -/
-theorem nodeUnnormalizedDynamics_isPCF : (nodeUnnormalizedDynamics k).toDivisorDynamics.IsPCF := nodeDivisorDynamics_isPCF k
+theorem nodeUnnormalizedDynamics_isPCF : (nodeUnnormalizedDynamics k).toDivisorDynamics.IsPCF :=
+    nodeDivisorDynamics_isPCF k
 
 end Dynamics
 

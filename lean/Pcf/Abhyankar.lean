@@ -32,9 +32,11 @@ Tag 0EYF makes **three** assertions about `C = A[x]/(x^e - f)`, and they are not
 within reach:
 
 1. `Spec(C) → Spec(A)` is **finite locally free** — proved here, in the stronger form
-   "free of rank `e`": `Pcf.Kummer.finrank_adjoinRoot_kummerPoly`, with freeness and finiteness supplied directly
+   "free of rank `e`": `Pcf.Kummer.finrank_adjoinRoot_kummerPoly`, with freeness and finiteness
+   supplied directly
    by Mathlib's `Polynomial.Monic.free_adjoinRoot` and `Monic.finite_adjoinRoot`.
-2. it is **étale over `Spec(A_f)`** — proved here: `Pcf.Kummer.etale_adjoinRoot_kummerPoly` (with `u` the image
+2. it is **étale over `Spec(A_f)`** — proved here: `Pcf.Kummer.etale_adjoinRoot_kummerPoly` (with
+   `u` the image
    of `f`, a unit after inverting it) and `Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit`.
 3. `Spec(C_f) → Spec(A_f)` is **tamely ramified over `Spec(A)` in codimension one** —
    **not proved, and not stated**. There is no tameness predicate, no codimension and no
@@ -58,8 +60,9 @@ remains an assumption of the development.
 ## Necessity of the hypotheses
 
 Both hypotheses are necessary, and this file proves it rather than asserting it:
-`Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero` (in characteristic `2` with `e = 2`, the conclusion fails) and
-`Pcf.Kummer.not_etale_of_not_isUnit` (at `a = 0` the model `k[y]/(y^e)` is not reduced).
+`Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero` (in characteristic `2` with `e = 2`,
+the conclusion fails) and `Pcf.Kummer.not_etale_of_not_isUnit` (at `a = 0` the model `k[y]/(y^e)` is
+not reduced).
 
 ## The mechanism
 
@@ -82,11 +85,14 @@ unit constant term (`u` invertible) are exactly the two hypotheses that make `c`
   `Ideal.ramificationIdx` (a `Module.length`); identifying it with the ramification paragraph before
   Definition `def:crit-branch` of
   `latex/paper.tex` is *not* formalized anywhere in this development. See `AXIOMS.md` §E.
-* `Pcf.Kummer.finrank_adjoinRoot_kummerPoly` — clause 1 of Tag 0EYF (freeness and finiteness are Mathlib's).
+* `Pcf.Kummer.finrank_adjoinRoot_kummerPoly` — clause 1 of Tag 0EYF (freeness and finiteness are
+  Mathlib's).
 * `Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit` — clause 2 in the form matching "invert `f`".
-* `Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero`, `Pcf.Kummer.not_etale_of_not_isUnit` — both hypotheses are
+* `Pcf.Kummer.not_etale_adjoinRoot_X_sq_sub_one_of_two_eq_zero`,
+  `Pcf.Kummer.not_etale_of_not_isUnit` — both hypotheses are
   necessary, proved.
-* `Pcf.Kummer.localPolyToKummerPoly`, `Pcf.Kummer.localPolyEquivKummerPoly` — the substitution `x ↦ t * y`. This is the
+* `Pcf.Kummer.localPolyToKummerPoly`, `Pcf.Kummer.localPolyEquivKummerPoly` — the substitution
+  `x ↦ t * y`. This is the
   base change internal to Tag 0EYG's proof, **not** Tag 0EYF; nothing downstream uses it.
 -/
 
@@ -105,8 +111,8 @@ variable {R : Type*} [CommRing R]
 /-- The **Kummer polynomial** `X ^ e - u`, for `u` a unit of `R`.
 
 This is the local equation of the standard tamely ramified cover of Stacks Tag 0EYF
-*after* the divisor equation has been inverted; see `Pcf.Kummer.localPolyToKummerPoly` for the passage
-from the ramified model `X ^ e - u * t ^ e`. -/
+*after* the divisor equation has been inverted; see `Pcf.Kummer.localPolyToKummerPoly` for the
+passage from the ramified model `X ^ e - u * t ^ e`. -/
 noncomputable def kummerPoly (u : Rˣ) (e : ℕ) : R[X] := X ^ e - C (u : R)
 
 theorem kummerPoly_monic (u : Rˣ) {e : ℕ} (he : e ≠ 0) : (kummerPoly u e).Monic :=
@@ -174,7 +180,8 @@ theorem isStandardEtale_adjoinRoot_of_separable {f : R[X]} (hf : f.Monic) (hs : 
     ⟨f, hf, 1, ⟨b, a, 1, by rw [pow_one]; linear_combination hab⟩⟩ rfl
 
 /-- **The Kummer algebra is standard étale.** -/
-theorem isStandardEtale_adjoinRoot_kummerPoly (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
+theorem isStandardEtale_adjoinRoot_kummerPoly (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R)))
+    :
     Algebra.IsStandardEtale R (AdjoinRoot (kummerPoly u e)) :=
   isStandardEtale_adjoinRoot_of_separable (kummerPoly_monic u he)
     (Polynomial.separable_X_pow_sub_C_unit u hu)
@@ -197,7 +204,8 @@ theorem etale_adjoinRoot_kummerPoly (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsU
 This is the conclusion Theorem `thm:bounding` (per-divisor form) needs, and it is here *derived*
 from the
 standard tame local form rather than assumed. -/
-theorem ramificationIdx_adjoinRoot_kummerPoly_eq_one (u : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R)))
+theorem ramificationIdx_adjoinRoot_kummerPoly_eq_one (u : Rˣ) {e : ℕ} (he : e ≠ 0)
+    (hu : IsUnit ((e : R)))
     (q : Ideal (AdjoinRoot (kummerPoly u e))) [q.IsPrime] :
     q.ramificationIdx R = 1 := by
   have := etale_adjoinRoot_kummerPoly u he hu
@@ -251,10 +259,10 @@ theorem kummerPoly_eq_localPoly (u : Rˣ) (e : ℕ) :
 
 /-! ### Both hypotheses are necessary
 
-`Pcf.Kummer.etale_adjoinRoot_kummerPoly` assumes that `e` is invertible in `R` — *tameness* — and that the
-constant term is a unit, which is what inverting the equation of the divisor achieves.
-This section proves that neither can be dropped, rather than asserting it: in each failing
-case the **conclusion** fails, not merely this file's proof of it.
+`Pcf.Kummer.etale_adjoinRoot_kummerPoly` assumes that `e` is invertible in `R` — *tameness* — and
+that the constant term is a unit, which is what inverting the equation of the divisor achieves. This
+section proves that neither can be dropped, rather than asserting it: in each failing case the
+**conclusion** fails, not merely this file's proof of it.
 
 The mechanism is the same both times. The algebra acquires a nonzero nilpotent, and a
 formally unramified algebra over a field is reduced. -/
@@ -382,20 +390,25 @@ noncomputable def localPolyEquivKummerPoly (u : Rˣ) (t : Rˣ) (e : ℕ) :
   AlgEquiv.ofAlgHom (localPolyToKummerPoly u (t : R) e) (kummerPolyToLocalPoly u t e)
     (by
       ext
-      simp only [AlgHom.coe_comp, Function.comp_apply, kummerPolyToLocalPoly_root, map_mul, localPolyToKummerPoly_root,
+      simp only
+          [AlgHom.coe_comp, Function.comp_apply, kummerPolyToLocalPoly_root, map_mul,
+              localPolyToKummerPoly_root,
         AlgHom.commutes, AlgHom.coe_id, id_eq]
       rw [← mul_assoc, ← map_mul]
       simp)
     (by
       ext
-      simp only [AlgHom.coe_comp, Function.comp_apply, localPolyToKummerPoly_root, map_mul, kummerPolyToLocalPoly_root,
+      simp only
+          [AlgHom.coe_comp, Function.comp_apply, localPolyToKummerPoly_root, map_mul,
+              kummerPolyToLocalPoly_root,
         AlgHom.commutes, AlgHom.coe_id, id_eq]
       rw [← mul_assoc, ← map_mul]
       simp)
 
 /-- The ramified model with an `e`-th power divisor equation is étale, transported across
-`Pcf.Kummer.localPolyEquivKummerPoly`. Superseded by `Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit`, which drops
-the `e`-th power hypothesis; retained because it is the one place `localPolyEquivKummerPoly` is used. -/
+`Pcf.Kummer.localPolyEquivKummerPoly`. Superseded by
+`Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit`, which drops the `e`-th power hypothesis; retained
+because it is the one place `localPolyEquivKummerPoly` is used. -/
 theorem etale_adjoinRoot_localPoly (u : Rˣ) (t : Rˣ) {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) :
     Algebra.Etale R (AdjoinRoot (localPoly u ((t : R) ^ e) e)) :=
   haveI := etale_adjoinRoot_kummerPoly u he hu

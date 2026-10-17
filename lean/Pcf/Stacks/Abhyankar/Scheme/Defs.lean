@@ -63,10 +63,10 @@ extension).  Everything else is a quantification of it:
   `IsTamelyRamifiedInCodimensionOne` (Tag `0BSE`, intrinsic on schemes) and its chart reading
   `IsTamelyRamifiedAlongDivisor`.
 The scheme layer passes from `IsTamelyRamifiedInCodimensionOne` to `IsTamelyRamifiedAlongDivisor`
-(`isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`, `TameBridge.lean`) and from `IsTamelyRamifiedAlongDivisor` to the affine
-`IsTamelyRamifiedInCodimensionOneAlong` at the local rings of a chart
-(`AffineTame.isTamelyRamifiedInCodimensionOneAlong_localizedNormalization`, `AffineTameTransfer.lean`), which is the
-hypothesis of `Pcf.Stacks.abhyankarLemmaTameOfFinite`.
+(`isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`, `TameBridge.lean`) and from
+`IsTamelyRamifiedAlongDivisor` to the affine `IsTamelyRamifiedInCodimensionOneAlong` at the local
+rings of a chart (`AffineTame.isTamelyRamifiedInCodimensionOneAlong_localizedNormalization`,
+`AffineTameTransfer.lean`), which is the hypothesis of `Pcf.Stacks.abhyankarLemmaTameOfFinite`.
 
 ## The affine hypothesis
 
@@ -211,7 +211,8 @@ def IsEtaleLocallyStandardRootCover {X Y : Scheme.{u}} (π : Y ⟶ X) : Prop :=
 in which `IsTamelyRamifiedInCodimensionOne` reads on an affine open `Spec R` with `D = V(a)` and
 `Y = Spec B`: at every prime `𝔭 ∋ a` with `dim R_𝔭 = 1` the algebra `K_𝔭 ⊗_R B` is tamely
 ramified with respect to `R_𝔭`. -/
-def IsTamelyRamifiedAlongDivisor {R : Type u} [CommRing R] (a : R) (B : Type u) [CommRing B] [Algebra R B] :
+def IsTamelyRamifiedAlongDivisor {R : Type u} [CommRing R] (a : R) (B : Type u) [CommRing B]
+    [Algebra R B] :
     Prop :=
   ∀ p : Ideal R, (_ : p.IsPrime) → a ∈ p → ringKrullDim (Localization.AtPrime p) = 1 →
     IsTamelyRamifiedOver (Localization.AtPrime p)

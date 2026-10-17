@@ -42,14 +42,20 @@ fails in the wild case.
 
 ## Main results
 
-* `Pcf.DivisorDynamics.IsChain.extend` — Lemma `lem:lift`, existence clause, iterated (the old padding
+* `Pcf.DivisorDynamics.IsChain.extend` — Lemma `lem:lift`, existence clause, iterated (the old
+  padding
   lemma).
-* `Pcf.DivisorDynamics.iterateRamificationIdx_add` — multiplicativity of ramification indices in towers.
-* `Pcf.DivisorDynamics.mem_branch_iterate_iff` — Proposition `prop:iterates`(1) (ramification under iterates).
-* `Pcf.DivisorDynamics.mem_branch_iterate_succ` — Proposition `prop:iterates`(2) (orbit propagation).
-* `Pcf.DivisorDynamics.postcriticalSet_iterate` — Proposition `prop:iterates`(3)–(4) (`PCset(f) = PCset(fᵐ)`).
+* `Pcf.DivisorDynamics.iterateRamificationIdx_add` — multiplicativity of ramification indices in
+  towers.
+* `Pcf.DivisorDynamics.mem_branch_iterate_iff` — Proposition `prop:iterates`(1) (ramification under
+  iterates).
+* `Pcf.DivisorDynamics.mem_branch_iterate_succ` — Proposition `prop:iterates`(2) (orbit
+  propagation).
+* `Pcf.DivisorDynamics.postcriticalSet_iterate` — Proposition `prop:iterates`(3)–(4)
+  (`PCset(f) = PCset(fᵐ)`).
 * `Pcf.DivisorDynamics.isPCF_iff_forall_orbit_finite` — the orbit characterization of PCF.
-* `Pcf.DivisorDynamics.isPCF_of_finite_cover` — Lemma `lem:normalization` (passing to normalizations).
+* `Pcf.DivisorDynamics.isPCF_of_finite_cover` — Lemma `lem:normalization` (passing to
+  normalizations).
 -/
 
 @[expose] public section
@@ -90,7 +96,8 @@ variable {P : Type u} (D : DivisorDynamics P)
 (the ramification paragraph before Definition `def:crit-branch`, and that definition). -/
 def branch : Set P := {Q | ∃ Q', D.step Q' = Q ∧ 1 < D.ramificationIdx Q'}
 
-theorem mem_branch_iff {Q : P} : Q ∈ D.branch ↔ ∃ Q', D.step Q' = Q ∧ 1 < D.ramificationIdx Q' := Iff.rfl
+theorem mem_branch_iff {Q : P} : Q ∈ D.branch ↔ ∃ Q', D.step Q' = Q ∧ 1 < D.ramificationIdx Q' :=
+    Iff.rfl
 
 theorem branch_finite : D.branch.Finite := D.step_image_ramified_finite
 
@@ -149,19 +156,23 @@ theorem exists_isChain_iff (P₀ Q : P) (m : ℕ) :
 /-- The ramification index of the `m`-th iterate, `e(Q / gᵐ(Q)) = ∏_{i<m} e(gⁱ(Q))`.
 Defining it by this product is precisely the multiplicativity of ramification indices
 in towers invoked in the proof of Lemma `lem:tower`. -/
-def iterateRamificationIdx (m : ℕ) (Q : P) : ℕ := ∏ i ∈ Finset.range m, D.ramificationIdx (D.step^[i] Q)
+def iterateRamificationIdx (m : ℕ) (Q : P) : ℕ := ∏ i ∈ Finset.range m, D.ramificationIdx
+    (D.step^[i] Q)
 
 theorem iterateRamificationIdx_pos (m : ℕ) (Q : P) : 0 < D.iterateRamificationIdx m Q :=
   CanonicallyOrderedAdd.prod_pos.mpr fun _ _ => D.ramificationIdx_pos _
 
-@[simp] theorem iterateRamificationIdx_zero (Q : P) : D.iterateRamificationIdx 0 Q = 1 := by simp [iterateRamificationIdx]
+@[simp] theorem iterateRamificationIdx_zero (Q : P) : D.iterateRamificationIdx 0 Q = 1 :=
+    by simp [iterateRamificationIdx]
 
-@[simp] theorem iterateRamificationIdx_one (Q : P) : D.iterateRamificationIdx 1 Q = D.ramificationIdx Q := by simp [iterateRamificationIdx]
+@[simp] theorem iterateRamificationIdx_one (Q : P) : D.iterateRamificationIdx 1 Q =
+    D.ramificationIdx Q := by simp [iterateRamificationIdx]
 
 /-- **Multiplicativity of ramification indices in towers** (§`sec:prelim`, proof of Lemma
 `lem:tower`). -/
 theorem iterateRamificationIdx_add (m n : ℕ) (Q : P) :
-    D.iterateRamificationIdx (m + n) Q = D.iterateRamificationIdx m Q * D.iterateRamificationIdx n (D.step^[m] Q) := by
+    D.iterateRamificationIdx (m + n) Q = D.iterateRamificationIdx m Q * D.iterateRamificationIdx n
+        (D.step^[m] Q) := by
   simp only [iterateRamificationIdx, Finset.prod_range_add]
   congr 1
   refine Finset.prod_congr rfl fun i _ => ?_
@@ -186,7 +197,8 @@ theorem one_lt_iterateRamificationIdx_iff (m : ℕ) (Q : P) :
       (fun j => D.ramificationIdx (D.step^[j] Q)) hmem
     rw [iterateRamificationIdx, ← hprod]
     exact lt_of_lt_of_le hgt
-      (Nat.le_mul_of_pos_right _ (CanonicallyOrderedAdd.prod_pos.mpr fun _ _ => D.ramificationIdx_pos _))
+      (Nat.le_mul_of_pos_right _
+          (CanonicallyOrderedAdd.prod_pos.mpr fun _ _ => D.ramificationIdx_pos _))
 
 /-- The primes over which the `m`-th iterate branches, described directly.
 This is the set-level form of Proposition `prop:iterates`(1). -/
@@ -224,7 +236,8 @@ def iterate (m : ℕ) : DivisorDynamics P where
 
 @[simp] theorem iterate_step (m : ℕ) : (D.iterate m).step = D.step^[m] := rfl
 
-@[simp] theorem iterate_ramificationIdx (m : ℕ) : (D.iterate m).ramificationIdx = D.iterateRamificationIdx m := rfl
+@[simp] theorem iterate_ramificationIdx (m : ℕ) : (D.iterate m).ramificationIdx =
+    D.iterateRamificationIdx m := rfl
 
 theorem branch_iterate (m : ℕ) :
     (D.iterate m).branch = ⋃ n ∈ Set.Iio m, D.step^[n] '' D.branch :=
@@ -253,7 +266,8 @@ def postcriticalSet : Set P := ⋃ n : ℕ, D.step^[n] '' D.branch
 components (Definition `def:pcf`). -/
 def IsPCF : Prop := D.postcriticalSet.Finite
 
-theorem mem_postcriticalSet_iff {Q : P} : Q ∈ D.postcriticalSet ↔ ∃ n, ∃ R ∈ D.branch, D.step^[n] R = Q := by
+theorem mem_postcriticalSet_iff {Q : P} : Q ∈ D.postcriticalSet ↔ ∃ n, ∃ R ∈ D.branch, D.step^[n] R
+    = Q := by
   simp only [postcriticalSet, Set.mem_iUnion, Set.mem_image]
 
 theorem branch_subset_postcriticalSet : D.branch ⊆ D.postcriticalSet := fun _ hQ =>
@@ -274,13 +288,15 @@ theorem step_iterate_mem_postcriticalSet {Q : P} (h : Q ∈ D.postcriticalSet) (
     exact D.step_image_postcriticalSet_subset ⟨_, ih, rfl⟩
 
 /-- `Branch(gᵐ) ⊆ PCset(g)` (Proposition `prop:iterates`(3)–(4)). -/
-theorem branch_iterate_subset_postcriticalSet (m : ℕ) : (D.iterate m).branch ⊆ D.postcriticalSet := by
+theorem branch_iterate_subset_postcriticalSet (m : ℕ) : (D.iterate m).branch ⊆ D.postcriticalSet :=
+    by
   intro Q hQ
   obtain ⟨n, _, R, hR, hRQ⟩ := (D.mem_branch_iterate_iff m Q).mp hQ
   exact D.mem_postcriticalSet_iff.mpr ⟨n, R, hR, hRQ⟩
 
 /-- **Proposition `prop:iterates`(3)–(4)**. `PCset(gᵐ) = PCset(g)` for every `m ≥ 1`. -/
-theorem postcriticalSet_iterate {m : ℕ} (hm : 1 ≤ m) : (D.iterate m).postcriticalSet = D.postcriticalSet := by
+theorem postcriticalSet_iterate {m : ℕ} (hm : 1 ≤ m) : (D.iterate m).postcriticalSet =
+    D.postcriticalSet := by
   apply Set.Subset.antisymm
   · intro Q hQ
     obtain ⟨j, R, hR, hRQ⟩ := (D.iterate m).mem_postcriticalSet_iff.mp hQ

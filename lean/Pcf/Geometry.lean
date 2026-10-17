@@ -24,7 +24,8 @@ This file carries two things.
    finiteness statements into `Pcf.PCFSetup`.
 2. **The record of a retracted interface.** Earlier versions of this file carried a field
    `standardForm`, valued in `Pcf.KummerWitness`, which was presented as "Abhyankar's lemma"
-   and consumed to prove `PCFSetup.notMem_branch_iterate`. Two adversarial reviews showed that interface to be
+   and consumed to prove `PCFSetup.notMem_branch_iterate`. Two adversarial reviews showed that
+   interface to be
    logically equivalent to its own conclusion (`Pcf.nonempty_kummerWitness_iff`,
    `Pcf.kummerWitness_iff_unramifiedWitness`). **The field has been removed.** Theorem
    `thm:bounding` is now *derived* in `Pcf/Bounding/Chart.lean` from purity and Abhyankar's
@@ -32,8 +33,9 @@ This file carries two things.
    `Pcf/Bounding/Wiring.lean`. The witness types and the refutation theorems are kept below,
    unconsumed, so that the record cannot be lost.
 
-On this file's route, `PCFSetup.notMem_branch_iterate` is an explicit argument of `Pcf.PCFGeometry.toPCFSetup`
-and `Pcf.PCFGeometry.restriction_isPCF`: the join no longer pretends to supply it.
+On this file's route, `PCFSetup.notMem_branch_iterate` is an explicit argument of
+`Pcf.PCFGeometry.toPCFSetup` and `Pcf.PCFGeometry.restriction_isPCF`: the join no longer pretends to
+supply it.
 
 ## What is proved here
 
@@ -172,7 +174,8 @@ the unit `u` of the resulting Kummer equation `y ^ e = u`.
 
 Nothing here asserts that anything is unramified, trivial, or an isomorphism. That
 `n = 1` follows is `Pcf.KummerWitness.eq_one`, whose proof is
-`Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one`: the Kummer algebra is étale over its base. -/
+`Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one`: the Kummer algebra is étale over its
+base. -/
 structure KummerWitness (n : ℕ) where
   /-- The base ring; étale-locally, the local ring of `B` at the point, with the equation
   of the divisor inverted. -/
@@ -211,10 +214,12 @@ attribute [instance] KummerWitness.commBase KummerWitness.isPrime
 witness is `1`.
 
 Unlike `Pcf.UnramifiedWitness.eq_one`, which reads off a bijectivity field, this goes
-through `Pcf.Kummer.etale_adjoinRoot_kummerPoly`: `R[y]/(y ^ e - u)` is étale over `R` because `e` is invertible
-and `u` is a unit, hence unramified at every prime. -/
+through `Pcf.Kummer.etale_adjoinRoot_kummerPoly`: `R[y]/(y ^ e - u)` is étale over `R` because `e`
+is invertible and `u` is a unit, hence unramified at every prime. -/
 theorem KummerWitness.eq_one {n : ℕ} (w : KummerWitness n) : n = 1 :=
-  w.ram_eq.trans (Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one w.unit w.deg_ne_zero w.deg_isUnit w.prime)
+  w.ram_eq.trans
+      (Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one w.unit w.deg_ne_zero w.deg_isUnit
+          w.prime)
 
 /-- Any prime of any tame Kummer algebra is a witness for its own ramification index. -/
 noncomputable def KummerWitness.ofKummer {R : Type} [CommRing R] (u : Rˣ) {e : ℕ}
@@ -239,7 +244,8 @@ noncomputable def KummerWitness.ofTame {R : Type} [CommRing R] [Nontrivial R] (u
     {e : ℕ} (he : e ≠ 0) (hu : IsUnit ((e : R))) : KummerWitness 1 :=
   letI q := (Pcf.Kummer.exists_isPrime_adjoinRoot_kummerPoly u he).choose
   haveI : q.IsPrime := (Pcf.Kummer.exists_isPrime_adjoinRoot_kummerPoly u he).choose_spec
-  (Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one u he hu q) ▸ KummerWitness.ofKummer u he hu q
+  (Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one u he hu q) ▸ KummerWitness.ofKummer u he
+      hu q
 
 /-- A concrete tame witness of degree `3`: a prime of `ℚ[y]/(y³ - 1)`, which is a
 `ℚ`-algebra of dimension `3`. -/
@@ -280,8 +286,8 @@ argument is wrong** and is retracted. A sufficient hypothesis need only *imply* 
 conclusion; equivalence is not forced. This interface is equivalent to its conclusion for
 a specific, identifiable reason: `Base`, `deg`, `unit` and `prime` are chosen freely by
 whoever supplies the witness, and no field ties them to the prime whose index is `ram q`.
-So `Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one` is applied to an algebra the supplier invented, not
-to the cover under discussion, and no content crosses.
+So `Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one` is applied to an algebra the supplier
+invented, not to the cover under discussion, and no content crosses.
 
 The genuinely weaker interface described by the review — fix the local extension as data
 and have Abhyankar's lemma supply an `AlgEquiv` from *that* extension onto standard pieces —
@@ -364,7 +370,8 @@ theorem finite_sing_subtype [NoetherianSpace B] :
     {Q : {s : Set B // IsProperIrreducibleClosed s} |
       (Q : Set B) ⊆ D.singAmbient ∨ (Q : Set B) ⊆ D.singSelf}.Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
-  refine ((finite_isProperIrreducibleClosed_subset D.singAmbient_isClosed D.singAmbient_ne_univ).union
+  refine ((finite_isProperIrreducibleClosed_subset D.singAmbient_isClosed
+      D.singAmbient_ne_univ).union
     (finite_isProperIrreducibleClosed_subset D.singSelf_isClosed D.singSelf_ne_univ)).subset ?_
   rintro s ⟨⟨Q, hQ⟩, h, rfl⟩
   rcases h with h | h
@@ -376,7 +383,8 @@ number. -/
 theorem finite_meets_subtype [NoetherianSpace B] :
     {Q : {s : Set B // IsProperIrreducibleClosed s} | (Q : Set B) ⊆ D.interOther}.Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
-  refine (finite_isProperIrreducibleClosed_subset D.interOther_isClosed D.interOther_ne_univ).subset ?_
+  refine (finite_isProperIrreducibleClosed_subset D.interOther_isClosed D.interOther_ne_univ).subset
+      ?_
   rintro s ⟨⟨Q, hQ⟩, h, rfl⟩
   exact ⟨hQ, h⟩
 
@@ -386,19 +394,20 @@ end BoundingCorrectionLoci
 
 Everything above proves Step 0 of Theorem `thm:bounding` as a statement about a topological
 space. This section connects it to `Pcf.PCFSetup`, the structure Theorem
-`thm:normal-invariant` consumes, so that the two fields `singularPrimes_finite` and `meets_finite` are
-**discharged**. Primes of `A` are realized as the subtype `{s : Set B // Pcf.IsProperIrreducibleClosed s}`.
+`thm:normal-invariant` consumes, so that the two fields `singularPrimes_finite` and `meets_finite`
+are **discharged**. Primes of `A` are realized as the subtype
+`{s : Set B // Pcf.IsProperIrreducibleClosed s}`.
 
 The decisive feature of the manuscript's argument is visible in the type: the three
-correction loci `singAmbient`, `singSelf` and `otherBranchIntersection` are fields of `PCFGeometry` that
-do **not** depend on `m`, while the bounding conclusion `key` is quantified over every `m`.
+correction loci `singAmbient`, `singSelf` and `otherBranchIntersection` are fields of `PCFGeometry`
+that do **not** depend on `m`, while the bounding conclusion `key` is quantified over every `m`.
 That is exactly "the correction terms do not depend on the iterate". -/
 
 variable {PX : Type*}
 
-/-- Build the `DivisorDynamics` on the primes of a Noetherian space with `step_image_ramified_finite`
-**proved** rather than assumed, given that every branch prime lies in a proper closed
-locus — in the application, the image of the non-étale locus.
+/-- Build the `DivisorDynamics` on the primes of a Noetherian space with
+`step_image_ramified_finite` **proved** rather than assumed, given that every branch prime lies in a
+proper closed locus — in the application, the image of the non-étale locus.
 
 This discharges the finiteness of the branch divisor (§`sec:defs`, after Definition
 `def:crit-branch`) at the
@@ -415,7 +424,8 @@ noncomputable def divisorDynamicsOfGeometry [NoetherianSpace B]
   ramificationIdx_pos := ram_pos
   step_surjective := step_surjective
   step_image_ramified_finite := by
-    have hfin : {Q : {s : Set B // IsProperIrreducibleClosed s} | (Q : Set B) ⊆ nonEtale}.Finite := by
+    have hfin : {Q : {s : Set B // IsProperIrreducibleClosed s} | (Q : Set B) ⊆ nonEtale}.Finite :=
+        by
       apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
       refine (finite_isProperIrreducibleClosed_subset hclosed hne).subset ?_
       rintro t ⟨⟨Q, hQ⟩, h, rfl⟩
@@ -430,10 +440,10 @@ subsets. The bounding theorem is **not** a field: `Pcf.PCFGeometry.toPCFSetup` t
 conclusion as an explicit argument, and `Pcf/Bounding/Wiring.lean` derives that conclusion
 from charts.
 
-`ambient` and `restriction` are `Pcf.DivisorDynamics`s, and `DivisorDynamics` carries `step_surjective` (lying over) and
-`step_image_ramified_finite` (finiteness of the branch divisor) as fields; both are therefore assumed
-here too. `Pcf.divisorDynamicsOfGeometry` discharges `step_image_ramified_finite` for the restricted system from
-a proper closed locus. -/
+`ambient` and `restriction` are `Pcf.DivisorDynamics`s, and `DivisorDynamics` carries
+`step_surjective` (lying over) and `step_image_ramified_finite` (finiteness of the branch divisor)
+as fields; both are therefore assumed here too. `Pcf.divisorDynamicsOfGeometry` discharges
+`step_image_ramified_finite` for the restricted system from a proper closed locus. -/
 structure PCFGeometry (PX : Type*) (B : Type*) [TopologicalSpace B] where
   /-- `f` acting on the primes of `X`. -/
   ambient : DivisorDynamics PX
@@ -465,13 +475,15 @@ def singularPrimes : Set {s : Set B // IsProperIrreducibleClosed s} :=
   {Q | (Q : Set B) ⊆ G.singAmbient ∨ (Q : Set B) ⊆ G.singSelf}
 
 /-- The primes of `A` inside `A ∩ E`. -/
-def meets (E : PX) : Set {s : Set B // IsProperIrreducibleClosed s} := {Q | (Q : Set B) ⊆ G.otherBranchIntersection E}
+def meets (E : PX) : Set {s : Set B // IsProperIrreducibleClosed s} :=
+    {Q | (Q : Set B) ⊆ G.otherBranchIntersection E}
 
 /-- `PCFSetup.singularPrimes_finite`, **proved** from Theorem `thm:bounding` Step 0 and Lemma
 `lem:finitely-many` and Noetherianness. -/
 theorem singularPrimes_finite [NoetherianSpace B] : G.singularPrimes.Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
-  refine ((finite_isProperIrreducibleClosed_subset G.singAmbient_isClosed G.singAmbient_ne_univ).union
+  refine ((finite_isProperIrreducibleClosed_subset G.singAmbient_isClosed
+      G.singAmbient_ne_univ).union
     (finite_isProperIrreducibleClosed_subset G.singSelf_isClosed G.singSelf_ne_univ)).subset ?_
   rintro t ⟨⟨Q, hQ⟩, h, rfl⟩
   rcases h with h | h
@@ -483,7 +495,8 @@ theorem singularPrimes_finite [NoetherianSpace B] : G.singularPrimes.Finite := b
 theorem meets_finite [NoetherianSpace B] (E : PX) (hE : E ≠ G.fixedPrime) :
     (G.meets E).Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
-  refine (finite_isProperIrreducibleClosed_subset (G.otherBranchIntersection_isClosed E hE) (G.otherBranchIntersection_ne_univ E hE)).subset ?_
+  refine (finite_isProperIrreducibleClosed_subset (G.otherBranchIntersection_isClosed E hE)
+      (G.otherBranchIntersection_ne_univ E hE)).subset ?_
   rintro t ⟨⟨Q, hQ⟩, h, rfl⟩
   exact ⟨hQ, h⟩
 
@@ -492,8 +505,9 @@ every iterate, yields the structure Theorem `thm:normal-invariant` consumes.
 
 `singularPrimes_finite` and `meets_finite` are genuinely proved, from Step 0's properness statements
 plus Noetherianness. `key` is taken as an explicit argument: on the chart route it is
-`Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` (through `Pcf.NonEtalePCFSetup.toPCFSetup`), derived from purity and
-Abhyankar's lemma. Lying over and `step_image_ramified_finite` remain fields of the two `DivisorDynamics`s. -/
+`Pcf.PCFSetupChart.notMem_nonEtaleBranch_iterate` (through `Pcf.NonEtalePCFSetup.toPCFSetup`),
+derived from purity and Abhyankar's lemma. Lying over and `step_image_ramified_finite` remain fields
+of the two `DivisorDynamics`s. -/
 noncomputable def toPCFSetup [NoetherianSpace B]
     (key : ∀ (m : ℕ) (Q : {s : Set B // IsProperIrreducibleClosed s}), Q ∉ G.singularPrimes →
       (∀ E ∈ (G.ambient.iterate m).branch, E ≠ G.fixedPrime → Q ∉ G.meets E) →
@@ -513,9 +527,9 @@ noncomputable def toPCFSetup [NoetherianSpace B]
 finite, so is the restriction, given the conclusion of Theorem `thm:bounding` for every
 iterate (`key`).
 
-What this route assumes: `key`, `step_surjective` and `step_image_ramified_finite` on both `DivisorDynamics`s, and
-the properness of the three correction loci. What it no longer assumes separately:
-`singularPrimes_finite` and `meets_finite`, which are proved. -/
+What this route assumes: `key`, `step_surjective` and `step_image_ramified_finite` on both
+`DivisorDynamics`s, and the properness of the three correction loci. What it no longer assumes
+separately: `singularPrimes_finite` and `meets_finite`, which are proved. -/
 theorem restriction_isPCF [NoetherianSpace B]
     (key : ∀ (m : ℕ) (Q : {s : Set B // IsProperIrreducibleClosed s}), Q ∉ G.singularPrimes →
       (∀ E ∈ (G.ambient.iterate m).branch, E ≠ G.fixedPrime → Q ∉ G.meets E) →

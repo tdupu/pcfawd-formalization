@@ -66,7 +66,8 @@ of `0EYG` themselves are carried out for a finite normalization (`AbhyankarLemma
   "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`)
   and then uses the same lemmas (see `Tame/Defs.lean`, "Shared lemmas").
 * **Scheme level** (phase 2): `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` and
-  `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` (directory `Abhyankar/Scheme/`), the statements of Stacks
+  `Pcf.Stacks.SchemeLevel.abhyankarLemma_normalization` (directory `Abhyankar/Scheme/`), the
+  statements of Stacks
   Lemmas 58.31.5 and 58.31.6 for a locally Noetherian scheme, an effective Cartier divisor that
   is a regular scheme, and a finite étale `Y → X ∖ D` tamely ramified in codimension 1.  They are
   proved from the tame affine theorem on affine charts.

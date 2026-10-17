@@ -108,11 +108,14 @@ theorem schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow (m : ℕ) :
 /-- The postcritical set defined using the canonical normalized branch locus is
 unchanged by every positive iterate of the actual scheme morphism. -/
 theorem schemeNormalizedPostcriticalSet_pow (m : ℕ) (hm : 1 ≤ m) :
-    schemeNormalizedPostcriticalSet k (End.of f ^ m).asHom = schemeNormalizedPostcriticalSet k f := by
+    schemeNormalizedPostcriticalSet k (End.of f ^ m).asHom = schemeNormalizedPostcriticalSet k f :=
+        by
   rw [schemeNormalizedPostcriticalSet_eq_normalization_image,
     schemeNormalizedPostcriticalSet_eq_normalization_image,
-    schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow, DivisorDynamics.postcriticalSet_iterate _ hm]
-  exact congrArg (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized.postcriticalSet)
+    schemeGlobalNormalizationUnnormalizedDynamics_normalized_pow,
+        DivisorDynamics.postcriticalSet_iterate _ hm]
+  exact congrArg
+      (fun ν ↦ ν '' (schemeGlobalNormalizationUnnormalizedDynamics k f).normalized.postcriticalSet)
     (funext fun Q ↦ Subtype.ext (by
       simp only [schemeGlobalNormalizationUnnormalizedDynamics_normalization_val]))
 

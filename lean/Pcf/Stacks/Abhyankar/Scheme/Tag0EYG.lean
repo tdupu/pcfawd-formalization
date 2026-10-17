@@ -13,13 +13,14 @@ public import Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame
 /-!
 # Abhyankar's lemma for a regular divisor, scheme form (Stacks Lemma 58.31.5, Tag `0EYG`)
 
-`Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme`: let `X` be a locally Noetherian scheme, `D ⊂ X` an effective
-Cartier divisor such that `D` is a regular scheme, and `Y → X ∖ D` finite étale.  If `Y` is
+`Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme`: let `X` be a locally Noetherian scheme, `D ⊂ X` an
+effective Cartier divisor such that `D` is a regular scheme, and `Y → X ∖ D` finite étale. If `Y` is
 tamely ramified over `X` in codimension one, then étale locally on `X` the morphism `Y → X` is a
 finite disjoint union of standard tamely ramified morphisms (Example 58.31.4).
 
 Three forms:
-* `abhyankarLemma_scheme_of_abhyankarLemmaTameOver`: with the affine statement as the hypothesis `AbhyankarLemmaTameOver X`;
+* `abhyankarLemma_scheme_of_abhyankarLemmaTameOver`: with the affine statement as the hypothesis
+  `AbhyankarLemmaTameOver X`;
 * `abhyankarLemma_scheme`: unconditional, discharging it by the tame affine theorem
   `Pcf.Stacks.abhyankarLemmaTameOfFinite` (any characteristic);
 * `abhyankarLemma_scheme_of_isUnit_natCast`: on a `ℚ`-scheme, discharging it by the
@@ -38,7 +39,8 @@ Three forms:
   affine" → `ChartData.lean`, `hasLocalizedStandardCoverAt_chart`
 * "`A/fA` is regular" (`D` regular) → `isRegularRing_quotient_of_isRegularScheme`
 * "by Lemma 58.31.1 the base change is tamely ramified in codimension 1" → on the chart:
-  `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`; the base change to `A^{sh}` is inside the affine
+  `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne`; the base change to `A^{sh}` is
+  inside the affine
   statement
 * strict henselization, normal domains, root covers, descent along `colim A_λ` → the affine
   statement (`Pcf.Stacks.abhyankarLemmaTameOfFinite`), entering via
@@ -162,6 +164,7 @@ theorem abhyankarLemma_scheme_of_isUnit_natCast (X : Scheme.{u}) [IsLocallyNoeth
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]
     (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
     IsEtaleLocallyStandardTame (f ≫ (complementOpen D).ι) :=
-  abhyankarLemma_scheme_of_abhyankarLemmaTameOver X (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
+  abhyankarLemma_scheme_of_abhyankarLemmaTameOver X
+      (abhyankarLemmaTameOver_of_isUnit_natCast X hnat) D hD hDreg f htame
 
 end Pcf.Stacks.SchemeLevel

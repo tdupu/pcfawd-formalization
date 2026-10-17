@@ -14,7 +14,8 @@ public import Pcf.Stacks.Abhyankar.FiniteNormalization
 
 The compact notions of `Pcf.Palomar.Statement` agree with the development's:
 
-* `isPCF_iff_divisorDynamics_isPCF`: `IsPCF` of a finite dominant endomorphism of a normal Noetherian
+* `isPCF_iff_divisorDynamics_isPCF`: `IsPCF` of a finite dominant endomorphism of a normal
+  Noetherian
   integral scheme is `DivisorDynamics.IsPCF` of its divisor dynamics;
 * `isNormalizationLift_unique` / `isNormalizationLift_lift`: the canonical normalization lift
   `schemeGlobalNormalizationLift f` is the unique `IsNormalizationLift`, so
@@ -85,7 +86,8 @@ theorem isPCF_iff_divisorDynamics_isPCF {X : Scheme.{u}} (f : X ⟶ X) [IsFinite
       rw [← hRQ, ← hQ'R, ← Function.iterate_succ_apply, divisorDynamics_step_iterate_val]
     · rintro ⟨x, hx, hram, n, rfl⟩
       let Q' : SchemeDivisorPoint X := ⟨x, hx⟩
-      refine ⟨D.step^[n] (D.step Q'), D.mem_postcriticalSet_iff.mpr ⟨n, D.step Q', ⟨Q', rfl, hram⟩, rfl⟩,
+      refine ⟨D.step^[n] (D.step Q'), D.mem_postcriticalSet_iff.mpr
+          ⟨n, D.step Q', ⟨Q', rfl, hram⟩, rfl⟩,
         ?_⟩
       rw [← Function.iterate_succ_apply, divisorDynamics_step_iterate_val]
   unfold IsPCF DivisorDynamics.IsPCF

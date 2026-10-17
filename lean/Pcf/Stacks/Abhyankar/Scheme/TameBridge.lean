@@ -26,9 +26,10 @@ respect to `𝒪_{X,ξ}` (Tag `09E9`).  This file identifies that condition on a
   `ramificationIdx_eq_of_ringEquiv` for Mathlib's length-defined `Ideal.ramificationIdx` and
   `Algebra.IsSeparable.of_equiv_equiv` for residue fields).
 
-The output `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne` is the chart form `IsTamelyRamifiedAlongDivisor a M` used by the
-affine statement.  Stacks treats this identification as evident ("as in the discussion above")
-in the proof of Tag `0EYG`; the transport lemmas are general API for `IsTamelyRamifiedOver`.
+The output `isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne` is the chart form
+`IsTamelyRamifiedAlongDivisor a M` used by the affine statement. Stacks treats this identification
+as evident ("as in the discussion above") in the proof of Tag `0EYG`; the transport lemmas are
+general API for `IsTamelyRamifiedOver`.
 -/
 
 @[expose] public section
@@ -118,7 +119,8 @@ theorem ramificationIdx_eq_of_ringEquiv {q : Ideal S} {q' : Ideal S'} [q.IsPrime
 include h in
 /-- Tame ramification at a prime (`IsTamelyRamifiedAt`) is invariant under compatible ring
 isomorphisms of the base and the algebra. -/
-theorem _root_.Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv {q : PrimeSpectrum S} {q' : PrimeSpectrum S'}
+theorem _root_.Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv {q : PrimeSpectrum S}
+    {q' : PrimeSpectrum S'}
     (hq : q.asIdeal = q'.asIdeal.comap e2) (H : IsTamelyRamifiedAt R S q) :
     IsTamelyRamifiedAt R' S' q' := by
   have hp := under_eq_comap_of_ringEquiv e1 e2 h hq
@@ -182,7 +184,8 @@ end
 open `V` and `f : Y → X ∖ D` is finite and tamely ramified over `X` in codimension one (Stacks
 Section 58.31), then the chart `Γ(X, V) → Γ(Y, (f ≫ ι)⁻¹ V)` is tame in codimension one along
 `V(a)` in the sense of `IsTamelyRamifiedAlongDivisor`. -/
-theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : Scheme.{u}} {D : X.IdealSheafData}
+theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : Scheme.{u}}
+    {D : X.IdealSheafData}
     {V : X.affineOpens} {a : Γ(X, V)} (hDa : D.ideal V = Ideal.span {a})
     (f : Y ⟶ complementOpen D) [IsFinite f]
     (htame : IsTamelyRamifiedInCodimensionOne (complementOpen D) f) :
@@ -198,7 +201,8 @@ theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne {X Y : 
     rw [← SetLike.mem_coe, ← V.2.range_fromSpec]
     exact Set.mem_range_self pt
   let xU : V.1 := ⟨ξ, hξV⟩
-  have hprime : V.2.primeIdealOf xU = pt := AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec V.2 pt
+  have hprime : V.2.primeIdealOf xU = pt := AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec V.2
+      pt
   let _ : Algebra Γ(X, V.1) (X.presheaf.stalk ξ) := X.presheaf.algebra_section_stalk xU
   have hloc : IsLocalization.AtPrime (X.presheaf.stalk ξ) p := by
     have := V.2.isLocalization_stalk xU

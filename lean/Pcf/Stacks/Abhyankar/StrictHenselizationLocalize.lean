@@ -65,7 +65,8 @@ theorem _root_.Polynomial.scaleRoots_comp_C_mul_X {A : Type*} [CommRing A] (p : 
 
 /-- The derivative of `p.scaleRoots s`, evaluated at `s • ξ`, is `s ^ (deg p - 1)` times the
 derivative of `p` at `ξ`, in the form `s • p'ˢ(s ξ) = s ^ deg p • p'(ξ)`. -/
-theorem _root_.Polynomial.aeval_smul_derivative_scaleRoots {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
+theorem _root_.Polynomial.aeval_smul_derivative_scaleRoots {A B : Type*} [CommRing A] [CommRing B]
+    [Algebra A B]
     (p : A[X]) (s : A) (ξ : B) :
     algebraMap A B s * aeval (algebraMap A B s * ξ) (derivative (p.scaleRoots s)) =
       algebraMap A B (s ^ p.natDegree) * aeval ξ (derivative p) := by

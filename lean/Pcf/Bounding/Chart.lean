@@ -23,8 +23,8 @@ public import Mathlib.RingTheory.Localization.AtPrime.Basic
 This file **derives** the conclusion of Theorem `thm:bounding` of `latex/paper.tex` from
 Zariski–Nagata purity and Abhyankar's lemma, following Steps 0–4 of the manuscript's proof.
 Until this file, the formalization *assumed* that conclusion (`Pcf.PCFSetup.notMem_branch_iterate`,
-`Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate`, and — in a disguised form caught by two adversarial reviews — the
-`KummerWitness`-valued field `standardForm`). Here it is a theorem,
+`Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate`, and — in a disguised form caught by two
+adversarial reviews — the `KummerWitness`-valued field `standardForm`). Here it is a theorem,
 `Pcf.BoundingChart.isEtaleAt_restriction`.
 
 ## The chart
@@ -482,7 +482,8 @@ theorem isEtaleAt_quot_of_pieces (hEt : Algebra.Etale R R')
   exact Bounding.formallyEtale_of_localStructure (algebraMap R R' a) _ θ I hcomp
     (LocalModel.span_le_comap_span_root (u i) (algebraMap R R' a) he1)
     (LocalModel.quotientMap_bijective (u i) (algebraMap R R' a) he1)
-    (LocalModel.root_pow_mem_span_algebraMap_of_le (u i) (algebraMap R R' a)) haI hIker hsurj hker hloc
+    (LocalModel.root_pow_mem_span_algebraMap_of_le (u i) (algebraMap R R' a)) haI hIker hsurj hker
+        hloc
 
 end Pieces
 

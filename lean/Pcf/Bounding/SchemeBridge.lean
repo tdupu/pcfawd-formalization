@@ -1118,7 +1118,8 @@ noncomputable def affineIdealSheafStalkBoundingLocalizationPresentation
   simp [V]
 
 /-- Failure of formal unramifiedness at a point, defined from the actual stalk map. -/
-def SchemeStalkNotFormallyUnramifiedAt {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) : Prop :=
+def SchemeStalkNotFormallyUnramifiedAt {X Y : AlgebraicGeometry.Scheme.{u}} (g : X ⟶ Y) (x : X) :
+    Prop :=
   ¬ (g.stalkMap x).hom.FormallyUnramified
 
 /-- The codimension-one stalk-formal-non-unramified locus of an actual scheme morphism. -/

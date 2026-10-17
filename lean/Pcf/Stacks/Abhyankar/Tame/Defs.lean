@@ -185,7 +185,8 @@ def AbhyankarLemmaTameOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra
 every positive integer is a unit, `S` is tamely ramified in codimension one
 (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) once `S` is finite; the finiteness of
 `S` is supplied by `hfin` (in practice `Pcf.Stacks.finite_of_isIntegralClosure_away`). -/
-theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] {a : R}
+theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
+    {a : R}
     (h : AbhyankarLemmaTame R S a)
     (hfin : IsNoetherianRing R → a ∈ nonZeroDivisors R → IsRegularRing (R ⧸ Ideal.span {a}) →
       Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S) →
@@ -199,7 +200,8 @@ theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRi
     (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 /-- The finite-normalization forms: the tame statement implies the characteristic-zero one. -/
-theorem AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
+theorem AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite {R S : Type u} [CommRing R]
+    [CommRing S] [Algebra R S]
     {a : R} (h : AbhyankarLemmaTameOfFinite R S a) : AbhyankarLemmaOfFinite R S a := by
   intro hR ha hreg hfin hetale hint hnat y hy
   haveI := hfin

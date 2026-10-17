@@ -160,7 +160,8 @@ two-dimensional normal local rings (Serre's criterion, Algebra 10.157.4) and mir
 (Algebra 10.128.1).  Here flatness comes from an elementary miracle flatness for a regular pair
 (`Pcf.Stacks.Purity.MiracleFlatnessTwo`), without the Cohen–Macaulay API. -/
 theorem finiteNormalPuncturedEtalePurity_of_isRegularLocalRing_of_isIntegrallyClosed_dimension_two
-    (R : Type u) [CommRing R] [IsRegularLocalRing R] [IsIntegrallyClosed R] (hdim : ringKrullDim R = 2) :
+    (R : Type u) [CommRing R] [IsRegularLocalRing R] [IsIntegrallyClosed R]
+        (hdim : ringKrullDim R = 2) :
     FiniteNormalPuncturedEtalePurity R := by
   intro B hB
   let S : Type u := B.unop

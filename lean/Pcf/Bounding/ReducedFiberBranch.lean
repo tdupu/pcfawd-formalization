@@ -449,7 +449,8 @@ theorem mem_schemeReducedFiberBranch_iff
     omega
   · rintro ⟨Q, hQE, hram⟩ hred
     have h :=
-      (schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one f E).mp hred Q hQE
+      (schemeDivisorFiber_isReduced_iff_forall_schemeDivisorRamificationIdx_eq_one f E).mp hred Q
+          hQE
     omega
 
 /-- On a normal scheme, the reduced-fiber branch definition is exactly the

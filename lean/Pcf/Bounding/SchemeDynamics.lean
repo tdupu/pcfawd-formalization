@@ -25,8 +25,8 @@ or a bounding conclusion.
 
 Ramification indices multiply under composition because the intermediate
 codimension-one stalk is a DVR and the upper stalk extension is torsion free.
-Consequently `DivisorDynamics.iterateRamificationIdx` agrees with the ramification index of the actual
-scheme iterate. The comparison with affine-coordinate `heightOneRamificationIdx` remains
+Consequently `DivisorDynamics.iterateRamificationIdx` agrees with the ramification index of the
+actual scheme iterate. The comparison with affine-coordinate `heightOneRamificationIdx` remains
 separate.
 -/
 
@@ -124,7 +124,8 @@ theorem schemeDivisorRamificationIdx_comp
     [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian Y] [IsNormalScheme Y]
     (x : SchemeDivisorPoint X) :
     schemeDivisorRamificationIdx (f ≫ g) x =
-      schemeDivisorRamificationIdx g (x.mapFiniteDominantNormal f) * schemeDivisorRamificationIdx f x := by
+      schemeDivisorRamificationIdx g (x.mapFiniteDominantNormal f) * schemeDivisorRamificationIdx f
+          x := by
   let R := Z.presheaf.stalk (g (f x.1))
   let S := Y.presheaf.stalk (f x.1)
   let T := X.presheaf.stalk x.1
@@ -301,7 +302,8 @@ theorem divisorDynamicsOfFiniteDominantNormal_ramificationIdx
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
     [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
     (hcrit : (schemeDivisorNonEtaleLocus f).Finite) (x : SchemeDivisorPoint X) :
-    (divisorDynamicsOfFiniteDominantNormal f hcrit).ramificationIdx x = schemeDivisorRamificationIdx f x := rfl
+    (divisorDynamicsOfFiniteDominantNormal f hcrit).ramificationIdx x = schemeDivisorRamificationIdx
+        f x := rfl
 
 /-- The abstract iterated step agrees with the actual scheme iterate on points. -/
 theorem divisorDynamicsOfFiniteDominantNormal_iterate_step_val

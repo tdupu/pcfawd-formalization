@@ -31,7 +31,8 @@ opens `x ∈ U ⊆ X`, `V ⊆ Y` with `f(U) ⊆ V` such that the ring map `𝒪_
 
 * `IsStacksQuasiFiniteAt` — Definition 29.21.1(1) (Tag `01TD`): of finite type and quasi-finite at
   the prime of `x`. Quasi-finiteness at a prime is Mathlib's `RingHom.QuasiFiniteAt` (the
-  localization is quasi-finite), the same encoding as the ring-level `ZariskiNagataPurityHypothesesAt`.
+  localization is quasi-finite), the same encoding as the ring-level
+  `ZariskiNagataPurityHypothesesAt`.
   For finite-type ring maps it is equivalent to Stacks' Definition 10.122.3 ("isolated in its
   fibre"); Mathlib proves the scheme form of this equivalence as
   `Scheme.Hom.quasiFiniteAt_iff_isOpen_singleton_asFiber` (this file does not restate it).
@@ -60,8 +61,8 @@ finally the affine conclusion `Algebra.IsEtaleAt R w` spreads out to a basic ope
 `d = dim 𝒪_{X,x}` directly on schemes, localizing étale-locally on base and target (Descent
 `35.23.31`, `35.31.1`, More on Morphisms `37.41.1`). Here the scheme statement is instead reduced
 Zariski-locally to the affine theorem, whose proof carries out that induction at the ring level
-(`zariskiNagataPurity_of_etaleNormalAscent`, with the étale localization done through the algebra form
-`00UJ`; see `Purity/Tag0BMB.lean` and `Purity/Tag0BMBLocalModel.lean`).
+(`zariskiNagataPurity_of_etaleNormalAscent`, with the étale localization done through the algebra
+form `00UJ`; see `Purity/Tag0BMB.lean` and `Purity/Tag0BMBLocalModel.lean`).
 -/
 
 @[expose] public section

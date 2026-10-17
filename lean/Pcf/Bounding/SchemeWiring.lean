@@ -146,7 +146,8 @@ theorem schemeDivisorNonEtaleLocus_tower {A : AlgebraicGeometry.Scheme.{u}} (g :
     (n : ℕ) (Q : SchemeDivisorPoint A)
     (hQ : Q ∈ schemeDivisorNonEtaleLocus (CategoryTheory.End.of g ^ 1).asHom) :
     Q ∈ schemeDivisorNonEtaleLocus (CategoryTheory.End.of g ^ (n + 1)).asHom ∨
-      schemeDivisorMap g hcodim Q ∈ schemeDivisorNonEtaleLocus (CategoryTheory.End.of g ^ n).asHom := by
+      schemeDivisorMap g hcodim Q ∈ schemeDivisorNonEtaleLocus
+          (CategoryTheory.End.of g ^ n).asHom := by
   have hx : SchemeStalkNotFormallyEtaleAt g Q.1 := by simpa [schemeDivisorNonEtaleLocus] using hQ
   rw [pow_succ]
   change SchemeStalkNotFormallyEtaleAt (g ≫ (CategoryTheory.End.of g ^ n).asHom) Q.1 ∨
@@ -161,7 +162,8 @@ The inclusion U2, finiteness U3, and tower implications U4 and U5 are theorems.
 Normalized ramification comparison U1 remains a field. Finiteness follows from
 integrality, Noetherianity, dominance, local finite presentation, and characteristic
 zero at the generic stalk; generic formal étaleness of every iterate is derived. -/
-structure SchemeNormalizationUnnormalizedDynamics (A : AlgebraicGeometry.Scheme.{u}) (PN : Type v) where
+structure SchemeNormalizationUnnormalizedDynamics (A : AlgebraicGeometry.Scheme.{u}) (PN : Type v)
+    where
   /-- The actual self-map of the possibly nonnormal scheme. -/
   selfMap : A ⟶ A
   /-- The actual self-map is finite, as in the manuscript. -/
@@ -184,7 +186,8 @@ structure SchemeNormalizationUnnormalizedDynamics (A : AlgebraicGeometry.Scheme.
   /-- The normalization map has finite fibers on divisors. -/
   normalization_finite_fiber : ∀ Q, (normalization ⁻¹' {Q}).Finite
   /-- Normalized ramification maps into the unnormalized non-unramified locus. -/
-  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx : ∀ m Q, 1 < normalized.iterateRamificationIdx m Q →
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx : ∀ m Q, 1 < normalized.iterateRamificationIdx m
+      Q →
     normalization Q ∈ schemeDivisorNonUnramifiedLocus (CategoryTheory.End.of selfMap ^ m).asHom
   /-- The invariant divisor is integral. -/
   integral : AlgebraicGeometry.IsIntegral A
@@ -205,7 +208,8 @@ def nonUnramifiedLocus (m : ℕ) : Set (SchemeDivisorPoint A) :=
 
 /-- Formal étaleness implies formal unramifiedness on the actual stalk maps. -/
 theorem nonUnramifiedLocus_subset_nonEtaleLocus (m : ℕ) :
-    D.nonUnramifiedLocus m ⊆ schemeDivisorNonEtaleLocus (CategoryTheory.End.of D.selfMap ^ m).asHom :=
+    D.nonUnramifiedLocus m ⊆ schemeDivisorNonEtaleLocus
+        (CategoryTheory.End.of D.selfMap ^ m).asHom :=
   schemeDivisorNonUnramifiedLocus_subset_nonEtaleLocus (CategoryTheory.End.of D.selfMap ^ m).asHom
 
 /-- Non-unramifiedness persists in the tower of actual stalk maps. -/
@@ -281,7 +285,8 @@ def toNormalizationUnnormalizedDynamics :
   normalization_finite_fiber := D.normalization_finite_fiber
   nonUnramifiedLocus := D.nonUnramifiedLocus
   nonEtaleLocus := fun m ↦ schemeDivisorNonEtaleLocus (CategoryTheory.End.of D.selfMap ^ m).asHom
-  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx := D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx
+  mem_nonUnramifiedLocus_of_one_lt_ramificationIdx :=
+      D.mem_nonUnramifiedLocus_of_one_lt_ramificationIdx
   nonUnramifiedLocus_subset_nonEtaleLocus := D.nonUnramifiedLocus_subset_nonEtaleLocus
   nonEtaleLocus_finite := D.nonEtaleLocus_finite
   nonUnramifiedLocus_tower := D.nonUnramifiedLocus_tower
@@ -289,7 +294,8 @@ def toNormalizationUnnormalizedDynamics :
 
 @[simp]
 theorem toNormalizationUnnormalizedDynamics_step :
-    D.toNormalizationUnnormalizedDynamics.step = schemeDivisorMap D.selfMap D.selfMap_preserves_divisors :=
+    D.toNormalizationUnnormalizedDynamics.step = schemeDivisorMap D.selfMap
+        D.selfMap_preserves_divisors :=
   rfl
 
 @[simp]
@@ -476,7 +482,8 @@ noncomputable def toSchemeNormalizationPCFSetupChart :
         (finitePreimageAffine (CategoryTheory.End.of f ^ m).asHom d.U : X.Opens) :=
       ⟨⟨(pointClosureIdealSheaf A.1).subschemeι Q'.1, d.source_mem⟩⟩
     have hval := congrArg Subtype.val hQ'Q
-    change ((schemeDivisorMap S.restriction.selfMap S.restriction.selfMap_preserves_divisors)^[m] Q').1 = Q.1
+    change ((schemeDivisorMap S.restriction.selfMap S.restriction.selfMap_preserves_divisors)^[m]
+        Q').1 = Q.1
       at hval
     rw [schemeDivisorMap_iterate_val] at hval
     have hxz :
@@ -498,12 +505,14 @@ variable {A : AlgebraicGeometry.Scheme.{u}} {PX : Type v} {PN : Type w}
 
 /-- The bounding conclusion for actual divisors, derived from purity and Abhyankar on the
 identified local stalk chart. -/
-theorem notMem_nonEtaleBranch_iterate (m : ℕ) (hm : 1 ≤ m) (Q : SchemeDivisorPoint A) (hs : Q ∉ S.singularPrimes)
+theorem notMem_nonEtaleBranch_iterate (m : ℕ) (hm : 1 ≤ m) (Q : SchemeDivisorPoint A)
+    (hs : Q ∉ S.singularPrimes)
     (hmeets : ∀ E ∈ (S.ambient.iterate m).branch, E ≠ S.fixedPrime → Q ∉ S.meets E) :
     Q ∉ S.restriction.toNormalizationUnnormalizedDynamics.nonEtaleBranch m := by
   rintro ⟨Q', hcrit, hQ'Q⟩
   have hchart := S.chart m hm Q hs hmeets Q' hQ'Q
-  have hnot : Q' ∉ schemeDivisorNonEtaleLocus (CategoryTheory.End.of S.restriction.selfMap ^ m).asHom :=
+  have hnot : Q' ∉ schemeDivisorNonEtaleLocus
+      (CategoryTheory.End.of S.restriction.selfMap ^ m).asHom :=
     hchart.notMem_schemeDivisorNonEtaleLocus
   exact hnot hcrit
 
@@ -521,7 +530,8 @@ def toNormalizationPCFSetup :
   notMem_nonEtaleBranch_iterate := S.notMem_nonEtaleBranch_iterate
 
 /-- The unnormalized restriction is `1`-PCF on the actual-stalk chart route. -/
-theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
+theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) :
+    S.restriction.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
   S.toNormalizationPCFSetup.restriction_isNonEtaleBranchPCF h
 
 /-- The normalized restriction is PCF on the actual-stalk chart route. -/
@@ -556,7 +566,8 @@ theorem notMem_nonEtaleBranch_iterate (m : ℕ) (hm : 1 ≤ m)
   S.toSchemeNormalizationPCFSetupChart.notMem_nonEtaleBranch_iterate m hm Q hs hmeets
 
 /-- The actual unnormalized invariant-divisor restriction is `1`-PCF. -/
-theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) : S.restriction.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
+theorem restriction_isNonEtaleBranchPCF (h : S.ambient.IsPCF) :
+    S.restriction.toNormalizationUnnormalizedDynamics.IsNonEtaleBranchPCF :=
   S.toSchemeNormalizationPCFSetupChart.restriction_isNonEtaleBranchPCF h
 
 /-- The normalized invariant-divisor dynamics is PCF. -/

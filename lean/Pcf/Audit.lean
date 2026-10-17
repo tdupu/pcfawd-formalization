@@ -205,8 +205,8 @@ hypotheses are invisible to `#print axioms` by construction.
 
 `Pcf.Examples.diagonalSquaring`'s `key` field is proved rather than assumed, so
 `Pcf.Examples.diagonalSquaring_restriction_isPCF` witnesses that `Pcf.PCFSetup.restriction_isPCF` is
-not vacuous. On the chart route (`Pcf/Bounding/`), `notMem_nonEtaleBranch_iterate` is a theorem derived from
-Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
+not vacuous. On the chart route (`Pcf/Bounding/`), `notMem_nonEtaleBranch_iterate` is a theorem
+derived from Zariski–Nagata purity and Abhyankar's lemma; see `lean/AXIOMS.md` §G.
 -/
 
 @[expose] public section
@@ -624,13 +624,15 @@ hypotheses. -/
   Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_maximalIdeal_eq_of_ringKrullDim_eq
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.point_ker_under
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.map_maximalIdeal_localColimit
-#print axioms Pcf.Stacks.PointedEtaleNeighborhood.exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_flat
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_faithfullyFlat
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.ringKrullDim_localColimit
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.toLocalColimitAlgHom_injective_of_isDomain
 #print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isDomain
-#print axioms Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
+#print axioms
+  Pcf.Stacks.PointedEtaleNeighborhood.localColimit_isRegularLocalRing_of_isNoetherianRing
 #print axioms Pcf.Stacks.flatModule_free_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.exists_basis_of_flat_of_isNilpotent_maximalIdeal
 #print axioms Pcf.Stacks.IsLocalRing.ResidueField.map_bijective_of_surjective
@@ -1326,9 +1328,10 @@ assumption; no field is valued in them. -/
 /-! ## Appendix `app:other-defs`: the unnormalized loci, and Theorem `thm:normal-invariant`
 in its `1`-PCF form
 
-`Pcf.UnnormalizedDynamics` carries Proposition `prop:loci-compare` and Lemma `lem:tower-unnormalized`
-as *fields* (assumed, see `lean/AXIOMS.md` §B.8); `Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate` is the étale form of
-Theorem `thm:bounding`, also assumed. Everything printed here is proved from those. -/
+`Pcf.UnnormalizedDynamics` carries Proposition `prop:loci-compare` and Lemma
+`lem:tower-unnormalized` as *fields* (assumed, see `lean/AXIOMS.md` §B.8);
+`Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate` is the étale form of Theorem `thm:bounding`,
+also assumed. Everything printed here is proved from those. -/
 
 #print axioms Pcf.UnnormalizedDynamics.branch_iterate_subset_nonUnramifiedBranch
 #print axioms Pcf.UnnormalizedDynamics.branch_subset_nonUnramifiedBranch
@@ -1352,17 +1355,21 @@ Theorem `thm:bounding`, also assumed. Everything printed here is proved from tho
 
 /-! ## Normalized and unnormalized divisor carriers
 
-`Pcf.NormalizationUnnormalizedDynamics` keeps divisors on the normalization separate from divisors on
-the possibly nonnormal scheme.  The PCF transfer below uses finite normalization fibers rather
+`Pcf.NormalizationUnnormalizedDynamics` keeps divisors on the normalization separate from divisors
+on the possibly nonnormal scheme. The PCF transfer below uses finite normalization fibers rather
 than a definitional identification of the two carriers. -/
 
 #print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_iterate
-#print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_image_branch_iterate_subset_nonUnramifiedBranch
-#print axioms Pcf.NormalizationUnnormalizedDynamics.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet
-#print axioms Pcf.NormalizationUnnormalizedDynamics.postcriticalSet_subset_normalization_preimage_nonUnramifiedPostcriticalSet
+#print axioms
+  Pcf.NormalizationUnnormalizedDynamics.normalization_image_branch_iterate_subset_nonUnramifiedBranch
+#print axioms
+  Pcf.NormalizationUnnormalizedDynamics.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet
+#print axioms
+  Pcf.NormalizationUnnormalizedDynamics.postcriticalSet_subset_normalization_preimage_nonUnramifiedPostcriticalSet
 #print axioms Pcf.NormalizationUnnormalizedDynamics.normalized_isPCF_of_isNonUnramifiedBranchPCF
 #print axioms Pcf.NormalizationUnnormalizedDynamics.normalized_isPCF_of_isNonEtaleBranchPCF
-#print axioms Pcf.NormalizationUnnormalizedDynamics.nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset
+#print axioms
+  Pcf.NormalizationUnnormalizedDynamics.nonEtalePostcriticalSet_subset_of_nonEtaleBranch_subset
 #print axioms Pcf.NormalizationUnnormalizedDynamics.isNonEtaleBranchPCF_of_nonEtaleBranch_subset
 #print axioms Pcf.NormalizationPCFSetup.nonEtaleBranch_iterate_subset_bound
 #print axioms Pcf.NormalizationPCFSetup.restriction_isNonEtaleBranchPCF
@@ -2029,8 +2036,8 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 /-! ## Example `ex:pinched`: the pinched plane
 
 Ring-level facts are proved outright. The dynamical statements take `o ∈ crit₀(g)` as a
-hypothesis (`nonUnramifiedPostcriticalSet_infinite`) or stipulate it (`nodeUnnormalizedDynamics`); the fibre-length
-computation behind it is not formalized. -/
+hypothesis (`nonUnramifiedPostcriticalSet_infinite`) or stipulate it (`nodeUnnormalizedDynamics`);
+the fibre-length computation behind it is not formalized. -/
 
 #print axioms Pcf.Examples.Pinched.squaringMap_mem
 #print axioms Pcf.Examples.Pinched.squaringMap_mem_of_mem
@@ -2129,9 +2136,11 @@ computation behind it is not formalized. -/
 #print axioms Pcf.Stacks.finite_away_of_finite_tensor
 #print axioms Pcf.Stacks.formallyEtale_away
 #print axioms Pcf.Stacks.etale_away
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedAlongDivisor_of_isUnit_natCast
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_localizedCover
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_localizedNormalization
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedOver_congr
@@ -2193,20 +2202,24 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 -- Pcf.Stacks.Abhyankar.Scheme.AffineTameTransfer
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.comap_le_localizationAtPrime
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_normalizationAtContraction
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_normalizationAtContraction_genericFibre
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_normalizationAtContraction_genericFibre
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.hasAbhyankarStandardCoverAt_localizedNormalization
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_away_fractionRing
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_normalizationAtContraction
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_genericFibreAtContraction
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isMaximal_map_normalizationAtContraction
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedInCodimensionOneAlong_localizedNormalization
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.isTamelyRamifiedInCodimensionOneAlong_localizedNormalization
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isUnit_localizedEquation_localizedCover
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_fractionFieldAtContraction
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.localizedNormalizationToNormalizationAtContraction_val
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.localizedNormalizationToNormalizationAtContraction_val
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isLocalization_localizationAtContraction
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_localizationAtContraction
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.ringKrullDim_localizationAtContraction
-#print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_localizationAtContraction_fractionField
+#print axioms
+  Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_localizationAtContraction_fractionField
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.genericFibreAtContraction_algebraMap_tmul
 #print axioms Pcf.Stacks.SchemeLevel.AffineTame.isScalarTower_genericFibreAtContraction
 
@@ -2301,7 +2314,8 @@ Every theorem of `Pcf/Stacks/Abhyankar/Scheme/` (list generated from the Lean en
 -- Pcf.Stacks.Abhyankar.Scheme.TameBridge
 #print axioms Pcf.Stacks.IsTamelyRamifiedAt.of_ringEquiv
 #print axioms Pcf.Stacks.SchemeLevel.IsTamelyRamifiedOver.of_ringEquiv
-#print axioms Pcf.Stacks.SchemeLevel.isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne
+#print axioms
+  Pcf.Stacks.SchemeLevel.isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOne
 #print axioms Pcf.Stacks.SchemeLevel.isIntegral_map_of_ringEquiv
 #print axioms Pcf.Stacks.SchemeLevel.length_quotient_map_ringEquiv
 #print axioms Pcf.Stacks.SchemeLevel.isUnit_natCast_residueField_iff

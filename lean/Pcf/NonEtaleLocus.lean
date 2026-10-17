@@ -40,7 +40,8 @@ The remaining two stay assumptions, and they are the mathematically substantial 
 ## Main results
 
 * `Pcf.isClosed_nonEtaleLocus` — the non-étale locus is closed. **Proved.**
-* `Pcf.closure_eq_univ_of_primeSpectrumCodimension_eq_zero` — height-zero primes are generic. **Proved.**
+* `Pcf.closure_eq_univ_of_primeSpectrumCodimension_eq_zero` — height-zero primes are generic.
+  **Proved.**
 * `Pcf.purityDataOfAlgebra` — the assembled `Pcf.PurityData (PrimeSpectrum S)`.
 * `Pcf.codim_eq_one_of_algebra` — global purity on `Spec S`, i.e. `E` is pure of
   codimension one, from Tag 0BMB and generic étaleness and nothing else.
@@ -144,7 +145,8 @@ noncomputable def purityDataOfAlgebra [IsDomain S] [Algebra.FinitePresentation R
     (hfin : ∀ p : PrimeSpectrum S, p.asIdeal.height ≠ ⊤)
     (hgen : nonEtaleLocus R S ≠ Set.univ)
     (hloc : ∀ x : PrimeSpectrum S, 1 ≤ primeSpectrumCodimension S x →
-      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S) :
+      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉
+          nonEtaleLocus R S) :
     PurityData (PrimeSpectrum S) where
   codim := primeSpectrumCodimension S
   nonEtale := nonEtaleLocus R S
@@ -187,7 +189,8 @@ theorem codim_eq_one_of_algebra [IsDomain S] [Algebra.FinitePresentation R S]
     (hfin : ∀ p : PrimeSpectrum S, p.asIdeal.height ≠ ⊤)
     (hgen : nonEtaleLocus R S ≠ Set.univ)
     (hloc : ∀ x : PrimeSpectrum S, 1 ≤ primeSpectrumCodimension S x →
-      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉ nonEtaleLocus R S)
+      (∀ x', x' ⤳ x → primeSpectrumCodimension S x' = 1 → x' ∉ nonEtaleLocus R S) → x ∉
+          nonEtaleLocus R S)
     {E₀ : Set (PrimeSpectrum S)}
     (hE₀ : (purityDataOfAlgebra R S hfin hgen hloc).IsComponent E₀)
     {η : PrimeSpectrum S} (hη : closure ({η} : Set (PrimeSpectrum S)) = E₀) :

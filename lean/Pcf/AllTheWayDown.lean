@@ -58,10 +58,10 @@ actual recursion has no branch longer than the topological Krull dimension of `X
 * `Pcf.postcriticalSet_finite_allTheWayDown` — the conclusion unfolded to Definition `def:pcf`.
 
 There is deliberately **no** separate "purity route" descent theorem here. `Pcf/Wiring.lean`
-discharges `DivisorDynamics.step_image_ramified_finite` for a restricted system, so each stage of a tower may be
-built by `Pcf.PCFGeometry.ofPurityData` instead of by hand; but the descent induction is
-the same theorem either way, and stating a second copy of it with an unused hypothesis
-would suggest a distinction that does not exist.
+discharges `DivisorDynamics.step_image_ramified_finite` for a restricted system, so each stage of a
+tower may be built by `Pcf.PCFGeometry.ofPurityData` instead of by hand; but the descent induction
+is the same theorem either way, and stating a second copy of it with an unused hypothesis would
+suggest a distinction that does not exist.
 
 ## What is **not** formalized, and must be read alongside the above
 
@@ -74,7 +74,8 @@ particular:
    `Pcf.schemePCFAllTheWayDownAtDepth_of_cover` recursively constructs the actual
    scheme-level descent, and `Pcf.SchemePCFDescentBranch` packages its actual branches.
    This file itself still takes a tower of `PCFSetup`s as input.
-2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PCFSetup.notMem_branch_iterate` is supplied
+2. **Theorem `thm:bounding` is an interface field here.** `Pcf.PCFSetup.notMem_branch_iterate` is
+   supplied
    to the abstract induction. On the actual invariant-divisor chart route it is derived
    from the literal Step 0 data, Zariski--Nagata purity, and Abhyankar's lemma.
 3. **Lying over and branch-finiteness are fields of abstract `DivisorDynamics`.** They are proved
@@ -112,7 +113,8 @@ conjecture quoted in
 this file's header — restated under a conjecture-facing name.
 `Pcf.PCFSetup.restriction_isPCF_of_iterate` is the same theorem. -/
 theorem isPCF_restriction_of_periodic {PX : Type u} {PA : Type u} (S : PCFSetup PX PA)
-    {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n) (hperiodic : S.ambient = D.iterate n) (h : D.IsPCF) :
+    {D : DivisorDynamics PX} {n : ℕ} (hn : 1 ≤ n) (hperiodic : S.ambient = D.iterate n)
+        (h : D.IsPCF) :
     S.restriction.IsPCF :=
   S.restriction_isPCF_of_iterate hn hperiodic h
 
@@ -127,7 +129,8 @@ than a finite schema. This abstract theorem does not stop because its abstractio
 no dimension. The actual-scheme companion recursion is separately proved to terminate
 after at most `topologicalKrullDim X` restriction steps (see the header).
 
-This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.isPCF_of_isPCF_restriction` is the same theorem. -/
+This is Corollary `cor:pcfawd` of `latex/paper.tex`. `Pcf.isPCF_of_isPCF_restriction` is the same
+theorem. -/
 theorem pcfAllTheWayDown_divisorDynamics {P : ℕ → Type u} (D : ∀ i, DivisorDynamics (P i))
     (S : ∀ i, PCFSetup (P i) (P (i + 1)))
     (hres : ∀ i, (S i).restriction = D (i + 1))

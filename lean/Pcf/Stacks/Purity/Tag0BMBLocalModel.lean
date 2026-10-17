@@ -30,7 +30,8 @@ This file proves the inductive step of Zariski--Nagata purity (Stacks Tag `0BMB`
 Let `R → S` be of finite type between Noetherian rings and let `w = q` satisfy the pointwise
 hypotheses `ZariskiNagataPurityHypothesesAt R S w`, with `p = q ∩ R`.
 
-1. Tag `00UJ` (`exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt`) gives an étale `R → R'`, a prime `P` of `R'`
+1. Tag `00UJ` (`exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt`) gives an étale
+   `R → R'`, a prime `P` of `R'`
    over `p` and a prime `P'` of `T = R' ⊗[R] S` over `P` and `q`, cut out by an idempotent `e`
    with `T_e` finite over `R'` and `P'` the only prime of `T_e` over `P`.
 2. The local model is `A = R'_P → B = T_{P'}`.  It is finite (uniqueness of `P'`), `A` is

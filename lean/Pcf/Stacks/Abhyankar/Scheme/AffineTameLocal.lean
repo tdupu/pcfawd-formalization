@@ -19,10 +19,12 @@ Setting: `R` Noetherian, `a ∈ R` a nonzerodivisor with `R/(a)` regular, `B` fi
 `AbhyankarLemmaTameOfFinite` at the local ring `R_y`:
 
 * `By B y = R_y ⊗_R B` and `Ny B y`, the integral closure of `R_y` in `B_y`;
-* `isLocalization_away_localizedNormalization`, `isIntegralClosure_localizedNormalization`: `B_y = N_y[1/a]` and `N_y` is the integral
+* `isLocalization_away_localizedNormalization`, `isIntegralClosure_localizedNormalization`:
+  `B_y = N_y[1/a]` and `N_y` is the integral
   closure of `R_y` in `N_y[1/a]`;
 * `isEtaleAt_localizedNormalization`: `N_y` is étale over `R_y` at primes not containing `a`;
-* `finite_localizedNormalization`: `N_y` is finite over `R_y` when `R_y` is a Noetherian normal domain
+* `finite_localizedNormalization`: `N_y` is finite over `R_y` when `R_y` is a Noetherian normal
+  domain
   (`finite_integralClosure_of_etale_fractionRing`: the integral closure of a Noetherian normal
   domain in a finite étale algebra over its fraction field is finite);
 * `isTamelyRamifiedAt_of_isLocalization`: tameness at a prime of `S` over `p` may be checked
@@ -89,7 +91,8 @@ theorem isLocalization_away_localization_tensor :
   have h := IsLocalization.tensor (S := Localization.AtPrime y) Ra (Submonoid.powers a)
   rwa [Algebra.algebraMapSubmonoid, Submonoid.map_powers] at h
 
-instance : IsScalarTower (Localization.AtPrime y) (Localization.AtPrime y ⊗[R] Ra) (LocalizedCover B y) :=
+instance : IsScalarTower (Localization.AtPrime y) (Localization.AtPrime y ⊗[R] Ra)
+    (LocalizedCover B y) :=
   IsScalarTower.of_algebraMap_eq (R := Localization.AtPrime y)
     (S := Localization.AtPrime y ⊗[R] Ra) (A := LocalizedCover B y) fun r ↦ by
     change _ = Algebra.TensorProduct.map (AlgHom.id (Localization.AtPrime y) _)
@@ -178,7 +181,8 @@ theorem finite_integralClosure_of_etale_fractionRing
 variable [Module.Finite Ra B] [Algebra.Etale Ra B]
 
 /-- The integral closure `N_y` of `R_y` in `B_y = R_y ⊗_R B`. -/
-abbrev LocalizedNormalization : Type u := integralClosure (Localization.AtPrime y) (LocalizedCover B y)
+abbrev LocalizedNormalization : Type u := integralClosure (Localization.AtPrime y)
+    (LocalizedCover B y)
 
 /-- The image `a_y` of `a` in `R_y`. -/
 abbrev localizedEquation : Localization.AtPrime y := algebraMap R (Localization.AtPrime y) a
@@ -187,7 +191,8 @@ omit [Algebra.Etale Ra B] in
 include Ra in
 /-- `B_y` is the localization of the normalization `N_y` away from `a_y`. -/
 theorem isLocalization_away_localizedNormalization :
-    IsLocalization.Away (algebraMap (Localization.AtPrime y) (LocalizedNormalization B y) (localizedEquation a y))
+    IsLocalization.Away
+        (algebraMap (Localization.AtPrime y) (LocalizedNormalization B y) (localizedEquation a y))
       (LocalizedCover B y) := by
   have := isIntegral_tensor Ra B y
   have := isLocalization_away_localization_tensor a Ra y
@@ -199,7 +204,9 @@ include Ra in
 /-- `N_y` is the integral closure of `R_y` in `N_y[1/a_y]`. -/
 theorem isIntegralClosure_localizedNormalization :
     IsIntegralClosure (LocalizedNormalization B y) (Localization.AtPrime y)
-      (Localization.Away (algebraMap (Localization.AtPrime y) (LocalizedNormalization B y) (localizedEquation a y))) := by
+      (Localization.Away
+          (algebraMap (Localization.AtPrime y) (LocalizedNormalization B y)
+              (localizedEquation a y))) := by
   have := isIntegral_tensor Ra B y
   have := isLocalization_away_localization_tensor a Ra y
   exact isIntegralClosure_localizationAway_integralClosure (localizedEquation a y)
@@ -216,7 +223,8 @@ theorem etale_localizedCover : Algebra.Etale (Localization.AtPrime y) (Localized
 include Ra in
 /-- `N_y` is étale over `R_y` at every prime not containing `a_y`. -/
 theorem isEtaleAt_localizedNormalization (w : PrimeSpectrum (LocalizedNormalization B y))
-    (hw : algebraMap (Localization.AtPrime y) (LocalizedNormalization B y) (localizedEquation a y) ∉ w.asIdeal) :
+    (hw : algebraMap (Localization.AtPrime y) (LocalizedNormalization B y) (localizedEquation a y) ∉
+        w.asIdeal) :
     Algebra.IsEtaleAt (Localization.AtPrime y) w.asIdeal := by
   have := isLocalization_away_localizedNormalization a Ra B y
   have := etale_localizedCover a Ra B y
@@ -226,7 +234,8 @@ include a Ra in
 /-- `N_y` is finite over `R_y` when `R_y` is a Noetherian normal domain (it will be regular local):
 `B_y` embeds in the finite étale `K`-algebra `K ⊗ B_y`, whose integral closure over `R_y` is finite
 (finite separable field extensions of the fraction field of a Noetherian normal domain). -/
-theorem finite_localizedNormalization [IsDomain (Localization.AtPrime y)] [IsIntegrallyClosed (Localization.AtPrime y)]
+theorem finite_localizedNormalization [IsDomain (Localization.AtPrime y)]
+    [IsIntegrallyClosed (Localization.AtPrime y)]
     [IsNoetherianRing (Localization.AtPrime y)] (ha : localizedEquation a y ≠ 0) :
     Module.Finite (Localization.AtPrime y) (LocalizedNormalization B y) := by
   let Ry := Localization.AtPrime y
@@ -238,8 +247,10 @@ theorem finite_localizedNormalization [IsDomain (Localization.AtPrime y)] [IsInt
   have haK : IsUnit (algebraMap Ry K (localizedEquation a y)) :=
     (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors
       (mem_nonZeroDivisors_of_ne_zero ha)).isUnit
-  let φ : Localization.AtPrime y ⊗[R] Ra →+* K := IsLocalization.Away.lift (localizedEquation a y) haK
-  let ψ : LocalizedCover B y →+* L := (Algebra.TensorProduct.includeRight (R := Ry) (A := K)).toRingHom
+  let φ : Localization.AtPrime y ⊗[R] Ra →+* K := IsLocalization.Away.lift (localizedEquation a y)
+      haK
+  let ψ : LocalizedCover B y →+* L :=
+      (Algebra.TensorProduct.includeRight (R := Ry) (A := K)).toRingHom
   have hcomp : (algebraMap K L).comp φ =
       ψ.comp (algebraMap (Localization.AtPrime y ⊗[R] Ra) (LocalizedCover B y)) := by
     apply IsLocalization.ringHom_ext (Submonoid.powers (localizedEquation a y))
@@ -275,7 +286,8 @@ theorem finite_localizedNormalization [IsDomain (Localization.AtPrime y)] [IsInt
     simpa [ψ] using hxz
   let f : LocalizedNormalization B y →ₗ[Ry] integralClosure Ry L :=
     { toFun := fun x ↦ ⟨ψ x.1, by
-        have := x.2.map (Algebra.TensorProduct.includeRight (R := Ry) (A := K) (B := LocalizedCover B y))
+        have := x.2.map
+            (Algebra.TensorProduct.includeRight (R := Ry) (A := K) (B := LocalizedCover B y))
         exact this⟩
       map_add' := fun x z ↦ by ext; simp
       map_smul' := fun r x ↦ by
@@ -304,7 +316,8 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S] (p : Ideal R) [p.
   [Algebra Rₚ Sₚ] [Algebra R Sₚ] [IsScalarTower R S Sₚ] [IsScalarTower R Rₚ Sₚ]
 
 /-- For a prime `q` of `S` over `p`, the image of `R ∖ p` in `S` is disjoint from `q`. -/
-theorem disjoint_primeCompl_powers_localizedEquation (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
+theorem disjoint_primeCompl_powers_localizedEquation (q : Ideal S) [q.IsPrime] (hq : q.under R = p)
+    :
     Disjoint (algebraMapSubmonoid S p.primeCompl : Set S) q := by
   rw [Set.disjoint_left]
   rintro _ ⟨r, hr, rfl⟩ hrq
@@ -316,13 +329,15 @@ omit [Algebra R Sₚ] [IsScalarTower R S Sₚ] in
 /-- A prime `q` of `S` over `p` extends to a prime of the localization `S_p`. -/
 theorem isPrime_map_localizationAtPrime (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
     (q.map (algebraMap S Sₚ)).IsPrime :=
-  IsLocalization.isPrime_of_isPrime_disjoint _ Sₚ q inferInstance (disjoint_primeCompl_powers_localizedEquation p q hq)
+  IsLocalization.isPrime_of_isPrime_disjoint _ Sₚ q inferInstance
+      (disjoint_primeCompl_powers_localizedEquation p q hq)
 
 omit [Algebra R Sₚ] [IsScalarTower R S Sₚ] in
 /-- A prime `q` of `S` over `p` is recovered from its extension to `S_p`. -/
 theorem comap_map_localizationAtPrime (q : Ideal S) [q.IsPrime] (hq : q.under R = p) :
     (q.map (algebraMap S Sₚ)).comap (algebraMap S Sₚ) = q :=
-  IsLocalization.under_map_of_isPrime_disjoint _ Sₚ inferInstance (disjoint_primeCompl_powers_localizedEquation p q hq)
+  IsLocalization.under_map_of_isPrime_disjoint _ Sₚ inferInstance
+      (disjoint_primeCompl_powers_localizedEquation p q hq)
 
 /-- Tameness at a prime `q` of `S` over `p` can be read after localizing at `p`. -/
 theorem isTamelyRamifiedAt_of_isLocalization (q : PrimeSpectrum S) (hq : q.asIdeal.under R = p)
@@ -335,7 +350,8 @@ theorem isTamelyRamifiedAt_of_isLocalization (q : PrimeSpectrum S) (hq : q.asIde
   have hidx : m.ramificationIdx Rₚ = q.asIdeal.ramificationIdx R :=
     IsLocalization.AtPrime.ramificationIdx_map_eq_ramificationIdx p Rₚ Sₚ q.asIdeal
   obtain ⟨h1, h2⟩ := h
-  have hmq : q.asIdeal = m.comap (algebraMap S Sₚ) := (comap_map_localizationAtPrime p Sₚ q.asIdeal hq).symm
+  have hmq : q.asIdeal = m.comap (algebraMap S Sₚ) :=
+      (comap_map_localizationAtPrime p Sₚ q.asIdeal hq).symm
   have hP0 : q.asIdeal.under R = (m.under Rₚ).comap (algebraMap R Rₚ) := by
     change q.asIdeal.comap (algebraMap R S) =
       (m.comap (algebraMap Rₚ Sₚ)).comap (algebraMap R Rₚ)
@@ -397,14 +413,16 @@ theorem isTamelyRamifiedAt_of_isLocalization (q : PrimeSpectrum S) (hq : q.asIde
 residue-field comparison and Mathlib's localization invariance of ramification indices). -/
 theorem isTamelyRamifiedAt_map_of_isLocalization (q : PrimeSpectrum S)
     (hq : q.asIdeal.under R = p) (h : IsTamelyRamifiedAt R S q) :
-    IsTamelyRamifiedAt Rₚ Sₚ ⟨q.asIdeal.map (algebraMap S Sₚ), isPrime_map_localizationAtPrime p Sₚ q.asIdeal hq⟩ := by
+    IsTamelyRamifiedAt Rₚ Sₚ
+        ⟨q.asIdeal.map (algebraMap S Sₚ), isPrime_map_localizationAtPrime p Sₚ q.asIdeal hq⟩ := by
   haveI : q.asIdeal.LiesOver p := ⟨hq.symm⟩
   set m : Ideal Sₚ := q.asIdeal.map (algebraMap S Sₚ) with hm
   haveI : m.IsPrime := isPrime_map_localizationAtPrime p Sₚ q.asIdeal hq
   have hidx : m.ramificationIdx Rₚ = q.asIdeal.ramificationIdx R :=
     IsLocalization.AtPrime.ramificationIdx_map_eq_ramificationIdx p Rₚ Sₚ q.asIdeal
   obtain ⟨h1, h2⟩ := h
-  have hmq : q.asIdeal = m.comap (algebraMap S Sₚ) := (comap_map_localizationAtPrime p Sₚ q.asIdeal hq).symm
+  have hmq : q.asIdeal = m.comap (algebraMap S Sₚ) :=
+      (comap_map_localizationAtPrime p Sₚ q.asIdeal hq).symm
   have hP0 : q.asIdeal.under R = (m.under Rₚ).comap (algebraMap R Rₚ) := by
     change q.asIdeal.comap (algebraMap R S) =
       (m.comap (algebraMap Rₚ Sₚ)).comap (algebraMap R Rₚ)

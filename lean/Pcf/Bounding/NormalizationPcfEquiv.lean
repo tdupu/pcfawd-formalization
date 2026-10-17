@@ -117,13 +117,16 @@ theorem branch_subset_nonUnramifiedBranch : D.branch ⊆ D.nonUnramifiedBranch 1
   exact D.normalization_image_branch_subset_nonUnramifiedBranch
 
 /-- The normalized postcritical set lies in the unnormalized one. -/
-theorem postcriticalSet_subset_nonUnramifiedPostcriticalSet : D.postcriticalSet ⊆ D.nonUnramifiedPostcriticalSet := by
+theorem postcriticalSet_subset_nonUnramifiedPostcriticalSet : D.postcriticalSet ⊆
+    D.nonUnramifiedPostcriticalSet := by
   rw [D.postcriticalSet_eq_normalization_image]
   exact D.normalization_image_postcriticalSet_subset_nonUnramifiedPostcriticalSet
 
-theorem isPCF_of_isNonUnramifiedBranchPCF (h : D.IsNonUnramifiedBranchPCF) : D.IsPCF := h.subset D.postcriticalSet_subset_nonUnramifiedPostcriticalSet
+theorem isPCF_of_isNonUnramifiedBranchPCF (h : D.IsNonUnramifiedBranchPCF) : D.IsPCF := h.subset
+    D.postcriticalSet_subset_nonUnramifiedPostcriticalSet
 
-theorem isPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) : D.IsPCF := D.isPCF_of_isNonUnramifiedBranchPCF (D.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF h)
+theorem isPCF_of_isNonEtaleBranchPCF (h : D.IsNonEtaleBranchPCF) : D.IsPCF :=
+    D.isPCF_of_isNonUnramifiedBranchPCF (D.isNonUnramifiedBranchPCF_of_isNonEtaleBranchPCF h)
 
 end NormalizationUnnormalizedDynamics
 
@@ -137,7 +140,8 @@ variable {A : Scheme.{u}} {PN : Type v} (D : SchemeNormalizationUnnormalizedDyna
 def branch : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormalizedDynamics.branch
 
 /-- The normalized postcritical set for the actual downstairs map. -/
-def postcriticalSet : Set (SchemeDivisorPoint A) := D.toNormalizationUnnormalizedDynamics.postcriticalSet
+def postcriticalSet : Set (SchemeDivisorPoint A) :=
+    D.toNormalizationUnnormalizedDynamics.postcriticalSet
 
 /-- PCF for the normalized branch locus of the actual downstairs map. -/
 def IsPCF : Prop := D.postcriticalSet.Finite
@@ -230,12 +234,14 @@ theorem schemeNormalizedBranch_eq_normalization_image_reducedFiberBranch :
     refine ⟨Q, ?_, ?_⟩
     · have h := congrArg Subtype.val hQE
       simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_step_val] using h
-    · simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_ramificationIdx] using hram
+    · simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_ramificationIdx] using
+        hram
   · rintro ⟨Q, hQE, hram⟩
     refine ⟨Q, ?_, ?_⟩
     · apply Subtype.ext
       simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_step_val] using hQE
-    · simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_ramificationIdx] using hram
+    · simpa only [schemeGlobalNormalizationUnnormalizedDynamics_normalized_ramificationIdx] using
+        hram
 
 /-- Pointwise form of the preceding equality: a downstairs divisor is in the
 normalized branch locus exactly when it is the normalization-image of a

@@ -17,7 +17,8 @@ Way Down".
 
 ## What is here
 
-* `Pcf.Examples.squaringProjectiveLine` — Example `ex:squaring`. The squaring map `f([x₀ : x₁]) = [x₀² : x₁²]`
+* `Pcf.Examples.squaringProjectiveLine` — Example `ex:squaring`. The squaring map
+  `f([x₀ : x₁]) = [x₀² : x₁²]`
   on `P¹` over an algebraically closed field `K`, recorded as a `Pcf.DivisorDynamics`.
   Its closed points are modelled as `Option K` (`some z ↔ z`, `none ↔ ∞`), the
   pushforward on primes is `z ↦ z²`, `∞ ↦ ∞`, and the ramification index is `2` at
@@ -26,7 +27,8 @@ Way Down".
   `Branch(fᵐ) = {0, ∞}` for every `m ≥ 1`.
 
 * `Pcf.Examples.diagonalSquaring` — Example `ex:squaring-P2`. A `Pcf.PCFSetup` witness, showing
-  that the hypotheses of Theorem `thm:normal-invariant` (`Pcf.PCFSetup.restriction_isPCF`) are simultaneously
+  that the hypotheses of Theorem `thm:normal-invariant` (`Pcf.PCFSetup.restriction_isPCF`) are
+  simultaneously
   satisfiable with *nontrivial* branch data, so Theorem `thm:normal-invariant` is not vacuous. Here
   `f([x : y : z]) = [x² : y² : z²]` on `P²`, `A = H₀` is the coordinate line `x = 0`,
   and `g = f|_{H₀}` is the squaring map of Example `ex:squaring`. We prove `Σ = {0, ∞}` (the two
@@ -85,8 +87,10 @@ noncomputable def squaringRamificationIdx (K : Type u) [Field K] : Option K → 
   | some z => if z = 0 then 2 else 1
   | none => 2
 
-/-- `squaringRamificationIdx` is positive, as a ramification index must be (`Pcf.DivisorDynamics.ramificationIdx_pos`). -/
-theorem squaringRamificationIdx_pos {K : Type u} [Field K] (p : Option K) : 0 < squaringRamificationIdx K p := by
+/-- `squaringRamificationIdx` is positive, as a ramification index must be
+(`Pcf.DivisorDynamics.ramificationIdx_pos`). -/
+theorem squaringRamificationIdx_pos {K : Type u} [Field K] (p : Option K) : 0 <
+    squaringRamificationIdx K p := by
   cases p with
   | none => simp [squaringRamificationIdx]
   | some z =>
@@ -124,7 +128,8 @@ algebraically closed field `K`, as a divisorial dynamical system on the closed p
 
 Surjectivity of the pushforward on primes is exactly algebraic closedness: every
 element of `K` is a square (`IsAlgClosed.exists_pow_nat_eq`). -/
-noncomputable def squaringProjectiveLine (K : Type u) [Field K] [IsAlgClosed K] : DivisorDynamics (Option K) where
+noncomputable def squaringProjectiveLine (K : Type u) [Field K] [IsAlgClosed K] : DivisorDynamics
+    (Option K) where
   step := Option.map (fun z => z ^ 2)
   ramificationIdx := squaringRamificationIdx K
   ramificationIdx_pos := squaringRamificationIdx_pos
@@ -139,15 +144,19 @@ noncomputable def squaringProjectiveLine (K : Type u) [Field K] [IsAlgClosed K] 
 
 variable (K : Type u) [Field K] [IsAlgClosed K]
 
-@[simp] theorem squaringProjectiveLine_step_some (z : K) : (squaringProjectiveLine K).step (some z) = some (z ^ 2) := rfl
+@[simp] theorem squaringProjectiveLine_step_some (z : K) : (squaringProjectiveLine K).step (some z)
+    = some (z ^ 2) := rfl
 
-@[simp] theorem squaringProjectiveLine_step_none : (squaringProjectiveLine K).step none = (none : Option K) := rfl
+@[simp] theorem squaringProjectiveLine_step_none : (squaringProjectiveLine K).step none =
+    (none : Option K) := rfl
 
-@[simp] theorem squaringProjectiveLine_ramificationIdx (p : Option K) : (squaringProjectiveLine K).ramificationIdx p = squaringRamificationIdx K p := rfl
+@[simp] theorem squaringProjectiveLine_ramificationIdx (p : Option K) :
+    (squaringProjectiveLine K).ramificationIdx p = squaringRamificationIdx K p := rfl
 
 /-- `0` is a fixed prime of the squaring map (Example `ex:squaring`: "`Branch(f) = {0, ∞}`, both
 fixed"). -/
-@[simp] theorem squaringProjectiveLine_step_zero : (squaringProjectiveLine K).step (some (0 : K)) = some (0 : K) := by
+@[simp] theorem squaringProjectiveLine_step_zero : (squaringProjectiveLine K).step (some (0 : K)) =
+    some (0 : K) := by
   simp
 
 /-- `∞` is a fixed prime of the squaring map (Example `ex:squaring`). -/
@@ -165,7 +174,8 @@ theorem squaringProjectiveLine_branch : (squaringProjectiveLine K).branch = {som
   branchSet_aux K
 
 /-- **Example `ex:squaring`**: `PCset(f) = {0, ∞}`, because both branch primes are fixed. -/
-theorem squaringProjectiveLine_postcriticalSet : (squaringProjectiveLine K).postcriticalSet = {some (0 : K), none} := by
+theorem squaringProjectiveLine_postcriticalSet : (squaringProjectiveLine K).postcriticalSet =
+    {some (0 : K), none} := by
   ext p
   rw [DivisorDynamics.mem_postcriticalSet_iff]
   constructor
@@ -254,11 +264,13 @@ omit [IsAlgClosed K] in
   simp [diagonalSquaringMeets]
 
 omit [IsAlgClosed K] in
-@[simp] theorem diagonalSquaringMeets_one : diagonalSquaringMeets K 1 = ({none} : Set (Option K)) := by
+@[simp] theorem diagonalSquaringMeets_one : diagonalSquaringMeets K 1 = ({none} : Set (Option K)) :=
+    by
   simp [diagonalSquaringMeets]
 
 omit [IsAlgClosed K] in
-@[simp] theorem diagonalSquaringMeets_two : diagonalSquaringMeets K 2 = ({some (0 : K)} : Set (Option K)) := by
+@[simp] theorem diagonalSquaringMeets_two : diagonalSquaringMeets K 2 =
+    ({some (0 : K)} : Set (Option K)) := by
   simp [diagonalSquaringMeets]
 
 /-- **Example `ex:squaring-P2`**, assembled: a `Pcf.PCFSetup` witness.
@@ -306,9 +318,11 @@ noncomputable def diagonalSquaring (K : Type u) [Field K] [IsAlgClosed K] :
 
 @[simp] theorem diagonalSquaring_ambient : (diagonalSquaring K).ambient = coordLines := rfl
 
-@[simp] theorem diagonalSquaring_restriction : (diagonalSquaring K).restriction = squaringProjectiveLine K := rfl
+@[simp] theorem diagonalSquaring_restriction : (diagonalSquaring K).restriction =
+    squaringProjectiveLine K := rfl
 
-@[simp] theorem diagonalSquaring_singularPrimes : (diagonalSquaring K).singularPrimes = (∅ : Set (Option K)) := rfl
+@[simp] theorem diagonalSquaring_singularPrimes : (diagonalSquaring K).singularPrimes =
+    (∅ : Set (Option K)) := rfl
 
 @[simp] theorem diagonalSquaring_meets : (diagonalSquaring K).meets = diagonalSquaringMeets K := rfl
 
@@ -346,11 +360,11 @@ theorem diagonalSquaring_bound : (diagonalSquaring K).bound = {some (0 : K), non
 squaring map of
 `P²` to the fixed coordinate line `H₀` is post-critically finite.
 
-This is obtained by *applying* `Pcf.PCFSetup.restriction_isPCF` (Theorem `thm:normal-invariant` = Theorem
-`thm:normal-invariant`) to the
-witness `diagonalSquaring`, not by reproving it. Since `diagonalSquaring` has nonempty
-branch data on both sides (`coordLines_branch = Set.univ` and
-`squaringProjectiveLine_branch = {0, ∞}`), Theorem `thm:normal-invariant` is demonstrably not vacuous. -/
+This is obtained by *applying* `Pcf.PCFSetup.restriction_isPCF` (Theorem `thm:normal-invariant` =
+Theorem `thm:normal-invariant`) to the witness `diagonalSquaring`, not by reproving it. Since
+`diagonalSquaring` has nonempty branch data on both sides (`coordLines_branch = Set.univ` and
+`squaringProjectiveLine_branch = {0, ∞}`), Theorem `thm:normal-invariant` is demonstrably not
+vacuous. -/
 theorem diagonalSquaring_restriction_isPCF : (diagonalSquaring K).restriction.IsPCF :=
   (diagonalSquaring K).restriction_isPCF (diagonalSquaring_ambient_isPCF K)
 

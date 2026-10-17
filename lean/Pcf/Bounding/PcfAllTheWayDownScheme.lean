@@ -210,7 +210,8 @@ theorem periodicDivisor_isNormalizedPCFOfFiniteType
     (schemeDivisorMap_iterate_val F _ (p * c) B).symm.trans
       (congrArg Subtype.val hperiodB)
   have hpcfF : (divisorDynamicsOfFiniteDominantNormalCharZero F).IsPCF := hpcf
-  have hpcfPower : (divisorDynamicsOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).IsPCF := by
+  have hpcfPower :
+      (divisorDynamicsOfFiniteDominantNormalCharZero (End.of F ^ (p * c)).asHom).IsPCF := by
     rw [divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate]
     exact (DivisorDynamics.isPCF_iterate_iff _).mp hpcfF (p * c) (Nat.mul_pos hp hc)
   have hpcfB := invariantDivisor_isNormalizedPCFOfFiniteType k sN

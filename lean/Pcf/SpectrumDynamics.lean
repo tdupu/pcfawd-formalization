@@ -15,12 +15,11 @@ public import Mathlib.RingTheory.Artinian.Ring
 /-!
 # A divisorial system on `Spec S`, with `step_image_ramified_finite` and `hbranch` both discharged
 
-`Pcf/Wiring.lean` derives `Pcf.DivisorDynamics.step_image_ramified_finite` for the restricted system from a
-`Pcf.PurityData`, but it still *assumes* `ramified_subset_nonEtale`: that a prime over
-which the system ramifies lies in the non-étale locus. That hypothesis is Definition
-`def:crit-branch` of
-`latex/paper.tex` read in the direction the argument needs, and in the abstract layer there
-is nothing to prove it from.
+`Pcf/Wiring.lean` derives `Pcf.DivisorDynamics.step_image_ramified_finite` for the restricted system
+from a `Pcf.PurityData`, but it still *assumes* `ramified_subset_nonEtale`: that a prime over which
+the system ramifies lies in the non-étale locus. That hypothesis is Definition `def:crit-branch` of
+`latex/paper.tex` read in the direction the argument needs, and in the abstract layer there is
+nothing to prove it from.
 
 Over an honest algebra there is. This file instantiates the dynamics at `Spec S` with the
 ramification index taken to be Mathlib's `Ideal.ramificationIdx` at the generic point, and
@@ -28,7 +27,8 @@ then **both** hypotheses become theorems:
 
 * `ramified ⟹ non-étale` is `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx`, which comes
   from `Ideal.ramificationIdx_eq_one` together with "étale implies unramified";
-* `step_image_ramified_finite` follows, because the ramified primes then lie in a proper closed subset
+* `step_image_ramified_finite` follows, because the ramified primes then lie in a proper closed
+  subset
   of a Noetherian space, which contains only finitely many primes, and the branch set is
   their image.
 
@@ -38,11 +38,11 @@ which is the separability hypothesis of §`sec:defs` and is a genuine condition 
 
 ## Why generic points
 
-`Pcf.IsProperIrreducibleClosed` is a property of *closed subsets*, while `Ideal.ramificationIdx` is attached
-to a *point* of `Spec S`. `PrimeSpectrum` is a sober space, so an irreducible closed subset
-has a generic point and is the closure of it; `Pcf.primeSpectrumRamificationIdx` uses that to read an index off
-a prime, and `Pcf.subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx` transports membership back from
-the point to the whole subset using closedness of the locus.
+`Pcf.IsProperIrreducibleClosed` is a property of *closed subsets*, while `Ideal.ramificationIdx` is
+attached to a *point* of `Spec S`. `PrimeSpectrum` is a sober space, so an irreducible closed subset
+has a generic point and is the closure of it; `Pcf.primeSpectrumRamificationIdx` uses that to read
+an index off a prime, and `Pcf.subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx`
+transports membership back from the point to the whole subset using closedness of the locus.
 
 ## What this does *not* do
 
@@ -71,7 +71,8 @@ noncomputable def primeSpectrumRamificationIdx (R : Type*) [CommRing R] [Algebra
   Ideal.ramificationIdx (Q.2.irreducible.genericPoint).asIdeal R
 
 theorem primeSpectrumRamificationIdx_pos [Module.Finite R S]
-    (Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s}) : 0 < primeSpectrumRamificationIdx R Q := by
+    (Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s}) : 0 <
+        primeSpectrumRamificationIdx R Q := by
   have := (Q.2.irreducible.genericPoint (α := PrimeSpectrum S)).isPrime
   exact Ideal.ramificationIdx_pos (R := R) _
 
@@ -81,8 +82,10 @@ contained in the non-étale locus.
 The generic point is non-étale by `Pcf.mem_nonEtaleLocus_of_one_lt_ramificationIdx`, the
 locus is closed, and the prime is the closure of its generic point. -/
 theorem subset_nonEtaleLocus_of_one_lt_primeSpectrumRamificationIdx [Algebra.EssFiniteType R S]
-    [Algebra.FinitePresentation R S] (Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s})
-    (h : 1 < primeSpectrumRamificationIdx R Q) : (Q : Set (PrimeSpectrum S)) ⊆ nonEtaleLocus R S := by
+    [Algebra.FinitePresentation R S]
+        (Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s})
+    (h : 1 < primeSpectrumRamificationIdx R Q) : (Q : Set (PrimeSpectrum S)) ⊆ nonEtaleLocus R S :=
+        by
   have hclosure : closure ({Q.2.irreducible.genericPoint} : Set (PrimeSpectrum S))
       = (Q : Set (PrimeSpectrum S)) :=
     Q.2.irreducible.closure_genericPoint Q.2.isClosed
@@ -101,8 +104,8 @@ omit [Algebra R S] in
 on prime spectra is surjective.
 
 This is the mathematical content of `Pcf.DivisorDynamics.step_surjective`, which is assumed on every
-route in this development. See the caveat on `Pcf.primeSpectrumSelfMap_surjective` for why proving it
-here does not yet remove the field. -/
+route in this development. See the caveat on `Pcf.primeSpectrumSelfMap_surjective` for why proving
+it here does not yet remove the field. -/
 theorem comap_surjective_of_isIntegral_of_injective {φ : R →+* S}
     (hint : φ.IsIntegral) (hinj : Function.Injective φ) :
     Function.Surjective (PrimeSpectrum.comap φ) := by
@@ -123,13 +126,14 @@ noncomputable def primeSpectrumSelfMap (φ : S →+* S) : PrimeSpectrum S → Pr
 surjective on points.
 
 **This does not yet discharge the field `Pcf.DivisorDynamics.step_surjective`.** That field is about
-a self-map of *divisors* — elements of `{s : Set (PrimeSpectrum S) // Pcf.IsProperIrreducibleClosed s}` —
-and transporting this statement there needs two things this development does not have:
-that the image of a closed set under a finite morphism is closed, and that such a morphism
-preserves codimension. The second is dimension theory that Mathlib's Krull-dimension API
-does not currently reach. So B1 stands as an assumption, with its content now identified
-and proved at the level where Mathlib can express it. -/
-theorem primeSpectrumSelfMap_surjective (φ : S →+* S) (hint : φ.IsIntegral) (hinj : Function.Injective φ) :
+a self-map of *divisors* — elements of
+`{s : Set (PrimeSpectrum S) // Pcf.IsProperIrreducibleClosed s}` — and transporting this statement
+there needs two things this development does not have: that the image of a closed set under a finite
+morphism is closed, and that such a morphism preserves codimension. The second is dimension theory
+that Mathlib's Krull-dimension API does not currently reach. So B1 stands as an assumption, with its
+content now identified and proved at the level where Mathlib can express it. -/
+theorem primeSpectrumSelfMap_surjective (φ : S →+* S) (hint : φ.IsIntegral)
+    (hinj : Function.Injective φ) :
     Function.Surjective (primeSpectrumSelfMap φ) :=
   comap_surjective_of_isIntegral_of_injective hint hinj
 
@@ -139,7 +143,8 @@ theorem primeSpectrumSelfMap_surjective (φ : S →+* S) (hint : φ.IsIntegral) 
 subset of a Noetherian space. -/
 theorem finite_ramified [Algebra.EssFiniteType R S] [Algebra.FinitePresentation R S]
     [NoetherianSpace (PrimeSpectrum S)] (hgen : nonEtaleLocus R S ≠ univ) :
-    {Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} | 1 < primeSpectrumRamificationIdx R Q}.Finite := by
+    {Q : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} | 1 <
+        primeSpectrumRamificationIdx R Q}.Finite := by
   apply Set.Finite.of_finite_image _ Subtype.val_injective.injOn
   refine (finite_isProperIrreducibleClosed_subset (isClosed_nonEtaleLocus R S) hgen).subset ?_
   rintro t ⟨⟨Q, hQ⟩, h, rfl⟩
@@ -152,7 +157,8 @@ The caller supplies the dynamics (`step`, and lying over) and generic étaleness
 `Pcf.restrictionDivisorDynamicsOfPurity`, which additionally demands `ramified_subset_nonEtale`. -/
 noncomputable def divisorDynamicsOfSpectrum [Module.Finite R S] [Algebra.EssFiniteType R S]
     [Algebra.FinitePresentation R S] [NoetherianSpace (PrimeSpectrum S)]
-    (step : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} → {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s})
+    (step : {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} →
+        {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s})
     (step_surjective : Function.Surjective step)
     (hgen : nonEtaleLocus R S ≠ univ) :
     DivisorDynamics {s : Set (PrimeSpectrum S) // IsProperIrreducibleClosed s} where
@@ -170,9 +176,11 @@ noncomputable def divisorDynamicsOfSpectrum [Module.Finite R S] [Algebra.EssFini
     (step) (step_surjective) (hgen : nonEtaleLocus R S ≠ univ) :
     (divisorDynamicsOfSpectrum step step_surjective hgen).step = step := rfl
 
-@[simp] theorem divisorDynamicsOfSpectrum_ramificationIdx [Module.Finite R S] [Algebra.EssFiniteType R S]
+@[simp] theorem divisorDynamicsOfSpectrum_ramificationIdx [Module.Finite R S]
+    [Algebra.EssFiniteType R S]
     [Algebra.FinitePresentation R S] [NoetherianSpace (PrimeSpectrum S)]
     (step) (step_surjective) (hgen : nonEtaleLocus R S ≠ univ) :
-    (divisorDynamicsOfSpectrum step step_surjective hgen).ramificationIdx = primeSpectrumRamificationIdx R := rfl
+    (divisorDynamicsOfSpectrum step step_surjective hgen).ramificationIdx =
+        primeSpectrumRamificationIdx R := rfl
 
 end Pcf

@@ -29,19 +29,21 @@ sentence:
 > finitely many codimension-`1` irreducible components.
 
 `Pcf.finite_isProperIrreducibleClosed_subset` is that sentence, proved. Together with
-`Pcf.IsProperIrreducibleClosed.not_subset_sUnion` — the `B ⊄ Z` half of Theorem `thm:bounding` Step 0 and Lemma
-`lem:finitely-many` —
-it removes the three finiteness assumptions from the axiom census.
+`Pcf.IsProperIrreducibleClosed.not_subset_sUnion` — the `B ⊄ Z` half of Theorem `thm:bounding` Step
+0 and Lemma `lem:finitely-many` — it removes the three finiteness assumptions from the axiom census.
 
 ## Main results
 
-* `Pcf.IsProperIrreducibleClosed.eq_of_subset_of_isProperIrreducibleClosed` — primes are incomparable.
+* `Pcf.IsProperIrreducibleClosed.eq_of_subset_of_isProperIrreducibleClosed` — primes are
+  incomparable.
 * `Pcf.IsProperIrreducibleClosed.subset_of_subset_sUnion` — a prime inside a finite union of
   closed sets lies inside one of them (irreducibility).
-* `Pcf.IsProperIrreducibleClosed.not_subset_sUnion` — Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, the
+* `Pcf.IsProperIrreducibleClosed.not_subset_sUnion` — Theorem `thm:bounding` Step 0 and Lemma
+  `lem:finitely-many`, the
   `Z` term: a prime is
   not contained in a finite union of primes different from it.
-* `Pcf.finite_isProperIrreducibleClosed_subset` — Theorem `thm:bounding` (per-divisor form), first paragraph: a proper
+* `Pcf.finite_isProperIrreducibleClosed_subset` — Theorem `thm:bounding` (per-divisor form), first
+  paragraph: a proper
   closed subset contains only finitely many primes.
 * `Pcf.IsProperIrreducibleClosed.inter_sUnion_ne_self` — `B ∩ Z ≠ B`, the form §`sec:bounding` uses.
 * `Pcf.not_subset_of_two_le_codim` — Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`,
@@ -77,18 +79,21 @@ structure IsProperIrreducibleClosed (P : Set X) : Prop where
   /-- `P` is maximal among proper irreducible closed subsets. -/
   maximal : ∀ Q : Set X, IsIrreducible Q → IsClosed Q → Q ≠ Set.univ → P ⊆ Q → P = Q
 
-theorem IsProperIrreducibleClosed.nonempty {P : Set X} (hP : IsProperIrreducibleClosed P) : P.Nonempty :=
+theorem IsProperIrreducibleClosed.nonempty {P : Set X} (hP : IsProperIrreducibleClosed P) :
+    P.Nonempty :=
   hP.irreducible.nonempty
 
 /-- Distinct primes are incomparable: if one prime contains another they are equal.
 This is the codimension-one content of the integral-effective-divisor convention of §`sec:intro`. -/
-theorem IsProperIrreducibleClosed.eq_of_subset_of_isProperIrreducibleClosed {P Q : Set X} (hP : IsProperIrreducibleClosed P) (hQ : IsProperIrreducibleClosed Q)
+theorem IsProperIrreducibleClosed.eq_of_subset_of_isProperIrreducibleClosed {P Q : Set X}
+    (hP : IsProperIrreducibleClosed P) (hQ : IsProperIrreducibleClosed Q)
     (h : P ⊆ Q) : P = Q :=
   hP.maximal Q hQ.irreducible hQ.isClosed hQ.ne_univ h
 
 /-- A prime contained in a finite union of closed sets is contained in one of them.
 This is irreducibility, in the form used repeatedly in §`sec:bounding`. -/
-theorem IsProperIrreducibleClosed.subset_of_subset_sUnion {P : Set X} (hP : IsProperIrreducibleClosed P) {S : Set (Set X)}
+theorem IsProperIrreducibleClosed.subset_of_subset_sUnion {P : Set X}
+    (hP : IsProperIrreducibleClosed P) {S : Set (Set X)}
     (hSfin : S.Finite) (hSclosed : ∀ t ∈ S, IsClosed t) (hsub : P ⊆ ⋃₀ S) :
     ∃ t ∈ S, P ⊆ t := by
   classical
@@ -104,7 +109,8 @@ of primes distinct from it.
 
 In the manuscript: "We have `B ⊄ Z` because `Z` is a union of primes distinct
 from `B`." -/
-theorem IsProperIrreducibleClosed.not_subset_sUnion {P : Set X} (hP : IsProperIrreducibleClosed P) {S : Set (Set X)}
+theorem IsProperIrreducibleClosed.not_subset_sUnion {P : Set X} (hP : IsProperIrreducibleClosed P)
+    {S : Set (Set X)}
     (hSfin : S.Finite) (hSprime : ∀ Q ∈ S, IsProperIrreducibleClosed Q) (hPS : P ∉ S) :
     ¬ P ⊆ ⋃₀ S := by
   intro hsub
@@ -115,7 +121,8 @@ theorem IsProperIrreducibleClosed.not_subset_sUnion {P : Set X} (hP : IsProperIr
 /-- **Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many`, the `Z` term, in the form
 §`sec:bounding` uses it**: `B ∩ Z` is a proper
 subset of `B`, where `Z` is the union of the branch components other than `B`. -/
-theorem IsProperIrreducibleClosed.inter_sUnion_ne_self {P : Set X} (hP : IsProperIrreducibleClosed P) {S : Set (Set X)}
+theorem IsProperIrreducibleClosed.inter_sUnion_ne_self {P : Set X}
+    (hP : IsProperIrreducibleClosed P) {S : Set (Set X)}
     (hSfin : S.Finite) (hSprime : ∀ Q ∈ S, IsProperIrreducibleClosed Q) (hPS : P ∉ S) :
     P ∩ ⋃₀ S ≠ P := fun h =>
   hP.not_subset_sUnion hSfin hSprime hPS (h ▸ Set.inter_subset_right)
@@ -166,7 +173,8 @@ In the manuscript, the codimension-one points at which `g̃` fails to be étale 
 generic points of the components of `supp Ω`, a proper closed subset because `g` is
 separable; their images give the finitely many components of `Branch(g)`. Granted
 that `supp Ω` is a proper closed subset, this theorem is the rest of that argument. -/
-theorem finite_image_isProperIrreducibleClosed_subset [NoetherianSpace X] {C : Set X} (hC : IsClosed C)
+theorem finite_image_isProperIrreducibleClosed_subset [NoetherianSpace X] {C : Set X}
+    (hC : IsClosed C)
     (hCne : C ≠ Set.univ) {β : Type*} (f : Set X → β) :
     (f '' {P : Set X | IsProperIrreducibleClosed P ∧ P ⊆ C}).Finite :=
   (finite_isProperIrreducibleClosed_subset hC hCne).image f

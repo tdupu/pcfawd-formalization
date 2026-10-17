@@ -193,8 +193,8 @@ This discharges the two inputs of `zariskiNagataPurity_of_etaleNormalAscent`: `0
 `IsStacksNormalRing.of_etale` and `0BMA` by
 `finiteNormalPuncturedEtalePurity_of_isRegularLocalRing`.
 Proof route: the strong induction on the height and the étale-local finite model of the Stacks
-proof (`zariskiNagataPurity_of_etaleNormalAscent`, `hasZariskiNagataPurityAt_of_lowerHeight`).  It diverges
-from Stacks in two places: the final descent of étaleness is done on local rings (Kähler
+proof (`zariskiNagataPurity_of_etaleNormalAscent`, `hasZariskiNagataPurityAt_of_lowerHeight`). It
+diverges from Stacks in two places: the final descent of étaleness is done on local rings (Kähler
 differentials and Tor-free tensor products) instead of with Descent, Lemma 35.23.31 / Tag `02VN`,
 and inside `0BMA`, whose input here is not proved by the Stacks proof (completion descent and an
 elementary formal lifting replace `0BLL`/`0BLH` and `0BM6`/`0EKS`); see
@@ -207,9 +207,11 @@ theorem zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R 
 
 /-- The Palomar-facing form of `zariskiNagataPurity`: the compact statement
 `Pcf.Palomar.ZariskiNagataPurity`, with no hypotheses. -/
-theorem _root_.Pcf.Palomar.zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
+theorem _root_.Pcf.Palomar.zariskiNagataPurity (R S : Type u) [CommRing R] [CommRing S]
+    [Algebra R S] :
     Pcf.Palomar.ZariskiNagataPurity R S :=
-  Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
+  Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
+      (fun _ C _ _ _ _ h ↦ IsStacksNormalRing.of_etale C h)
     (fun A _ _ h ↦ finiteNormalPuncturedEtalePurity_of_isRegularLocalRing A h) R S
 
 #print axioms puncturedSpectrumPurity_of_finiteNormalPuncturedEtalePurity

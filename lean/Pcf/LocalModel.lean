@@ -28,7 +28,8 @@ additionally records that the standard piece is free over the base with basis
 
 * `Pcf.LocalModel.localPoly u a e` : the polynomial `X ^ e - C (u * a)` cutting out a
   standard piece of a tame cyclic cover.
-* `Pcf.LocalModel.adjoinRootBasis` : the `R`-module basis `1, z, …, z ^ (e - 1)` of the standard piece.
+* `Pcf.LocalModel.adjoinRootBasis` : the `R`-module basis `1, z, …, z ^ (e - 1)` of the standard
+  piece.
 * `Pcf.LocalModel.restrictionMap` : the restriction map `R/(a) → C/(z)` along the divisor,
   i.e. the algebraic form of `V(z) → V(a)`.
 * `Pcf.LocalModel.restrictionEquiv` : that map packaged as an `R`-algebra isomorphism.
@@ -36,7 +37,8 @@ additionally records that the standard piece is free over the base with basis
 ## Main results
 
 * `Pcf.LocalModel.localPoly_monic` : `X ^ e - C (u * a)` is monic for `1 ≤ e`.
-* `Pcf.LocalModel.free_adjoinRoot` / `Pcf.LocalModel.finite_adjoinRoot` / `Pcf.LocalModel.finrank_adjoinRoot` :
+* `Pcf.LocalModel.free_adjoinRoot` / `Pcf.LocalModel.finite_adjoinRoot` /
+  `Pcf.LocalModel.finrank_adjoinRoot` :
   the standard piece is a finite free `R`-module of rank `e`.
 * `Pcf.LocalModel.quotientRootEquiv` : **the main result**, the `R`-algebra isomorphism
   `R[z]/(z ^ e - u * a, z) ≃ₐ[R] R/(a)`.  This is the statement
@@ -181,7 +183,8 @@ of `paper.tex`. -/
 @[simp]
 theorem adjoinRootBasis_apply [Nontrivial R] (he : 1 ≤ e) (i : Fin e) :
     adjoinRootBasis u a he i = AdjoinRoot.root (localPoly u a e) ^ (i : ℕ) := by
-  simp only [adjoinRootBasis, adjoinRootPowerBasis, Module.Basis.reindex_apply, PowerBasis.basis_eq_pow,
+  simp only
+      [adjoinRootBasis, adjoinRootPowerBasis, Module.Basis.reindex_apply, PowerBasis.basis_eq_pow,
     AdjoinRoot.powerBasis'_gen]
   rfl
 
@@ -439,8 +442,8 @@ restriction to the divisor, which is an isomorphism
 (`Pcf.LocalModel.restrictionMap_bijective`).
 
 The proof uses that `C` is free over `R` with basis `1, z, …, z ^ (e - 1)`
-(`Pcf.LocalModel.adjoinRootBasis`): if the class of `z` vanished then `z = a * c` in `C`, and reading
-off the coefficient of the basis vector `z` — a genuine basis vector, distinct from `1`,
+(`Pcf.LocalModel.adjoinRootBasis`): if the class of `z` vanished then `z = a * c` in `C`, and
+reading off the coefficient of the basis vector `z` — a genuine basis vector, distinct from `1`,
 precisely because `2 ≤ e` — gives `a * c₁ = 1`, making `a` a unit.
 
 Every hypothesis is needed: for `e ≤ 1` and for `a` a unit the image of `z` in `C/(a)` is

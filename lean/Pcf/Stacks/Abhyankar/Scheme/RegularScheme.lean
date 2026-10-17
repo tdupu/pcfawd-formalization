@@ -34,7 +34,8 @@ namespace Pcf.Stacks.SchemeLevel
 variable {X : Scheme.{u}}
 
 /-- `primeIdealOf` inverts `fromSpec`. -/
-theorem _root_.AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec {U : X.Opens} (hU : IsAffineOpen U)
+theorem _root_.AlgebraicGeometry.IsAffineOpen.primeIdealOf_fromSpec {U : X.Opens}
+    (hU : IsAffineOpen U)
     (p : PrimeSpectrum Γ(X, U)) :
     hU.primeIdealOf ⟨hU.fromSpec p,
       by rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact Set.mem_range_self p⟩ = p :=

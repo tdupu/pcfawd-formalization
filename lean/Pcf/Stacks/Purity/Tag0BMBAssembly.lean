@@ -17,7 +17,8 @@ mathematically distinct inputs.
 
 * Tag `00UJ` (the affine form used in Tag `02LK`) replaces a quasi-finite map near the chosen
   point by a finite component after a pointed etale base change.  The theorem
-  `exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt` applies the actual Mathlib theorem, with no proxy data.
+  `exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt` applies the actual Mathlib
+  theorem, with no proxy data.
 * Clause (2) of Tag `0BMA` says that a finite torsion-free normal algebra which is etale on the
   punctured spectrum is etale.  `FiniteNormalPuncturedEtalePurity` records exactly this corrected
   affine clause.  Torsion-freeness is explicit because it excludes vertical closed-point

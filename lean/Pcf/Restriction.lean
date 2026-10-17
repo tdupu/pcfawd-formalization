@@ -18,11 +18,11 @@ This file formalizes §`sec:main` of `latex/paper.tex` on the abstract carrier: 
 The geometric input is Theorem `thm:bounding`, the key proposition bounding the ramification
 of a restriction. Theorem `thm:bounding` is proved in the manuscript by Zariski–Nagata purity
 (Stacks Tag 0BMB) followed by Abhyankar's lemma for a regular divisor (Stacks Tag 0EYG);
-neither is available in Mathlib. It enters here as the field `PCFSetup.notMem_branch_iterate`, together
-with the finiteness statements of Theorem `thm:bounding` Step 0 and Lemma `lem:finitely-many` as
-`singularPrimes_finite` and `meets_finite`.
-See `lean/AXIOMS.md` for the full census of assumed inputs, and
-`Pcf.Examples.DiagonalSquaring` for a witness showing that `PCFSetup` is inhabited.
+neither is available in Mathlib. It enters here as the field `PCFSetup.notMem_branch_iterate`,
+together with the finiteness statements of Theorem `thm:bounding` Step 0 and Lemma
+`lem:finitely-many` as `singularPrimes_finite` and `meets_finite`. See `lean/AXIOMS.md` for the full
+census of assumed inputs, and `Pcf.Examples.DiagonalSquaring` for a witness showing that `PCFSetup`
+is inhabited.
 
 Everything below `PCFSetup` is proved outright: given the key proposition, the passage
 from "the branch primes of every iterate lie in one fixed finite set" to
@@ -33,7 +33,8 @@ formalized without further assumptions.
 
 * `Pcf.PCFSetup.restriction_isPCF` — Theorem `thm:normal-invariant`.
 * `Pcf.PCFSetup.restriction_isPCF_of_iterate` — Corollary `cor:normal-preperiodic`.
-* `Pcf.isPCF_of_isPCF_restriction` — Corollary `cor:pcfawd`, the descent along a chain of periodic primes.
+* `Pcf.isPCF_of_isPCF_restriction` — Corollary `cor:pcfawd`, the descent along a chain of periodic
+  primes.
 * `Pcf.PCFSetup.normalization_isPCF` — Corollary `cor:pcfawd` in its normalized form.
 -/
 
