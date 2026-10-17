@@ -59,11 +59,9 @@ file. Statement-to-declaration map: `README.md`, likewise.
 **Status: prepared, not submitted.** No submission to the Palomar registry has been
 made. This file is the manifest of what a submission would assert; submitting is a
 separate, explicitly authorized act. Still open before any submission (from
-`palomar/README.md`): the relationship answer and reconciling `latex/paper.tex`. (The Palomar
-preflight for the unconditional Challenge passed on `tdupu/pcfawd-formalization` `2f33fee`,
-run 39037647205.) Its
-"Formalization" subsubsection still says `thm:general`, `lem:covers` and the passage to the
-normalization are not formalized, which contradicts Entry 0.
+`palomar/README.md`): the relationship answer, and the authors' hand review of the revised
+"Formalization" subsubsection of `latex/paper.tex` (`af86252`). (The Palomar preflight for the
+unconditional Challenge passed on `tdupu/pcfawd-formalization` `2f33fee`, run 39037647205.)
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -226,10 +224,9 @@ Res. Lett. **24** (2017) 1633–1647, `arXiv:1511.00194`.
   the Challenge's three theorems with the permitted axioms. The equivalence of the
   Challenge notions with the development's (`Bridge.lean`) is evidence for this file's
   reader, and the Challenge does not depend on it.
-* **The manuscript is not reconciled.** The "Formalization" subsubsection of
-  `latex/paper.tex` still says `thm:general`, `lem:covers` and the passage to the
-  normalization are not formalized, which contradicts this entry. `paper.tex` is
-  hand-managed.
+* **The manuscript's account is not yet author-reviewed.** The "Formalization"
+  subsubsection of `latex/paper.tex` was revised on 2026-10-17 to describe this entry; the
+  authors have not yet reviewed the revision. `paper.tex` is hand-managed.
 * **No human author has reviewed the statement.** `review.status` is `agent-reviewed`.
 
 **Axioms.** All three: `[propext, Classical.choice, Quot.sound]`
@@ -538,8 +535,7 @@ more faithful.
   it: faithful to `cor:pcfawd`, slightly more general (no separatedness; `f` need not be a
   `k`-morphism). The 2026-10-17 Challenge drops the two hypotheses and changes no
   definition. No human comparison has been completed for any entry.
-* `latex/paper.tex` currently **contradicts Entry 0** in its "Formalization"
-  subsubsection, which still lists `thm:general`, `lem:covers` and the passage to the
-  normalization as not formalized, and `prop:loci-compare` and `lem:tower-unnormalized` as
-  assumed. `paper.tex` is hand-managed and must be reconciled by the authors before
-  submission (`palomar/README.md`).
+* The "Formalization" subsubsection of `latex/paper.tex` was revised on 2026-10-17 to
+  describe Entry 0 (it previously listed `thm:general`, `lem:covers` and the passage to the
+  normalization as not formalized). `paper.tex` is hand-managed; the authors' review of the
+  revision is pending (`palomar/README.md`).
