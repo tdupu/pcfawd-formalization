@@ -28,9 +28,9 @@ This file proves the inductive step of Zariski--Nagata purity (Stacks Tag `0BMB`
 `w` of height at least two, following the second and third paragraphs of the Stacks proof.
 
 Let `R → S` be of finite type between Noetherian rings and let `w = q` satisfy the pointwise
-hypotheses `ZariskiNagataPurityInputsAt R S w`, with `p = q ∩ R`.
+hypotheses `ZariskiNagataPurityHypothesesAt R S w`, with `p = q ∩ R`.
 
-1. Tag `00UJ` (`exists_tag0BMB_finiteComponent`) gives an étale `R → R'`, a prime `P` of `R'`
+1. Tag `00UJ` (`exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt`) gives an étale `R → R'`, a prime `P` of `R'`
    over `p` and a prime `P'` of `T = R' ⊗[R] S` over `P` and `q`, cut out by an idempotent `e`
    with `T_e` finite over `R'` and `P'` the only prime of `T_e` over `P`.
 2. The local model is `A = R'_P → B = T_{P'}`.  It is finite (uniqueness of `P'`), `A` is
@@ -524,7 +524,7 @@ theorem hasZariskiNagataPurityAt_of_lowerHeight
     HasZariskiNagataPurityAt R S w := by
   intro h
   obtain ⟨R', _, _, _, P, _, _, e, he, P', _, _, hcomapq, heP', -, hfin, huniq⟩ :=
-    exists_tag0BMB_finiteComponent w h
+    exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt w h
   let q := w.asIdeal
   let p := q.under R
   let T := R' ⊗[R] S

@@ -30,7 +30,7 @@ namespace Pcf.Stacks
 The source local ring is a normal domain, the target local ring is regular, the map is
 quasi-finite, the positive local dimensions agree, and the map is unramified at every
 codimension-one generization of `w`. -/
-structure ZariskiNagataPurityInputsAt
+structure ZariskiNagataPurityHypothesesAt
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
     (w : PrimeSpectrum S) : Prop where
   source_isDomain : IsDomain (Localization.AtPrime w.asIdeal)
@@ -47,7 +47,7 @@ structure ZariskiNagataPurityInputsAt
 def HasZariskiNagataPurityAt
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
     (w : PrimeSpectrum S) : Prop :=
-  ZariskiNagataPurityInputsAt R S w → Algebra.IsEtaleAt R w.asIdeal
+  ZariskiNagataPurityHypothesesAt R S w → Algebra.IsEtaleAt R w.asIdeal
 
 /-- **Zariski--Nagata purity, Stacks Tag `0BMB`**, specialized to affine schemes.
 

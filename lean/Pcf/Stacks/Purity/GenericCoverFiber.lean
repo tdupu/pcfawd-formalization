@@ -161,7 +161,7 @@ noncomputable def puncturedCoverGenericFiber (hdim : 1 ≤ ringKrullDim R) :
 
 /-- The generic fibre formed over the puncture is the same scheme as base change over
 `Spec R` along its generic point. -/
-noncomputable def puncturedCoverGenericFiber_iso_basePullback
+noncomputable def puncturedCoverGenericFiberIsoBasePullback
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     ((puncturedCoverGenericFiber R hdim).obj V).left ≅
@@ -199,7 +199,7 @@ theorem puncturedCover_genericPullback_sections_injective
   exact (Limits.pullback.fst V.hom g).app_injective ⊤
 
 /-- Restriction of global functions on a punctured cover to its actual generic fibre. -/
-noncomputable def puncturedCoverGenericFiber_sectionMap
+noncomputable def puncturedCoverGenericFiberSectionMap
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     Γ(V.left, ⊤) →+* Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) := by
@@ -212,7 +212,7 @@ omit [IsNoetherianRing R] in
 theorem puncturedCoverGenericFiber_sectionMap_injective
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    Function.Injective (puncturedCoverGenericFiber_sectionMap R hdim V) := by
+    Function.Injective (puncturedCoverGenericFiberSectionMap R hdim V) := by
   exact puncturedCover_genericPullback_sections_injective R hdim V
 
 omit [IsNoetherianRing R] in
@@ -257,7 +257,7 @@ theorem puncturedCoverGenericFiber_etale_appTop (hdim : 1 ≤ ringKrullDim R)
 
 /-- The finite étale algebra map of the generic fibre, with its source identified with the
 function field rather than the global sections of its affine spectrum. -/
-noncomputable def puncturedCoverGenericFiber_ringHom (hdim : 1 ≤ ringKrullDim R)
+noncomputable def puncturedCoverGenericFiberRingHom (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     (Spec R).functionField →+*
       Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) :=
@@ -270,10 +270,10 @@ through `V → U → Spec R` agrees with pulling it through `Spec K → Spec R`.
 theorem puncturedCoverGenericFiber_sectionMap_base
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    (puncturedCoverGenericFiber_sectionMap R hdim V).comp
+    (puncturedCoverGenericFiberSectionMap R hdim V).comp
       (((Scheme.ΓSpecIso R).inv ≫
         (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom) =
-      (puncturedCoverGenericFiber_ringHom R hdim V).comp
+      (puncturedCoverGenericFiberRingHom R hdim V).comp
         (algebraMap R (Spec R).functionField) := by
   let i := (puncturedSpectrum R).ι
   let g := (puncturedSpectrum R).fromSpecStalkOfMem (genericPoint (Spec R))
@@ -314,7 +314,7 @@ omit [IsNoetherianRing R] in
 function field. -/
 theorem puncturedCoverGenericFiber_ringHom_finite (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    (puncturedCoverGenericFiber_ringHom R hdim V).Finite := by
+    (puncturedCoverGenericFiberRingHom R hdim V).Finite := by
   have h₁ := puncturedCoverGenericFiber_finite_appTop R hdim V
   have h₂ : ((Scheme.ΓSpecIso (Spec R).functionField).inv.hom).Finite :=
     RingHom.Finite.of_surjective _
@@ -325,7 +325,7 @@ omit [IsNoetherianRing R] in
 /-- The same generic-fibre algebra map is étale over the function field. -/
 theorem puncturedCoverGenericFiber_ringHom_etale (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    (puncturedCoverGenericFiber_ringHom R hdim V).Etale := by
+    (puncturedCoverGenericFiberRingHom R hdim V).Etale := by
   have h₁ := puncturedCoverGenericFiber_etale_appTop R hdim V
   have h₂ : ((Scheme.ΓSpecIso (Spec R).functionField).inv.hom).Etale :=
     RingHom.Etale.of_bijective
@@ -338,12 +338,12 @@ noncomputable def puncturedCoverGenericFiberAlgebra (hdim : 1 ≤ ringKrullDim R
     CommAlgCat (Spec R).functionField := by
   let W := (puncturedCoverGenericFiber R hdim).obj V
   letI : Algebra (Spec R).functionField Γ(W.left, ⊤) :=
-    (puncturedCoverGenericFiber_ringHom R hdim V).toAlgebra
+    (puncturedCoverGenericFiberRingHom R hdim V).toAlgebra
   exact .of (Spec R).functionField Γ(W.left, ⊤)
 
 /-- The injective generic restriction, now as a homomorphism of `R`-algebras with the
 canonical structures coming from the two maps to `Spec R`. -/
-noncomputable def puncturedCoverGenericFiber_sectionAlgHom
+noncomputable def puncturedCoverGenericFiberSectionAlgHom
     (hdim : 1 ≤ ringKrullDim R)
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     letI : Algebra R Γ(V.left, ⊤) :=
@@ -357,7 +357,7 @@ noncomputable def puncturedCoverGenericFiber_sectionAlgHom
       (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
   let E := puncturedCoverGenericFiberAlgebra R hdim V
   letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
-  refine ⟨puncturedCoverGenericFiber_sectionMap R hdim V, ?_⟩
+  refine ⟨puncturedCoverGenericFiberSectionMap R hdim V, ?_⟩
   intro r
   exact congrArg (fun f : R →+* E => f r)
     (puncturedCoverGenericFiber_sectionMap_base R hdim V)
@@ -372,7 +372,7 @@ theorem puncturedCoverGenericFiber_sectionAlgHom_injective
         (V.hom ≫ (puncturedSpectrum R).ι).appTop).hom).toAlgebra
     letI : Algebra R (puncturedCoverGenericFiberAlgebra R hdim V) :=
       Algebra.compHom _ (algebraMap R (Spec R).functionField)
-    Function.Injective (puncturedCoverGenericFiber_sectionAlgHom R hdim V) :=
+    Function.Injective (puncturedCoverGenericFiberSectionAlgHom R hdim V) :=
   puncturedCoverGenericFiber_sectionMap_injective R hdim V
 
 omit [IsNoetherianRing R] in
@@ -406,7 +406,7 @@ theorem puncturedCover_sections_isReduced (hdim : 1 ≤ ringKrullDim R)
   haveI : IsReduced Γ(((puncturedCoverGenericFiber R hdim).obj V).left, ⊤) := by
     change IsReduced E
     infer_instance
-  exact isReduced_of_injective (puncturedCoverGenericFiber_sectionMap R hdim V)
+  exact isReduced_of_injective (puncturedCoverGenericFiberSectionMap R hdim V)
     (puncturedCoverGenericFiber_sectionMap_injective R hdim V)
 
 end Pcf.Stacks

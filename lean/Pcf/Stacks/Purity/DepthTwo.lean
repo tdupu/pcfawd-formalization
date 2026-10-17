@@ -98,7 +98,7 @@ theorem exists_isSMulRegular_quotient_mem_maximalIdeal
 
 /-- Avoidance of the closed point by the associated primes is equivalent to the existence of a
 regular element in the maximal ideal of the principal quotient. -/
-theorem maximalIdeal_not_mem_associatedPrimes_iff_exists_isSMulRegular_quotient
+theorem maximalIdeal_notMem_associatedPrimes_iff_exists_isSMulRegular_quotient
     (x : R) :
     maximalIdeal R ∉ associatedPrimes R (QuotSMulTop x R) ↔
       ∃ y ∈ maximalIdeal R, IsSMulRegular (QuotSMulTop x R) y := by

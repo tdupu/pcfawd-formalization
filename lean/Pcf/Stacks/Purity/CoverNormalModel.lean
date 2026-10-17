@@ -50,7 +50,7 @@ theorem puncturedCover_exists_finiteNormalGenericModel
   let B := finiteNormalModel R K I L
   refine ⟨B, finiteNormalModel_moduleFinite R K I L,
     finiteNormalModel_isStacksNormalRing R K I L, ?_⟩
-  exact ⟨(finiteNormalModel_genericFiberEquiv R K I L).trans e.symm⟩
+  exact ⟨(finiteNormalModelGenericFiberEquiv R K I L).trans e.symm⟩
 
 /-- The comparison of the model with the cover at the generic point, expressed geometrically.
 The next step in Tag `0BM9` is to extend this isomorphism over the whole punctured spectrum. -/
@@ -148,7 +148,7 @@ theorem puncturedCover_sections_integralClosure_finite
   letI : Algebra R E := Algebra.compHom E (algebraMap R (Spec R).functionField)
   have hE : Module.Finite R (integralClosure R E) :=
     puncturedCoverGenericFiber_integralClosure_finite R hdim V
-  let f := puncturedCoverGenericFiber_sectionAlgHom R hdim V
+  let f := puncturedCoverGenericFiberSectionAlgHom R hdim V
   let fC := f.mapIntegralClosure
   have hfC : Function.Injective fC := by
     intro x y h

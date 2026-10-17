@@ -172,7 +172,7 @@ theorem puncturedCover_baseGenericPullback_algebraEtale
   let q := pullback.fst f g
   letI : Algebra K Γ(W, ⊤) :=
     (((Scheme.ΓSpecIso K).inv ≫ q.appTop).hom).toAlgebra
-  let e := puncturedCoverGenericFiber_iso_basePullback R hdim V
+  let e := puncturedCoverGenericFiberIsoBasePullback R hdim V
   let s := pullbackSymmetry f g
   let t := s ≪≫ e.symm
   letI : IsAffine W :=
@@ -302,7 +302,7 @@ theorem puncturedCover_genericFiber_normalizationDesc_isIso
 normalization to the puncture: the result is the original arbitrary finite étale cover. This is
 the exact geometric comparison in Stacks Tag `0BM9`, prior to identifying the affine
 normalization with the explicit finite normal algebra. -/
-noncomputable def puncturedCover_genericFiber_normalizationRestrictIso
+noncomputable def puncturedCoverGenericFiberNormalizationRestrictIso
     (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
     [IsIntegrallyClosed R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :

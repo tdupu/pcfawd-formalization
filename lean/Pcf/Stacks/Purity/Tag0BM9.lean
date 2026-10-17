@@ -125,12 +125,12 @@ noncomputable def normalizationRestrictOverIsoOfOpenImmersion
 
 /-- The finite normalization extension constructed from the generic fibre restricts to the
 original finite étale cover by an isomorphism over the punctured spectrum. -/
-noncomputable def puncturedCover_genericFiber_normalizationSpecRestrictOverIso
+noncomputable def puncturedCoverGenericFiberNormalizationSpecRestrictOverIso
     (R : CommRingCat.{u}) [IsDomain R] [IsLocalRing R] [IsNoetherianRing R]
     [IsIntegrallyClosed R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     (Over.pullback (puncturedSpectrum R).ι).obj
-        (Over.mk (puncturedCover_genericFiber_normalizationSpecMap R V)) ≅
+        (Over.mk (puncturedCoverGenericFiberNormalizationSpecMap R V)) ≅
       Over.mk V.hom := by
   let f := (Spec R).fromSpecStalk (genericPoint (Spec R))
   let g := V.hom ≫ (puncturedSpectrum R).ι
@@ -151,13 +151,13 @@ noncomputable def puncturedCover_genericFiber_normalizationSpecRestrictOverIso
   letI : QuasiSeparated (p ≫ i) := inferInstance
   letI : IsOpenImmersion i := inferInstance
   letI : IsAffine j.normalization := isAffine_of_isAffineHom j.fromNormalization
-  have hmap : puncturedCover_genericFiber_normalizationSpecMap R V =
+  have hmap : puncturedCoverGenericFiberNormalizationSpecMap R V =
       j.normalization.isoSpec.inv ≫ j.fromNormalization := by
-    dsimp [puncturedCover_genericFiber_normalizationSpecMap]
+    dsimp [puncturedCoverGenericFiberNormalizationSpecMap]
     rw [Spec.map_comp, ← Scheme.isoSpec_Spec_inv,
       Scheme.isoSpec_inv_naturality]
   let k : Over.mk j.fromNormalization ≅
-      Over.mk (puncturedCover_genericFiber_normalizationSpecMap R V) :=
+      Over.mk (puncturedCoverGenericFiberNormalizationSpecMap R V) :=
     Over.isoMk j.normalization.isoSpec (by rw [hmap]; simp)
   let k' := (Over.pullback i).mapIso k
   have hpj : 𝟙 _ ≫ (p ≫ i) = j := by
@@ -255,7 +255,7 @@ theorem puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra
     puncturedCover_genericFiber_normalizationSections_isTorsionFree R V
   have hnormal : IsStacksNormalRing A :=
     puncturedCover_genericFiber_normalizationSections_isStacksNormalRing R hdim V
-  let e := puncturedCover_genericFiber_normalizationSpecRestrictOverIso R V
+  let e := puncturedCoverGenericFiberNormalizationSpecRestrictOverIso R V
   have hetale : Etale (((Over.pullback (puncturedSpectrum R).ι).obj
       ((algSpec (.of R)).obj (Opposite.op A))).hom) := by
     letI : MorphismProperty.RespectsIso (@Etale) := by
@@ -266,7 +266,7 @@ theorem puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra
       change IsIso eScheme.hom
       infer_instance
     have hsource : Etale (((Over.pullback (puncturedSpectrum R).ι).obj
-        (Over.mk (puncturedCover_genericFiber_normalizationSpecMap R V))).hom) := by
+        (Over.mk (puncturedCoverGenericFiberNormalizationSpecMap R V))).hom) := by
       rw [← e.hom.w]
       apply (MorphismProperty.cancel_left_of_respectsIso @Etale _ _).mpr
       exact V.prop.2

@@ -16,36 +16,36 @@ public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
 # API for the pointwise Stacks morphism properties
 
 `Purity/Tag0BMBScheme.lean` states the Stacks pointwise notions literally:
-`StacksQuasiFiniteAt` (Definition 29.21.1, `01TD`), `StacksUnramifiedAt` (29.36.1, `02G4`) and
-`StacksEtaleAt` (29.37.1, `02GI`), each as "there are affine opens `x ∈ U`, `V ⊇ f(U)` such that
+`IsStacksQuasiFiniteAt` (Definition 29.21.1, `01TD`), `IsStacksUnramifiedAt` (29.36.1, `02G4`) and
+`IsStacksEtaleAt` (29.37.1, `02GI`), each as "there are affine opens `x ∈ U`, `V ⊇ f(U)` such that
 `𝒪_Y(V) → 𝒪_X(U)` has the ring-map property". This file connects them to Mathlib so that they
 can be used, or avoided, by other developments.
 
 ## Bridges to Mathlib (the intended entry points)
 
-* `stacksEtaleAt_iff_exists_etale`: étale at `x` iff `Etale (U.ι ≫ f)` for an open `U ∋ x`.
-* `stacksUnramifiedAt_iff_exists`, `stacksUnramifiedAt_iff_stalkMap`: unramified at `x` iff
+* `isStacksEtaleAt_iff_exists_etale`: étale at `x` iff `Etale (U.ι ≫ f)` for an open `U ∋ x`.
+* `isStacksUnramifiedAt_iff_exists`, `isStacksUnramifiedAt_iff_stalkMap`: unramified at `x` iff
   `LocallyOfFiniteType` and `FormallyUnramified` near `x`, iff locally of finite type near `x`
   with formally unramified stalk map.
-* `stacksQuasiFiniteAt_iff`: quasi-finite at `x` iff locally of finite type near `x` and
+* `isStacksQuasiFiniteAt_iff`: quasi-finite at `x` iff locally of finite type near `x` and
   `Scheme.Hom.QuasiFiniteAt f x`; `quasiFiniteAt_iff_appLE` is the converse of Mathlib's
   `Scheme.Hom.QuasiFiniteAt.quasiFiniteAt`.
-* Global forms (the remaining clauses of the three tags): `forall_stacksEtaleAt_iff`
-  (`Etale f`), `forall_stacksUnramifiedAt_iff` (`LocallyOfFiniteType f ∧ FormallyUnramified f`),
-  `forall_stacksQuasiFiniteAt_iff` (`LocallyOfFiniteType f ∧ LocallyQuasiFinite f`).
+* Global forms (the remaining clauses of the three tags): `forall_isStacksEtaleAt_iff`
+  (`Etale f`), `forall_isStacksUnramifiedAt_iff` (`LocallyOfFiniteType f ∧ FormallyUnramified f`),
+  `forall_isStacksQuasiFiniteAt_iff` (`LocallyOfFiniteType f ∧ LocallyQuasiFinite f`).
 * `exists_etale_of_zariskiNagataPurity`: Tag `0BMB` with hypotheses and conclusion in Mathlib
-  vocabulary, derived from the Stacks-literal `stacksEtaleAt_of_zariskiNagataPurity`.
+  vocabulary, derived from the Stacks-literal `isStacksEtaleAt_of_zariskiNagataPurity`.
 
 ## Chart independence and stability
 
 * `HasRingHomProperty.appLE_of_comp_ι`, `HasRingHomProperty.appLE_of_appLE_of_le`,
-  `StacksEtaleAt.etale_appLE`: once the ring-map property holds on one chart around `x`, it holds
+  `IsStacksEtaleAt.etale_appLE`: once the ring-map property holds on one chart around `x`, it holds
   on every smaller affine chart.
-* `isOpen_setOf_stacksEtaleAt`, `isOpen_setOf_stacksUnramifiedAt`,
-  `isOpen_setOf_stacksQuasiFiniteAt`: the three loci are open.
+* `isOpen_setOf_isStacksEtaleAt`, `isOpen_setOf_isStacksUnramifiedAt`,
+  `isOpen_setOf_isStacksQuasiFiniteAt`: the three loci are open.
 * `stacks*At_comp_iff_of_isOpenImmersion`: insensitivity to restriction to opens.
-* `StacksEtaleAt.stacksUnramifiedAt`, `StacksUnramifiedAt.stacksQuasiFiniteAt`,
-  `StacksEtaleAt.stacksQuasiFiniteAt`.
+* `IsStacksEtaleAt.isStacksUnramifiedAt`, `IsStacksUnramifiedAt.isStacksQuasiFiniteAt`,
+  `IsStacksEtaleAt.isStacksQuasiFiniteAt`.
 
 The generic lemmas in `Pcf.Stacks.HasRingHomProperty` and `Pcf.Stacks.IsZariskiLocalAtSource`
 hold for any property of morphisms defined by a local property of ring maps; they are stated so
@@ -205,16 +205,16 @@ variable {X Y : Scheme.{u}} {f : X ⟶ Y}
 
 /-- `f` is étale at `x` in the sense of Stacks iff `f` is étale (Mathlib's `Etale`) on
 some open neighbourhood of `x`. This is the main bridge for reusers. -/
-theorem stacksEtaleAt_iff_exists_etale (x : X) :
-    StacksEtaleAt f x ↔ ∃ U : X.Opens, x ∈ U ∧ Etale (U.ι ≫ f) :=
+theorem isStacksEtaleAt_iff_exists_etale (x : X) :
+    IsStacksEtaleAt f x ↔ ∃ U : X.Opens, x ∈ U ∧ Etale (U.ι ≫ f) :=
   HasRingHomProperty.exists_appLE_iff_exists_comp_ι (P := @Etale) x
 
 /-- **Independence of chart.** If `f` is étale at `x`, there is an open `U ∋ x` such that
 `𝒪_Y(V) → 𝒪_X(W)` is étale for *every* pair of affine opens `W ⊆ U`, `V` with `f(W) ⊆ V`. -/
-theorem StacksEtaleAt.etale_appLE {x : X} (h : StacksEtaleAt f x) :
+theorem IsStacksEtaleAt.etale_appLE {x : X} (h : IsStacksEtaleAt f x) :
     ∃ U : X.Opens, x ∈ U ∧ ∀ (V : Y.Opens) (_ : IsAffineOpen V) (W : X.Opens)
       (_ : IsAffineOpen W) (_ : W ≤ U) (e : W ≤ f ⁻¹ᵁ V), (f.appLE V W e).hom.Etale := by
-  obtain ⟨U, hx, hU⟩ := (stacksEtaleAt_iff_exists_etale x).1 h
+  obtain ⟨U, hx, hU⟩ := (isStacksEtaleAt_iff_exists_etale x).1 h
   exact ⟨U, hx, fun V hV W hW hWU e ↦
     HasRingHomProperty.appLE_of_comp_ι (P := @Etale) hU hV hW hWU e⟩
 
@@ -233,32 +233,32 @@ set_option backward.isDefEq.respectTransparency false in
 /-- Stacks Definition 29.37.1, second clause: `f` is étale iff it is étale at every point;
 in Mathlib this is `Etale f`. -/
 @[stacks 02GI "second clause: étale morphism, as Mathlib's `Etale`"]
-theorem forall_stacksEtaleAt_iff : (∀ x, StacksEtaleAt f x) ↔ Etale f := by
-  simp_rw [stacksEtaleAt_iff_exists_etale]
+theorem forall_isStacksEtaleAt_iff : (∀ x, IsStacksEtaleAt f x) ↔ Etale f := by
+  simp_rw [isStacksEtaleAt_iff_exists_etale]
   exact (IsZariskiLocalAtSource.iff_forall_exists_comp_ι (P := @Etale)).symm
 
 /-- An étale morphism (Mathlib's `Etale`) is étale at every point. -/
-theorem stacksEtaleAt_of_etale [Etale f] (x : X) : StacksEtaleAt f x :=
-  forall_stacksEtaleAt_iff.2 ‹_› x
+theorem isStacksEtaleAt_of_etale [Etale f] (x : X) : IsStacksEtaleAt f x :=
+  forall_isStacksEtaleAt_iff.2 ‹_› x
 
 /-- The étale locus `{x | f is étale at x}` is open. -/
-theorem isOpen_setOf_stacksEtaleAt : IsOpen {x : X | StacksEtaleAt f x} := by
-  simp_rw [stacksEtaleAt_iff_exists_etale]
+theorem isOpen_setOf_isStacksEtaleAt : IsOpen {x : X | IsStacksEtaleAt f x} := by
+  simp_rw [isStacksEtaleAt_iff_exists_etale]
   exact IsZariskiLocalAtSource.isOpen_setOf_exists_comp_ι
 
 -- Needed (Mathlib v4.35): instance search for `IsZariskiLocalAtSource @Etale` or
 -- `(@LocallyOfFiniteType ⊓ @FormallyUnramified).IsMultiplicative` fails without it.
 set_option backward.isDefEq.respectTransparency false in
 /-- Étaleness at a point is insensitive to precomposition with open immersions. -/
-theorem stacksEtaleAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
-    [IsOpenImmersion i] (z : Z) : StacksEtaleAt (i ≫ f) z ↔ StacksEtaleAt f (i z) := by
-  rw [stacksEtaleAt_iff_exists_etale, stacksEtaleAt_iff_exists_etale]
+theorem isStacksEtaleAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
+    [IsOpenImmersion i] (z : Z) : IsStacksEtaleAt (i ≫ f) z ↔ IsStacksEtaleAt f (i z) := by
+  rw [isStacksEtaleAt_iff_exists_etale, isStacksEtaleAt_iff_exists_etale]
   exact IsZariskiLocalAtSource.exists_comp_ι_comp_iff (P := @Etale) i z
 
 /-- Restricting `f` to an open `U ⊆ X` does not change étaleness at points of `U`. -/
-theorem stacksEtaleAt_ι_comp_iff (U : X.Opens) (x : U) :
-    StacksEtaleAt (U.ι ≫ f) x ↔ StacksEtaleAt f x.1 :=
-  stacksEtaleAt_comp_iff_of_isOpenImmersion U.ι x
+theorem isStacksEtaleAt_ι_comp_iff (U : X.Opens) (x : U) :
+    IsStacksEtaleAt (U.ι ≫ f) x ↔ IsStacksEtaleAt f x.1 :=
+  isStacksEtaleAt_comp_iff_of_isOpenImmersion U.ι x
 
 end Etale
 
@@ -272,8 +272,8 @@ set_option backward.isDefEq.respectTransparency false in
 /-- `f` is unramified at `x` (Stacks) iff on some open neighbourhood of `x` it is locally
 of finite type and formally unramified (Mathlib's `LocallyOfFiniteType`,
 `FormallyUnramified`). -/
-theorem stacksUnramifiedAt_iff_exists (x : X) :
-    StacksUnramifiedAt f x ↔
+theorem isStacksUnramifiedAt_iff_exists (x : X) :
+    IsStacksUnramifiedAt f x ↔
       ∃ U : X.Opens, x ∈ U ∧ LocallyOfFiniteType (U.ι ≫ f) ∧ FormallyUnramified (U.ι ≫ f) := by
   have := HasRingHomProperty.inf (P := @LocallyOfFiniteType) (P' := @FormallyUnramified)
   exact HasRingHomProperty.exists_appLE_iff_exists_comp_ι
@@ -283,37 +283,37 @@ theorem stacksUnramifiedAt_iff_exists (x : X) :
 point; in Mathlib this is `LocallyOfFiniteType f ∧ FormallyUnramified f`. -/
 @[stacks 02G4 "third clause: unramified morphism, as Mathlib's `LocallyOfFiniteType` and \
   `FormallyUnramified`"]
-theorem forall_stacksUnramifiedAt_iff :
-    (∀ x, StacksUnramifiedAt f x) ↔ LocallyOfFiniteType f ∧ FormallyUnramified f := by
+theorem forall_isStacksUnramifiedAt_iff :
+    (∀ x, IsStacksUnramifiedAt f x) ↔ LocallyOfFiniteType f ∧ FormallyUnramified f := by
   have := HasRingHomProperty.inf (P := @LocallyOfFiniteType) (P' := @FormallyUnramified)
-  simp_rw [stacksUnramifiedAt_iff_exists]
+  simp_rw [isStacksUnramifiedAt_iff_exists]
   exact (IsZariskiLocalAtSource.iff_forall_exists_comp_ι
     (P := @LocallyOfFiniteType ⊓ @FormallyUnramified)).symm
 
 /-- The unramified locus `{x | f is unramified at x}` is open. -/
-theorem isOpen_setOf_stacksUnramifiedAt : IsOpen {x : X | StacksUnramifiedAt f x} := by
-  simp_rw [stacksUnramifiedAt_iff_exists]
+theorem isOpen_setOf_isStacksUnramifiedAt : IsOpen {x : X | IsStacksUnramifiedAt f x} := by
+  simp_rw [isStacksUnramifiedAt_iff_exists]
   exact IsZariskiLocalAtSource.isOpen_setOf_exists_comp_ι
     (P := @LocallyOfFiniteType ⊓ @FormallyUnramified)
 
 /-- Unramifiedness at a point is insensitive to precomposition with open immersions. -/
-theorem stacksUnramifiedAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
+theorem isStacksUnramifiedAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
     [IsOpenImmersion i] (z : Z) :
-    StacksUnramifiedAt (i ≫ f) z ↔ StacksUnramifiedAt f (i z) := by
+    IsStacksUnramifiedAt (i ≫ f) z ↔ IsStacksUnramifiedAt f (i z) := by
   have := HasRingHomProperty.inf (P := @LocallyOfFiniteType) (P' := @FormallyUnramified)
-  rw [stacksUnramifiedAt_iff_exists, stacksUnramifiedAt_iff_exists]
+  rw [isStacksUnramifiedAt_iff_exists, isStacksUnramifiedAt_iff_exists]
   exact IsZariskiLocalAtSource.exists_comp_ι_comp_iff
     (P := @LocallyOfFiniteType ⊓ @FormallyUnramified) i z
 
 /-- **Stalk criterion.** `f` is unramified at `x` iff `f` is locally of finite type near `x`
 and the stalk map `𝒪_{Y,f x} → 𝒪_{X,x}` is formally unramified. -/
-theorem stacksUnramifiedAt_iff_stalkMap (x : X) :
-    StacksUnramifiedAt f x ↔ (∃ U : X.Opens, x ∈ U ∧ LocallyOfFiniteType (U.ι ≫ f)) ∧
+theorem isStacksUnramifiedAt_iff_stalkMap (x : X) :
+    IsStacksUnramifiedAt f x ↔ (∃ U : X.Opens, x ∈ U ∧ LocallyOfFiniteType (U.ι ≫ f)) ∧
       (f.stalkMap x).hom.FormallyUnramified := by
   constructor
   · intro h
-    obtain ⟨U, hx, hU, -⟩ := (stacksUnramifiedAt_iff_exists x).1 h
-    exact ⟨⟨U, hx, hU⟩, formallyUnramified_stalkMap_of_stacksUnramifiedAt h⟩
+    obtain ⟨U, hx, hU, -⟩ := (isStacksUnramifiedAt_iff_exists x).1 h
+    exact ⟨⟨U, hx, hU⟩, formallyUnramified_stalkMap_of_isStacksUnramifiedAt h⟩
   · rintro ⟨⟨U, hxU, hU⟩, hst⟩
     obtain ⟨V, hV, hfx, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.mp Y.isBasis_affineOpens
       (TopologicalSpace.Opens.mem_top (f x))
@@ -337,10 +337,10 @@ theorem stacksUnramifiedAt_iff_stalkMap (x : X) :
       exact hun.formallyUnramified
 
 /-- Étale at `x` implies unramified at `x`. -/
-theorem StacksEtaleAt.stacksUnramifiedAt {x : X} (h : StacksEtaleAt f x) :
-    StacksUnramifiedAt f x := by
-  obtain ⟨U, hx, hU⟩ := (stacksEtaleAt_iff_exists_etale x).1 h
-  exact (stacksUnramifiedAt_iff_exists x).2 ⟨U, hx, inferInstance, inferInstance⟩
+theorem IsStacksEtaleAt.isStacksUnramifiedAt {x : X} (h : IsStacksEtaleAt f x) :
+    IsStacksUnramifiedAt f x := by
+  obtain ⟨U, hx, hU⟩ := (isStacksEtaleAt_iff_exists_etale x).1 h
+  exact (isStacksUnramifiedAt_iff_exists x).2 ⟨U, hx, inferInstance, inferInstance⟩
 
 end Unramified
 
@@ -370,8 +370,8 @@ theorem quasiFiniteAt_iff_appLE {x : X} (V : Y.Opens) (hV : IsAffineOpen V) (U :
 
 /-- `f` is quasi-finite at `x` (Stacks) iff `f` is locally of finite type near `x` and
 quasi-finite at `x` in Mathlib's stalk sense (`Scheme.Hom.QuasiFiniteAt`). -/
-theorem stacksQuasiFiniteAt_iff (x : X) :
-    StacksQuasiFiniteAt f x ↔
+theorem isStacksQuasiFiniteAt_iff (x : X) :
+    IsStacksQuasiFiniteAt f x ↔
       (∃ U : X.Opens, x ∈ U ∧ LocallyOfFiniteType (U.ι ≫ f)) ∧ f.QuasiFiniteAt x := by
   constructor
   · rintro ⟨U, hU, V, hV, e, hx, hft, hqf⟩
@@ -393,9 +393,9 @@ theorem stacksQuasiFiniteAt_iff (x : X) :
 set_option backward.isDefEq.respectTransparency false in
 /-- For `f` locally of finite type, Stacks' quasi-finiteness at `x` is exactly Mathlib's
 `f.QuasiFiniteAt x`. -/
-theorem stacksQuasiFiniteAt_iff_quasiFiniteAt [LocallyOfFiniteType f] (x : X) :
-    StacksQuasiFiniteAt f x ↔ f.QuasiFiniteAt x := by
-  rw [stacksQuasiFiniteAt_iff]
+theorem isStacksQuasiFiniteAt_iff_quasiFiniteAt [LocallyOfFiniteType f] (x : X) :
+    IsStacksQuasiFiniteAt f x ↔ f.QuasiFiniteAt x := by
+  rw [isStacksQuasiFiniteAt_iff]
   exact and_iff_right ⟨⊤, trivial, IsZariskiLocalAtSource.comp ‹_› _⟩
 
 -- Needed (Mathlib v4.35): instance search for `IsZariskiLocalAtSource @Etale` or
@@ -406,9 +406,9 @@ quasi-finite at every point. Mathlib's `LocallyQuasiFinite` omits the finite-typ
 the Stacks notion is `LocallyOfFiniteType f ∧ LocallyQuasiFinite f`. -/
 @[stacks 01TD "second clause: locally quasi-finite, as Mathlib's `LocallyOfFiniteType` and \
   `LocallyQuasiFinite`"]
-theorem forall_stacksQuasiFiniteAt_iff :
-    (∀ x, StacksQuasiFiniteAt f x) ↔ LocallyOfFiniteType f ∧ LocallyQuasiFinite f := by
-  simp_rw [stacksQuasiFiniteAt_iff]
+theorem forall_isStacksQuasiFiniteAt_iff :
+    (∀ x, IsStacksQuasiFiniteAt f x) ↔ LocallyOfFiniteType f ∧ LocallyQuasiFinite f := by
+  simp_rw [isStacksQuasiFiniteAt_iff]
   constructor
   · intro h
     have : LocallyOfFiniteType f :=
@@ -418,22 +418,22 @@ theorem forall_stacksQuasiFiniteAt_iff :
     exact ⟨⟨⊤, trivial, IsZariskiLocalAtSource.comp h₁ _⟩, f.quasiFiniteAt x⟩
 
 /-- Unramified at `x` implies quasi-finite at `x`. -/
-theorem StacksUnramifiedAt.stacksQuasiFiniteAt {x : X} (h : StacksUnramifiedAt f x) :
-    StacksQuasiFiniteAt f x := by
+theorem IsStacksUnramifiedAt.isStacksQuasiFiniteAt {x : X} (h : IsStacksUnramifiedAt f x) :
+    IsStacksQuasiFiniteAt f x := by
   obtain ⟨U, hU, V, hV, e, hx, hft, hfu⟩ := h
   refine ⟨U, hU, V, hV, e, hx, hft, ?_⟩
   algebraize [(f.appLE V U e).hom]
   exact inferInstanceAs (Algebra.QuasiFinite Γ(Y, V) (Localization.AtPrime _))
 
 /-- Étale at `x` implies quasi-finite at `x`. -/
-theorem StacksEtaleAt.stacksQuasiFiniteAt {x : X} (h : StacksEtaleAt f x) :
-    StacksQuasiFiniteAt f x :=
-  h.stacksUnramifiedAt.stacksQuasiFiniteAt
+theorem IsStacksEtaleAt.isStacksQuasiFiniteAt {x : X} (h : IsStacksEtaleAt f x) :
+    IsStacksQuasiFiniteAt f x :=
+  h.isStacksUnramifiedAt.isStacksQuasiFiniteAt
 
 /-- The quasi-finite locus `{x | f is quasi-finite at x}` is open (via Mathlib's
 `Scheme.Hom.isOpen_quasiFiniteAt`, a consequence of Zariski's main theorem). -/
-theorem isOpen_setOf_stacksQuasiFiniteAt : IsOpen {x : X | StacksQuasiFiniteAt f x} := by
-  simp_rw [stacksQuasiFiniteAt_iff]
+theorem isOpen_setOf_isStacksQuasiFiniteAt : IsOpen {x : X | IsStacksQuasiFiniteAt f x} := by
+  simp_rw [isStacksQuasiFiniteAt_iff]
   refine isOpen_iff_forall_mem_open.2 fun x ⟨⟨U, hxU, hU⟩, hx⟩ ↦
     ⟨U.ι '' {y | (U.ι ≫ f).QuasiFiniteAt y}, ?_,
       U.ι.isOpenEmbedding.isOpenMap _ (U.ι ≫ f).isOpen_quasiFiniteAt, ⟨x, hxU⟩, ?_, rfl⟩
@@ -445,10 +445,10 @@ theorem isOpen_setOf_stacksQuasiFiniteAt : IsOpen {x : X | StacksQuasiFiniteAt f
 -- `(@LocallyOfFiniteType ⊓ @FormallyUnramified).IsMultiplicative` fails without it.
 set_option backward.isDefEq.respectTransparency false in
 /-- Quasi-finiteness at a point is insensitive to precomposition with open immersions. -/
-theorem stacksQuasiFiniteAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
+theorem isStacksQuasiFiniteAt_comp_iff_of_isOpenImmersion {Z : Scheme.{u}} (i : Z ⟶ X)
     [IsOpenImmersion i] (z : Z) :
-    StacksQuasiFiniteAt (i ≫ f) z ↔ StacksQuasiFiniteAt f (i z) := by
-  rw [stacksQuasiFiniteAt_iff, stacksQuasiFiniteAt_iff,
+    IsStacksQuasiFiniteAt (i ≫ f) z ↔ IsStacksQuasiFiniteAt f (i z) := by
+  rw [isStacksQuasiFiniteAt_iff, isStacksQuasiFiniteAt_iff,
     IsZariskiLocalAtSource.exists_comp_ι_comp_iff (P := @LocallyOfFiniteType) i z,
     Scheme.Hom.quasiFiniteAt_comp_iff_of_isOpenImmersion]
 
@@ -466,7 +466,7 @@ normal domain, `𝒪_{Y,f x}` is regular, `f` is locally of finite type near `x`
 formally unramified at every specialization `x' ⤳ x` with `dim 𝒪_{X,x'} = 1`. Then `f` is
 étale (`Etale`) on an open neighbourhood of `x`.
 
-This is `stacksEtaleAt_of_zariskiNagataPurity` (the Stacks-literal statement, which also
+This is `isStacksEtaleAt_of_zariskiNagataPurity` (the Stacks-literal statement, which also
 carries the tag) transported along the bridges of this file; it is the form intended for reuse. -/
 @[stacks 0BMB "Mathlib vocabulary: normal domain stalk, stalkwise formally unramified, \
   conclusion Etale on a neighbourhood"]
@@ -480,10 +480,10 @@ theorem exists_etale_of_zariskiNagataPurity [IsLocallyNoetherian X] [IsLocallyNo
       (f.stalkMap x').hom.FormallyUnramified) :
     ∃ U : X.Opens, x ∈ U ∧ Etale (U.ι ≫ f) := by
   obtain ⟨U, hxU, hU⟩ := hft
-  rw [← stacksEtaleAt_iff_exists_etale]
-  exact stacksEtaleAt_of_zariskiNagataPurity f x IsStacksNormalRing.of_isDomain ‹_›
-    ((stacksQuasiFiniteAt_iff x).2 ⟨⟨U, hxU, hU⟩, hqf⟩) hdim hpos fun x' hx' h1 ↦
-      (stacksUnramifiedAt_iff_stalkMap x').2 ⟨⟨U, hx'.mem_open U.2 hxU, hU⟩, hunr x' hx' h1⟩
+  rw [← isStacksEtaleAt_iff_exists_etale]
+  exact isStacksEtaleAt_of_zariskiNagataPurity f x IsStacksNormalRing.of_isDomain ‹_›
+    ((isStacksQuasiFiniteAt_iff x).2 ⟨⟨U, hxU, hU⟩, hqf⟩) hdim hpos fun x' hx' h1 ↦
+      (isStacksUnramifiedAt_iff_stalkMap x').2 ⟨⟨U, hx'.mem_open U.2 hxU, hU⟩, hunr x' hx' h1⟩
 
 -- Needed (Mathlib v4.35): instance search for `IsZariskiLocalAtSource @Etale` or
 -- `(@LocallyOfFiniteType ⊓ @FormallyUnramified).IsMultiplicative` fails without it.

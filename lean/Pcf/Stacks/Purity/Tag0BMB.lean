@@ -49,7 +49,7 @@ The hypotheses `h033C` (Stacks Tag `033C`, normality ascends along étale maps, 
 `EtaleNormalAscent`) and `h0BMA` (Stacks Tag `0BMA`, finite normal punctured étale purity over
 regular local rings of dimension `≥ 2`) are both proved; `zariskiNagataPurity` (in
 `Pcf.Stacks.Purity.Tag0BMA`) discharges them and carries the Stacks `0BMB` attribute. -/
-theorem zariskiNagataPurity_of_inputs
+theorem zariskiNagataPurity_of_etaleNormalAscent
     (h033C : EtaleNormalAscent.{u})
     (h0BMA : ∀ (A : Type u) [CommRing A] [IsRegularLocalRing A],
       2 ≤ ringKrullDim A → FiniteNormalPuncturedEtalePurity A)
@@ -82,16 +82,16 @@ theorem zariskiNagataPurity_of_inputs
         exact hlt
       exact ih _ hlt' R₁ S₁ hR₁ hS₁ hft₁ w₁ (ENat.natCast_toNat hne).symm
 
-/-- The Palomar-facing form of `zariskiNagataPurity_of_inputs`: the compact statement
+/-- The Palomar-facing form of `zariskiNagataPurity_of_etaleNormalAscent`: the compact statement
 `Pcf.Palomar.ZariskiNagataPurity`, under the same upstream hypotheses `h033C` and `h0BMA`. -/
-theorem palomar_zariskiNagataPurity_of_inputs
+theorem _root_.Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
     (h033C : EtaleNormalAscent.{u})
     (h0BMA : ∀ (A : Type u) [CommRing A] [IsRegularLocalRing A],
       2 ≤ ringKrullDim A → FiniteNormalPuncturedEtalePurity A)
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] :
     Pcf.Palomar.ZariskiNagataPurity R S := by
   intro hR hS hft w hw
-  exact zariskiNagataPurity_of_inputs h033C h0BMA R S hR hS hft w
+  exact Pcf.Stacks.zariskiNagataPurity_of_etaleNormalAscent h033C h0BMA R S hR hS hft w
     ⟨hw.source_isDomain, hw.source_isIntegrallyClosed, hw.target_isRegular, hw.quasiFinite,
       hw.equalDimension, hw.positiveDimension, hw.unramifiedCodimensionOne⟩
 

@@ -57,7 +57,7 @@ theorem mem_puncturedSpectrum_iff
   simp
 
 @[simp]
-theorem closedPoint_not_mem_puncturedSpectrum
+theorem closedPoint_notMem_puncturedSpectrum
     (R : Type u) [CommRing R] [IsLocalRing R] :
     IsLocalRing.closedPoint R ∉ puncturedSpectrum R := by
   simp
@@ -214,7 +214,7 @@ def PuncturedFiniteEtaleMorphismsExtend : Prop :=
 
 omit [IsNoetherianRing R] in
 /-- The morphism-extension property is exactly sufficient to make restriction fully faithful. -/
-noncomputable def restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful
+noncomputable def restrictFiniteEtaleToPuncturedSpectrumFullyFaithful
     (hMorphisms : PuncturedFiniteEtaleMorphismsExtend R) :
     (restrictFiniteEtaleToPuncturedSpectrum R).FullyFaithful where
   preimage {X Y} f := Classical.choose ((hMorphisms X Y).2 f)
@@ -236,7 +236,7 @@ noncomputable def restrictFiniteEtaleToPuncturedSpectrumEquivalence
     FiniteEtaleCover (Spec (.of R)) ≌ FiniteEtaleCover (puncturedSpectrumScheme R) := by
   let F := restrictFiniteEtaleToPuncturedSpectrum R
   let hFullyFaithful : F.FullyFaithful :=
-    restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful R hMorphisms
+    restrictFiniteEtaleToPuncturedSpectrumFullyFaithful R hMorphisms
   let hEssSurj : F.EssSurj :=
     restrictFiniteEtaleToPuncturedSpectrum_essSurj R hExtension hRecovery
   letI : F.Full := hFullyFaithful.full

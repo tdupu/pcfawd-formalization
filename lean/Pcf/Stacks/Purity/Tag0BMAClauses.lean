@@ -269,7 +269,7 @@ theorem finiteNormalPuncturedEtalePurity_of_puncturedSpectrumPurity
       (.of R) hdim C
   let eΓ := (puncturedFiniteEtaleGlobalSections R).mapIso eY
   let eB := (finiteNormalPuncturedEtaleAlgebraProperty R).ι.mapIso
-    ((tag0BM9_finiteNormalAlgebraRecoveryIso (.of R) hdim).app B')
+    ((puncturedFiniteEtaleCoverEquivalence_counitIso (.of R) hdim).app B')
   let eCB : C ≅ B :=
     (eUnitΓ ≪≫ asIso ((puncturedSectionsSpecAdjunction (.of R)).counit.app C)).symm ≪≫
       eΓ ≪≫ eB

@@ -117,7 +117,7 @@ end IsStacksNormalRing
 
 /-- Integral closures along a base-ring isomorphism have the same underlying elements of the
 ambient algebra. -/
-noncomputable def integralClosure_ringEquiv_of_baseRingEquiv
+noncomputable def integralClosureRingEquivOfBaseRingEquiv
     (R S T : Type*) [CommRing R] [CommRing S] [CommRing T]
     [Algebra R T] [Algebra S T]
     (φ : R ≃+* S)
@@ -141,6 +141,6 @@ theorem integralClosure_isStacksNormalRing_of_baseRingEquiv
       IsStacksNormalRing (integralClosure S T) := by
   intro h
   exact IsStacksNormalRing.of_ringEquiv
-    (integralClosure_ringEquiv_of_baseRingEquiv R S T φ hcomp) h
+    (integralClosureRingEquivOfBaseRingEquiv R S T φ hcomp) h
 
 end Pcf.Stacks

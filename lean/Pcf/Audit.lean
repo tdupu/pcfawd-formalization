@@ -294,7 +294,7 @@ finite-presentation case of Tag 036W by `Pcf.Stacks.etaleLocalOnSource`. Everyth
 printed here reports only the standard axioms, as it must: the assumed inputs are
 hypotheses. -/
 
-#print axioms Pcf.Stacks.ZariskiNagataPurityInputsAt
+#print axioms Pcf.Stacks.ZariskiNagataPurityHypothesesAt
 #print axioms Pcf.Stacks.HasZariskiNagataPurityAt
 #print axioms Pcf.Stacks.ZariskiNagataPurity.of_etale
 #print axioms Pcf.Stacks.algebraMap_flat_iff_localRingHom_flat
@@ -375,7 +375,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_coprime_factorization_of_map_eq_X_pow_mul_X_sub_one
 #print axioms Pcf.Stacks.FiniteNormalPuncturedEtalePurity
 #print axioms Pcf.Stacks.ZariskiNagataFiniteLocalModel
-#print axioms Pcf.Stacks.exists_tag0BMB_finiteComponent
+#print axioms Pcf.Stacks.exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt
 #print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_finiteLocalModel
 #print axioms Pcf.Stacks.zariskiNagataPurity_of_finiteLocalModels
 #print axioms Pcf.Stacks.finiteEtaleCover_sections_finite_etale
@@ -398,14 +398,14 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedSectionsSpecAdjunction_counit_isIso
 #print axioms
   Pcf.Stacks.puncturedGlobalSections_finiteNormalPuncturedEtaleAlgebraProperty
-#print axioms Pcf.Stacks.tag0BM9Adjunction
-#print axioms Pcf.Stacks.tag0BM9Adjunction_counit_isIso
-#print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover_fullyFaithful
+#print axioms Pcf.Stacks.puncturedFiniteEtaleSectionsAdjunction
+#print axioms Pcf.Stacks.puncturedFiniteEtaleSectionsAdjunction_counit_isIso
+#print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCoverFullyFaithful
 #print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover_essSurj
-#print axioms Pcf.Stacks.tag0BM9Equivalence
-#print axioms Pcf.Stacks.tag0BM9_puncturedCoverRecoveryIso
-#print axioms Pcf.Stacks.tag0BM9_finiteNormalAlgebraRecoveryIso
-#print axioms Pcf.Stacks.tag0BM9_puncturedGlobalSections_fullyFaithful
+#print axioms Pcf.Stacks.puncturedFiniteEtaleCoverEquivalence
+#print axioms Pcf.Stacks.puncturedFiniteEtaleCoverEquivalence_unitIso
+#print axioms Pcf.Stacks.puncturedFiniteEtaleCoverEquivalence_counitIso
+#print axioms Pcf.Stacks.puncturedGlobalSectionsFullyFaithfulOfTwoLeRingKrullDim
 #print axioms Pcf.Stacks.minimalPrime_under_eq_bot_of_isTorsionFree
 #print axioms Pcf.Stacks.two_le_height_of_liesOver_of_finite_torsionFree
 #print axioms Pcf.Stacks.exists_associatedPrime_liesOver_closedPoint
@@ -422,13 +422,13 @@ hypotheses. -/
 #print axioms Pcf.Stacks.hasZariskiNagataPurityAt_of_height_eq_one
 #print axioms Pcf.Stacks.exists_etale_finite_component_of_quasiFiniteAt
 #print axioms Pcf.Stacks.mem_puncturedSpectrum_iff
-#print axioms Pcf.Stacks.closedPoint_not_mem_puncturedSpectrum
+#print axioms Pcf.Stacks.closedPoint_notMem_puncturedSpectrum
 #print axioms Pcf.Stacks.puncturedFiniteEtaleRecovery
 #print axioms Pcf.Stacks.puncturedFiniteEtaleExtensionCover
 #print axioms Pcf.Stacks.puncturedFiniteEtaleRecoveryIso
 #print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrum_essSurj
 #print axioms Pcf.Stacks.PuncturedFiniteEtaleMorphismsExtend
-#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrum_fullyFaithful
+#print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrumFullyFaithful
 #print axioms Pcf.Stacks.restrictFiniteEtaleToPuncturedSpectrumEquivalence
 #print axioms Pcf.Stacks.IsStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.isReduced
@@ -438,8 +438,8 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteNormalAlgebraToPuncturedCover
 #print axioms Pcf.Stacks.puncturedCoverRecoveryIso
 #print axioms Pcf.Stacks.PuncturedGlobalSectionsMorphismsExtend
-#print axioms Pcf.Stacks.tag0BM9EquivalenceOfMorphismExtension
-#print axioms Pcf.Stacks.tag0BM9EquivalenceOfRecovery
+#print axioms Pcf.Stacks.puncturedFiniteEtaleCoverEquivalenceOfMorphismExtension
+#print axioms Pcf.Stacks.puncturedFiniteEtaleCoverEquivalenceOfRecovery
 #print axioms Pcf.Stacks.IsIntegralClosure.isDomain_of_isIntegralClosureInField
 #print axioms Pcf.Stacks.IsIntegralClosure.isIntegrallyClosed_of_finiteExtension
 #print axioms Pcf.Stacks.IsIntegralClosure.isStacksNormalRing_of_finiteExtension
@@ -450,7 +450,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.exists_nonzero_mem_maximalIdeal_of_one_le_ringKrullDim
 #print axioms Pcf.Stacks.exists_regularSequence_one_of_one_le_ringKrullDim
 #print axioms Pcf.Stacks.PrincipalQuotientsAvoidClosedPoint
-#print axioms Pcf.Stacks.maximalIdeal_not_mem_associatedPrimes_iff_exists_isSMulRegular_quotient
+#print axioms Pcf.Stacks.maximalIdeal_notMem_associatedPrimes_iff_exists_isSMulRegular_quotient
 #print axioms Pcf.Stacks.exists_regularSequence_two_of_principalQuotient_not_associated
 #print axioms Pcf.Stacks.maximalIdeal_not_isPrincipal_of_two_le_ringKrullDim
 #print axioms Pcf.Stacks.principalQuotientsAvoidClosedPoint_of_two_le_ringKrullDim
@@ -468,7 +468,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.genericFiber_maximalSpectrum_finite
 #print axioms Pcf.Stacks.genericFiber_component_isField
 #print axioms Pcf.Stacks.genericFiber_isReduced
-#print axioms Pcf.Stacks.genericFiber_equivPi
+#print axioms Pcf.Stacks.genericFiberEquivPi
 #print axioms Pcf.Stacks.genericPoint_mem_puncturedSpectrum
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_isAffine
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_finite_appTop
@@ -485,7 +485,7 @@ hypotheses. -/
 #print axioms Pcf.Stacks.normalizationIsoOfSourceIso
 #print axioms Pcf.Stacks.normalizationRestrictIsoOfOpenImmersion
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationDesc_isIso
-#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationRestrictIso
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberNormalizationRestrictIso
 #print axioms Pcf.Stacks.puncturedCover_baseGenericPullback_algebraEtale
 #print axioms Pcf.Stacks.puncturedCover_baseGenericPullback_algebraMap
 #print axioms
@@ -494,12 +494,12 @@ hypotheses. -/
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_fromNormalization_finite_appTop
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSections_finite
 #print axioms Pcf.Stacks.puncturedCover_genericFiber_normalization_isFinite
-#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecMap
-#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecRestrictIso
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberNormalizationSpecMap
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberNormalizationSpecRestrictIso
 #print axioms Pcf.Stacks.normalizationIsoOfSourceIsoEq
 #print axioms Pcf.Stacks.normalizationIsoOfSourceIsoEq_hom_fromNormalization
 #print axioms Pcf.Stacks.normalizationRestrictOverIsoOfOpenImmersion
-#print axioms Pcf.Stacks.puncturedCover_genericFiber_normalizationSpecRestrictOverIso
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberNormalizationSpecRestrictOverIso
 #print axioms
   Pcf.Stacks.puncturedCover_genericFiber_normalizationSections_isTorsionFree
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalPuncturedEtaleAlgebra
@@ -507,15 +507,15 @@ hypotheses. -/
 #print axioms Pcf.Stacks.finiteNormalModel_moduleFinite
 #print axioms Pcf.Stacks.finiteNormalModel_isStacksNormalRing
 #print axioms Pcf.Stacks.IsStacksNormalRing.of_ringEquiv
-#print axioms Pcf.Stacks.integralClosure_ringEquiv_of_baseRingEquiv
+#print axioms Pcf.Stacks.integralClosureRingEquivOfBaseRingEquiv
 #print axioms Pcf.Stacks.integralClosure_isStacksNormalRing_of_baseRingEquiv
-#print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_equiv
+#print axioms Pcf.Stacks.finiteSeparableProductIntegralClosureEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_integralClosure_isStacksNormalRing
 #print axioms Pcf.Stacks.finiteEtaleAlgebra_integralClosure_finite
 #print axioms Pcf.Stacks.integralClosure_finite_of_baseRingEquiv
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_integralClosure_isStacksNormalRing
-#print axioms Pcf.Stacks.finiteNormalModel_genericFiberEquiv
+#print axioms Pcf.Stacks.finiteNormalModelGenericFiberEquiv
 #print axioms Pcf.Stacks.finiteSeparableProduct_integralClosure_finite
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericModel
 #print axioms Pcf.Stacks.puncturedCover_exists_finiteNormalGenericSchemeModel
@@ -527,18 +527,18 @@ hypotheses. -/
 #print axioms Pcf.Stacks.genericPoint_toPuncturedSpectrum_schemeTheoreticallyDominant
 #print axioms Pcf.Stacks.genericPoint_toPuncturedSpectrum_quasiCompact
 #print axioms Pcf.Stacks.puncturedCover_genericBaseChange_isIso
-#print axioms Pcf.Stacks.puncturedCoverGenericFiber_iso_basePullback
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberIsoBasePullback
 #print axioms Pcf.Stacks.puncturedCover_genericPullback_sections_injective
-#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberSectionMap
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_injective
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionMap_base
-#print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionAlgHom
+#print axioms Pcf.Stacks.puncturedCoverGenericFiberSectionAlgHom
 #print axioms Pcf.Stacks.puncturedCoverGenericFiber_sectionAlgHom_injective
 #print axioms Pcf.Stacks.puncturedCover_normalization_isAffine
-#print axioms Pcf.Stacks.puncturedCover_normalizationSpecMap
-#print axioms Pcf.Stacks.puncturedCover_normalizationRestrictIso
-#print axioms Pcf.Stacks.puncturedCover_normalizationSpecRestrictIso
-#print axioms Pcf.Stacks.puncturedCover_normalizationSectionsIso
+#print axioms Pcf.Stacks.puncturedCoverNormalizationSpecMap
+#print axioms Pcf.Stacks.puncturedCoverNormalizationRestrictIso
+#print axioms Pcf.Stacks.puncturedCoverNormalizationSpecRestrictIso
+#print axioms Pcf.Stacks.puncturedCoverNormalizationSectionsIso
 #print axioms Pcf.Stacks.puncturedCover_normalizationIntegralClosure_finite
 #print axioms Pcf.Stacks.puncturedCover_normalizationSections_isReduced
 #print axioms Pcf.Stacks.puncturedCover_normalization_isReduced
@@ -1581,9 +1581,9 @@ Every non-internal theorem of the modules added in the purity/Abhyankar run
 Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 
 #print axioms Pcf.Stacks.zariskiNagataPurity
-#print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
+#print axioms Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
-#print axioms Pcf.Stacks.palomar_zariskiNagataPurity
+#print axioms Pcf.Palomar.zariskiNagataPurity
 #print axioms Pcf.Stacks.abhyankarLemma
 #print axioms Pcf.Palomar.abhyankarLemma
 #print axioms Pcf.Stacks.abhyankarLemmaTame
@@ -1920,8 +1920,8 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.puncturedSpectrumPurity_of_isRegularLocalRing_of_isAdicComplete
 
 -- Pcf.Stacks.Purity.Tag0BMB
-#print axioms Pcf.Stacks.palomar_zariskiNagataPurity_of_inputs
-#print axioms Pcf.Stacks.zariskiNagataPurity_of_inputs
+#print axioms Pcf.Palomar.zariskiNagataPurity_of_etaleNormalAscent
+#print axioms Pcf.Stacks.zariskiNagataPurity_of_etaleNormalAscent
 
 -- Pcf.Stacks.Purity.Tag0BMBLocalModel
 #print axioms Pcf.Stacks.faithfullyFlat_localization_atPrime
@@ -1943,10 +1943,10 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 -- Pcf.Stacks.Purity.Tag0BMBScheme
 #print axioms Pcf.Stacks.IsStacksNormalRing.isDomain_isIntegrallyClosed_of_isLocalRing
 #print axioms Pcf.Stacks.formallyUnramified_stalkMap_iff
-#print axioms Pcf.Stacks.formallyUnramified_stalkMap_of_stacksUnramifiedAt
+#print axioms Pcf.Stacks.formallyUnramified_stalkMap_of_isStacksUnramifiedAt
 #print axioms Pcf.Stacks.isRegularLocalRing_atPrime_of_eq
-#print axioms Pcf.Stacks.stacksEtaleAt_of_isEtaleAt
-#print axioms Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity
+#print axioms Pcf.Stacks.isStacksEtaleAt_of_isEtaleAt
+#print axioms Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity
 
 -- Pcf.Stacks.Purity.Tag0BMBSchemeAPI
 #print axioms Pcf.Stacks.HasRingHomProperty.resLE_iff_appLE
@@ -1960,28 +1960,28 @@ Abhyankar modules now imported by `Pcf`.  The headline theorems are first. -/
 #print axioms Pcf.Stacks.IsZariskiLocalAtSource.exists_comp_ι_comp_iff
 #print axioms Pcf.Stacks.mem_basicOpen_of_notMem_primeIdealOf
 #print axioms Pcf.Stacks.appLE_basicOpen_of_away
-#print axioms Pcf.Stacks.stacksEtaleAt_iff_exists_etale
-#print axioms Pcf.Stacks.StacksEtaleAt.etale_appLE
+#print axioms Pcf.Stacks.isStacksEtaleAt_iff_exists_etale
+#print axioms Pcf.Stacks.IsStacksEtaleAt.etale_appLE
 #print axioms Pcf.Stacks.etale_appLE_of_le
-#print axioms Pcf.Stacks.forall_stacksEtaleAt_iff
-#print axioms Pcf.Stacks.stacksEtaleAt_of_etale
-#print axioms Pcf.Stacks.isOpen_setOf_stacksEtaleAt
-#print axioms Pcf.Stacks.stacksEtaleAt_comp_iff_of_isOpenImmersion
-#print axioms Pcf.Stacks.stacksEtaleAt_ι_comp_iff
-#print axioms Pcf.Stacks.stacksUnramifiedAt_iff_exists
-#print axioms Pcf.Stacks.forall_stacksUnramifiedAt_iff
-#print axioms Pcf.Stacks.isOpen_setOf_stacksUnramifiedAt
-#print axioms Pcf.Stacks.stacksUnramifiedAt_comp_iff_of_isOpenImmersion
-#print axioms Pcf.Stacks.stacksUnramifiedAt_iff_stalkMap
-#print axioms Pcf.Stacks.StacksEtaleAt.stacksUnramifiedAt
+#print axioms Pcf.Stacks.forall_isStacksEtaleAt_iff
+#print axioms Pcf.Stacks.isStacksEtaleAt_of_etale
+#print axioms Pcf.Stacks.isOpen_setOf_isStacksEtaleAt
+#print axioms Pcf.Stacks.isStacksEtaleAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.isStacksEtaleAt_ι_comp_iff
+#print axioms Pcf.Stacks.isStacksUnramifiedAt_iff_exists
+#print axioms Pcf.Stacks.forall_isStacksUnramifiedAt_iff
+#print axioms Pcf.Stacks.isOpen_setOf_isStacksUnramifiedAt
+#print axioms Pcf.Stacks.isStacksUnramifiedAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.isStacksUnramifiedAt_iff_stalkMap
+#print axioms Pcf.Stacks.IsStacksEtaleAt.isStacksUnramifiedAt
 #print axioms Pcf.Stacks.quasiFiniteAt_iff_appLE
-#print axioms Pcf.Stacks.stacksQuasiFiniteAt_iff
-#print axioms Pcf.Stacks.stacksQuasiFiniteAt_iff_quasiFiniteAt
-#print axioms Pcf.Stacks.forall_stacksQuasiFiniteAt_iff
-#print axioms Pcf.Stacks.StacksUnramifiedAt.stacksQuasiFiniteAt
-#print axioms Pcf.Stacks.StacksEtaleAt.stacksQuasiFiniteAt
-#print axioms Pcf.Stacks.isOpen_setOf_stacksQuasiFiniteAt
-#print axioms Pcf.Stacks.stacksQuasiFiniteAt_comp_iff_of_isOpenImmersion
+#print axioms Pcf.Stacks.isStacksQuasiFiniteAt_iff
+#print axioms Pcf.Stacks.isStacksQuasiFiniteAt_iff_quasiFiniteAt
+#print axioms Pcf.Stacks.forall_isStacksQuasiFiniteAt_iff
+#print axioms Pcf.Stacks.IsStacksUnramifiedAt.isStacksQuasiFiniteAt
+#print axioms Pcf.Stacks.IsStacksEtaleAt.isStacksQuasiFiniteAt
+#print axioms Pcf.Stacks.isOpen_setOf_isStacksQuasiFiniteAt
+#print axioms Pcf.Stacks.isStacksQuasiFiniteAt_comp_iff_of_isOpenImmersion
 #print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity
 #print axioms Pcf.Stacks.exists_etale_of_zariskiNagataPurity_of_locallyOfFiniteType
 

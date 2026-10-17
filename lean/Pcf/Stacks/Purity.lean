@@ -85,7 +85,7 @@ cycle). The completed proof is downstream:
   pointwise form), with axioms `[propext, Classical.choice, Quot.sound]`;
 * `Pcf.Stacks.Purity.Tag0BMB`: the `0BMB` assembly from `033C` and `0BMA`;
 * `Pcf.Stacks.Purity.HypersurfaceLiftingComplete`: `0BLM` for complete regular local rings.
-* `Pcf.Stacks.Purity.Tag0BMBScheme`: `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity`, the
+* `Pcf.Stacks.Purity.Tag0BMBScheme`: `Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity`, the
   scheme-level pointwise form of `0BMB` (morphisms of locally Noetherian schemes).
 
 All of these modules are imported by the root module `Pcf`.

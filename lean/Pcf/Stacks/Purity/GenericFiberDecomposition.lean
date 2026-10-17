@@ -66,7 +66,7 @@ theorem genericFiber_isReduced (hB : IsStacksNormalRing B) :
 
 /-- The disconnected generic fibre of a finite Stacks-normal algebra is canonically a finite
 product of its residue fields at maximal ideals. -/
-noncomputable def genericFiber_equivPi [Module.Finite R B]
+noncomputable def genericFiberEquivPi [Module.Finite R B]
     (hB : IsStacksNormalRing B) :
     (K ⊗[R] B) ≃+* ∀ q : MaximalSpectrum (K ⊗[R] B),
       (K ⊗[R] B) ⧸ q.asIdeal := by

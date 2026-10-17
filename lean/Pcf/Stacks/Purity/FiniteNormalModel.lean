@@ -71,7 +71,7 @@ theorem finiteNormalModel_isStacksNormalRing :
 
 /-- The generic fibre of the finite normal model recovers the original product of separable
 field extensions, including the empty product. -/
-noncomputable def finiteNormalModel_genericFiberEquiv :
+noncomputable def finiteNormalModelGenericFiberEquiv :
     K ⊗[R] (finiteNormalModel R K I L) ≃ₐ[K] (∀ i, L i) := by
   letI : Fintype I := Fintype.ofFinite I
   letI : DecidableEq I := Classical.decEq I
@@ -134,7 +134,7 @@ theorem finiteSeparableProduct_integralClosure_finite
 
 /-- Integral closure in a finite product of field extensions is the product of the individual
 integral closures.  This also covers an empty product. -/
-noncomputable def finiteSeparableProduct_integralClosure_equiv
+noncomputable def finiteSeparableProductIntegralClosureEquiv
     [∀ i, Algebra R (L i)] [∀ i, IsScalarTower R K (L i)] :
     (integralClosure R (∀ i, L i)) ≃ₐ[R] (∀ i, integralClosure R (L i)) := by
   letI (i : I) : Module.Finite R (integralClosure R (L i)) :=
@@ -167,7 +167,7 @@ noncomputable def finiteSeparableProduct_integralClosure_equiv
 theorem finiteSeparableProduct_integralClosure_isStacksNormalRing
     [∀ i, Algebra R (L i)] [∀ i, IsScalarTower R K (L i)] :
     IsStacksNormalRing (integralClosure R (∀ i, L i)) := by
-  let e := finiteSeparableProduct_integralClosure_equiv R K I L
+  let e := finiteSeparableProductIntegralClosureEquiv R K I L
   have hprod : IsStacksNormalRing (∀ i, integralClosure R (L i)) := by
     exact IsStacksNormalRing.pi (fun i =>
       IsIntegralClosure.isStacksNormalRing_of_finiteExtension
@@ -229,7 +229,7 @@ theorem integralClosure_finite_of_baseRingEquiv
     Module.Finite B (integralClosure B T) := by
   let C := integralClosure A T
   let D := integralClosure B T
-  let e := integralClosure_ringEquiv_of_baseRingEquiv A B T φ hcomp
+  let e := integralClosureRingEquivOfBaseRingEquiv A B T φ hcomp
   have hmap : algebraMap B D =
       e.symm.toRingHom.comp ((algebraMap A C).comp φ.symm.toRingHom) := by
     ext b

@@ -157,7 +157,7 @@ theorem finiteNormalAlgebra_openSections_bijective (hdim : 2 ≤ ringKrullDim R)
           haveI : Module.IsTorsionFree R K := inferInstance
           haveI : Module.IsTorsionFree R E :=
             Module.IsTorsionFree.trans (M := E) K
-          let f : Γ(P, ⊤) →ₐ[R] E := puncturedCoverGenericFiber_sectionAlgHom R hdim1 V
+          let f : Γ(P, ⊤) →ₐ[R] E := puncturedCoverGenericFiberSectionAlgHom R hdim1 V
           letI : Module.IsTorsionFree R Γ(P, ⊤) :=
             Function.Injective.moduleIsTorsionFree f
               (puncturedCoverGenericFiber_sectionMap_injective R hdim1 V)

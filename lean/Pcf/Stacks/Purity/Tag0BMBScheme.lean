@@ -29,15 +29,15 @@ Stacks. This file therefore states the three Stacks definitions literally, as ex
 opens `x ∈ U ⊆ X`, `V ⊆ Y` with `f(U) ⊆ V` such that the ring map `𝒪_Y(V) → 𝒪_X(U)`
 (`f.appLE V U _`) has the relevant property:
 
-* `StacksQuasiFiniteAt` — Definition 29.21.1(1) (Tag `01TD`): of finite type and quasi-finite at
+* `IsStacksQuasiFiniteAt` — Definition 29.21.1(1) (Tag `01TD`): of finite type and quasi-finite at
   the prime of `x`. Quasi-finiteness at a prime is Mathlib's `RingHom.QuasiFiniteAt` (the
-  localization is quasi-finite), the same encoding as the ring-level `ZariskiNagataPurityInputsAt`.
+  localization is quasi-finite), the same encoding as the ring-level `ZariskiNagataPurityHypothesesAt`.
   For finite-type ring maps it is equivalent to Stacks' Definition 10.122.3 ("isolated in its
   fibre"); Mathlib proves the scheme form of this equivalence as
   `Scheme.Hom.quasiFiniteAt_iff_isOpen_singleton_asFiber` (this file does not restate it).
-* `StacksUnramifiedAt` — Definition 29.36.1(1) (Tag `02G4`): the ring map is unramified, i.e. of
+* `IsStacksUnramifiedAt` — Definition 29.36.1(1) (Tag `02G4`): the ring map is unramified, i.e. of
   finite type with `Ω = 0` (`RingHom.FiniteType` and `RingHom.FormallyUnramified`).
-* `StacksEtaleAt` — Definition 29.37.1(1) (Tag `02GI`): the ring map is étale (`RingHom.Etale`: of
+* `IsStacksEtaleAt` — Definition 29.37.1(1) (Tag `02GI`): the ring map is étale (`RingHom.Etale`: of
   finite presentation and formally étale; Stacks Definition 10.143.1 asks for finite presentation
   with `H₁(NL) = 0` and `Ω = 0`, which is formal étaleness by Mathlib's
   `Algebra.formallyEtale_iff`).
@@ -60,7 +60,7 @@ finally the affine conclusion `Algebra.IsEtaleAt R w` spreads out to a basic ope
 `d = dim 𝒪_{X,x}` directly on schemes, localizing étale-locally on base and target (Descent
 `35.23.31`, `35.31.1`, More on Morphisms `37.41.1`). Here the scheme statement is instead reduced
 Zariski-locally to the affine theorem, whose proof carries out that induction at the ring level
-(`zariskiNagataPurity_of_inputs`, with the étale localization done through the algebra form
+(`zariskiNagataPurity_of_etaleNormalAscent`, with the étale localization done through the algebra form
 `00UJ`; see `Purity/Tag0BMB.lean` and `Purity/Tag0BMBLocalModel.lean`).
 -/
 
@@ -81,7 +81,7 @@ variable {X Y : Scheme.{u}}
 quasi-finite at the prime corresponding to `x`. Tag `01TD` also defines locally quasi-finite and
 quasi-finite morphisms; only the first clause, quasi-finite at `x`, is formalized here. -/
 @[stacks 01TD "first clause: quasi-finite at a point"]
-def StacksQuasiFiniteAt (f : X ⟶ Y) (x : X) : Prop :=
+def IsStacksQuasiFiniteAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (hU : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V) (hx : x ∈ U),
     (f.appLE V U hUV).hom.FiniteType ∧
@@ -93,7 +93,7 @@ vanishing module of differentials (Stacks Definition 10.151.1, Tag `00UT`; vanis
 `RingHom.FormallyUnramified`). Tag `02G4` also defines G-unramified at `x` and unramified
 morphisms; only the first clause, unramified at `x`, is formalized here. -/
 @[stacks 02G4 "first clause: unramified at a point"]
-def StacksUnramifiedAt (f : X ⟶ Y) (x : X) : Prop :=
+def IsStacksUnramifiedAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (_ : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V), x ∈ U ∧
     (f.appLE V U hUV).hom.FiniteType ∧ (f.appLE V U hUV).hom.FormallyUnramified
@@ -102,7 +102,7 @@ def StacksUnramifiedAt (f : X ⟶ Y) (x : X) : Prop :=
 `V ⊆ Y` with `f(U) ⊆ V` such that `𝒪_Y(V) → 𝒪_X(U)` is étale. Tag `02GI` also defines étale
 and standard étale morphisms; only the first clause, étale at `x`, is formalized here. -/
 @[stacks 02GI "first clause: étale at a point"]
-def StacksEtaleAt (f : X ⟶ Y) (x : X) : Prop :=
+def IsStacksEtaleAt (f : X ⟶ Y) (x : X) : Prop :=
   ∃ (U : X.Opens) (_ : IsAffineOpen U) (V : Y.Opens) (_ : IsAffineOpen V)
     (hUV : U ≤ f ⁻¹ᵁ V), x ∈ U ∧ (f.appLE V U hUV).hom.Etale
 
@@ -146,8 +146,8 @@ theorem formallyUnramified_stalkMap_iff {f : X ⟶ Y} {x : X} (U : Y.Opens)
       exact .of_restrictScalars Γ(Y, U) _ _
 
 /-- If `f` is unramified at `x` (Stacks sense), its stalk map at `x` is formally unramified. -/
-theorem formallyUnramified_stalkMap_of_stacksUnramifiedAt {f : X ⟶ Y} {x : X}
-    (h : StacksUnramifiedAt f x) : (f.stalkMap x).hom.FormallyUnramified := by
+theorem formallyUnramified_stalkMap_of_isStacksUnramifiedAt {f : X ⟶ Y} {x : X}
+    (h : IsStacksUnramifiedAt f x) : (f.stalkMap x).hom.FormallyUnramified := by
   obtain ⟨U, hU, V, hV, hUV, hx, -, hfu⟩ := h
   algebraize [(f.appLE V U hUV).hom]
   rw [formallyUnramified_stalkMap_iff V hV U hU hUV hx]
@@ -180,12 +180,12 @@ theorem appLE_basicOpen_of_away
 
 /-- If `𝒪_Y(V) → 𝒪_X(U)` is of finite presentation and étale at the prime of `x`, then `f` is
 étale at `x` in the sense of Stacks: it is étale on some basic open `D(g) ∋ x` of `U`. -/
-theorem stacksEtaleAt_of_isEtaleAt {f : X ⟶ Y} {x : X} (U : X.Opens) (hU : IsAffineOpen U)
+theorem isStacksEtaleAt_of_isEtaleAt {f : X ⟶ Y} {x : X} (U : X.Opens) (hU : IsAffineOpen U)
     (V : Y.Opens) (hV : IsAffineOpen V) (hUV : U ≤ f ⁻¹ᵁ V) (hx : x ∈ U)
     (hfp : (f.appLE V U hUV).hom.FinitePresentation)
     (h : letI := (f.appLE V U hUV).hom.toAlgebra
       Algebra.IsEtaleAt Γ(Y, V) (hU.primeIdealOf ⟨x, hx⟩).asIdeal) :
-    StacksEtaleAt f x := by
+    IsStacksEtaleAt f x := by
   algebraize [(f.appLE V U hUV).hom]
   obtain ⟨r, hrx, hr⟩ := Algebra.exists_etale_of_isEtaleAt (R := Γ(Y, V))
     (hU.primeIdealOf ⟨x, hx⟩).asIdeal
@@ -211,8 +211,8 @@ Let `f : X ⟶ Y` be a morphism of locally Noetherian schemes and `x ∈ X`, `y 
 `dim 𝒪_{X,x} = dim 𝒪_{Y,y} ≥ 1`, and `f` is unramified at every specialization `x' ⤳ x` with
 `dim 𝒪_{X,x'} = 1`. Then `f` is étale at `x`.
 
-The pointwise notions are the literal Stacks definitions `StacksQuasiFiniteAt` (29.21.1),
-`StacksUnramifiedAt` (29.36.1), `StacksEtaleAt` (29.37.1); normality is `IsStacksNormalRing`
+The pointwise notions are the literal Stacks definitions `IsStacksQuasiFiniteAt` (29.21.1),
+`IsStacksUnramifiedAt` (29.36.1), `IsStacksEtaleAt` (29.37.1); normality is `IsStacksNormalRing`
 (10.37.11) and `dim` is `ringKrullDim`.
 
 **Proof route (diverges from Stacks).** Stacks argues by induction on `d` directly on schemes,
@@ -230,18 +230,18 @@ whose own proof runs the Stacks induction at the ring level:
    and unramifiedness at `x'` passes through the stalk map
    (`formallyUnramified_stalkMap_iff`);
 4. `Pcf.Stacks.zariskiNagataPurity` gives `Algebra.IsEtaleAt R w`, which spreads out to a basic
-   open neighbourhood of `x` (`stacksEtaleAt_of_isEtaleAt`). -/
+   open neighbourhood of `x` (`isStacksEtaleAt_of_isEtaleAt`). -/
 @[stacks 0BMB]
-theorem stacksEtaleAt_of_zariskiNagataPurity [IsLocallyNoetherian X] [IsLocallyNoetherian Y]
+theorem isStacksEtaleAt_of_zariskiNagataPurity [IsLocallyNoetherian X] [IsLocallyNoetherian Y]
     (f : X ⟶ Y) (x : X)
     (hnormal : IsStacksNormalRing (X.presheaf.stalk x))
     (hregular : IsRegularLocalRing (Y.presheaf.stalk (f x)))
-    (hqf : StacksQuasiFiniteAt f x)
+    (hqf : IsStacksQuasiFiniteAt f x)
     (hdim : ringKrullDim (X.presheaf.stalk x) = ringKrullDim (Y.presheaf.stalk (f x)))
     (hpos : 1 ≤ ringKrullDim (X.presheaf.stalk x))
     (hunr : ∀ x' : X, x' ⤳ x → ringKrullDim (X.presheaf.stalk x') = 1 →
-      StacksUnramifiedAt f x') :
-    StacksEtaleAt f x := by
+      IsStacksUnramifiedAt f x') :
+    IsStacksEtaleAt f x := by
   obtain ⟨U, hU, V, hV, hUV, hx, hft, hqfat⟩ := hqf
   algebraize [(f.appLE V U hUV).hom]
   have hR : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
@@ -268,7 +268,7 @@ theorem stacksEtaleAt_of_zariskiNagataPurity [IsLocallyNoetherian X] [IsLocallyN
   have hregY : IsRegularLocalRing
       (Localization.AtPrime (hV.primeIdealOf ⟨f x, hUV hx⟩).asIdeal) :=
     IsRegularLocalRing.of_ringEquiv eY.toRingEquiv
-  have inputs : ZariskiNagataPurityInputsAt Γ(Y, V) Γ(X, U) w :=
+  have inputs : ZariskiNagataPurityHypothesesAt Γ(Y, V) Γ(X, U) w :=
     { source_isDomain := eX.symm.toMulEquiv.isDomain _
       source_isIntegrallyClosed := IsIntegrallyClosed.of_equiv eX.toRingEquiv
       target_isRegular := isRegularLocalRing_atPrime_of_eq hw
@@ -294,14 +294,14 @@ theorem stacksEtaleAt_of_zariskiNagataPurity [IsLocallyNoetherian X] [IsLocallyN
           have := hU.isLocalization_stalk' w' hx'
           rw [IsLocalization.AtPrime.ringKrullDim_eq_height w'.asIdeal, hw'1]
           rfl
-        have hst := formallyUnramified_stalkMap_of_stacksUnramifiedAt (hunr _ hspec hdim')
+        have hst := formallyUnramified_stalkMap_of_isStacksUnramifiedAt (hunr _ hspec hdim')
         rw [formallyUnramified_stalkMap_iff V hV U hU hUV hx'] at hst
         have hpt : hU.primeIdealOf ⟨hU.fromSpec w', hx'⟩ = w' :=
           hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf ⟨_, hx'⟩)
         rwa [hpt] at hst }
   -- Step 4: the affine theorem and spreading out.
   have hetale := zariskiNagataPurity Γ(Y, V) Γ(X, U) hR hA hft w inputs
-  exact stacksEtaleAt_of_isEtaleAt U hU V hV hUV hx
+  exact isStacksEtaleAt_of_isEtaleAt U hU V hV hUV hx
     (RingHom.FinitePresentation.of_finiteType.mp hft) hetale
 
 end Pcf.Stacks

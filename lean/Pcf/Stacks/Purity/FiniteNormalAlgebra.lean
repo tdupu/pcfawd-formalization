@@ -179,7 +179,7 @@ def PuncturedGlobalSectionsMorphismsExtend
       (puncturedGlobalSectionsToFiniteNormalAlgebra R hTarget).map f)
 
 /-- Unique extension of morphisms makes the Tag `0BM9` global-sections functor fully faithful. -/
-noncomputable def puncturedGlobalSections_fullyFaithful
+noncomputable def puncturedGlobalSectionsFullyFaithful
     (hTarget : ∀ V, finiteNormalPuncturedEtaleAlgebraProperty R
       ((puncturedFiniteEtaleGlobalSections R).obj V))
     (hMorphisms : PuncturedGlobalSectionsMorphismsExtend R hTarget) :
@@ -208,7 +208,7 @@ theorem puncturedGlobalSections_essSurj
 /-- The exact categorical conclusion of Tag `0BM9`, conditional on the three remaining algebraic
 inputs: global sections land in the finite-normal target and algebra maps extend uniquely, while
 restriction followed by global sections recovers every target algebra. -/
-noncomputable def tag0BM9EquivalenceOfMorphismExtension
+noncomputable def puncturedFiniteEtaleCoverEquivalenceOfMorphismExtension
     (hTarget : ∀ V, finiteNormalPuncturedEtaleAlgebraProperty R
       ((puncturedFiniteEtaleGlobalSections R).obj V))
     (hMorphisms : PuncturedGlobalSectionsMorphismsExtend R hTarget)
@@ -220,7 +220,7 @@ noncomputable def tag0BM9EquivalenceOfMorphismExtension
       FiniteNormalPuncturedEtaleAlgebra R := by
   let F := puncturedGlobalSectionsToFiniteNormalAlgebra R hTarget
   let hFullyFaithful : F.FullyFaithful :=
-    puncturedGlobalSections_fullyFaithful R hTarget hMorphisms
+    puncturedGlobalSectionsFullyFaithful R hTarget hMorphisms
   let hEssSurj : F.EssSurj :=
     puncturedGlobalSections_essSurj R hTarget hAlgebraRecovery
   letI : F.Full := hFullyFaithful.full
@@ -235,7 +235,7 @@ global sections of its restriction to `U`.
 
 The hypotheses are intentionally exposed.  This theorem packages, but does not prove, the missing
 depth-two/reflexive algebra. -/
-noncomputable def tag0BM9EquivalenceOfRecovery
+noncomputable def puncturedFiniteEtaleCoverEquivalenceOfRecovery
     (hTarget : ∀ V, finiteNormalPuncturedEtaleAlgebraProperty R
       ((puncturedFiniteEtaleGlobalSections R).obj V))
     (hRecovery : ∀ V, IsIso ((puncturedFiniteEtaleRecovery R).app V))

@@ -208,7 +208,7 @@ regularity needed after Abhyankar, is proved in Lean.  Concretely:
   Abhyankar's lemma (Stacks 0EYG/0EYH), each an explicit hypothesis isolated in the
   TauCeti-facing modules `Pcf/Stacks/Purity.lean` and `Pcf/Stacks/Abhyankar.lean`, through
   the manuscript's Steps 1–4 — the five local
-  purity hypotheses are packaged as `Pcf.Stacks.ZariskiNagataPurityInputsAt`, and
+  purity hypotheses are packaged as `Pcf.Stacks.ZariskiNagataPurityHypothesesAt`, and
   `Pcf.Stacks.HasZariskiNagataPurityAt` makes the cover étale at that point; Abhyankar gives the named
   `Pcf.Stacks.HasAbhyankarStandardCoverAt` presentation, whose final clause is
   `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers`; the restriction of a piece to
@@ -436,7 +436,7 @@ notion, with the identification itself an assumption); **not formalized**.
 | `ex:squaring-P2` | `Pcf.Examples.diagonalSquaring` | proved on a reduced ambient model (see that file's caveat); `key` **proved** there, so `PCFSetup` is inhabited |
 | `ex:wild` | `Pcf.Examples.CharP.orbit_infinite` | the critical orbit of `h(t) = t^{p+1} + c` is infinite: proved; the geometry of `F` not formalized |
 | `ex:frobenius-line` | `Pcf.Examples.CharP.restriction_eq_frobenius`, `derivative_charPoly_ne_zero` | concrete identities proved; "index one but not étale" not formalized |
-| `thm:purity` (Stacks 0BMB) | `Pcf.Stacks.ZariskiNagataPurity`, with pointwise inputs `Pcf.Stacks.ZariskiNagataPurityInputsAt` and conclusion `Pcf.Stacks.HasZariskiNagataPurityAt`; `Pcf.AbstractZariskiNagataPurity`, `Pcf.PurityData.localPurity` are older restatements | **statement formalized, theorem assumed**; faithful to the affine case of the tag (§G) |
+| `thm:purity` (Stacks 0BMB) | `Pcf.Stacks.ZariskiNagataPurity`, with pointwise inputs `Pcf.Stacks.ZariskiNagataPurityHypothesesAt` and conclusion `Pcf.Stacks.HasZariskiNagataPurityAt`; `Pcf.AbstractZariskiNagataPurity`, `Pcf.PurityData.localPurity` are older restatements | **statement formalized, theorem assumed**; faithful to the affine case of the tag (§G) |
 | `thm:abhyankar` (Stacks 0EYG + 0EYH) | `Pcf.Stacks.AbhyankarLemma`, with conclusion `Pcf.Stacks.HasAbhyankarStandardCoverAt` and standard-cover product `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers` | **statement formalized, theorem assumed**; weaker than the tags (characteristic zero in place of tameness; units `uᵢ` allowed; points of `D` only) |
 | Stacks 00NP | `Pcf.Stacks.isDomain_of_isRegularLocalRing` | **proved** by cotangent-space induction, prime avoidance, Krull intersection, and Nakayama; this removes the former local-domain clause from `Pcf.Stacks.AbhyankarLemma` |
 | `lem:jacobian`, `ex:basilica`, `ex:dupont`, `ex:loci-compared`, `rem:why-normalized`, `q:singularPrimes-B` | — | not formalized |

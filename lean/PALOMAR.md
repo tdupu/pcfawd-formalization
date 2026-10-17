@@ -95,7 +95,7 @@ are not formalized, which contradicts Entry 0.
 # Entry 0 — PCF all the way down in characteristic zero (CONDITIONAL; the Palomar entry)
 
 > **Update (2026-10-16): the unconditional theorem exists.** Zariski--Nagata purity and
-> Abhyankar's lemma are now proved in this repository (`Pcf.Stacks.palomar_zariskiNagataPurity`,
+> Abhyankar's lemma are now proved in this repository (`Pcf.Palomar.zariskiNagataPurity`,
 > `Pcf.Palomar.abhyankarLemma`), and `lean/Pcf/Palomar/Unconditional.lean` proves
 >
 > ```

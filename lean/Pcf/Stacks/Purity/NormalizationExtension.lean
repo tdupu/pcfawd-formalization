@@ -43,7 +43,7 @@ theorem puncturedCover_normalization_isAffine
   exact isAffine_of_isAffineHom f.fromNormalization
 
 /-- The affine relative normalization's canonical morphism to `Spec R`. -/
-noncomputable def puncturedCover_normalizationSpecMap
+noncomputable def puncturedCoverNormalizationSpecMap
     (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     Spec Γ((V.hom ≫ (puncturedSpectrum R).ι).normalization, ⊤) ⟶ Spec R := by
@@ -56,7 +56,7 @@ noncomputable def puncturedCover_normalizationSpecMap
 
 /-- Relative normalization of `Spec R` in a finite étale cover of its puncture restricts back to
 that cover. The assertion does not depend on connectedness or positive dimension. -/
-noncomputable def puncturedCover_normalizationRestrictIso
+noncomputable def puncturedCoverNormalizationRestrictIso
     (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     pullback (V.hom ≫ (puncturedSpectrum R).ι).fromNormalization
@@ -76,10 +76,10 @@ noncomputable def puncturedCover_normalizationRestrictIso
 
 /-- A literal affine `Spec` model extending the cover over the puncture. Finiteness and
 Stacks-normality of its section algebra remain to be established for Tag `0BM9`. -/
-noncomputable def puncturedCover_normalizationSpecRestrictIso
+noncomputable def puncturedCoverNormalizationSpecRestrictIso
     (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
-    pullback (puncturedCover_normalizationSpecMap R V) (puncturedSpectrum R).ι ≅ V.left := by
+    pullback (puncturedCoverNormalizationSpecMap R V) (puncturedSpectrum R).ι ≅ V.left := by
   let i := (puncturedSpectrum R).ι
   let f := V.hom ≫ i
   letI : IsAffine f.normalization := puncturedCover_normalization_isAffine R V
@@ -87,11 +87,11 @@ noncomputable def puncturedCover_normalizationSpecRestrictIso
   let j := f.normalization.isoSpec.asOver (Spec R)
   let k := (Over.pullback i).mapIso j
   let kScheme := (Over.forget _).mapIso k
-  convert kScheme.symm ≪≫ puncturedCover_normalizationRestrictIso R V using 1; rfl
+  convert kScheme.symm ≪≫ puncturedCoverNormalizationRestrictIso R V using 1; rfl
 
 /-- The affine normalization ring is exactly the integral closure of the base's global sections
 inside the cover's global sections. This is the algebra whose finiteness must be established. -/
-noncomputable def puncturedCover_normalizationSectionsIso
+noncomputable def puncturedCoverNormalizationSectionsIso
     (R : CommRingCat.{u}) [IsLocalRing R] [IsNoetherianRing R]
     (V : FiniteEtaleCover (puncturedSpectrumScheme R)) :
     letI : Algebra Γ(Spec R, ⊤) Γ(V.left, ⊤) :=
@@ -115,7 +115,7 @@ theorem puncturedCover_normalizationSections_isReduced
   haveI : IsReduced Γ(V.left, ⊤) := puncturedCover_sections_isReduced R hdim V
   haveI : IsReduced (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤)) :=
     isReduced_of_injective (Subalgebra.val _) Subtype.val_injective
-  let e := puncturedCover_normalizationSectionsIso R V
+  let e := puncturedCoverNormalizationSectionsIso R V
   exact isReduced_of_injective e.hom.hom e.commRingCatIsoToRingEquiv.injective
 
 /-- The relative normalization itself is a reduced affine scheme. -/
@@ -189,7 +189,7 @@ theorem puncturedCover_normalization_finite_appTop
   have h₁ : (algebraMap Γ(Spec R, ⊤)
       (integralClosure Γ(Spec R, ⊤) Γ(V.left, ⊤))).Finite :=
     RingHom.finite_algebraMap.mpr hB
-  let e := puncturedCover_normalizationSectionsIso R V
+  let e := puncturedCoverNormalizationSectionsIso R V
   have h₂ : e.inv.hom.Finite := RingHom.Finite.of_surjective _
     ((ConcreteCategory.isIso_iff_bijective e.inv).mp inferInstance).surjective
   have hc := h₂.comp h₁

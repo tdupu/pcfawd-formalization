@@ -23,7 +23,7 @@ inputs of `Pcf.PCFAllTheWayDownLocalTheorems` and of the compared Palomar statem
 
 | Input | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
-| Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Stacks.palomar_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Palomar.zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
 | Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Palomar.abhyankarLemma` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tag0EYG.lean`, now `abhyankarLemmaOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
 
 The headline theorems with these inputs discharged are in `Pcf/Palomar/Unconditional.lean`:
@@ -105,7 +105,7 @@ the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`F
 
 | Claim | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
-| Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
+| Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.isStacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
 | The same in Mathlib vocabulary (`Etale` on an open neighbourhood) | `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBSchemeAPI.lean` | `[propext, Classical.choice, Quot.sound]` |
 | Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemmaTame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tame/Tag0EYGTame.lean`, now `abhyankarLemmaTameOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
 | Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.abhyankarLemma_scheme` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
@@ -115,7 +115,7 @@ Route divergences (each described in the docstring at the declaration):
 
 * `0BMB` scheme form: reduced Zariski-locally to the affine `Pcf.Stacks.zariskiNagataPurity`
   instead of Stacks' étale-local induction on schemes (docstring of
-  `stacksEtaleAt_of_zariskiNagataPurity`).
+  `isStacksEtaleAt_of_zariskiNagataPurity`).
 * `0EYG` tame affine: the phase-1 route (`04GW` comparison, integral models giving the `0EYH`
   form) with `0EYD` proved by comparing ramification indices along the ind-étale base change
   (module docstring of `Tame/Tag0EYGTame.lean`, `Tame/Defs.lean`).
@@ -196,7 +196,7 @@ Its only literature packages are required on every relevant affine chart and
 iterate of the canonical normalization:
 
 * `Stacks.ZariskiNagataPurity`, the 0BMB implication with its five pointwise geometric
-  hypotheses named by `Stacks.ZariskiNagataPurityInputsAt` and its local conclusion named
+  hypotheses named by `Stacks.ZariskiNagataPurityHypothesesAt` and its local conclusion named
   by `Stacks.HasZariskiNagataPurityAt`; and
 * `Stacks.AbhyankarLemma`, the 0EYG/0EYH local standard-form conclusion, now named
   explicitly as `Stacks.HasAbhyankarStandardCoverAt`; its finite disjoint union is the
@@ -1119,7 +1119,7 @@ or `UnramifiedWitness` survives as a field.
 
 | ID | Lean | Stacks | Verdict |
 | --- | --- | --- | --- |
-| G1 | `Pcf.Stacks.ZariskiNagataPurity R S`: for `Spec S → Spec R` with `R`, `S` Noetherian and `S` of finite type, every prime `w` satisfying `Pcf.Stacks.ZariskiNagataPurityInputsAt R S w` has `Pcf.Stacks.HasZariskiNagataPurityAt R S w`.  The input structure says that `S_w` is an integrally closed domain, `R_{w∩R}` is regular local, `S` is quasi-finite at `w`, `ht w = ht (w ∩ R) ≥ 1`, and `S` is unramified over `R` at every `w' ≤ w` of height `1`; the conclusion is étaleness at `w`. | **0BMB**: `f : X → Y` locally Noetherian, `x ∈ X`, `y = f(x)`; (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) `dim 𝒪_{X,x} = dim 𝒪_{Y,y} ≥ 1`, (5) for `x' ⤳ x` with `dim 𝒪_{X,x'} = 1`, `f` unramified at `x'`. Then `f` étale at `x`. | **Faithful** (the affine special case). `x' ⤳ x` is `w' ≤ w` (`PrimeSpectrum.le_iff_specializes`); "normal" is integrally closed domain; `dim 𝒪_{X,x}` is `Ideal.height`; "quasi-finite at `x`" in Stacks presupposes finite type, so `Algebra.FiniteType R S` is a premise alongside `Algebra.QuasiFiniteAt`; `IsUnramifiedAt`/`IsEtaleAt` are the local-ring forms, which for finite-type algebras over Noetherian rings are the Stacks meaning. |
+| G1 | `Pcf.Stacks.ZariskiNagataPurity R S`: for `Spec S → Spec R` with `R`, `S` Noetherian and `S` of finite type, every prime `w` satisfying `Pcf.Stacks.ZariskiNagataPurityHypothesesAt R S w` has `Pcf.Stacks.HasZariskiNagataPurityAt R S w`.  The input structure says that `S_w` is an integrally closed domain, `R_{w∩R}` is regular local, `S` is quasi-finite at `w`, `ht w = ht (w ∩ R) ≥ 1`, and `S` is unramified over `R` at every `w' ≤ w` of height `1`; the conclusion is étaleness at `w`. | **0BMB**: `f : X → Y` locally Noetherian, `x ∈ X`, `y = f(x)`; (1) `𝒪_{X,x}` normal, (2) `𝒪_{Y,y}` regular, (3) `f` quasi-finite at `x`, (4) `dim 𝒪_{X,x} = dim 𝒪_{Y,y} ≥ 1`, (5) for `x' ⤳ x` with `dim 𝒪_{X,x'} = 1`, `f` unramified at `x'`. Then `f` étale at `x`. | **Faithful** (the affine special case). `x' ⤳ x` is `w' ≤ w` (`PrimeSpectrum.le_iff_specializes`); "normal" is integrally closed domain; `dim 𝒪_{X,x}` is `Ideal.height`; "quasi-finite at `x`" in Stacks presupposes finite type, so `Algebra.FiniteType R S` is a premise alongside `Algebra.QuasiFiniteAt`; `IsUnramifiedAt`/`IsEtaleAt` are the local-ring forms, which for finite-type algebras over Noetherian rings are the Stacks meaning. |
 | G2 | `Pcf.Stacks.AbhyankarLemma R S a`: if `R` is Noetherian, `a` a nonzerodivisor, `R/(a)` regular, `S` finite over `R` and étale at every prime not containing `a`, `S` the integral closure of `R` in `S_a`, and every positive integer invertible in `R`, then every prime `y ∋ a` satisfies `Pcf.Stacks.HasAbhyankarStandardCoverAt R S a y`.  This names an étale `R`-algebra `R'` with a prime over `y`, Noetherian, with `a` a nonzerodivisor in `R'`, `R'/(a)` regular, and `Pcf.Stacks.IsFiniteDisjointUnionOfStandardTameCovers R' (R' ⊗_R S) a`, i.e. `R' ⊗_R S ≅ ∏ᵢ R'[zᵢ]/(zᵢ^{eᵢ} − uᵢ a)` as `R'`-algebras, `eᵢ ≥ 1` invertible in `R'`. | **0EYG**: `X` locally Noetherian, `D ⊂ X` effective Cartier and regular, `Y → X ∖ D` finite étale and tamely ramified over `X` in codim 1 ⟹ étale locally on `X`, `Y → X` is a finite disjoint union of standard tamely ramified morphisms. **0EYH**: the normalization `Y'` of `X` in `Y` is finite locally free and étale locally on `X` a finite disjoint union of `Spec(A[x]/(x^e − f)) → Spec(A)`, `A` Noetherian, `f` a nonzerodivisor, `A/fA` regular, `e ≥ 1` invertible in `A`. | **Weaker** than 0EYG + 0EYH. Weaker because: (i) the premise "tamely ramified in codimension 1" is replaced by the stronger "every positive integer is invertible" (characteristic zero, the manuscript's standing hypothesis); (ii) the conclusion allows units `uᵢ` (the manuscript's form; 0EYH has `uᵢ = 1`); (iii) only points of `D` are covered; (iv) "finite étale over `X ∖ D`" is written pointwise, which for a finite algebra over a Noetherian ring is equivalent. The local-domain consequence used in Step 3 is derived from the regularity conclusion by the proved Tag 00NP theorem. |
 
 **Could either be equivalent to the conclusion?** No, and for a reason visible in the types:

@@ -17,7 +17,7 @@ mathematically distinct inputs.
 
 * Tag `00UJ` (the affine form used in Tag `02LK`) replaces a quasi-finite map near the chosen
   point by a finite component after a pointed etale base change.  The theorem
-  `exists_tag0BMB_finiteComponent` applies the actual Mathlib theorem, with no proxy data.
+  `exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt` applies the actual Mathlib theorem, with no proxy data.
 * Clause (2) of Tag `0BMA` says that a finite torsion-free normal algebra which is etale on the
   punctured spectrum is etale.  `FiniteNormalPuncturedEtalePurity` records exactly this corrected
   affine clause.  Torsion-freeness is explicit because it excludes vertical closed-point
@@ -63,7 +63,7 @@ def FiniteNormalPuncturedEtalePurity
 Here `R_p → S_q` is the canonical map of local rings at the chosen point.  Finiteness is the
 finite-component conclusion of `00UJ`; torsion-freeness is the injective/equidimensional part of
 the Stacks argument; and the last field is the induction conclusion on the punctured spectrum.
-Normality is deliberately absent: it follows from the `ZariskiNagataPurityInputsAt` hypothesis
+Normality is deliberately absent: it follows from the `ZariskiNagataPurityHypothesesAt` hypothesis
 on `S_q` and is installed in the terminal theorem below. -/
 def ZariskiNagataFiniteLocalModel
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
@@ -83,10 +83,10 @@ The selected idempotent cuts out a finite component after an etale base change. 
 component contains a unique prime over the pointed prime and that prime maps to the original
 point.  This is the actual affine construction invoked at the `02LK` sentence of the Stacks
 proof, rather than a conclusion-shaped finite-model premise. -/
-theorem exists_tag0BMB_finiteComponent
+theorem exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     [Algebra.FiniteType R S]
-    (w : PrimeSpectrum S) (h : ZariskiNagataPurityInputsAt R S w) :
+    (w : PrimeSpectrum S) (h : ZariskiNagataPurityHypothesesAt R S w) :
     let p := w.asIdeal.under R
     let q := w.asIdeal
     ∃ (R' : Type u) (_ : CommRing R') (_ : Algebra R R') (_ : Algebra.Etale R R')
@@ -148,11 +148,11 @@ the finite-normal clause of `0BMA`. -/
 theorem zariskiNagataPurity_of_finiteLocalModels
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S]
     [IsNoetherianRing R] [IsNoetherianRing S] [Algebra.FiniteType R S]
-    (h0BMA : ∀ (w : PrimeSpectrum S), ZariskiNagataPurityInputsAt R S w →
+    (h0BMA : ∀ (w : PrimeSpectrum S), ZariskiNagataPurityHypothesesAt R S w →
       2 ≤ w.asIdeal.height →
       FiniteNormalPuncturedEtalePurity
         (Localization.AtPrime (w.asIdeal.under R)))
-    (hmodels : ∀ (w : PrimeSpectrum S), ZariskiNagataPurityInputsAt R S w →
+    (hmodels : ∀ (w : PrimeSpectrum S), ZariskiNagataPurityHypothesesAt R S w →
       2 ≤ w.asIdeal.height →
       ZariskiNagataFiniteLocalModel R S w) :
     ZariskiNagataPurity R S := by
@@ -166,7 +166,7 @@ theorem zariskiNagataPurity_of_finiteLocalModels
     exact hasZariskiNagataPurityAt_of_finiteLocalModel R S w
       (h0BMA w h hw2) (hmodels w h hw2) h
 
-#print axioms exists_tag0BMB_finiteComponent
+#print axioms exists_etale_finiteComponent_of_zariskiNagataPurityHypothesesAt
 #print axioms hasZariskiNagataPurityAt_of_finiteLocalModel
 #print axioms zariskiNagataPurity_of_finiteLocalModels
 
