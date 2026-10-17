@@ -15,8 +15,8 @@ public import Mathlib.RingTheory.Localization.Pi
 
 Main theorem: `Pcf.Stacks.SchemeLevel.hasLocalizedStandardCoverAt_of_tame`.  Given the affine
 hypothesis `AbhyankarLemmaTameOfFinite` at the local ring `R_y`
-(`Pcf.Stacks.abhyankarLemma_tame_of_finite`, or the characteristic-zero
-`Pcf.Stacks.abhyankarLemma_of_finite`), a finite étale `R_a`-algebra `B` which is tame in
+(`Pcf.Stacks.abhyankarLemmaTameOfFinite`, or the characteristic-zero
+`Pcf.Stacks.abhyankarLemmaOfFinite`), a finite étale `R_a`-algebra `B` which is tame in
 codimension one along `V(a)` admits, at every `y ∈ V(a)`, a pointed étale
 neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
 (`HasLocalizedStandardCoverAt`).
@@ -33,7 +33,7 @@ neighbourhood `R → A` with `A ⊗_R B ≅ ∏_i A_a[x]/(x^{e_i} - u_i a)`
   by a localization argument, `isTamelyRamifiedInCodimensionOneAlong_ny` (Mathlib's localization
   invariance of ramification indices).
 * Strictly henselian case `A^{sh} ⊗_A B ≅ ∏ A^{sh}_f[x]/(x^{e_i} - f)`: the affine hypothesis
-  `AbhyankarLemmaTameOfFinite` (`Pcf.Stacks.abhyankarLemma_tame_of_finite`).
+  `AbhyankarLemmaTameOfFinite` (`Pcf.Stacks.abhyankarLemmaTameOfFinite`).
 * Descend the isomorphism to some `A_λ` (Algebra, Lemma 10.127.8, Tag `05N9`) and make the `e_i`
   invertible: `exists_stage_localizedStandard`, `exists_stage_isUnit_natCast` (built on pcf's
   `exists_descendedAlgEquiv`).

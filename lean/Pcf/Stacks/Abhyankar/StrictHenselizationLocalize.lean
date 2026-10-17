@@ -59,17 +59,17 @@ universe u
 namespace Pcf.Stacks.PointedEtaleNeighborhood
 
 /-- Scaling the roots of `p` by `s` and substituting `s X` multiplies `p` by `s ^ deg p`. -/
-theorem scaleRoots_comp_C_mul_X {A : Type*} [CommRing A] (p : A[X]) (s : A) :
+theorem _root_.Polynomial.scaleRoots_comp_C_mul_X {A : Type*} [CommRing A] (p : A[X]) (s : A) :
     (p.scaleRoots s).comp (C s * X) = C (s ^ p.natDegree) * p := by
   rw [comp, scaleRoots_eval₂_mul (f := C) X s, eval₂_C_X, map_pow]
 
 /-- The derivative of `p.scaleRoots s`, evaluated at `s • ξ`, is `s ^ (deg p - 1)` times the
 derivative of `p` at `ξ`, in the form `s • p'ˢ(s ξ) = s ^ deg p • p'(ξ)`. -/
-theorem aeval_smul_derivative_scaleRoots {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
+theorem _root_.Polynomial.aeval_smul_derivative_scaleRoots {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
     (p : A[X]) (s : A) (ξ : B) :
     algebraMap A B s * aeval (algebraMap A B s * ξ) (derivative (p.scaleRoots s)) =
       algebraMap A B (s ^ p.natDegree) * aeval ξ (derivative p) := by
-  have h := congrArg derivative (scaleRoots_comp_C_mul_X p s)
+  have h := congrArg derivative (Polynomial.scaleRoots_comp_C_mul_X p s)
   rw [derivative_comp, derivative_C_mul_X, derivative_C_mul] at h
   have h' := congrArg (aeval ξ) h
   simp only [map_mul, aeval_C, aeval_comp, aeval_X] at h'
@@ -144,7 +144,7 @@ theorem exists_localizationBaseChange_refinement (X : PointedEtaleNeighborhood S
         algebraMap S B (bS ^ P.f.natDegree) * aeval w (derivative P.f) := by
     intro B _ _ _ _ w
     rw [← aeval_map_algebraMap S, ← derivative_map, hFmap]
-    exact aeval_smul_derivative_scaleRoots P.f bS w
+    exact Polynomial.aeval_smul_derivative_scaleRoots P.f bS w
   have hdown : ∀ (B : Type u) [CommRing B] [Algebra R B] [Algebra S B] [IsScalarTower R S B]
       (w : B), U.HasMap (algebraMap S B bS * w) → P.P.HasMap w := by
     intro B _ _ _ _ w hw

@@ -43,7 +43,7 @@ Given `C : StrictRootComponentPreData A N a E` and a proof `hunr` that `C.carrie
 over `StrictRootCover a E` at all height-one primes (or only at those containing the root, via
 `toDataOfRootMem`), `C.toData hunr : StrictRootComponentData A N a E` has carrier `C.carrier`
 definitionally, so a purity hypothesis for `C.carrier` applies unchanged to
-`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`.
+`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`.
 
 Stacks Tag `03GE` (integral closure commutes with étale base change) is not needed: the
 normalization is taken directly over `A'`.
@@ -194,7 +194,7 @@ variable {A N a E}
 
 /-- Completing the pre-data with the codimension-one unramifiedness (Stacks `0BRM`) gives the
 component data consumed by
-`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`.  The carrier is
+`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`.  The carrier is
 unchanged (`StrictRootComponentPreData.toData_carrier`). -/
 def StrictRootComponentPreData.toData (C : StrictRootComponentPreData A N a E)
     (hunramified : ∀ w : PrimeSpectrum C.carrier, w.asIdeal.height = 1 →

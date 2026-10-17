@@ -208,7 +208,7 @@ theorem reesQuotient_isNoetherian
 
 /-- A coefficient formula for a product in which the sum is extended to any fixed bound for
 the degree of the right factor. -/
-theorem Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
+theorem _root_.Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
     {R : Type u} [CommRing R] (p q : Polynomial R) {D : ℕ}
     (hp : p.natDegree ≤ D) (n : ℕ) :
     (q * p).coeff n = ∑ j ∈ Finset.range (D + 1),
@@ -1891,7 +1891,7 @@ end PointedEtaleNeighborhood
 #print axioms Ideal.adicReesIdeal
 #print axioms Ideal.coeff_mem_pow_succ_of_mem_rees_map
 #print axioms Ideal.reesQuotient_isNoetherian
-#print axioms Ideal.Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
+#print axioms Polynomial.coeff_mul_eq_sum_range_of_natDegree_le
 #print axioms Ideal.fg_of_adic_approximation
 #print axioms Ideal.fg_of_fg_quotient_of_isAdicComplete
 #print axioms Ideal.isNoetherianRing_of_fg_quotient_of_isAdicComplete

@@ -150,7 +150,7 @@ embedding used in the last paragraph of Tag `0EYG`.
 This statement keeps the high-dimensional root cover `A` separate from the height-one DVR
 used by Tag `09EV`.  Relating their fraction-field root presentations is an upstream
 localization/base-change step, not silently built into this theorem. -/
-theorem exists_fractionFieldEmbedding_of_tag0EYE_strict_local_normalization
+theorem exists_fractionFieldEmbedding_of_strictlyHenselian_normalization
     (R A N D K₀ K M : Type u)
     [CommRing R]
     [CommRing A] [IsNoetherianRing A] [IsDomain A] [IsIntegrallyClosed A]
@@ -180,7 +180,7 @@ theorem exists_fractionFieldEmbedding_of_tag0EYE_strict_local_normalization
     (hpurity : ZariskiNagataPurity A N) :
     Nonempty (M →ₐ[K₀] K) := by
   letI : Algebra.Etale A N :=
-    Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain
+    Algebra.etale_of_isRegularRing_quotient_of_zariskiNagataPurity
       z hz hetaleAway hunramified hpurity
   exact ⟨(fractionRingAlgEquivOfFiniteEtaleLocalOverFraction
     R A N D K₀ K).toAlgHom.comp (IsScalarTower.toAlgHom K₀ M D)⟩
@@ -262,13 +262,13 @@ theorem exists_dvrRootFractionPowerEquiv_of_strict_local_normalization
   let froot : M →ₐ[FractionRing A]
       AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) pi) n) :=
     (dvrRootFractionEquiv pi hn1 hpi).toAlgHom.comp f
-  exact exists_dvrRootFractionPowerEquiv_of_embedding_tame
+  exact exists_dvrRootFractionPowerEquiv_of_embedding
     pi hn1 hpi hunit froot
 
 #print axioms fractionRingAlgEquivOfFiniteEtaleLocal
 #print axioms fractionRingAlgEquivOfFiniteEtaleLocalOverFraction
 #print axioms normalIntegralAlgEquivOfFractionRingEquiv
-#print axioms exists_fractionFieldEmbedding_of_tag0EYE_strict_local_normalization
+#print axioms exists_fractionFieldEmbedding_of_strictlyHenselian_normalization
 #print axioms exists_dvrRootFractionPowerEquiv_of_strict_local_normalization
 
 end

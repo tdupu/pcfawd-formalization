@@ -17,7 +17,7 @@ Stacks Tag `0EYG`, last paragraph, with the addendum `0EYH`.
 
 Over a Noetherian strictly henselian local ring `A` with a regular divisor `a`, each normal
 domain component `N` of the normalization, tamely ramified in codimension one, has fraction field
-`K(a^{1/n})` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`, from
+`K(a^{1/n})` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`, from
 `0BRM`, `0EYE`, purity, strict splitting and `09EV`).  This file finishes the argument:
 
 * `strictRootCoverToRootFractionField`, `exists_mul_eq_strictRootCoverToRootFractionField`: the
@@ -26,15 +26,15 @@ domain component `N` of the normalization, tamely ramified in codimension one, h
 * `strictRootCoverEquivOfFractionRingEquiv`: normality turns the field identification
   `Frac N ≅ K(a^{1/n})` into `N ≅ A[x]/(x^n - a)` (the step "the normality of `B` then implies
   `B ≅ A_f[y]/(y^n - f)`; details omitted" of `0EYG`, done on the integral models);
-* `exists_strictRootCover_equiv_of_idempotent_factor_tame`: the above for one idempotent factor,
+* `exists_strictRootCover_equiv_of_idempotent_factor`: the above for one idempotent factor,
   with `n` a unit of `A` (the last paragraph of `0EYG`,
   `isUnit_natCast_of_strictRootCover_etale_away`);
-* `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`: the normalization is the
+* `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian`: the normalization is the
   finite product `∏ A[x]/(x^{nᵢ} - a)`, i.e. the `hstrict` input of
-  `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict_tame`.
+  `PointedEtaleNeighborhood.hasAbhyankarStandardCoverAt_of_strict`.
 
 Both proofs of `0EYG` in pcf use these lemmas: the characteristic-zero one supplies the tameness
-hypothesis from "every positive integer is a unit" (`isTamelyRamifiedAt_of_all_nat_isUnit`).
+hypothesis from "every positive integer is a unit" (`isTamelyRamifiedAt_of_isUnit_natCast`).
 
 ## Stacks correspondence (proof of `0EYG`)
 
@@ -42,13 +42,13 @@ hypothesis from "every positive integer is a unit" (`isTamelyRamifiedAt_of_all_n
   a domain" → `exists_completeOrthogonalIdempotents_of_isIntegralClosure_localizationAway` and
   the per-factor theorem below
 * "Let `e ≥ 1` be the product of the ramification indices … `e` is invertible in `κ(𝔭`)" →
-  `exists_strictRootComponentData_tame` (`(E : A) ∉ (a)`)
+  `exists_strictRootComponentData` (`(E : A) ∉ (a)`)
 * "`A' = A[x]/(x^e - f)` … By Abhyankar's lemma (`0BRM`) `Spec(B')` is unramified over `Spec(A')` in
-  codimension `1`" → `StrictRootComponentData` from `exists_strictRootComponentData_tame` (`0BRM`
+  codimension `1`" → `StrictRootComponentData` from `exists_strictRootComponentData` (`0BRM`
   via `StrictHeightOneUnramified`)
 * "By Lemma `0EYE` … finite étale `Spec(C) → Spec(A')` … `A'` strictly henselian … inclusion
   `B ⊂ A'_{f'}`; by `09EV`, `L = K[f^{1/n}]`, `n ∣ e`" →
-  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame` (with
+  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData` (with
   `zariskiNagataPurity`)
 * "The normality of `B` then implies `B ≅ A_f[y]/(y^n - f)`" →
   `strictRootCoverEquivOfFractionRingEquiv` (on the integral models)
@@ -189,12 +189,12 @@ codimension one over `A`, is isomorphic to a root cover `A[x]/(x^n - a)` with `n
 
 Route (see the module docstring): the exponent `E` (product of the ramification indices, a unit of
 `κ((a))` by tameness) and the root-cover component with its codimension-one unramifiedness (`0BRM`,
-`exists_strictRootComponentData_tame`); `0EYE` with purity `zariskiNagataPurity`, the strict
-splitting and `09EV` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`),
+`exists_strictRootComponentData`); `0EYE` with purity `zariskiNagataPurity`, the strict
+splitting and `09EV` (`exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`),
 giving `Frac N ≅ K(a^{1/n})`, `n ∣ E`; normality (`strictRootCoverEquivOfFractionRingEquiv`); and
 finally `n` is a unit of `A` because `N[1/a]` is étale over `A[1/a]` and `n ∣ E` is not in the prime
 `(a)` (`isUnit_natCast_of_strictRootCover_etale_away`). -/
-theorem exists_strictRootCover_equiv_of_idempotent_factor_tame
+theorem exists_strictRootCover_equiv_of_idempotent_factor
     (a : A) (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     [Algebra.Etale A (Localization.Away (algebraMap A T a))]
@@ -219,9 +219,9 @@ theorem exists_strictRootCover_equiv_of_idempotent_factor_tame
   haveI : Algebra.IsIntegral A N := Algebra.IsIntegral.of_finite A N
   haveI : Algebra.Etale A (Localization.Away (algebraMap A N a)) :=
     etale_localizationAway_quotient_idempotent (Rb := A) (algebraMap A T a) he
-  obtain ⟨E, hE1, hEa, ⟨D⟩⟩ := exists_strictRootComponentData_tame (N := N) ha ha0 hetN htame
+  obtain ⟨E, hE1, hEa, ⟨D⟩⟩ := exists_strictRootComponentData (N := N) ha ha0 hetN htame
   obtain ⟨n, hnE, hn1, ⟨f⟩⟩ :=
-    exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
+    exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
       ha ha0 hE1 hEa D (zariskiNagataPurity _ _)
   have hna : ((n : ℕ) : A) ∉ Ideal.span ({a} : Set A) := by
     intro hn
@@ -244,7 +244,7 @@ Divergence from Stacks: the conclusion is the integral (normalization) form of `
 Stacks first proves `A_f ⊗ B ≅ ∏ A_f[x]/(x^{eᵢ} - f)` and then omits the normalization step.  The
 tameness hypothesis is taken factor by factor (it is produced in that form by
 `PointedEtaleNeighborhood.isTamelyRamifiedAt_strictBaseChangeFactor`). -/
-theorem isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
+theorem isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
     (a : A) (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     [Module.Finite A T] [Algebra.Etale A (Localization.Away (algebraMap A T a))]
@@ -272,7 +272,7 @@ theorem isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
     obtain ⟨hdom, hic, hfin, hcl⟩ := hfac i
     haveI : FaithfulSMul A (T ⧸ Ideal.span {1 - e i}) :=
       faithfulSMul_quotient_idempotent (algebraMap A T a) (he.idem i) hcl.algebraMap_injective
-    exact exists_strictRootCover_equiv_of_idempotent_factor_tame a ha ha0 (he.idem i) hcl
+    exact exists_strictRootCover_equiv_of_idempotent_factor a ha ha0 (he.idem i) hcl
       (htame (e i) (he.idem i))
   choose n hn hunit g using key
   let σ : ι ≃ Fin (Fintype.card ι) := Fintype.equivFin ι
@@ -287,11 +287,11 @@ end Assembly
 #print axioms strictRootCoverToRootFractionField
 #print axioms exists_mul_eq_strictRootCoverToRootFractionField
 #print axioms strictRootCoverEquivOfFractionRingEquiv
-#print axioms exists_strictRootCover_equiv_of_idempotent_factor_tame
-#print axioms isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
+#print axioms exists_strictRootCover_equiv_of_idempotent_factor
+#print axioms isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
 
 #check @strictRootCoverEquivOfFractionRingEquiv
-#check @exists_strictRootCover_equiv_of_idempotent_factor_tame
-#check @isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame
+#check @exists_strictRootCover_equiv_of_idempotent_factor
+#check @isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian
 
 end Pcf.Stacks

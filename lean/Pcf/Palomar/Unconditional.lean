@@ -21,7 +21,7 @@ The two local theorems that `Pcf.pcfAllTheWayDown_charZero` and
 * Abhyankar's lemma for a regular divisor (Stacks `0EYG`/`0EYH`, all positive integers
   invertible): `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`
   (`Pcf/Stacks/Abhyankar/FiniteNormalization.lean`; the normalization is proved finite), with
-  Palomar form `Pcf.Stacks.palomar_abhyankarLemma` (`Pcf/Stacks/Abhyankar/Tag0EYG.lean`; the
+  Palomar form `Pcf.Palomar.abhyankarLemma` (`Pcf/Stacks/Abhyankar/Tag0EYG.lean`; the
   Palomar statement assumes the normalization finite).
 
 This file discharges those inputs:
@@ -71,7 +71,7 @@ namespace Pcf.Palomar
 The statement is that of the compared theorem `Pcf.Palomar.pcfAllTheWayDown_charZero` with its
 `purity` and `abhyankar` binders removed. Those two inputs are supplied by
 `Pcf.Stacks.palomar_zariskiNagataPurity` (Zariski--Nagata purity, Stacks `0BMB`) and
-`Pcf.Stacks.palomar_abhyankarLemma` (Abhyankar's lemma, Stacks `0EYG`/`0EYH`), both proved in
+`Pcf.Palomar.abhyankarLemma` (Abhyankar's lemma, Stacks `0EYG`/`0EYH`), both proved in
 this repository. -/
 theorem pcfAllTheWayDown_charZero_unconditional
     (k : Type u) [Field k] [CharZero k]
@@ -81,7 +81,7 @@ theorem pcfAllTheWayDown_charZero_unconditional
     (hpcf : IsNormalizedPCF f) :
     PCFAllTheWayDown f :=
   pcfAllTheWayDown_charZero (fun R S _ _ _ ↦ Stacks.palomar_zariskiNagataPurity R S)
-    (fun R S _ _ _ a ↦ Stacks.palomar_abhyankarLemma R S a) k s f hpcf
+    (fun R S _ _ _ a ↦ Pcf.Palomar.abhyankarLemma R S a) k s f hpcf
 
 end Pcf.Palomar
 

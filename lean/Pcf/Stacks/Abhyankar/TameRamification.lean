@@ -69,7 +69,7 @@ This is the characteristic-zero observation used by the manuscript.  The unusual
 ring hypothesis is exactly the one already present in `Pcf.Stacks.AbhyankarLemma`; unlike
 mere `CharZero R`, it survives passage to every residue field (compare `ℤ`, whose positive
 characteristic residue fields show why `CharZero R` alone is insufficient). -/
-theorem isTamelyRamifiedAt_of_all_nat_isUnit
+theorem isTamelyRamifiedAt_of_isUnit_natCast
     (R : Type u) (S : Type v) [CommRing R] [CommRing S] [Algebra R S]
     [Module.Finite R S]
     (hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (q : PrimeSpectrum S) :
@@ -95,13 +95,13 @@ theorem isTamelyRamifiedAt_of_all_nat_isUnit
 /-- In the characteristic-zero setting of the manuscript, every finite algebra is tamely
 ramified in codimension one along any chosen principal divisor.  Finiteness is used only to
 make the ramification indices positive and the residue extensions algebraic. -/
-theorem isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
+theorem isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
     (R : Type u) (S : Type v) [CommRing R] [CommRing S] [Algebra R S]
     [Module.Finite R S]
     (hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (a : R) :
     IsTamelyRamifiedInCodimensionOneAlong R S a := by
   intro q _ _
-  exact isTamelyRamifiedAt_of_all_nat_isUnit R S hunit q
+  exact isTamelyRamifiedAt_of_isUnit_natCast R S hunit q
 
 /-- Characteristic-zero base-change consequence of the tame predicate.
 
@@ -110,18 +110,18 @@ is tame in codimension one over `A` when every positive integer is already inver
 `R`.  This is a useful algebraic consequence in the setting of PCFAWD, but is strictly
 narrower than Stacks Tag `0EYD`: it neither states nor replaces that tag's scheme-level
 theorem with its four DVR hypotheses. -/
-theorem baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
+theorem baseChange_isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
     (R : Type u) (S : Type v) (A : Type*)
     [CommRing R] [CommRing S] [CommRing A] [Algebra R S] [Algebra R A]
     [Module.Finite R S]
     (hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (a : R) :
     IsTamelyRamifiedInCodimensionOneAlong A (A ⊗[R] S) (algebraMap R A a) := by
-  apply isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
+  apply isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
   intro n hn
   simpa only [map_natCast] using (hunit n hn).map (algebraMap R A)
 
-#print axioms isTamelyRamifiedAt_of_all_nat_isUnit
-#print axioms isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
-#print axioms baseChange_tameInCodimensionOneAlong_of_all_nat_isUnit
+#print axioms isTamelyRamifiedAt_of_isUnit_natCast
+#print axioms isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
+#print axioms baseChange_isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
 
 end Pcf.Stacks

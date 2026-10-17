@@ -48,22 +48,22 @@ That module is imported by the root module `Pcf`.
 the first assertion of `0EYH` and is proved (`Pcf.Stacks.finite_of_isIntegralClosure_away` and its
 characteristic-zero form), from the scheme-level layer's affine normalization results.  The proofs
 of `0EYG` themselves are carried out for a finite normalization (`AbhyankarLemmaOfFinite`,
-`Pcf.Stacks.abhyankarLemma_of_finite`; `Pcf.Stacks.AbhyankarLemmaTameOfFinite`,
-`Pcf.Stacks.abhyankarLemma_tame_of_finite`).
+`Pcf.Stacks.abhyankarLemmaOfFinite`; `Pcf.Stacks.AbhyankarLemmaTameOfFinite`,
+`Pcf.Stacks.abhyankarLemmaTameOfFinite`).
 
 ## The three layers
 
 * **Characteristic zero, affine** (phase 1): `Pcf.Stacks.abhyankarLemma` (from
-  `Pcf.Stacks.abhyankarLemma_of_finite` in `Pcf.Stacks.Abhyankar.Tag0EYG`), for this statement
+  `Pcf.Stacks.abhyankarLemmaOfFinite` in `Pcf.Stacks.Abhyankar.Tag0EYG`), for this statement
   `AbhyankarLemma`, which assumes every positive integer invertible in `R`.  It is the input of
   the PCFAWD headline.
-* **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemma_tame` (from
-  `Pcf.Stacks.abhyankarLemma_tame_of_finite` in `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame`, directory
+* **Tame, any characteristic, affine** (phase 2): `Pcf.Stacks.abhyankarLemmaTame` (from
+  `Pcf.Stacks.abhyankarLemmaTameOfFinite` in `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame`, directory
   `Abhyankar/Tame/`), for
   `Pcf.Stacks.AbhyankarLemmaTame`, whose hypothesis is the tag's "tamely ramified in
   codimension 1" (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`, `Tame/Defs.lean`).  The
   two affine theorems share one proof: the characteristic-zero theorem supplies tameness from
-  "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`)
+  "every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`)
   and then uses the same lemmas (see `Tame/Defs.lean`, "Shared lemmas").
 * **Scheme level** (phase 2): `Pcf.Stacks.SchemeLevel.tag0EYG` and
   `Pcf.Stacks.SchemeLevel.tag0EYH` (directory `Abhyankar/Scheme/`), the statements of Stacks
@@ -134,7 +134,7 @@ def AbhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R
     HasAbhyankarStandardCoverAt R S a y
 
 /-- `Pcf.Stacks.AbhyankarLemma` with the normalization `S` assumed finite over `R` (the form in
-which the characteristic-zero proof `Pcf.Stacks.abhyankarLemma_of_finite` is carried out).  The
+which the characteristic-zero proof `Pcf.Stacks.abhyankarLemmaOfFinite` is carried out).  The
 public statement `AbhyankarLemma` assumes only `S[1/a]` finite over `R[1/a]` and derives this
 finiteness (Stacks `0EYH`). -/
 def AbhyankarLemmaOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :

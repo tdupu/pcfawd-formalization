@@ -66,12 +66,12 @@ The scheme layer passes from `IsTamelyRamifiedInCodimOne` to `ChartTame`
 (`chartTame_of_isTamelyRamifiedInCodimOne`, `TameBridge.lean`) and from `ChartTame` to the affine
 `IsTamelyRamifiedInCodimensionOneAlong` at the local rings of a chart
 (`AffineTame.isTamelyRamifiedInCodimensionOneAlong_ny`, `AffineTameTransfer.lean`), which is the
-hypothesis of `Pcf.Stacks.abhyankarLemma_tame_of_finite`.
+hypothesis of `Pcf.Stacks.abhyankarLemmaTameOfFinite`.
 
 ## The affine hypothesis
 
 `Pcf.Stacks.AbhyankarLemmaTameOfFinite R S a` (defined in `Pcf.Stacks.Abhyankar.Tame.Defs`,
-proved as `Pcf.Stacks.abhyankarLemma_tame_of_finite`) is the affine statement used by the scheme
+proved as `Pcf.Stacks.abhyankarLemmaTameOfFinite`) is the affine statement used by the scheme
 layer: `R` Noetherian, `a` a nonzerodivisor with
 `R/(a)` regular, `S` finite over `R`, étale away from `a`, the integral closure of `R` in
 `S[1/a]`, tamely ramified in codimension one along `V(a)` (pcf's
@@ -80,9 +80,9 @@ neighbourhood `R → R'` with `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - u_i a)`, `e_i
 (`HasAbhyankarStandardCoverAt`).  It is the characteristic-free analogue of the characteristic-zero
 `Pcf.Stacks.AbhyankarLemmaOfFinite` (whose hypothesis "every positive integer is invertible" is
 replaced by tameness), and `abhyankarLemmaTame_of_natCast_isUnit` discharges it in the
-characteristic-zero case from `Pcf.Stacks.abhyankarLemma_of_finite`.  It assumes `S` finite; it
+characteristic-zero case from `Pcf.Stacks.abhyankarLemmaOfFinite`.  It assumes `S` finite; it
 is applied only at local rings, where that finiteness is classical.  The public affine theorems
-`Pcf.Stacks.abhyankarLemma_tame` and `Pcf.Stacks.abhyankarLemma` assume only `S[1/a]` finite over
+`Pcf.Stacks.abhyankarLemmaTame` and `Pcf.Stacks.abhyankarLemma` assume only `S[1/a]` finite over
 `R[1/a]` and prove the finiteness of `S` from this layer
 (`Pcf.Stacks.Abhyankar.FiniteNormalization`).
 -/
@@ -241,31 +241,31 @@ def HasSplitCoverAt {R : Type u} [CommRing R] (B : Type u) [CommRing B] [Algebra
 
 /-- **Characteristic-zero discharge of the affine hypothesis.**  If every positive integer is
 invertible in `R`, then `AbhyankarLemmaTameOfFinite R S a` holds, by the characteristic-zero
-theorem `Pcf.Stacks.abhyankarLemma_of_finite` (the tameness hypothesis is not needed). -/
+theorem `Pcf.Stacks.abhyankarLemmaOfFinite` (the tameness hypothesis is not needed). -/
 theorem abhyankarLemmaTame_of_natCast_isUnit (R S : Type u) [CommRing R] [CommRing S]
     [Algebra R S] (a : R) (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
     AbhyankarLemmaTameOfFinite R S a :=
   fun hR ha hreg hfin hetale hint _ y hy ↦
-    Pcf.Stacks.abhyankarLemma_of_finite R S a hR ha hreg hfin hetale hint hnat y hy
+    Pcf.Stacks.abhyankarLemmaOfFinite R S a hR ha hreg hfin hetale hint hnat y hy
 
 /-- The form in which the scheme-level theorems take the affine hypothesis: the affine
 statement for every ring receiving a ring map from `Γ(X, ⊤)` (in the proof it is used only for
 local rings `Γ(X, V)_𝔭` of affine opens `V`).  The tame theorem
-`Pcf.Stacks.abhyankarLemma_tame_of_finite : ∀ R S a, AbhyankarLemmaTameOfFinite R S a`
+`Pcf.Stacks.abhyankarLemmaTameOfFinite : ∀ R S a, AbhyankarLemmaTameOfFinite R S a`
 discharges it outright. -/
 def AbhyankarLemmaTameOver (X : Scheme.{u}) : Prop :=
   ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R),
     Nonempty (Γ(X, ⊤) →+* R) → AbhyankarLemmaTameOfFinite R S a
 
 /-- If every positive integer is invertible on `X` (a `ℚ`-scheme), the affine hypothesis holds
-over `X` by the characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite`. -/
+over `X` by the characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite`. -/
 theorem abhyankarLemmaTameOver_of_natCast_isUnit (X : Scheme.{u})
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Γ(X, ⊤))) : AbhyankarLemmaTameOver X := by
   intro R S _ _ _ a ⟨φ⟩
   refine abhyankarLemmaTame_of_natCast_isUnit R S a fun n hn ↦ ?_
   simpa only [map_natCast] using (hnat n hn).map φ
 
-/-- A universally quantified affine theorem (such as `Pcf.Stacks.abhyankarLemma_tame_of_finite`)
+/-- A universally quantified affine theorem (such as `Pcf.Stacks.abhyankarLemmaTameOfFinite`)
 discharges the hypothesis over every scheme. -/
 theorem abhyankarLemmaTameOver_of_forall (X : Scheme.{u})
     (h : ∀ (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R),

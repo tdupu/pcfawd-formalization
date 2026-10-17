@@ -183,7 +183,7 @@ Unlike the regular-base convenience theorem above, this declaration uses the lit
 regular-divisor hypothesis of `0EYE`.  At a point over the divisor, ambient regularity is
 proved from the regular quotient by `isRegularLocalRing_atPrime_of_regular_principal_quotient`
 (Tag `00NU`); away from the divisor no ambient regularity is needed. -/
-theorem Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain
+theorem Algebra.etale_of_isRegularRing_quotient_of_zariskiNagataPurity
     {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     [IsNoetherianRing R] [IsDomain R] [IsIntegrallyClosed R]
     [IsDomain S] [IsIntegrallyClosed S]
@@ -239,7 +239,7 @@ of a finite normal dominant component into finite etaleness over the root cover.
 The remaining named dependency is still Tag `0BMB`; normal-domain hypotheses on the root
 cover and the chosen normalization component are structural and do not assert flatness or
 etaleness. -/
-theorem Algebra.tag0EYE_standardRoot_of_zariskiNagataPurity
+theorem Algebra.etale_standardRootNormalization_of_zariskiNagataPurity
     {R N : Type u} [CommRing R] [CommRing N] [IsNoetherianRing R]
     (unit : Rˣ) (a : R) {exponent : ℕ} (hexponent : 1 ≤ exponent)
     (ha : a ∈ nonZeroDivisors R)
@@ -266,7 +266,7 @@ theorem Algebra.tag0EYE_standardRoot_of_zariskiNagataPurity
   let z : A := AdjoinRoot.root (Pcf.LocalModel.localPoly unit a exponent)
   letI : IsRegularRing (A ⧸ Ideal.span ({z} : Set A)) :=
     standardCover_rootQuotient_isRegularRing unit a hexponent
-  apply Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain
+  apply Algebra.etale_of_isRegularRing_quotient_of_zariskiNagataPurity
     z (Pcf.LocalModel.root_mem_nonZeroDivisors unit a hexponent ha)
     hetaleAway hunramified hpurity
 
@@ -274,7 +274,7 @@ theorem Algebra.tag0EYE_standardRoot_of_zariskiNagataPurity
 #print axioms Algebra.etale_of_zariskiNagataPurity_finite_normal_domain
 #print axioms Algebra.etale_across_nonZeroDivisor_of_zariskiNagataPurity_finite_normal_domain
 #print axioms isRegularLocalRing_atPrime_of_regular_principal_quotient
-#print axioms Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain
-#print axioms Algebra.tag0EYE_standardRoot_of_zariskiNagataPurity
+#print axioms Algebra.etale_of_isRegularRing_quotient_of_zariskiNagataPurity
+#print axioms Algebra.etale_standardRootNormalization_of_zariskiNagataPurity
 
 end Pcf.Stacks

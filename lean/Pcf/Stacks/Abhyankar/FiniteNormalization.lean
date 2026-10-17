@@ -19,13 +19,13 @@ with `S[1/a] = R[1/a] ⊗_R S` finite over `R[1/a]` and étale away from `a` (so
 closure of `R` in `S[1/a]` (the normalization `Y'` of `X = Spec R` in `Y`).  If `S[1/a]` is tamely
 ramified in codimension one along `V(a)`, then `S` is finite over `R`
 (`Pcf.Stacks.finite_of_isIntegralClosure_away`); the characteristic-zero case is
-`Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit`.
+`Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast`.
 
 With this, the public affine theorems are stated without assuming the normalization finite:
 `Pcf.Stacks.abhyankarLemma : ∀ R S a, AbhyankarLemma R S a` and
-`Pcf.Stacks.abhyankarLemma_tame : ∀ R S a, AbhyankarLemmaTame R S a`, deduced from the
-finite-normalization forms `Pcf.Stacks.abhyankarLemma_of_finite` and
-`Pcf.Stacks.abhyankarLemma_tame_of_finite`.
+`Pcf.Stacks.abhyankarLemmaTame : ∀ R S a, AbhyankarLemmaTame R S a`, deduced from the
+finite-normalization forms `Pcf.Stacks.abhyankarLemmaOfFinite` and
+`Pcf.Stacks.abhyankarLemmaTameOfFinite`.
 
 ## Route (Stacks proof of `0EYH` → Lean)
 
@@ -35,7 +35,7 @@ the statements … étale locally on `X`; by `0EYG` we may assume `Y` is a finit
 * `B` is finite étale over `R_a` (`etale_away`; the étale hypothesis is pointwise formal
   étaleness, the finiteness hypothesis supplies finite presentation);
 * the codimension-one tameness of `S` is read on the chart `Spec B → Spec R_a ⊂ Spec R`
-  (`chartTame_of_isTamelyRamifiedInCodimensionOneAlong`): at a height-one prime `𝔭 ∋ a`, the
+  (`isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong`): at a height-one prime `𝔭 ∋ a`, the
   integral closure of `R_𝔭` in `K_𝔭 ⊗_R B` is a localization of `S`, and tameness is invariant
   under localization (`isTamelyRamifiedAt_map_of_isLocalization`);
 * `0EYG` at every point of `V(a)` (`hasLocalizedStandardCoverAt_of_tame`, which applies the
@@ -117,25 +117,25 @@ attribute [local instance] rpAlgebra sfAlgebra cpAlgebra
 
 /-- `B_y = R_y ⊗_R B` as a `B`-algebra (via `inclB`). -/
 @[instance_reducible]
-noncomputable def byAlgebra (y : Ideal R) [y.IsPrime] : Algebra B (By B y) :=
+noncomputable def localizedCoverAlgebra (y : Ideal R) [y.IsPrime] : Algebra B (By B y) :=
   (inclB B y).toAlgebra
 
-attribute [local instance] byAlgebra
+attribute [local instance] localizedCoverAlgebra
 
-instance by_isScalarTower (y : Ideal R) [y.IsPrime] : IsScalarTower R B (By B y) :=
+instance isScalarTower_localizedCover (y : Ideal R) [y.IsPrime] : IsScalarTower R B (By B y) :=
   IsScalarTower.of_algebraMap_eq fun r ↦ by
     change (algebraMap R (Localization.AtPrime y) r) ⊗ₜ[R] (1 : B) =
       (1 : Localization.AtPrime y) ⊗ₜ[R] algebraMap R B r
     rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul]
 
 /-- `B_y` is the localization of `B` at `R ∖ y`. -/
-theorem isLocalization_by (y : Ideal R) [y.IsPrime] :
+theorem isLocalization_localizedCover (y : Ideal R) [y.IsPrime] :
     IsLocalization (Algebra.algebraMapSubmonoid B y.primeCompl) (By B y) := by
   letI : Algebra B (Localization.AtPrime y ⊗[R] B) := Algebra.TensorProduct.rightAlgebra
   exact IsLocalization.tensorRight (Localization.AtPrime y) y.primeCompl
 
 /-- The map `integralClosure R B → N_y` induced by `B → B_y`. -/
-noncomputable def integralClosureToNy (y : Ideal R) [y.IsPrime] :
+noncomputable def integralClosureToLocalizedNormalization (y : Ideal R) [y.IsPrime] :
     integralClosure R B →+* Ny B y where
   toFun x := ⟨algebraMap B (By B y) x.1, by
     have hx : IsIntegral R x.1 := x.2
@@ -147,19 +147,19 @@ noncomputable def integralClosureToNy (y : Ideal R) [y.IsPrime] :
 
 /-- `N_y` as an algebra over `integralClosure R B`. -/
 @[instance_reducible]
-noncomputable def nyAlgebra (y : Ideal R) [y.IsPrime] : Algebra (integralClosure R B) (Ny B y) :=
-  (integralClosureToNy B y).toAlgebra
+noncomputable def localizedNormalizationAlgebra (y : Ideal R) [y.IsPrime] : Algebra (integralClosure R B) (Ny B y) :=
+  (integralClosureToLocalizedNormalization B y).toAlgebra
 
-attribute [local instance] nyAlgebra
+attribute [local instance] localizedNormalizationAlgebra
 
-instance ny_isScalarTower (y : Ideal R) [y.IsPrime] :
+instance isScalarTower_localizedNormalization (y : Ideal R) [y.IsPrime] :
     IsScalarTower (integralClosure R B) (Ny B y) (By B y) := by
   refine ⟨fun x c s ↦ ?_⟩
-  change ((integralClosureToNy B y x * c : Ny B y) : By B y) * s = (x : B) • (c * s)
+  change ((integralClosureToLocalizedNormalization B y x * c : Ny B y) : By B y) * s = (x : B) • (c * s)
   rw [Subalgebra.coe_mul, Algebra.smul_def, mul_assoc]
   rfl
 
-instance ny_isScalarTower' (y : Ideal R) [y.IsPrime] :
+instance isScalarTower_integralClosure_localizedNormalization (y : Ideal R) [y.IsPrime] :
     IsScalarTower R (integralClosure R B) (Ny B y) :=
   IsScalarTower.of_algebraMap_eq fun r ↦ by
     apply Subtype.ext
@@ -168,9 +168,9 @@ instance ny_isScalarTower' (y : Ideal R) [y.IsPrime] :
 
 /-- `N_y` is the localization of `integralClosure R B` at `R ∖ y` (integral closure commutes with
 localization). -/
-theorem isLocalization_ny (y : Ideal R) [y.IsPrime] :
+theorem isLocalization_localizedNormalization (y : Ideal R) [y.IsPrime] :
     IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R B) y.primeCompl) (Ny B y) := by
-  haveI := isLocalization_by B y
+  haveI := isLocalization_localizedCover B y
   exact IsLocalization.integralClosure (R := R) (S := B) (Rf := Localization.AtPrime y)
     (Sf := By B y) y.primeCompl
 
@@ -221,7 +221,7 @@ theorem isTamelyRamifiedOver_of_isTamelyRamifiedInCodimensionOneAlong [IsNoether
   have hmq : q.map (algebraMap (Ny B y) (Cp B y p')) = m :=
     IsLocalization.map_under (Algebra.algebraMapSubmonoid (Ny B y) p'.primeCompl) (Cp B y p') m
   -- the prime `q₀` of `N = integralClosure R B` below `q`
-  haveI := isLocalization_ny B y
+  haveI := isLocalization_localizedNormalization B y
   let q0 : Ideal (integralClosure R B) := q.comap (algebraMap (integralClosure R B) (Ny B y))
   have hq0 : q0.under R = y := by
     have : q0.under R = (q.under Ry).under R := by
@@ -275,7 +275,7 @@ include Ra in
 normalization `S` of `R` in `B` is tamely ramified in codimension one along `V(a)`
 (`IsTamelyRamifiedInCodimensionOneAlong`): at a height-one prime `𝔭 ∋ a`, the integral closure of
 `R_𝔭` in `K_𝔭 ⊗_R B` is the localization of `S` at `𝔭`. -/
-theorem chartTame_of_isTamelyRamifiedInCodimensionOneAlong [IsNoetherianRing R]
+theorem isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong [IsNoetherianRing R]
     (ha : a ∈ nonZeroDivisors R) [IsRegularRing (R ⧸ Ideal.span {a})]
     [IsIntegralClosure S R B] (htame : IsTamelyRamifiedInCodimensionOneAlong R S a) :
     ChartTame a B := by
@@ -300,8 +300,8 @@ include Ra in
 `𝔭 ∋ a`, `R_𝔭` is a discrete valuation ring and `K_𝔭 ⊗_R B` is finite étale over `K_𝔭`, so the
 integral closure of `R_𝔭` in it is finite (`finite_integralClosure_of_etale_fractionRing`), and
 every prime of a finite algebra is tame in characteristic zero
-(`isTamelyRamifiedAt_of_all_nat_isUnit`). -/
-theorem chartTame_of_natCast_isUnit [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
+(`isTamelyRamifiedAt_of_isUnit_natCast`). -/
+theorem isTamelyRamifiedAlongDivisor_of_isUnit_natCast [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
     [IsRegularRing (R ⧸ Ideal.span {a})] [Module.Finite Ra B] [Algebra.Etale Ra B]
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) : ChartTame a B := by
   intro p hp hap _
@@ -347,7 +347,7 @@ theorem chartTame_of_natCast_isUnit [IsNoetherianRing R] (ha : a ∈ nonZeroDivi
   have hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : Rp) := fun n hn ↦ by
     simpa only [map_natCast] using (hnat n hn).map (algebraMap R Rp)
   intro m hm
-  exact Pcf.Stacks.isTamelyRamifiedAt_of_all_nat_isUnit Rp (integralClosure Rp L) hunit _
+  exact Pcf.Stacks.isTamelyRamifiedAt_of_isUnit_natCast Rp (integralClosure Rp L) hunit _
 
 end ChartTameCharZero
 
@@ -430,7 +430,7 @@ theorem etale_away [IsNoetherianRing R] {a : R}
 form): `0EYG` at every point of `V(a)` (`hasLocalizedStandardCoverAt_of_tame`, with a
 finite-normalization theorem `hA` at the local rings `R_y`) and faithfully flat descent of
 finiteness (`integralClosure_finite`). -/
-theorem finite_of_isIntegralClosure_away_of_chartTame [IsNoetherianRing R] {a : R}
+theorem finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor [IsNoetherianRing R] {a : R}
     (ha : a ∈ nonZeroDivisors R) [IsRegularRing (R ⧸ Ideal.span {a})]
     (hfin : Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S))
     (hetale : ∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal)
@@ -463,18 +463,18 @@ theorem finite_of_isIntegralClosure_away [IsNoetherianRing R] {a : R}
     [IsIntegralClosure S R (Localization.Away (algebraMap R S a))]
     (htame : IsTamelyRamifiedInCodimensionOneAlong R S a) :
     Module.Finite R S :=
-  finite_of_isIntegralClosure_away_of_chartTame ha hfin hetale
-    (chartTame_of_isTamelyRamifiedInCodimensionOneAlong a (Localization.Away a) _ S ha htame)
-    fun _ S' _ _ b ↦ abhyankarLemma_tame_of_finite _ S' b
+  finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor ha hfin hetale
+    (isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong a (Localization.Away a) _ S ha htame)
+    fun _ S' _ _ b ↦ abhyankarLemmaTameOfFinite _ S' b
 
 /-- **The normalization is finite, characteristic zero** (Stacks Tag `0EYH`, first assertion,
 affine form, every positive integer invertible in `R`; no tameness hypothesis is needed).  The
-local input is the characteristic-zero theorem `abhyankarLemma_of_finite` (through
+local input is the characteristic-zero theorem `abhyankarLemmaOfFinite` (through
 `SchemeLevel.abhyankarLemmaTame_of_natCast_isUnit`), whose proof is the shared tame proof with
-tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`. -/
+tameness supplied by `isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`. -/
 @[stacks 0EYH "first assertion (the normalization is finite), affine form; every positive integer \
   invertible"]
-theorem finite_of_isIntegralClosure_away_of_natCast_isUnit [IsNoetherianRing R] {a : R}
+theorem finite_of_isIntegralClosure_away_of_isUnit_natCast [IsNoetherianRing R] {a : R}
     (ha : a ∈ nonZeroDivisors R) [IsRegularRing (R ⧸ Ideal.span {a})]
     (hfin : Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S))
     (hetale : ∀ w : PrimeSpectrum S, algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal)
@@ -483,8 +483,8 @@ theorem finite_of_isIntegralClosure_away_of_natCast_isUnit [IsNoetherianRing R] 
     Module.Finite R S := by
   haveI := finite_away_of_finite_tensor hfin
   haveI := etale_away hfin hetale
-  exact finite_of_isIntegralClosure_away_of_chartTame ha hfin hetale
-    (chartTame_of_natCast_isUnit a (Localization.Away a) _ ha hnat)
+  exact finite_of_isIntegralClosure_away_of_isTamelyRamifiedAlongDivisor ha hfin hetale
+    (isTamelyRamifiedAlongDivisor_of_isUnit_natCast a (Localization.Away a) _ ha hnat)
     fun y S' _ _ b ↦ abhyankarLemmaTame_of_natCast_isUnit _ S' b fun n hn ↦ by
       simpa only [map_natCast] using (hnat n hn).map (algebraMap R (Localization.AtPrime y.asIdeal))
 
@@ -504,7 +504,7 @@ Comparison with the tags (restrictions, all part of the statement `AbhyankarLemm
   `u` a unit of `R'`.  Points outside `D` (the tag's trivial case) are not treated.
 
 The normalization `S` is not assumed finite over `R`: its finiteness (first assertion of `0EYH`) is
-`finite_of_isIntegralClosure_away`, and the theorem is then `abhyankarLemma_tame_of_finite`. -/
+`finite_of_isIntegralClosure_away`, and the theorem is then `abhyankarLemmaTameOfFinite`. -/
 @[stacks 0EYG "affine form; Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and \
     S etale at primes not containing a; tamely ramified in codimension 1, any characteristic; \
     normalization (0EYH) form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
@@ -512,23 +512,23 @@ The normalization `S` is not assumed finite over `R`: its finiteness (first asse
     Y -> X \\ D finite etale as: R[1/a] ⊗ S finite over R[1/a] and S etale at primes not \
     containing a; tamely ramified in codimension 1, any characteristic; pieces R'[x]/(x^e - f), \
     f = u_i a"]
-theorem abhyankarLemma_tame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+theorem abhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemmaTame R S a := by
   intro hR ha hreg hfin hetale hint htame y hy
   haveI := hreg
   haveI := hint
-  exact abhyankarLemma_tame_of_finite R S a hR ha hreg
+  exact abhyankarLemmaTameOfFinite R S a hR ha hreg
     (finite_of_isIntegralClosure_away ha hfin hetale htame) hetale hint htame y hy
 
 /-- **Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG` and `0EYH`)**, in pcf's affine
 characteristic-zero form `Pcf.Stacks.AbhyankarLemma`: every positive integer invertible in `R`
 (stronger than the tags' "tamely ramified in codimension one"), `Y = Spec S[1/a] → X ∖ D` finite
 étale, `S` the normalization of `R` in `S[1/a]`; the conclusion is the `0EYH` local-structure form
-at the points of `D`, as for `abhyankarLemma_tame`.
+at the points of `D`, as for `abhyankarLemmaTame`.
 
 The normalization `S` is not assumed finite over `R`: its finiteness is
-`finite_of_isIntegralClosure_away_of_natCast_isUnit`, and the theorem is then the
-characteristic-zero proof `abhyankarLemma_of_finite`. -/
+`finite_of_isIntegralClosure_away_of_isUnit_natCast`, and the theorem is then the
+characteristic-zero proof `abhyankarLemmaOfFinite`. -/
 @[stacks 0EYG "affine; all positive integers invertible; Y -> X \\ D finite etale as: \
     R[1/a] ⊗ S finite over R[1/a] and S etale at primes not containing a; normalization (0EYH) \
     form at points of D; pieces R'[x]/(x^e - f), f = u_i a",
@@ -540,7 +540,7 @@ theorem abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a
   intro hR ha hreg hfin hetale hint hnat y hy
   haveI := hreg
   haveI := hint
-  exact abhyankarLemma_of_finite R S a hR ha hreg
-    (finite_of_isIntegralClosure_away_of_natCast_isUnit ha hfin hetale hnat) hetale hint hnat y hy
+  exact abhyankarLemmaOfFinite R S a hR ha hreg
+    (finite_of_isIntegralClosure_away_of_isUnit_natCast ha hfin hetale hnat) hetale hint hnat y hy
 
 end Pcf.Stacks

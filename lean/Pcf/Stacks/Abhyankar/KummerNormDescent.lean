@@ -139,7 +139,7 @@ No characteristic hypothesis is needed: the proof combines the norm argument
 (`dvrRootFraction_intermediate_eq_power_of_rootOfUnity_descent`) with Stacks' root-of-unity
 descent (`dvrRootFraction_rootOfUnity_mem_base`), which uses only that `n` is a unit in `κ_A`. -/
 @[stacks 09EV "clause (6), intermediate fields of the tame radical extension, any characteristic"]
-theorem dvrRootFraction_intermediate_eq_power_tame
+theorem dvrRootFraction_intermediate_eq_power
     {A : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
     (π : A) {n : ℕ} (hn : 2 ≤ n) (hπ : Irreducible π)
     (hunit : IsUnit ((n : ℕ) : ResidueField A)) :
@@ -205,7 +205,7 @@ theorem dvrRootFractionRing_intermediate_eq_power
   let e : FractionRing B ≃ₐ[K] L := dvrRootFractionEquiv π hn1 hπ
   intro M
   obtain ⟨d, hdvd, hdpos, hM⟩ :=
-    dvrRootFraction_intermediate_eq_power_tame π hn hπ hunit (M.map e.toAlgHom)
+    dvrRootFraction_intermediate_eq_power π hn hπ hunit (M.map e.toAlgHom)
   refine ⟨d, hdvd, hdpos, ?_⟩
   have hmap : (M.map e.toAlgHom).map e.symm.toAlgHom = M := by
     ext x
@@ -229,7 +229,7 @@ theorem dvrRootFractionRing_intermediate_eq_power
 
 #print axioms radical_pow_relative_finrank_mem
 #print axioms dvrRootFraction_intermediate_eq_power_of_rootOfUnity_descent
-#print axioms dvrRootFraction_intermediate_eq_power_tame
+#print axioms dvrRootFraction_intermediate_eq_power
 #print axioms dvrRootFractionEquiv_root
 #print axioms dvrRootFractionRing_intermediate_eq_power
 

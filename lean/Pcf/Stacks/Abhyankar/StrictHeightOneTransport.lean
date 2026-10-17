@@ -30,13 +30,13 @@ the classification of `StrictComponentClassification.lean`:
 * `isUnramifiedAt_of_isEtaleAt`, `forall_height_one_isUnramifiedAt_of_root_mem`: away from `x`
   the component is étale, so codimension-one unramifiedness only needs to be checked at the
   height-one primes containing `x`, i.e. over the divisor prime `(x)`;
-* `exists_common_multiple_ramificationIdx_tame`: the product `E` of the ramification indices of
+* `exists_common_multiple_ramificationIdx`: the product `E` of the ramification indices of
   the finitely many height-one primes of `N` over `(a)` (minimal primes of `aN`, Noetherian); when
   `N` is tamely ramified at these primes, `E` is a unit in `κ((a))`.
 * `StrictRootComponentData`: a normal-domain component `N'` of the normalization of `A'` in
   `(A' ⊗_A N)[1/x]`, together with the structure maps `A → A' → N'`, `N → N'`, étaleness away
   from `x`, and the codimension-one `0BRM` conclusion.
-* `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame` (and a
+* `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData` (and a
   characteristic-zero specialization to the strict henselization `LocalColimit R Ω`): given such
   data with `E` a unit in `κ((a))`, and Zariski–Nagata purity, the fraction field of the component
   `N` is `K(a^{1/n})` with `n ∣ E`.
@@ -54,9 +54,9 @@ This file only states `StrictRootComponentData`; its construction is carried out
    `StrictHeightOneUnramified.lean`): the divisibility form of Stacks `0BRM` (ramification index
    `e_q` dividing `E`, with no finiteness of the upper DVR over the lower one) is
    `formallyUnramified_dvrRoot_of_dvd`; it is transported to the component by
-   `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame`, which completes
-   the data in `StrictRootComponentPreData.toDataOfDvd_tame`. `exists_strictRootComponentData_tame`
-   combines this with `exists_common_multiple_ramificationIdx_tame` above.
+   `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`, which completes
+   the data in `StrictRootComponentPreData.toDataOfDvd`. `exists_strictRootComponentData`
+   combines this with `exists_common_multiple_ramificationIdx` above.
 -/
 
 @[expose] public section
@@ -150,7 +150,7 @@ such `q` (in the application `p = (a)`, so `E ∈ κ((a))ˣ`).
 
 Divergence from Stacks: the product is taken over the height-one minimal primes of `aN` (these
 are the maximal ideals of the integral closure of `A_𝔭` in `L` in Stacks' notation). -/
-theorem exists_common_multiple_ramificationIdx_tame [IsNoetherianRing N] [IsDomain N]
+theorem exists_common_multiple_ramificationIdx [IsNoetherianRing N] [IsDomain N]
     [Algebra.IsIntegral A N] (a : A) (ha : algebraMap A N a ≠ 0)
     (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
       IsTamelyRamifiedAt A N q)
@@ -236,7 +236,7 @@ variable {A N a E}
 tame form.**  Given the normalization component data over the root cover `A[x]/(x^E − a)`, with
 `E ≥ 1` a unit in `κ((a))`, and Zariski–Nagata purity for it, the fraction field of the component
 `N` is `K(a^{1/n})` for a divisor `n` of `E`. -/
-theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
+theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
     [IsNoetherianRing A] [HenselianLocalRing A] [IsSepClosed (ResidueField A)]
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
@@ -248,7 +248,7 @@ theorem exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
     ∃ n : ℕ, n ∣ E ∧ 1 ≤ n ∧
       Nonempty (FractionRing N ≃ₐ[FractionRing A]
         AdjoinRoot (dvrRootPoly (algebraMap A (FractionRing A) a) n)) :=
-  exists_rootExponent_fractionRing_equiv_of_strictComponent_tame A N C.carrier a E ha ha0 hE hEa
+  exists_rootExponent_fractionRing_equiv_of_strictComponent A N C.carrier a E ha ha0 hE hEa
     C.etaleAway C.unramified hpurity
 
 end ComponentData
@@ -256,7 +256,7 @@ end ComponentData
 #print axioms under_eq_of_height_eq_one_of_mem
 #print axioms forall_height_one_isUnramifiedAt_of_root_mem
 #print axioms mem_minimalPrimes_span_of_height_eq_one
-#print axioms exists_common_multiple_ramificationIdx_tame
-#print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame
+#print axioms exists_common_multiple_ramificationIdx
+#print axioms exists_rootExponent_fractionRing_equiv_of_strictRootComponentData
 
 end Pcf.Stacks

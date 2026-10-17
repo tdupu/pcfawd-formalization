@@ -11,17 +11,17 @@ public import Pcf.Palomar.Statement
 /-!
 # Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG`, `0EYH`)
 
-The main theorem: `Pcf.Stacks.abhyankarLemma_of_finite`, an unconditional
+The main theorem: `Pcf.Stacks.abhyankarLemmaOfFinite`, an unconditional
 proof of `Pcf.Stacks.AbhyankarLemmaOfFinite R S a` (the normalization `S` assumed finite over `R`)
-for all `R S a`, and its Palomar-facing form `palomar_abhyankarLemma`.  The public statement
+for all `R S a`, and its Palomar-facing form `Pcf.Palomar.abhyankarLemma`.  The public statement
 `Pcf.Stacks.abhyankarLemma`, which proves that finiteness (Stacks `0EYH`), is in
 `Pcf.Stacks.Abhyankar.FiniteNormalization`.
 
 * `hasAbhyankarStandardCoverAt_of_mem_divisor`: the conclusion at a point `y ∈ V(a)`.  Every
   positive integer being a unit of `R`, `S` is tamely ramified in codimension one
-  (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`), so this is the tame case
-  `hasAbhyankarStandardCoverAt_of_mem_divisor_tame` (`Tame/Tag0EYGTame.lean`);
-* `abhyankarLemma_of_finite`, `palomar_abhyankarLemma`.
+  (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`), so this is the tame case
+  `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame` (`Tame/Tag0EYGTame.lean`);
+* `abhyankarLemmaOfFinite`, `Pcf.Palomar.abhyankarLemma`.
 -/
 
 @[expose] public section
@@ -35,10 +35,10 @@ namespace Pcf.Stacks
 set_option linter.style.haveILetI false
 
 /-- **Abhyankar's lemma at a point of the divisor (Stacks Tags `0EYG`, `0EYH`).**  The unpacked
-form of `abhyankarLemma_of_finite`.  If every positive integer is a unit of `R`, then `S` is
+form of `abhyankarLemmaOfFinite`.  If every positive integer is a unit of `R`, then `S` is
 tamely ramified over `R` in codimension one
-(`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`), and the conclusion is the tame case
-`hasAbhyankarStandardCoverAt_of_mem_divisor_tame`. -/
+(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`), and the conclusion is the tame case
+`hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`. -/
 theorem hasAbhyankarStandardCoverAt_of_mem_divisor
     (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R)
     [IsNoetherianRing R] (ha : a ∈ nonZeroDivisors R)
@@ -48,8 +48,8 @@ theorem hasAbhyankarStandardCoverAt_of_mem_divisor
     [IsIntegralClosure S R (Localization.Away (algebraMap R S a))]
     (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal) :
     HasAbhyankarStandardCoverAt R S a y :=
-  hasAbhyankarStandardCoverAt_of_mem_divisor_tame R S a ha hetale
-    (isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit R S hnat a) y hy
+  hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame R S a ha hetale
+    (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 /-- **Abhyankar's lemma for a regular divisor (Stacks Tags `0EYG` and `0EYH`)**, unconditionally,
 in pcf's affine form `Pcf.Stacks.AbhyankarLemmaOfFinite` (normalization assumed finite).
@@ -70,9 +70,9 @@ Comparison with the tags (restrictions, all already part of the statement
   Points outside `D` (the tag's trivial case) are not treated.
 
 Proof route: every positive integer being invertible in `R`, `S` is tamely ramified over `R` in
-codimension one (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`: the ramification
+codimension one (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`: the ramification
 indices are units and the residue extensions are separable in characteristic zero), and the proof
-is that of the tame case, `Pcf.Stacks.abhyankarLemma_tame_of_finite` (`Tame/Tag0EYGTame.lean`), whose
+is that of the tame case, `Pcf.Stacks.abhyankarLemmaTameOfFinite` (`Tame/Tag0EYGTame.lean`), whose
 lemmas are shared by both theorems: reduction to the strict henselization at `κ(y)ˢᵉᵖ`,
 decomposition into normal domains, root cover, `0BRM`, `0EYE` with Zariski–Nagata purity, strict
 splitting, `09EV`, the exponent is a unit, descent to an étale stage.  The divergences from the
@@ -83,7 +83,7 @@ tags are `Pcf.Stacks.SchemeLevel.tag0EYG` and `Pcf.Stacks.SchemeLevel.tag0EYH`
     of D, normalization assumed finite over R; pieces R'[x]/(x^e - f), f = u_i a",
   stacks 0EYH "affine; all positive integers invertible; local structure clause at points of D, \
     normalization assumed finite over R; pieces R'[x]/(x^e - f), f = u_i a"]
-theorem abhyankarLemma_of_finite (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+theorem abhyankarLemmaOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemmaOfFinite R S a := by
   intro _ ha hreg hfin hetale hint hnat y hy
   haveI := hreg
@@ -93,8 +93,8 @@ theorem abhyankarLemma_of_finite (R S : Type u) [CommRing R] [CommRing S] [Algeb
 
 /-- The Palomar-facing form `Pcf.Palomar.AbhyankarLemma` (definitionally
 `Pcf.Stacks.AbhyankarLemmaOfFinite`: the Palomar statement assumes the normalization finite). -/
-theorem palomar_abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
+theorem _root_.Pcf.Palomar.abhyankarLemma (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     Pcf.Palomar.AbhyankarLemma R S a :=
-  abhyankarLemma_of_finite R S a
+  abhyankarLemmaOfFinite R S a
 
 end Pcf.Stacks

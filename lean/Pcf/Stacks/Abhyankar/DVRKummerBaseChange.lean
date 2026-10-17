@@ -187,7 +187,7 @@ This is the literal normalization/localization bridge in the last paragraph of T
 `0BRM`: uniqueness of integral closure first identifies the finite models, and
 `Localization.localAlgEquiv` then identifies the factors selected by corresponding
 primes. -/
-noncomputable def localizationEquivKummerUnit_of_isIntegralClosure
+noncomputable def localizationEquivKummerUnitOfIsIntegralClosure
     (S : Type v) (N : Type w) (C : Type x)
     [CommRing S] [CommRing N] [CommRing C]
     [Algebra S N] [Algebra S C] [Algebra N C] [IsScalarTower S N C]
@@ -445,7 +445,7 @@ abbrev DVRRamificationKummerLocalization
 
 /-- Universe-polymorphic form of `standardCoverBaseChangeEquiv` used for the two DVRs,
 which need not live in the same universe. -/
-noncomputable def standardCoverBaseChangeEquiv'
+noncomputable def standardCoverBaseChangeEquivOfUnitEq
     {R : Type u} {T : Type v} [CommRing R] [CommRing T] [Algebra R T]
     (unit : Rˣ) (a : R) (exponent : ℕ) :
     T ⊗[R] AdjoinRoot (Pcf.LocalModel.localPoly unit a exponent) ≃ₐ[T]
@@ -499,7 +499,7 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
         AdjoinRoot (Pcf.LocalModel.localPoly
           (1 : Sˣ) (algebraMap R S pi) exponent) := by
     rw [dvrRootPoly_eq_localPoly]
-    let eBaseChangeRS := standardCoverBaseChangeEquiv'
+    let eBaseChangeRS := standardCoverBaseChangeEquivOfUnitEq
       (R := R) (T := S) (1 : Rˣ) pi exponent
     have hMappedOneS : Units.map (algebraMap R S) (1 : Rˣ) = (1 : Sˣ) :=
       map_one _
@@ -519,7 +519,7 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
           (1 : Sˣ) (algebraMap R S pi) exponent) ≃ₐ[K]
         AdjoinRoot (Pcf.LocalModel.localPoly
           (1 : Kˣ) (algebraMap S K (algebraMap R S pi)) exponent) := by
-    let eBaseChangeSK := standardCoverBaseChangeEquiv'
+    let eBaseChangeSK := standardCoverBaseChangeEquivOfUnitEq
       (R := S) (T := K) (1 : Sˣ) (algebraMap R S pi) exponent
     have hMappedOneK : Units.map (algebraMap S K) (1 : Sˣ) = (1 : Kˣ) :=
       map_one _
@@ -561,7 +561,7 @@ noncomputable def dvrRootPuncturedBaseChangeEquivKummerLocalization
         K ⊗[S] U ≃ₐ[K]
           K ⊗[S] AdjoinRoot (Pcf.LocalModel.localPoly unit 1 exponent) :=
       Algebra.TensorProduct.congr (AlgEquiv.refl : K ≃ₐ[K] K) ePolynomialS
-    let eBaseChangeS := standardCoverBaseChangeEquiv'
+    let eBaseChangeS := standardCoverBaseChangeEquivOfUnitEq
       (R := S) (T := K) unit 1 exponent
     let ePolynomialK :
         AdjoinRoot (Pcf.LocalModel.localPoly
@@ -763,7 +763,7 @@ theorem isUnramifiedAt_of_standardRoot_integralClosure_kummerUnit_localFactor
   let g : N ≃ₐ[S] U := IsIntegralClosure.equiv S N C U
   let q : Ideal U := m.map g
   let equiv : T ≃ₐ[S] Localization.AtPrime q :=
-    localizationEquivKummerUnit_of_isIntegralClosure
+    localizationEquivKummerUnitOfIsIntegralClosure
       S N C unit exponent m
   letI : IsDomain A := dvrRootAlgebra_isDomain pi hexponent hpi
   letI : IsLocalRing A := dvrRootAlgebra_isLocalRing pi hexponent hpi
@@ -910,7 +910,7 @@ theorem isUnramifiedAt_of_standardRoot_kummerGenericNormalization_localFactor
   let T := Localization.AtPrime m
   let V := Localization.AtPrime q
   let equiv : T ≃ₐ[S] V :=
-    localizationEquivKummerUnit_of_isIntegralClosure
+    localizationEquivKummerUnitOfIsIntegralClosure
       S N C unit exponent m
   letI : IsDomain V :=
     kummerUnit_localizationAtPrime_isDomain
@@ -1293,7 +1293,7 @@ theorem etale_of_dvr_standardRoot_kummerUnit_square
   exact etale_of_dvr_kummerUnit_ramification_square
     R S A T unit exponent (by omega) heUnit q equiv hindex
 
-#print axioms localizationEquivKummerUnit_of_isIntegralClosure
+#print axioms localizationEquivKummerUnitOfIsIntegralClosure
 #print axioms kummerUnit_isIntegralClosure_localizationAway_uniformizer
 #print axioms kummerUnit_localizationAtPrime_isRegularLocalRing
 #print axioms kummerUnit_localizationAtPrime_isDomain

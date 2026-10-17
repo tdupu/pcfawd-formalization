@@ -65,7 +65,7 @@ Any characteristic; the exponent `n = 1` is allowed (then `K(π^{1/1}) = K`, `M 
 Stacks states `09EV` for `n ≥ 2` only, and this case is not part of the tag). The tameness
 hypothesis is exactly Stacks' "`n` is prime to the residue characteristic", i.e. `n ∈ κ_A^×`. -/
 @[stacks 09EV "clause (6), tame case, any characteristic; n = 1 added"]
-theorem exists_dvrRootFractionPowerEquiv_of_embedding_tame
+theorem exists_dvrRootFractionPowerEquiv_of_embedding
     {A M : Type u} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A]
     [Field M] [Algebra (FractionRing A) M]
     (π : A) {n : ℕ} (hn : 1 ≤ n) (hπ : Irreducible π)
@@ -99,7 +99,7 @@ theorem exists_dvrRootFractionPowerEquiv_of_embedding_tame
         (f := f.toLinearMap) (hM.trans hL.symm)).mp hinj⟩
     exact AlgEquiv.ofBijective f hbij
   · obtain ⟨d, hdvd, hd, hfield⟩ :=
-      dvrRootFraction_intermediate_eq_power_tame π hn2 hπ hunit f.fieldRange
+      dvrRootFraction_intermediate_eq_power π hn2 hπ hunit f.fieldRange
     refine ⟨d, hdvd, hd, ?_⟩
     let toRange : M ≃ₐ[K] f.fieldRange := AlgEquiv.ofInjective f f.injective
     let identifyRange : f.fieldRange ≃ₐ[K]
@@ -110,6 +110,6 @@ theorem exists_dvrRootFractionPowerEquiv_of_embedding_tame
       (dvrRootFractionPowerEquiv π hn hd hdvd hπ).symm⟩
 
 #print axioms dvrRootFractionPowerEquiv
-#print axioms exists_dvrRootFractionPowerEquiv_of_embedding_tame
+#print axioms exists_dvrRootFractionPowerEquiv_of_embedding
 
 end Pcf.Stacks

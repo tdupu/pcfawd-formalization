@@ -88,18 +88,18 @@ theorem standardCover_finrank [Nontrivial R] (u : Rˣ) (a : R) {e : ℕ} (he : 1
 This does not compute the ramification index as `e`; it proves the exact tameness predicate
 because the PCFAWD hypothesis makes every positive ramification index invertible in every
 residue field, while finite residue extensions in characteristic zero are separable. -/
-theorem standardCover_tameInCodimensionOne_charZero
+theorem standardCover_isTamelyRamifiedInCodimensionOne_charZero
     (u : Rˣ) (a : R) {e : ℕ} (he : 1 ≤ e)
     (hunit : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) :
     IsTamelyRamifiedInCodimensionOneAlong R
       (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) a := by
   letI : Module.Finite R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) :=
     Pcf.LocalModel.finite_adjoinRoot u a he
-  exact isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit
+  exact isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast
     R (AdjoinRoot (Pcf.LocalModel.localPoly u a e)) hunit a
 
 #print axioms localizedStandardCover_etale
 #print axioms standardCover_free
-#print axioms standardCover_tameInCodimensionOne_charZero
+#print axioms standardCover_isTamelyRamifiedInCodimensionOne_charZero
 
 end Pcf.Stacks

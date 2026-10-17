@@ -247,7 +247,7 @@ theorem zariskiNagataPurity_iff (R S : Type u) [CommRing R] [CommRing S] [Algebr
 /-- The compact Abhyankar statement is equivalent to the development's.  The compact one assumes
 the normalization `S` finite over `R`; the development's assumes only `S[1/a]` finite over
 `R[1/a]` and the two agree because the normalization is then finite
-(`Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit`, Stacks `0EYH`). -/
+(`Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast`, Stacks `0EYH`). -/
 theorem abhyankarLemma_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     AbhyankarLemma R S a ↔ Stacks.AbhyankarLemma R S a := by
   constructor
@@ -256,7 +256,7 @@ theorem abhyankarLemma_iff (R S : Type u) [CommRing R] [CommRing S] [Algebra R S
     haveI := hreg
     haveI := hint
     exact h hR ha hreg
-      (Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit ha hfin hetale hnat)
+      (Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast ha hfin hetale hnat)
       hetale hint hnat y hy
   · intro h hR ha hreg hfin hetale hint hnat y hy
     haveI := hfin

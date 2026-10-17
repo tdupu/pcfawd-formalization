@@ -19,19 +19,19 @@ for a regular divisor: the hypothesis "every positive integer is invertible" of
 `Pcf.Stacks.AbhyankarLemma` (characteristic zero) is replaced by the hypothesis of Stacks Tag `0EYG`
 itself, "`Y` is tamely ramified over `X` in codimension `1`" (Stacks `0BSE`, Section 58.31, with
 More on Algebra Definition 15.113.7 = Tag `09E9`), in any characteristic.  There is one proof:
-the characteristic-zero theorem `Pcf.Stacks.abhyankarLemma_of_finite` derives tameness from "every
-positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`) and
-then runs through the same lemmas as `Pcf.Stacks.abhyankarLemma_tame_of_finite` (see "Shared
-lemmas" below); the public `Pcf.Stacks.abhyankarLemma` and `Pcf.Stacks.abhyankarLemma_tame`
+the characteristic-zero theorem `Pcf.Stacks.abhyankarLemmaOfFinite` derives tameness from "every
+positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) and
+then runs through the same lemmas as `Pcf.Stacks.abhyankarLemmaTameOfFinite` (see "Shared
+lemmas" below); the public `Pcf.Stacks.abhyankarLemma` and `Pcf.Stacks.abhyankarLemmaTame`
 (`Pcf.Stacks.Abhyankar.FiniteNormalization`) add the finiteness of the normalization.
 
 ## The statement
 
 `Pcf.Stacks.AbhyankarLemmaTame R S a` is `Pcf.Stacks.AbhyankarLemma R S a` with the clause
 `∀ n : ℕ, n ≠ 0 → IsUnit (n : R)` replaced by `IsTamelyRamifiedInCodimensionOneAlong R S a`.
-It is proved in `Pcf.Stacks.Abhyankar.FiniteNormalization` (`Pcf.Stacks.abhyankarLemma_tame`),
+It is proved in `Pcf.Stacks.Abhyankar.FiniteNormalization` (`Pcf.Stacks.abhyankarLemmaTame`),
 from the finite-normalization form `AbhyankarLemmaTameOfFinite`
-(`Pcf.Stacks.abhyankarLemma_tame_of_finite`, `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame`).
+(`Pcf.Stacks.abhyankarLemmaTameOfFinite`, `Pcf.Stacks.Abhyankar.Tame.Tag0EYGTame`).
 
 ## Fidelity of the tameness predicate (Stacks `0BSE` and `09E9`)
 
@@ -63,13 +63,13 @@ unchanged and no new definition is needed.
 ## Shared lemmas
 
 Every step of the proof of `0EYG` is proved once, in any characteristic, and used by both
-`Pcf.Stacks.abhyankarLemma_of_finite` (characteristic zero) and
-`Pcf.Stacks.abhyankarLemma_tame_of_finite`, hence by `Pcf.Stacks.abhyankarLemma` and
-`Pcf.Stacks.abhyankarLemma_tame`.  The
+`Pcf.Stacks.abhyankarLemmaOfFinite` (characteristic zero) and
+`Pcf.Stacks.abhyankarLemmaTameOfFinite`, hence by `Pcf.Stacks.abhyankarLemma` and
+`Pcf.Stacks.abhyankarLemmaTame`.  The
 characteristic-zero theorem enters the shared route at the top:
 `hasAbhyankarStandardCoverAt_of_mem_divisor` (`Tag0EYG.lean`) is
-`hasAbhyankarStandardCoverAt_of_mem_divisor_tame` with tameness from
-`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`.
+`hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame` with tameness from
+`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`.
 
 Steps that never used characteristic zero:
 * the strict henselization `LocalColimit R Ω` and its structure: Noetherian (`06LJ`,
@@ -87,7 +87,7 @@ Steps that never used characteristic zero:
   (`StrictRootCover`), the component pre-data (`exists_strictRootComponentPreData`), the
   going-down bookkeeping (`under_eq_of_height_eq_one_of_mem`,
   `mem_minimalPrimes_span_of_height_eq_one`), `StrictRootComponentData`;
-* `0EYE` with purity (`Algebra.tag0EYE_of_zariskiNagataPurity_finite_normal_domain`,
+* `0EYE` with purity (`Algebra.etale_of_isRegularRing_quotient_of_zariskiNagataPurity`,
   `zariskiNagataPurity`), the strict splitting (`finiteEtaleLocalAlgEquivOfIsSepClosed`), the
   root-of-unity descent of `09EV` (`dvrRootFraction_rootOfUnity_mem_base`,
   `dvrRootFraction_intermediate_eq_power_of_rootOfUnity_descent`), the fraction-field transport
@@ -100,28 +100,28 @@ Steps stated with the tame hypothesis (Stacks' own; in characteristic zero it al
   `maximalIdeal_eq_span_root_of_dvd_and_isSeparable` (`κ(𝔪)/κ_B` separable; the uniformizer clause
   alone is `maximalIdeal_eq_span_root_of_dvd`);
 * `KummerNormDescent`, `KummerIntermediateEquiv`, `StrictComponentClassification`: `09EV`
-  clause (6) without `CharZero` and with `n ≥ 1` (`dvrRootFraction_intermediate_eq_power_tame`,
-  `exists_dvrRootFractionPowerEquiv_of_embedding_tame`,
-  `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing_tame`) and the component
-  classification `exists_rootExponent_fractionRing_equiv_of_strictComponent_tame`, with `E`
+  clause (6) without `CharZero` and with `n ≥ 1` (`dvrRootFraction_intermediate_eq_power`,
+  `exists_dvrRootFractionPowerEquiv_of_embedding`,
+  `exists_dvrRootFractionPowerEquiv_of_embedding_of_isFractionRing`) and the component
+  classification `exists_rootExponent_fractionRing_equiv_of_strictComponent`, with `E`
   invertible in `κ((a))`;
 * `StrictHeightOneTransport`, `StrictHeightOneUnramified`: the exponent `E`, the product of the
-  ramification indices (`exists_common_multiple_ramificationIdx_tame`),
-  `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame`,
-  `StrictRootComponentPreData.toDataOfDvd_tame`, `exists_strictRootComponentData_tame`,
-  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData_tame`, with
+  ramification indices (`exists_common_multiple_ramificationIdx`),
+  `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem`,
+  `StrictRootComponentPreData.toDataOfDvd`, `exists_strictRootComponentData`,
+  `exists_rootExponent_fractionRing_equiv_of_strictRootComponentData`, with
   `IsTamelyRamifiedAt` on the component;
 * `Tame/RootExponentUnit`: the last paragraph of `0EYG` (`n` is a unit of `A`);
 * `StrictGenericPresentation`: the strictly henselian case
-  (`exists_strictRootCover_equiv_of_idempotent_factor_tame`,
-  `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian_tame`);
-* `StrictStandardConclusion`: the descent (`exists_stage_natCast_isUnit`,
-  `exists_pointedEtale_standardTameCover_of_strict_tame`,
-  `hasAbhyankarStandardCoverAt_of_strict_tame`; "after increasing `λ` a bit more we may assume
+  (`exists_strictRootCover_equiv_of_idempotent_factor`,
+  `isFiniteDisjointUnionOfStandardTameCovers_of_strictlyHenselian`);
+* `StrictStandardConclusion`: the descent (`exists_stage_isUnit_natCast`,
+  `exists_pointedEtale_standardTameCover_of_strict`,
+  `hasAbhyankarStandardCoverAt_of_strict`; "after increasing `λ` a bit more we may assume
   `e_i` is invertible in `A_λ`");
 * `Tame/StrictBaseChangeTame`: the affine `0EYD` (58.31.1) transport of tameness from `S/R` to
   the components of `Rˢʰ ⊗_R S` over `Rˢʰ`;
-* `Tame/Tag0EYGTame`: the main theorem `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`.
+* `Tame/Tag0EYGTame`: the main theorem `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`.
 
 (The `_tame` suffixes record the history: these lemmas replaced characteristic-zero versions that
 assumed `∀ n ≠ 0, IsUnit (n : R)` or `CharZero`.)
@@ -154,7 +154,7 @@ Comparison with the tags (the remaining restrictions are those of `Pcf.Stacks.Ab
   `R' ⧸ (a)` regular, and `R' ⊗_R S ≅ ∏ R'[x]/(x^{e_i} - u_i a)` with `e_i` invertible in `R'`
   (the pieces `x^e - f`, `f = u_i a`, of `0EYH`); points outside `D` are not treated.
 
-Proved as `Pcf.Stacks.abhyankarLemma_tame` in `Pcf.Stacks.Abhyankar.FiniteNormalization`. -/
+Proved as `Pcf.Stacks.abhyankarLemmaTame` in `Pcf.Stacks.Abhyankar.FiniteNormalization`. -/
 def AbhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) : Prop :=
   IsNoetherianRing R →
   a ∈ nonZeroDivisors R →
@@ -167,7 +167,7 @@ def AbhyankarLemmaTame (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a
     HasAbhyankarStandardCoverAt R S a y
 
 /-- `Pcf.Stacks.AbhyankarLemmaTame` with the normalization `S` assumed finite over `R`: the form
-in which the tame proof `Pcf.Stacks.abhyankarLemma_tame_of_finite` is carried out and which the
+in which the tame proof `Pcf.Stacks.abhyankarLemmaTameOfFinite` is carried out and which the
 scheme layer applies at local rings (where the finiteness is classical, Stacks `032L`). -/
 def AbhyankarLemmaTameOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (a : R) :
     Prop :=
@@ -183,9 +183,9 @@ def AbhyankarLemmaTameOfFinite (R S : Type u) [CommRing R] [CommRing S] [Algebra
 
 /-- The tame statement implies the characteristic-zero statement `Pcf.Stacks.AbhyankarLemma`: if
 every positive integer is a unit, `S` is tamely ramified in codimension one
-(`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`) once `S` is finite; the finiteness of
+(`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`) once `S` is finite; the finiteness of
 `S` is supplied by `hfin` (in practice `Pcf.Stacks.finite_of_isIntegralClosure_away`). -/
-theorem AbhyankarLemma.of_tame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] {a : R}
+theorem AbhyankarLemma.of_abhyankarLemmaTame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S] {a : R}
     (h : AbhyankarLemmaTame R S a)
     (hfin : IsNoetherianRing R → a ∈ nonZeroDivisors R → IsRegularRing (R ⧸ Ideal.span {a}) →
       Module.Finite (Localization.Away a) (Localization.Away a ⊗[R] S) →
@@ -196,15 +196,15 @@ theorem AbhyankarLemma.of_tame {R S : Type u} [CommRing R] [CommRing S] [Algebra
   intro hR ha hreg hfinA hetale hint hnat y hy
   haveI := hfin hR ha hreg hfinA hetale hint hnat
   exact h hR ha hreg hfinA hetale hint
-    (isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit R S hnat a) y hy
+    (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 /-- The finite-normalization forms: the tame statement implies the characteristic-zero one. -/
-theorem AbhyankarLemmaOfFinite.of_tame {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
+theorem AbhyankarLemmaOfFinite.of_abhyankarLemmaTameOfFinite {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
     {a : R} (h : AbhyankarLemmaTameOfFinite R S a) : AbhyankarLemmaOfFinite R S a := by
   intro hR ha hreg hfin hetale hint hnat y hy
   haveI := hfin
   exact h hR ha hreg hfin hetale hint
-    (isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit R S hnat a) y hy
+    (isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast R S hnat a) y hy
 
 section ResidueField
 

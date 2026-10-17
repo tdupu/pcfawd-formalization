@@ -96,7 +96,7 @@ are not formalized, which contradicts Entry 0.
 
 > **Update (2026-10-16): the unconditional theorem exists.** Zariski--Nagata purity and
 > Abhyankar's lemma are now proved in this repository (`Pcf.Stacks.palomar_zariskiNagataPurity`,
-> `Pcf.Stacks.palomar_abhyankarLemma`), and `lean/Pcf/Palomar/Unconditional.lean` proves
+> `Pcf.Palomar.abhyankarLemma`), and `lean/Pcf/Palomar/Unconditional.lean` proves
 >
 > ```
 > Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional : ∀ (k : Type u_1) [inst : Field k] [CharZero k] {X : Scheme}
@@ -372,7 +372,7 @@ constant term `0` — is not étale over `k`.
   stated anywhere in this repository", which is now stale. The predicate
   `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong` now exists
   (`lean/Pcf/Stacks/Abhyankar/TameRamification.lean`), and
-  `Pcf.Stacks.standardCover_tameInCodimensionOne_charZero` proves clause 3 for the
+  `Pcf.Stacks.standardCover_isTamelyRamifiedInCodimensionOne_charZero` proves clause 3 for the
   standard cover only when every positive integer is invertible in the base. The general
   tame case is still not proved.)*
 * **This is not Abhyankar's lemma.** Tag 0EYG, the structure theorem, is not proved; an

@@ -24,7 +24,7 @@ inputs of `Pcf.PCFAllTheWayDownLocalTheorems` and of the compared Palomar statem
 | Input | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
 | Zariski--Nagata purity, Stacks `0BMB` (affine pointwise form) | `Pcf.Stacks.zariskiNagataPurity : ∀ R S, Pcf.Stacks.ZariskiNagataPurity R S`; Palomar form `Pcf.Stacks.palomar_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMA.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Stacks.palomar_abhyankarLemma` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tag0EYG.lean`, now `abhyankarLemma_of_finite`) | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar's lemma for a regular divisor, Stacks `0EYG`/`0EYH` (all positive integers invertible) | `Pcf.Stacks.abhyankarLemma : ∀ R S a, Pcf.Stacks.AbhyankarLemma R S a`; Palomar form `Pcf.Palomar.abhyankarLemma` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tag0EYG.lean`, now `abhyankarLemmaOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
 
 The headline theorems with these inputs discharged are in `Pcf/Palomar/Unconditional.lean`:
 
@@ -107,7 +107,7 @@ the authors' private research note `2026-10-16-purity-abhyankar-completion/` (`F
 | --- | --- | --- | --- |
 | Purity of branch locus, Stacks `0BMB`, scheme-level pointwise (literal Stacks pointwise notions) | `Pcf.Stacks.stacksEtaleAt_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBScheme.lean` | `[propext, Classical.choice, Quot.sound]` |
 | The same in Mathlib vocabulary (`Etale` on an open neighbourhood) | `Pcf.Stacks.exists_etale_of_zariskiNagataPurity` | `Pcf/Stacks/Purity/Tag0BMBSchemeAPI.lean` | `[propext, Classical.choice, Quot.sound]` |
-| Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemma_tame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tame/Tag0EYGTame.lean`, now `abhyankarLemma_tame_of_finite`) | `[propext, Classical.choice, Quot.sound]` |
+| Abhyankar for a regular divisor, tamely ramified in codimension 1, any characteristic, affine (`0EYG`/`0EYH`) | `Pcf.Stacks.abhyankarLemmaTame : ∀ R S a, Pcf.Stacks.AbhyankarLemmaTame R S a` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` (phase 3; previously `Tame/Tag0EYGTame.lean`, now `abhyankarLemmaTameOfFinite`) | `[propext, Classical.choice, Quot.sound]` |
 | Stacks `0EYG` (Lemma 58.31.5), scheme level, as stated | `Pcf.Stacks.SchemeLevel.tag0EYG` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYG.lean` | `[propext, Classical.choice, Quot.sound]` |
 | Stacks `0EYH` (Lemma 58.31.6), scheme level, as stated ("finite locally free" written as finite, flat, locally of finite presentation, Tag `02KB`) | `Pcf.Stacks.SchemeLevel.tag0EYH` | `Pcf/Stacks/Abhyankar/Scheme/Tag0EYH.lean` | `[propext, Classical.choice, Quot.sound]` |
 
@@ -136,25 +136,25 @@ The finiteness of `S` (first assertion of `0EYH`) is proved:
 | Claim | Theorem | File | `#print axioms` |
 | --- | --- | --- | --- |
 | The normalization is finite, tame case (`0EYH`, first assertion, affine) | `Pcf.Stacks.finite_of_isIntegralClosure_away` | `Pcf/Stacks/Abhyankar/FiniteNormalization.lean` | `[propext, Classical.choice, Quot.sound]` |
-| The same, every positive integer invertible (no tameness hypothesis) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_natCast_isUnit` | same | `[propext, Classical.choice, Quot.sound]` |
-| `0EYG`/`0EYH` affine, normalization not assumed finite | `Pcf.Stacks.abhyankarLemma`, `Pcf.Stacks.abhyankarLemma_tame` | same | `[propext, Classical.choice, Quot.sound]` |
+| The same, every positive integer invertible (no tameness hypothesis) | `Pcf.Stacks.finite_of_isIntegralClosure_away_of_isUnit_natCast` | same | `[propext, Classical.choice, Quot.sound]` |
+| `0EYG`/`0EYH` affine, normalization not assumed finite | `Pcf.Stacks.abhyankarLemma`, `Pcf.Stacks.abhyankarLemmaTame` | same | `[propext, Classical.choice, Quot.sound]` |
 
 The previous statements are kept as `Pcf.Stacks.AbhyankarLemmaOfFinite` and
-`Pcf.Stacks.AbhyankarLemmaTameOfFinite`, proved by `Pcf.Stacks.abhyankarLemma_of_finite`
-(`Tag0EYG.lean`) and `Pcf.Stacks.abhyankarLemma_tame_of_finite` (`Tame/Tag0EYGTame.lean`); the
+`Pcf.Stacks.AbhyankarLemmaTameOfFinite`, proved by `Pcf.Stacks.abhyankarLemmaOfFinite`
+(`Tag0EYG.lean`) and `Pcf.Stacks.abhyankarLemmaTameOfFinite` (`Tame/Tag0EYGTame.lean`); the
 scheme layer applies them at local rings.  The Palomar statement `Pcf.Palomar.AbhyankarLemma`
 still assumes the normalization finite (it is `AbhyankarLemmaOfFinite`); `Pcf.Palomar.abhyankarLemma_iff`
 now proves its equivalence with `Pcf.Stacks.AbhyankarLemma` using the finiteness theorem, and the
 headline statements are unchanged.
 
-The two `0EYG` proofs are now one: `Pcf.Stacks.abhyankarLemma_of_finite` supplies tameness from
-"every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_all_nat_isUnit`)
-and applies `hasAbhyankarStandardCoverAt_of_mem_divisor_tame`; each of the 16 former
+The two `0EYG` proofs are now one: `Pcf.Stacks.abhyankarLemmaOfFinite` supplies tameness from
+"every positive integer is invertible" (`isTamelyRamifiedInCodimensionOneAlong_of_isUnit_natCast`)
+and applies `hasAbhyankarStandardCoverAt_of_mem_divisor_of_tame`; each of the 16 former
 characteristic-zero/tame lemma pairs has one proof (map in `Tame/Defs.lean`, "Shared lemmas"), and
 the six `Tame/` files that held the tame duplicates were deleted.  So the characteristic-zero
-results, including `finite_of_isIntegralClosure_away_of_natCast_isUnit` and the PCFAWD headline,
+results, including `finite_of_isIntegralClosure_away_of_isUnit_natCast` and the PCFAWD headline,
 now go through the tame proof; their statements are unchanged.  The former consistency check
-`Pcf.Stacks.abhyankarLemma_of_tame` (same statement and route as `abhyankarLemma_of_finite`) was
+`Pcf.Stacks.abhyankarLemma_of_tame` (same statement and route as `abhyankarLemmaOfFinite`) was
 removed.
 
 `Module.Finite R S` could not simply be dropped: pcf's `Algebra.IsEtaleAt` is formal étaleness of
@@ -163,7 +163,7 @@ closure of `R` in `ℚ(ζ_{ℓ^∞})(t)`, every other hypothesis holds and `S` i
 conclusion would make `S` finite by faithfully flat descent, so the statement would be false.
 
 Route: `S[1/a]` is finite étale over `R[1/a]` (`etale_away`); the tameness of `S` is read on the
-chart `Spec S[1/a] → Spec R[1/a]` (`chartTame_of_isTamelyRamifiedInCodimensionOneAlong`, via the
+chart `Spec S[1/a] → Spec R[1/a]` (`isTamelyRamifiedAlongDivisor_of_isTamelyRamifiedInCodimensionOneAlong`, via the
 localization invariance of tameness, `isTamelyRamifiedAt_map_of_isLocalization`); then the
 scheme layer's `hasLocalizedStandardCoverAt_of_tame` and `integralClosure_finite` give the
 normalization finite, as in the Stacks proof of `0EYH` (étale-local structure from `0EYG`).
@@ -325,7 +325,7 @@ of them is now machine-checked:
   is étale where the divisor equation is invertible: `Pcf.Kummer.finrank_adjoinRoot_kummerPoly`, `Pcf.Kummer.etale_adjoinRoot_kummerPoly`,
   `Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one`. Clause 3, tameness in codimension one, is stated
   (`Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`) and proved only when every positive
-  integer is invertible (`Pcf.Stacks.standardCover_tameInCodimensionOne_charZero`). See §B.4.
+  integer is invertible (`Pcf.Stacks.standardCover_isTamelyRamifiedInCodimensionOne_charZero`). See §B.4.
 
 The interface is now `Pcf.KummerWitness` rather than `Pcf.UnramifiedWitness`.
 
@@ -463,7 +463,7 @@ assertions about `C = A[x]/(x^e − f)`; that file addresses the first two, and
 | --- | --- | --- |
 | 1. `Spec(C) → Spec(A)` finite locally free | **proved**, as free of rank `e` | `Pcf.Kummer.finrank_adjoinRoot_kummerPoly`; freeness and finiteness are Mathlib's `Polynomial.Monic.free_adjoinRoot` / `Monic.finite_adjoinRoot` |
 | 2. étale over `Spec(A_f)` | **proved** | `Pcf.Kummer.etale_adjoinRoot_kummerPoly`, `Pcf.Kummer.ramificationIdx_adjoinRoot_kummerPoly_eq_one`, `Pcf.Kummer.etale_adjoinRoot_localPoly_of_isUnit` |
-| 3. tamely ramified over `Spec(A)` in codimension 1 | **stated; proved only when every positive integer is a unit in `A`** (the PCFAWD characteristic-zero setting). The general tame case is not proved. | predicate `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`; `Pcf.Stacks.standardCover_tameInCodimensionOne_charZero`, for the cover `x^e − u·a` with `u` a unit |
+| 3. tamely ramified over `Spec(A)` in codimension 1 | **stated; proved only when every positive integer is a unit in `A`** (the PCFAWD characteristic-zero setting). The general tame case is not proved. | predicate `Pcf.Stacks.IsTamelyRamifiedInCodimensionOneAlong`; `Pcf.Stacks.standardCover_isTamelyRamifiedInCodimensionOne_charZero`, for the cover `x^e − u·a` with `u` a unit |
 
 Clause 3 is what the name "standard *tamely ramified* morphism" refers to, and it is the
 clause the proof of Tag 0EYG consumes.

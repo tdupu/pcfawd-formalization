@@ -49,15 +49,15 @@ Combined with `forall_height_one_isUnramifiedAt_of_root_mem` (étale away from `
 `StrictRootComponentData` (`StrictRootComponentPreData.toDataOfRootMem`).
 
 In characteristic zero (every positive integer a unit of `A`) the tameness hypothesis always holds
-(`isTamelyRamifiedAt_of_all_nat_isUnit`), so these lemmas serve both proofs of `0EYG` in pcf.
+(`isTamelyRamifiedAt_of_isUnit_natCast`), so these lemmas serve both proofs of `0EYG` in pcf.
 
 ## Main statements
 
-* `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame` — the `hroot`
+* `StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem` — the `hroot`
   input of `StrictRootComponentPreData.toDataOfRootMem`.
-* `StrictRootComponentPreData.toDataOfDvd_tame` — the completed `StrictRootComponentData`.
-* `exists_strictRootComponentData_tame` — existence of `StrictRootComponentData A N a E` for `E`
-  the product of the ramification indices (`exists_common_multiple_ramificationIdx_tame`, a unit
+* `StrictRootComponentPreData.toDataOfDvd` — the completed `StrictRootComponentData`.
+* `exists_strictRootComponentData` — existence of `StrictRootComponentData A N a E` for `E`
+  the product of the ramification indices (`exists_common_multiple_ramificationIdx`, a unit
   in `κ((a))`), combining `exists_strictRootComponentPreData`.
 
 Divergence from Stacks: Stacks takes `e` to be the product of the ramification indices over all
@@ -227,7 +227,7 @@ unit in `N_q` because tameness says `e ∈ κ(q ∩ A)ˣ`, i.e. `e ∉ q ∩ A`,
 separability of `κ(Q')/κ((x))` comes from `κ(Q')/κ(q)` separable (the residue clause of `0BRM`,
 `maximalIdeal_eq_span_root_of_dvd_and_isSeparable`) and `κ(q)/κ((a))` separable (tameness), by
 transitivity (Stacks `0BRM`: "κ(𝔪) is separable over κ_A"). -/
-theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
+theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     (hE : 1 ≤ E)
@@ -402,7 +402,7 @@ theorem StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_t
 /-- **The completed root-cover component data, tame case** (Stacks `0EYG`, paragraph 4): the
 pre-data of `StrictRootComponent.lean` together with the codimension-one `0BRM` conclusion, with
 tameness of `N` over `A` at the height-one primes containing `a`. -/
-def StrictRootComponentPreData.toDataOfDvd_tame
+def StrictRootComponentPreData.toDataOfDvd
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     (hE : 1 ≤ E)
@@ -413,11 +413,11 @@ def StrictRootComponentPreData.toDataOfDvd_tame
       IsTamelyRamifiedAt A N q)
     (C : StrictRootComponentPreData A N a E) : StrictRootComponentData A N a E :=
   C.toDataOfRootMem fun w hw hx ↦
-    C.isUnramifiedAt_of_height_eq_one_of_root_mem_tame ha ha0 hE hdiv htame w hw hx
+    C.isUnramifiedAt_of_height_eq_one_of_root_mem ha ha0 hE hdiv htame w hw hx
 
-/-- `toDataOfDvd_tame` does not change the carrier of the pre-data. -/
+/-- `toDataOfDvd` does not change the carrier of the pre-data. -/
 @[simp]
-theorem StrictRootComponentPreData.toDataOfDvd_tame_carrier
+theorem StrictRootComponentPreData.toDataOfDvd_carrier
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     (hE : 1 ≤ E)
@@ -427,7 +427,7 @@ theorem StrictRootComponentPreData.toDataOfDvd_tame_carrier
     (htame : ∀ q : PrimeSpectrum N, q.asIdeal.height = 1 → algebraMap A N a ∈ q.asIdeal →
       IsTamelyRamifiedAt A N q)
     (C : StrictRootComponentPreData A N a E) :
-    (C.toDataOfDvd_tame ha ha0 hE hdiv htame).carrier = C.carrier :=
+    (C.toDataOfDvd ha ha0 hE hdiv htame).carrier = C.carrier :=
   rfl
 
 /-- **Existence of the root-cover component data, tame case (Stacks `0EYG`, paragraph 4).**  For a
@@ -436,7 +436,7 @@ every height-one prime containing `a`, there is an exponent `E ≥ 1`, the produ
 ramification indices of `N` over `(a)`, which is a unit in `κ((a))` (`(E : A) ∉ (a)`; Stacks: "at
 this point we do not know that `e` is invertible in `A/fA` or in `A`"), together with a component
 datum `StrictRootComponentData A N a E` (the `0BRM` codimension-one conclusion). -/
-theorem exists_strictRootComponentData_tame
+theorem exists_strictRootComponentData
     (ha : a ∈ maximalIdeal A) (ha0 : a ∈ nonZeroDivisors A)
     [IsRegularLocalRing (A ⧸ Ideal.span ({a} : Set A))]
     [IsDomain N] [IsIntegrallyClosed N] [Module.Finite A N] [FaithfulSMul A N]
@@ -451,20 +451,20 @@ theorem exists_strictRootComponentData_tame
   haveI : (Ideal.span ({a} : Set A)).IsPrime := divisorPrime_isPrime a
   have ha0' : algebraMap A N a ≠ 0 := fun h ↦
     nonZeroDivisors.ne_zero ha0 (FaithfulSMul.algebraMap_injective A N (by rw [map_zero]; exact h))
-  obtain ⟨E, hE, hEa, hdiv⟩ := exists_common_multiple_ramificationIdx_tame (A := A) a ha0' htame
+  obtain ⟨E, hE, hEa, hdiv⟩ := exists_common_multiple_ramificationIdx (A := A) a ha0' htame
     (Ideal.span {a}) (fun q _ hqa ↦ by
       rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_under]
       exact hqa)
   obtain ⟨C⟩ := exists_strictRootComponentPreData (N := N) (E := E) ha ha0 hE hetale
-  exact ⟨E, hE, hEa, ⟨C.toDataOfDvd_tame ha ha0 hE hdiv htame⟩⟩
+  exact ⟨E, hE, hEa, ⟨C.toDataOfDvd ha ha0 hE hdiv htame⟩⟩
 
 end Main
 
 #print axioms exists_aeval_eq_of_mem_adjoin
 #print axioms StrictRootComponentPreData.faithfulSMul_component
 #print axioms StrictRootComponentPreData.exists_aeval_mul_eq_aeval_of_generic
-#print axioms StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem_tame
-#print axioms StrictRootComponentPreData.toDataOfDvd_tame
-#print axioms exists_strictRootComponentData_tame
+#print axioms StrictRootComponentPreData.isUnramifiedAt_of_height_eq_one_of_root_mem
+#print axioms StrictRootComponentPreData.toDataOfDvd
+#print axioms exists_strictRootComponentData
 
 end Pcf.Stacks

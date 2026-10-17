@@ -26,7 +26,7 @@ henselization has been identified with a finite disjoint union of standard tame 
 descent supplies one pointed étale stage, which is packaged as the conclusion
 `HasAbhyankarStandardCoverAt`.  No characteristic hypothesis is used: the exponents are units in
 the strict henselization by the strict-local presentation itself, and "after increasing `λ` a bit
-more" is carried out by `exists_stage_natCast_isUnit`, which descends the inverse of each `e_i` to
+more" is carried out by `exists_stage_isUnit_natCast`, which descends the inverse of each `e_i` to
 a stage and then the identity `e_i · e_i⁻¹ = 1` to a further stage
 (`exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero`).  Both proofs of `0EYG` in pcf use
 this file.
@@ -36,8 +36,8 @@ this file.
 * `A^sh = colim A_λ`, étale `A_λ` → `PointedEtaleNeighborhood.LocalColimit R Ω`
 * descent of the isomorphism (10.127.8) → `exists_stage_standardTameCover_of_limit_equiv`
 * descent of the units `u_i` of the pieces → `exists_stage_units`
-* "after increasing `λ` ... `e_i` invertible in `A_λ`" → `exists_stage_natCast_isUnit`
-* `Spec(A_λ) → Spec(A)` is the étale neighbourhood → `hasAbhyankarStandardCoverAt_of_strict_tame`
+* "after increasing `λ` ... `e_i` invertible in `A_λ`" → `exists_stage_isUnit_natCast`
+* `Spec(A_λ) → Spec(A)` is the étale neighbourhood → `hasAbhyankarStandardCoverAt_of_strict`
 
 The only difference from Stacks is that the colimit is taken over the explicit category
 `PointedEtaleNeighborhood R Ω` of pointed étale neighbourhoods.
@@ -68,7 +68,7 @@ The inverse of each `e_j` lives at some stage (`exists_stage_containing_finite_l
 and the identity `e_j · e_j⁻¹ = 1`, which holds in the colimit, holds at a further stage
 (`exists_refinement_eq_zero_of_toLocalColimitAlgHom_eq_zero`); a common refinement of these
 finitely many stages does the job. -/
-theorem exists_stage_natCast_isUnit (i : Type) [Finite i] (e : i → ℕ)
+theorem exists_stage_isUnit_natCast (i : Type) [Finite i] (e : i → ℕ)
     (h : ∀ j, IsUnit ((e j : ℕ) : LocalColimit R Ω)) :
     ∃ X : PointedEtaleNeighborhood R Ω, ∀ j, IsUnit ((e j : ℕ) : X) := by
   classical
@@ -99,12 +99,12 @@ theorem exists_stage_natCast_isUnit (i : Type) [Finite i] (e : i → ℕ)
 hypothesis.**  A strict-local standard presentation of the normalization descends to one pointed
 étale stage: the isomorphism descends by `05N9`/10.127.8
 (`exists_stage_standardTameCover_of_limit_equiv`), the units of the pieces descend by
-`exists_stage_units`, and the exponents become units at a stage by `exists_stage_natCast_isUnit`
+`exists_stage_units`, and the exponents become units at a stage by `exists_stage_isUnit_natCast`
 ("after increasing `λ` a bit more").
 
 No characteristic hypothesis is needed: the invertibility of the exponents is read off the
 strict-local presentation (where Stacks has "each `e_i` is an integer invertible in `A^sh`"). -/
-theorem exists_pointedEtale_standardTameCover_of_strict_tame
+theorem exists_pointedEtale_standardTameCover_of_strict
     {S : Type u} [CommRing S] [Algebra R S] [IsNoetherianRing R]
     (a : R) [Module.Finite R S]
     (hstrict : IsFiniteDisjointUnionOfStandardTameCovers
@@ -119,7 +119,7 @@ theorem exists_pointedEtale_standardTameCover_of_strict_tame
     ⟨ι, hι, exponent, unit, hexponent, hexponentUnit, ⟨hstrictEquiv⟩⟩
   letI := hι
   obtain ⟨X₀, unitX₀, hunitX₀⟩ := exists_stage_units ι unit
-  obtain ⟨X₁, hX₁⟩ := exists_stage_natCast_isUnit (R := R) (Ω := Ω) ι exponent hexponentUnit
+  obtain ⟨X₁, hX₁⟩ := exists_stage_isUnit_natCast (R := R) (Ω := Ω) ι exponent hexponentUnit
   obtain ⟨X, ⟨f₀⟩, ⟨f₁⟩⟩ := exists_common_refinement (R := R) (Ω := Ω) X₀ X₁
   let unitX : ι → Xˣ := fun j ↦ Units.map f₀.hom.toMonoidHom (unitX₀ j)
   have hunitX : ∀ j, Units.map (toLocalColimitAlgHom (R := R) (Ω := Ω) X) (unitX j) = unit j := by
@@ -241,12 +241,12 @@ theorem exists_pointedEtale_standardTameCover_of_strict_tame
 proof, paragraph 2), without a characteristic hypothesis.  A strict-local standard-cover
 presentation descends to the exact local standard-cover conclusion
 `HasAbhyankarStandardCoverAt`: the pointed étale stage of
-`exists_pointedEtale_standardTameCover_of_strict_tame` lies over `y` (its point has kernel `y`),
+`exists_pointedEtale_standardTameCover_of_strict` lies over `y` (its point has kernel `y`),
 is Noetherian, `a` stays a nonzerodivisor (flatness of étale maps) and `A_λ ⧸ (a)` stays regular
 (`quotient_span_isRegularRing_of_etale`, Stacks `0EYH`'s Noetherian/regular clauses).  The
 equality on the kernel of the chosen geometric point is the literal assertion that the pointed
 étale neighbourhood lies over `y`. -/
-theorem hasAbhyankarStandardCoverAt_of_strict_tame
+theorem hasAbhyankarStandardCoverAt_of_strict
     {S : Type u} [CommRing S] [Algebra R S] [IsNoetherianRing R]
     (a : R) (y : PrimeSpectrum R)
     (hΩ : RingHom.ker (algebraMap R Ω) = y.asIdeal)
@@ -258,7 +258,7 @@ theorem hasAbhyankarStandardCoverAt_of_strict_tame
       (algebraMap R (LocalColimit R Ω) a)) :
     HasAbhyankarStandardCoverAt R S a y := by
   obtain ⟨X, hstandard⟩ :=
-    exists_pointedEtale_standardTameCover_of_strict_tame a hstrict
+    exists_pointedEtale_standardTameCover_of_strict a hstrict
   let y' : PrimeSpectrum X :=
     ⟨RingHom.ker X.point.toRingHom, RingHom.ker_isPrime X.point.toRingHom⟩
   have hy' : y'.asIdeal.under R = y.asIdeal := by
@@ -288,8 +288,8 @@ theorem hasAbhyankarStandardCoverAt_of_strict_tame
     hmapRegular, inferInstance, hstandard⟩
   exact ⟨y', hy'⟩
 
-#print axioms exists_stage_natCast_isUnit
-#print axioms exists_pointedEtale_standardTameCover_of_strict_tame
-#print axioms hasAbhyankarStandardCoverAt_of_strict_tame
+#print axioms exists_stage_isUnit_natCast
+#print axioms exists_pointedEtale_standardTameCover_of_strict
+#print axioms hasAbhyankarStandardCoverAt_of_strict
 
 end Pcf.Stacks.PointedEtaleNeighborhood

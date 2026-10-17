@@ -17,7 +17,7 @@ This file implements the `05N9` descent paragraph of Stacks Tag `0EYG` for the c
 pointed-etale colimit used in this repository.  The first step moves a finite family of units
 from the strict local colimit to one pointed etale stage, including the inverse identities; the
 second descends an isomorphism with a standard tame cover.  The assembled descent paragraph is
-`exists_pointedEtale_standardTameCover_of_strict_tame` (`StrictStandardConclusion.lean`).
+`exists_pointedEtale_standardTameCover_of_strict` (`StrictStandardConclusion.lean`).
 -/
 
 @[expose] public section
