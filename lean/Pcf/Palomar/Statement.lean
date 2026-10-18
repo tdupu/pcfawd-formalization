@@ -15,7 +15,7 @@ public import Mathlib.RingTheory.RamificationInertia.Basic
 # The Palomar statement surface
 
 A compact restatement, in Mathlib vocabulary, of `Pcf.pcfAllTheWayDown_charZero_unconditional`.
-Its definitions are those of `palomar/PcfChallenge.lean`, and only the module docstring differs.
+Its definitions are those of the Challenge `PcfChallenge.lean` (beside `Pcf.lean`), and only the module docstring differs.
 Every definition here is written so that its body contains no nested proof term that Lean
 would abstract into an auxiliary `_proof_n` theorem: each proof obligation is a separately
 named lemma applied to variables only.  `Pcf.Palomar.Bridge` proves that these notions agree

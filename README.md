@@ -26,18 +26,20 @@ every positive integer is invertible. The proof uses only the axioms `propext`,
 `Classical.choice` and `Quot.sound`.
 
 The precise statement, with what it does not claim, is in
-[`palomar/formalization.yaml`](palomar/formalization.yaml) and Entry 0 of
+[`lean/formalization.yaml`](lean/formalization.yaml) and Entry 0 of
 [`lean/PALOMAR.md`](lean/PALOMAR.md). The census of assumed inputs and of proof routes is
 [`lean/AXIOMS.md`](lean/AXIOMS.md). The statement was reviewed by AI agents
 against the manuscript, not yet by a human author. AI use is summarized in
-`palomar/formalization.yaml` (`automation`); the authors keep the per-task record privately.
+`lean/formalization.yaml` (`automation`); the authors keep the per-task record privately.
 
 ## Layout
 
 | Path | Contents |
 | --- | --- |
-| `lean/` | The Lean development (library `Pcf`). |
-| `palomar/` | Palomar registry project: `PcfChallenge.lean` (the statement, Mathlib imports only), `PcfSolution.lean`, `comparator.json`, `formalization.yaml`. |
+| `lean/` | The Lean development (Lake package `pcfawd`, library `Pcf`), which is also the Palomar registry project. |
+| `lean/PcfChallenge.lean` | The Palomar Challenge: the statement, Mathlib imports only, with the three compared theorems as `sorry`. Its definitions are identical to `lean/Pcf/Palomar/Statement.lean`. |
+| `lean/PcfSolution.lean` | The Palomar Solution: imports `Pcf.Palomar.Unconditional`, which proves the compared theorems. |
+| `lean/comparator.json`, `lean/formalization.yaml` | Palomar Comparator configuration and metadata. |
 | `.github/workflows/palomar-preflight.yml` | Manually triggered Palomar preflight. |
 
 ## Building
@@ -51,13 +53,11 @@ lake exe cache get
 lake build
 ```
 
-The Palomar project uses `../lean` as a path dependency and shares its packages
-directory, so build `lean/` first:
+`lake build` builds the default targets `Pcf`, `PcfChallenge` and `PcfSolution`. The only
+warnings in `PcfChallenge` are the `sorry`s of the three compared theorems.
 
-```sh
-cd palomar
-lake build
-```
+Palomar submission parameters: project path `lean`, Comparator configuration
+`lean/comparator.json`, metadata `lean/formalization.yaml`.
 
 ## History
 
@@ -71,7 +71,10 @@ Codex also record the version of the commit tool they used.
 
 ## Palomar status
 
-Prepared, not submitted.
+Submitted on 2026-10-17 at commit `a39c378`, when the Palomar project was a separate `palomar/`
+directory requiring `../lean` by path. Verification and review passed, but Palomar's Challenge
+renderer does not accept a path dependency containing `..`, so `lean/` is now the project itself.
+Not yet registered.
 
 ## License
 

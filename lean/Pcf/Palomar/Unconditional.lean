@@ -30,7 +30,7 @@ This file discharges those inputs:
 * `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional`: the same theorem in the compact
   vocabulary of `Pcf.Palomar.Statement`, transported along the equivalences of
   `Pcf.Palomar.Bridge`.  This is the theorem compared by the Palomar Challenge
-  (`palomar/PcfChallenge.lean`).
+  (`PcfChallenge.lean`, beside `Pcf.lean`).
 -/
 
 @[expose] public section

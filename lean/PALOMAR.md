@@ -17,8 +17,12 @@ registered here as entries 9–11.
 The entry actually prepared for Palomar comparison is **Entry 0**, the characteristic-zero
 theorem `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` with its two non-vacuity
 companions. Its
-Palomar project is `palomar/` at the repository root (`PcfChallenge.lean`,
-`PcfSolution.lean`, `comparator.json`, `formalization.yaml`; see `palomar/README.md`).
+Palomar project is `lean/`, the directory holding this file: Lake package `pcfawd`, with
+`PcfChallenge.lean`, `PcfSolution.lean`, `comparator.json` and `formalization.yaml` beside
+`Pcf.lean`. (Until 2026-10-17 the project was a separate `palomar/` directory that required
+`../lean` by path; Palomar's Challenge renderer rejects a path dependency containing `..`, so
+the project was moved into `lean/`. The Challenge, Solution, Comparator configuration and
+metadata were moved unchanged.)
 Entries 1–11 are older claims about the same development. They are kept as a claim
 manifest and are not part of the Comparator configuration.
 
@@ -27,17 +31,18 @@ manifest and are not part of the Comparator configuration.
 All values re-derived 2026-10-17 at commit `c1e944e` ("Remove duplicate propositions from the
 Lean development"), before this file was edited. The Challenge and the dependencies of the three
 compared statements are unchanged from `156bee7`, where they were first derived (same
-structural hashes for all 4976 constants; see Entry 0).
+structural hashes for all 4976 constants; see Entry 0). The same check, re-run on 2026-10-17 after
+the Challenge and Solution moved from `palomar/` into `lean/`, again found the two lists identical.
 
 | Field | Value |
 | --- | --- |
 | Repository | `github.com/tdupu/pcfawd-formalization` (public; Palomar accepts only public repositories) |
 | Commit | supply at submission time: one full SHA of `tdupu/pcfawd-formalization` |
 | `lean/` subtree | `0bd280470476f4da968fa59cb1e68708291679e0` at `c1e944e` (`lean/Pcf` alone: `b958c48da7f9b7a10ea467e21973a18d395f9edf`; `palomar/`: `eb91320b9bb9d073dbaa202ec83572e19c76b21e`). This file lives inside `lean/`, so the `lean/` hash moves whenever this file changes; recompute with `git rev-parse HEAD:lean` |
-| Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`; `palomar/lean-toolchain` is identical) |
+| Toolchain | `leanprover/lean4:v4.35.0` (`lean/lean-toolchain`) |
 | Mathlib | `leanprover-community/mathlib4`, rev `56a005855ea17e0b0958f73ec801ae140b0a1679` (`inputRev` `v4.35.0`) |
 | Module system | all 238 tracked `.lean` files under `lean/Pcf/`, and `lean/Pcf.lean`, begin with `module` |
-| Build | `lake build Pcf Pcf.Audit` in `lean/`: `Build completed successfully (3726 jobs)`, 0 errors, 215 linter and deprecation warnings. `lake build` in `palomar/`: `Build completed successfully (3699 jobs)`; the only `sorry` warnings are the three Challenge theorems in `PcfChallenge.lean` |
+| Build | `lake build Pcf Pcf.Audit` in `lean/`: `Build completed successfully (3726 jobs)`, 0 errors, 215 linter and deprecation warnings. `lake build` in the then `palomar/`: `Build completed successfully (3699 jobs)`; the only `sorry` warnings are the three Challenge theorems in `PcfChallenge.lean`. After the 2026-10-17 move into `lean/`: `lake build PcfChallenge PcfSolution Pcf` in `lean/`: `Build completed successfully (3730 jobs)`, the only Challenge warnings the same three `sorry`s |
 | Audit | `lean/Pcf/Audit.lean`: the build log has 1740 `#print axioms` results for 1740 distinct declarations. 1711 report `[propext, Classical.choice, Quot.sound]`, 27 report `[propext, Quot.sound]`, 2 report `[propext]`, and none report `sorryAx` |
 | Forbidden tokens | no `sorry`, `axiom`, `admit` or `native_decide` as Lean tokens in tracked `lean/Pcf/**/*.lean`. A whole-word grep has five hits, all in prose (docstrings of `Bounding/FiniteTypeSingularLocusClosed.lean`, `Bounding/SchemeBridge.lean`, `Noetherian.lean`, `Stacks/Abhyankar/StrictHenselizationQuotientStandard.lean`, `ZariskiNagata.lean`) |
 
@@ -56,11 +61,15 @@ three were also printed separately (below).
 Accompanying manuscript: `latex/paper.tex`. Assumption census: `AXIOMS.md`, beside this
 file. Statement-to-declaration map: `README.md`, likewise.
 
-**Status: prepared, not submitted.** No submission to the Palomar registry has been
-made. This file is the manifest of what a submission would assert; submitting is a
-separate, explicitly authorized act. Still open before any submission: the relationship
-answer, and the authors' review of the manuscript's revised account of the formalization. The
-manuscript is not part of this repository.
+**Status: submitted 2026-10-17 by Taylor Dupuy** (Palomar web form) at commit
+`a39c3781b9850b9f3d5cbc9920322a3b8e365ef2`, project path `palomar`. Mechanical verification and
+review passed, but Palomar's Challenge renderer rejected `palomar/lake-manifest.json` ("renderer
+manifest has an invalid path package: 'pcf'"): it refuses path packages whose `dir` contains
+`..`, and the old `palomar/` project required `../lean`. `lean/` is now itself the Palomar project
+(Lake package renamed `pcf` → `pcfawd`), so no path dependency remains. A submission of the new
+layout uses project path `lean`, Comparator configuration `lean/comparator.json` and metadata
+`lean/formalization.yaml`. Not yet registered. This file is the manifest of what a submission
+asserts. The manuscript is not part of this repository.
 
 > **Correction (2026-09-23).** An earlier version of this file, and of the commit
 > message introducing it, said there is "no submission tooling in this environment" and
@@ -96,12 +105,12 @@ manuscript is not part of this repository.
 
 # Entry 0 — PCF all the way down in characteristic zero (UNCONDITIONAL; the Palomar entry)
 
-This is the entry the Comparator configuration `palomar/comparator.json` compares. Its
+This is the entry the Comparator configuration `lean/comparator.json` compares. Its
 `theorem_names` are the three declarations below, and its `permitted_axioms` are
 `propext`, `Quot.sound` and `Classical.choice`. The definitions it uses
 (`IsNormalizedPCF`, `PCFAllTheWayDown`, `ramificationIndexAt`, `normalization`,
 `pointClosure`, …) are in `lean/Pcf/Palomar/Statement.lean`. The definitions in
-`palomar/PcfChallenge.lean` (216 lines, Mathlib imports only) are identical to it; only
+`lean/PcfChallenge.lean` (216 lines, Mathlib imports only) are identical to it; only
 the module docstring differs, and the Challenge adds the three theorems with `sorry`.
 `lean/Pcf/Palomar/Bridge.lean` proves each Challenge notion equivalent to the
 development's (`isNormalizedPCF_iff_scheme`, `pcfAllTheWayDown_iff_scheme`), and
@@ -119,7 +128,7 @@ compared statement is the earlier one with those two binders removed and nothing
 changed. The earlier conditional Challenge passed the Palomar preflight on
 `tdupu/pcfawd-formalization` `ca90abd` (run 38939892378); that run does not cover this one.
 
-Extracted 2026-10-17 with `lake env lean` in `palomar/` on scratch files importing
+Extracted 2026-10-17 with `lake env lean` in the then `palomar/` project on scratch files importing
 `PcfSolution` and, separately, `PcfChallenge`. The `#check` output is the same text in both
 environments. The output below is the Solution's, verbatim. For the first declaration Lean
 prints the `#check @…` result without the leading `@`.
@@ -529,7 +538,7 @@ more faithful.
 * No author has reviewed the formalization. Compilation certifies the formal
   statements; it does not certify that they render the statements of `latex/paper.tex`.
   For Entry 0 only, an agent fidelity review (2026-10-15, recorded in
-  `palomar/formalization.yaml` `review.notes`) compared the then-conditional Challenge
+  `formalization.yaml` `review.notes`) compared the then-conditional Challenge
   definition by definition with `latex/paper.tex` and Stacks 0BMB/0EYF/0EYG/0EYH and approved
   it: faithful to `cor:pcfawd`, slightly more general (no separatedness; `f` need not be a
   `k`-morphism). The 2026-10-17 Challenge drops the two hypotheses and changes no
@@ -537,4 +546,4 @@ more faithful.
 * The "Formalization" subsubsection of `latex/paper.tex` was revised on 2026-10-17 to
   describe Entry 0 (it previously listed `thm:general`, `lem:covers` and the passage to the
   normalization as not formalized). `paper.tex` is hand-managed; the authors' review of the
-  revision is pending (`palomar/README.md`).
+  revision is pending.

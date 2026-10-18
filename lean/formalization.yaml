@@ -108,7 +108,8 @@ review:
   notes: >
     Statement fidelity was audited by agents against the manuscript. The
     2026-10-15 pass (lean-fidelity skill, Claude Opus 5.5) reviewed
-    palomar/PcfChallenge.lean definition by definition against the
+    the Challenge (then palomar/PcfChallenge.lean, now lean/PcfChallenge.lean)
+    definition by definition against the
     manuscript and Stacks 0BMB/0EYF/0EYG/0EYH and approved it: the statement
     faithfully formalizes cor:pcfawd and is slightly more general (no
     separatedness; f need not be a k-morphism). At that time the compared

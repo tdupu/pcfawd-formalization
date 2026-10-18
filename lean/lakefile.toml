@@ -1,7 +1,11 @@
-name = "pcf"
+# Lake package `pcfawd`: the `PCF all the way down` Lean development (library `Pcf`),
+# which is also the project selected for the Palomar registry submission: the Challenge
+# (`PcfChallenge.lean`, Mathlib imports only), the Solution (`PcfSolution.lean`), the
+# Comparator configuration (`comparator.json`) and `formalization.yaml` live here.
+name = "pcfawd"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["Pcf"]
+defaultTargets = ["Pcf", "PcfChallenge", "PcfSolution"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -16,3 +20,9 @@ rev = "v4.35.0"
 
 [[lean_lib]]
 name = "Pcf"
+
+[[lean_lib]]
+name = "PcfChallenge"
+
+[[lean_lib]]
+name = "PcfSolution"
