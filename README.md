@@ -11,6 +11,14 @@ to `latex/paper.tex` and its `\label`s (for example `cor:pcfawd`) are to that ma
 
 ## What is proved
 
+The feature branch `codex/pcfawd-charp-allcodim` also contains a Lean
+formalization of Theorem `thm:A` from the working characteristic-`p`
+manuscript: characteristic zero and positive characteristic with
+prime-to-`p` monodromy, for preperiodic proper integral closed
+subvarieties in every codimension. The recursive returns use the original
+reduced subvarieties. The precise theorem names and verification record are
+in [`lean/THEOREM-A.md`](lean/THEOREM-A.md).
+
 `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` formalizes Corollary
 `cor:pcfawd` of the manuscript in characteristic zero: a finite dominant
 self-map of an integral, locally Noetherian scheme with Noetherian underlying

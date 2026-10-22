@@ -290,6 +290,22 @@ noncomputable def divisorDynamicsOfFiniteDominantNormalCharZero
     ⟨genericPoint X,
       formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩
 
+/-- In any characteristic, separability of the function-field extension
+supplies the actual divisor dynamics of a finite dominant normal self-map.
+The branch finiteness is proved from generic étaleness and Noetherianity;
+no PCF or orbit condition is part of this constructor. Its `branch` records
+only indices greater than one. In positive characteristic, identifying it
+with the manuscript's branch set additionally requires separability of every
+residue extension at a divisor, to be obtained from prime-to-`p` monodromy. -/
+noncomputable def divisorDynamicsOfFiniteDominantNormalSeparable
+    {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
+    [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
+    (hsep : IsGenericallySeparable f) :
+    DivisorDynamics (SchemeDivisorPoint X) :=
+  divisorDynamicsOfFiniteDominantNormalNoetherian f
+    ⟨genericPoint X,
+      formallyEtale_stalkMap_genericPoint_of_finite_dominant_separable f hsep⟩
+
 @[simp]
 theorem divisorDynamicsOfFiniteDominantNormal_step_val
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]

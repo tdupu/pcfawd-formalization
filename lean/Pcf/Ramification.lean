@@ -6,6 +6,7 @@ Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Mathlib.Data.Nat.Prime.Basic
 
 /-!
 # An isomorphism has ramification index one
@@ -107,6 +108,16 @@ vacuous): a prime of `R` has ramification index `1` over `R` itself. -/
 theorem ramificationIdx_self_eq_one (q : Ideal R) [q.IsPrime] : q.ramificationIdx R = 1 :=
   ramificationIdx_eq_one_of_surjective q (fun x => ⟨x, rfl⟩)
 
+/-- The numerical last step of `paper-p.tex`, proof of `thm:allcodim-normal`:
+an index prime to the characteristic cannot divide a pure characteristic
+power unless it is one. The geometric valuation identity that supplies the
+divisibility is a separate obligation. -/
+theorem index_eq_one_of_dvd_prime_pow {p e a : ℕ} (hp : Nat.Prime p)
+    (hprimeToP : ¬p ∣ e) (hdiv : e ∣ p ^ a) : e = 1 :=
+  Nat.eq_one_of_dvd_coprimes (hp.coprime_pow_of_not_dvd hprimeToP)
+    (dvd_refl e) hdiv
+
 #print axioms ramificationIdx_eq_one_of_bijective
+#print axioms index_eq_one_of_dvd_prime_pow
 
 end Pcf.Ramification

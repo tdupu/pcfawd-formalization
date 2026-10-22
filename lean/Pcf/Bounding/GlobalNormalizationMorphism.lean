@@ -260,9 +260,9 @@ theorem schemeGlobalNormalizationMorphism_comm (f : X ⟶ X) (g : Y ⟶ Y) (π :
     schemeGlobalNormalizationMorphism_comp_morphism]
   simp only [hcomm]
 
-/-- Finiteness follows from finite type over a characteristic-zero field on the source. -/
+/-- Finiteness follows from finite type over any field on the source. -/
 theorem schemeGlobalNormalizationMorphism_isFinite_of_finiteType
-    (k : Type u) [Field k] [CharZero k] (s : Y ⟶ Spec (.of k)) [LocallyOfFiniteType s]
+    (k : Type u) [Field k] (s : Y ⟶ Spec (.of k)) [LocallyOfFiniteType s]
     (π : Y ⟶ X) [IsFinite π] [IsDominant π] :
     IsFinite (schemeGlobalNormalizationMorphism π) := by
   let := schemeGlobalNormalizationMap_isFinite Y k s

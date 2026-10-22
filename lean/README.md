@@ -11,6 +11,18 @@ Tucker, Wang).
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
 | Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**, never by number (numbers change between versions of the manuscript) |
 
+## Theorem A in both characteristics and every codimension
+
+The feature branch `codex/pcfawd-charp-allcodim` adds Theorem `thm:A` from
+the working `paper-p.tex` manuscript. Its two source-facing theorems are
+`Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` and
+`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF`. The second assumes
+prime-to-`p` monodromy. Both conclude the depth-indexed recursive property
+`Pcf.IsPCFAllSubvarieties` on original reduced point closures in every
+codimension. The proof includes the normalized Rees blow-up, generic fibre
+multiplicity, tame chart, and finite-cover transfer. The exact source map,
+build evidence, and axiom audit are in [THEOREM-A.md](THEOREM-A.md).
+
 ## What the paper proves, and what this development proves
 
 The paper's Theorem A (`thm:A` = `thm:general`) and Corollary `cor:pcfawd` say: every finite

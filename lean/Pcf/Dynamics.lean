@@ -346,6 +346,19 @@ theorem isPCF_of_orbits_subset {S : Set P} (hS : S.Finite)
   rw [IsPCF, postcriticalSet_eq_biUnion_orbit]
   exact hS.subset (Set.iUnion₂_subset h)
 
+/-- The last dynamical step of the blow-up argument in `paper-p.tex`, proof of
+`thm:allcodim-normal`: a uniform finite support for the branch divisors of
+*all* positive iterates makes the original map PCF. The construction of that
+support from normalized blow-ups is a separate geometric obligation. -/
+theorem isPCF_of_iterate_branch_subset {S : Set P} (hS : S.Finite)
+    (h : ∀ m, 1 ≤ m → (D.iterate m).branch ⊆ S) : D.IsPCF := by
+  apply D.isPCF_of_orbits_subset hS
+  intro Q hQ R hR
+  change R ∈ Set.range (fun n => D.step^[n] Q) at hR
+  obtain ⟨n, rfl⟩ := hR
+  exact h (n + 1) (Nat.succ_le_succ (Nat.zero_le n))
+    (D.mem_branch_iterate_succ n hQ)
+
 /-! ### Lemma `lem:normalization`: invariance under a finite orbit-compatible cover -/
 
 /-- **Lemma `lem:normalization`**. If `ν` is a finite-to-one map of prime systems intertwining the

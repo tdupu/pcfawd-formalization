@@ -20,8 +20,9 @@ public import Mathlib.RingTheory.Localization.AtPrime.Basic
 /-!
 # Theorem `thm:bounding`, derived on an affine chart
 
-This file **derives** the conclusion of Theorem `thm:bounding` of `latex/paper.tex` from
-Zariski–Nagata purity and Abhyankar's lemma, following Steps 0–4 of the manuscript's proof.
+This file **derives** the affine conclusion of Theorem `thm:bounding` of
+`latex/paper-p.tex` from Zariski–Nagata purity and the standard-cover conclusion
+of Abhyankar's lemma, following Steps 0–4 of the manuscript's proof.
 Until this file, the formalization *assumed* that conclusion (`Pcf.PCFSetup.notMem_branch_iterate`,
 `Pcf.NonEtalePCFSetup.notMem_nonEtaleBranch_iterate`, and — in a disguised form caught by two
 adversarial reviews — the `KummerWitness`-valued field `standardForm`). Here it is a theorem,
@@ -41,14 +42,13 @@ over `U`. `Pcf.BoundingChart R S a 𝔭` is the algebraic content of that choice
 | `U ∩ Z = ∅`, so `branch(f) ∩ U ⊆ D` (Lemma `lem:dictionary`) | `unramified_codim_one` |
 | the function-field extension is separable | `generic_etale` |
 | `V` is the normalization of `U` in `W = V ∖ f⁻¹(D)` | `normalization` |
-| characteristic zero (tameness) | `tame` |
 | `A ∩ V` is a component of `f⁻¹(D)`, cut out by `𝔭` | `𝔭` a minimal prime over `aS` |
 | Zariski–Nagata purity | `purity` (`Pcf.Stacks.ZariskiNagataPurity`) |
-| Abhyankar's lemma | `abhyankar` (`Pcf.Stacks.AbhyankarLemma`) |
+| Abhyankar's standard-cover conclusion | `standardPieces` |
 
-Every field except the last two is a hypothesis the manuscript states in Step 0 or in the
-one-sentence verification inside Step 1. The last two are the classical theorems, stated
-faithfully to the Stacks Project in `Pcf/Bounding/Stacks.lean`.
+The last field is derived from the characteristic-zero Abhyankar theorem by
+`LocalBoundingChart.toBoundingChart` and from the tame theorem by
+`TameBoundingChart.toBoundingChart`. The resulting Step 3--4 proof is shared.
 
 ## The derivation
 
@@ -80,8 +80,7 @@ out of this file. The finite-presentation case of Tag 036W needed here is
 
 Nothing here is a `KummerWitness`; nothing here lets the supplier of the data choose the
 algebra to which Abhyankar's lemma is applied. The local extension is `R → S` itself, the
-standard pieces are produced by the `abhyankar` field *for that extension*, and Step 3 is
-applied to those pieces.
+standard pieces are produced for that extension, and Step 3 is applied to those pieces.
 -/
 
 @[expose] public section
@@ -118,8 +117,6 @@ structure BoundingChart (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (
   regular_divisor : IsRegularRing (R ⧸ Ideal.span {a})
   /-- `V` is normal: every local ring is integrally closed. -/
   normal : ∀ w : PrimeSpectrum S, IsIntegrallyClosed (Localization.AtPrime w.asIdeal)
-  /-- Characteristic zero: every positive integer is invertible. -/
-  tame : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)
   /-- `dim 𝒪_{V,w} = dim 𝒪_{U,f(w)}`, because `f` is finite and surjective between varieties
   (the sentence in Step 1). -/
   dim_eq : ∀ w : PrimeSpectrum S, w.asIdeal.height = (w.asIdeal.under R).height
@@ -137,8 +134,10 @@ structure BoundingChart (R S : Type u) [CommRing R] [CommRing S] [Algebra R S] (
   minimal : 𝔭 ∈ (Ideal.span {algebraMap R S a}).minimalPrimes
   /-- **Zariski–Nagata purity**, Stacks Tag 0BMB. -/
   purity : Stacks.ZariskiNagataPurity R S
-  /-- **Abhyankar's lemma**, Stacks Tags 0EYG/0EYH. -/
-  abhyankar : Stacks.AbhyankarLemma R S a
+  /-- The standard-cover conclusion at every point of the divisor, supplied
+  by Abhyankar's lemma from tameness in the characteristic-`p` route. -/
+  standardPieces : ∀ y : PrimeSpectrum R, a ∈ y.asIdeal →
+    Stacks.HasAbhyankarStandardCoverAt R S a y
 
 namespace BoundingChart
 
@@ -191,15 +190,12 @@ theorem isEtaleAt_of_notMem (w : PrimeSpectrum S) (hw : algebraMap R S a ∉ w.a
 
 /-! ### Step 2: Abhyankar's lemma applies -/
 
-/-- **Step 2.** At every point `y` of `D`, Abhyankar's lemma produces an étale neighbourhood
-`R'` over which the cover is a finite disjoint union of standard pieces. The hypotheses of
-`Pcf.Stacks.AbhyankarLemma` are discharged by the chart and by Step 1. -/
+/-- **Step 2.** At every point `y` of `D`, the Abhyankar standard-cover
+conclusion supplies an étale neighbourhood `R'` over which the cover is a
+finite disjoint union of standard pieces. -/
 theorem exists_standardPieces (y : PrimeSpectrum R) (hy : a ∈ y.asIdeal) :
     Stacks.HasAbhyankarStandardCoverAt R S a y :=
-  haveI := h.finite
-  h.abhyankar h.noetherian_base h.nonZeroDivisor h.regular_divisor
-    (Module.Finite.base_change R (Localization.Away a) S) h.isEtaleAt_of_notMem h.normalization
-    h.tame y hy
+  h.standardPieces y hy
 
 /-! ### Steps 3–4: the base-changed restriction is étale everywhere -/
 

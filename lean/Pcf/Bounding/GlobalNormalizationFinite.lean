@@ -6,20 +6,22 @@ Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
 module
 
 public import Pcf.Bounding.GlobalNormalization
+public import Pcf.Vendor.TauCeti.RingTheory.IntegralClosure.MvPolynomial
 public import Mathlib.RingTheory.NoetherNormalization
 public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 public import Mathlib.RingTheory.Localization.Finiteness
 public import Mathlib.RingTheory.Algebraic.Integral
 
 /-!
-# Finiteness of normalization in characteristic zero
+# Finiteness of normalization over an arbitrary field
 
 Noether normalization reduces finiteness of integral closure for a finite-type
-domain over a characteristic-zero field to the finite separable extension
-theorem over a polynomial ring. Applying this to the coordinate rings in
+domain over any field to the characteristic-free finite-extension theorem for
+polynomial rings, supplied by the vendored Tau Ceti proof. Applying this to
+the coordinate rings in
 Mathlib's relative-normalization construction proves that
 `Palomar.normalizationMap A` is finite whenever `A` is integral and locally
-of finite type over a characteristic-zero field.
+of finite type over a field.
 -/
 
 @[expose] public section
@@ -33,10 +35,10 @@ namespace Pcf
 
 noncomputable section
 
-/-- The integral closure of a finite-type characteristic-zero domain in its
+/-- The integral closure of a finite-type domain over any field in its
 fraction field is a finite module. -/
 theorem finite_integralClosure_of_finiteType
-    (k : Type u) [Field k] [CharZero k]
+    (k : Type u) [Field k]
     (R : Type v) [CommRing R] [IsDomain R] [Algebra k R] [Algebra.FiniteType k R]
     (K : Type w) [Field K] [Algebra R K] [IsFractionRing R K] :
     Module.Finite R (integralClosure R K) := by
@@ -63,14 +65,15 @@ theorem finite_integralClosure_of_finiteType
       exact ⟨⟨x, hx.tower_top⟩, rfl⟩
     · rintro ⟨y, rfl⟩
       exact isIntegral_trans (R := P) (y : K) y.property
-  have : Module.Finite P C := IsIntegralClosure.finite P (FractionRing P) K C
+  have : Module.Finite P C :=
+    TauCeti.IsIntegralClosure.finite_mvPolynomial k (FractionRing P) K C
   exact Module.Finite.of_restrictScalars_finite P R C
 
 /-- On every nonempty affine open, the integral-closure ring used in the
 generic-point normalization is finite over the original ring of sections. -/
 theorem finite_schemeGenericIntegralClosure
     (A : Scheme.{u}) [IsIntegral A]
-    (k : Type u) [Field k] [CharZero k]
+    (k : Type u) [Field k]
     (U : A.Opens) (hU : IsAffineOpen U) [Nonempty U]
     [Algebra k Γ(A, U)] [Algebra.FiniteType k Γ(A, U)] :
     letI := ((schemeGenericInclusion A).app U).hom.toAlgebra
@@ -100,10 +103,10 @@ theorem finite_schemeGenericIntegralClosure
   exact Module.Finite.equiv ea.symm.mapIntegralClosure.toLinearEquiv
 
 /-- The absolute normalization of an integral scheme whose affine coordinate
-rings are finite-type over a characteristic-zero field is finite. -/
+rings are finite-type over a field is finite. -/
 theorem schemeGlobalNormalizationMap_isFinite_of_affineFiniteType
     (A : Scheme.{u}) [IsIntegral A]
-    (k : Type u) [Field k] [CharZero k]
+    (k : Type u) [Field k]
     [∀ U : A.affineOpens, Algebra k Γ(A, U)]
     [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)] :
     IsFinite (Palomar.normalizationMap A) := by
@@ -130,11 +133,11 @@ theorem schemeGlobalNormalizationMap_isFinite_of_affineFiniteType
     exact RingHom.Finite.of_surjective _ (Function.surjective_to_subsingleton _)
 
 /-- The absolute normalization map of an integral scheme locally of finite type
-over a characteristic-zero field is finite. In particular this applies to
+over any field is finite. In particular this applies to
 integral schemes of finite type over that field. -/
 theorem schemeGlobalNormalizationMap_isFinite
     (A : Scheme.{u}) [IsIntegral A]
-    (k : Type u) [Field k] [CharZero k]
+    (k : Type u) [Field k]
     (s : A ⟶ Spec (.of k)) [LocallyOfFiniteType s] :
     IsFinite (Palomar.normalizationMap A) := by
   let φ (U : A.affineOpens) : k →+* Γ(A, U) :=

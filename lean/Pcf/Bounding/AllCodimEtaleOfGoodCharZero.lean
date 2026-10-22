@@ -1,0 +1,433 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
+-/
+module
+
+public import Pcf.Bounding.AllCodimEtaleOfGood
+public import Pcf.Bounding.AllCodimChartCharZero
+public import Pcf.Bounding.AllCodimCharZero
+
+/-!
+# Étaleness over good points in characteristic zero (L1)
+
+The characteristic-zero form of `allCodimEtaleOfGood`. The valuation
+comparison is the same, with fibre multiplicity `μ = 1`, so the divisorial
+ramification index of the normalized return is one. Residue extensions are
+separable in characteristic zero, so the return is étale there.
+-/
+
+@[expose] public section
+
+namespace Pcf
+
+open AlgebraicGeometry CategoryTheory IsLocalRing TopologicalSpace Pcf.Bounding.AllCodimBlowup
+
+universe u
+
+noncomputable section
+
+set_option linter.style.haveILetI false
+
+/-- In characteristic zero a finite dominant self-map with divisorial
+ramification index one at `Q` is formally étale there. -/
+theorem formallyEtale_of_ramificationIdx_eq_one_of_charZero
+    (k : Type u) [Field k] [CharZero k]
+    {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X]
+    (s : X ⟶ Spec (.of k)) (h : X ⟶ X) [IsFinite h] [IsDominant h]
+    (Q : SchemeDivisorPoint X) (he : schemeDivisorRamificationIdx h Q = 1) :
+    (h.stalkMap Q.1).hom.FormallyEtale := by
+  rw [← schemeDivisorDelta_eq_one_iff_formallyEtale, schemeDivisorDelta_eq_one_iff]
+  refine ⟨he, ?_⟩
+  letI := (h.residueFieldMap Q.1).hom.toAlgebra
+  letI : FiniteDimensional (X.residueField (h Q.1)) (X.residueField Q.1) :=
+    finiteResidueField_of_isFinite h Q.1
+  let := schemeStalkAlgebraOfField k s (h Q.1)
+  haveI : CharZero (X.residueField (h Q.1)) := charZero_of_injective_ringHom
+    ((X.residue (h Q.1)).hom.comp (algebraMap k (X.presheaf.stalk (h Q.1)))).injective
+  exact Algebra.IsAlgebraic.isSeparable_of_perfectField
+
+/-- **L1** in characteristic zero from the chart property. -/
+theorem allCodimEtaleOfGoodCharZero_of_chart (k : Type u) [Field k] [CharZero k]
+    (hchart : AllCodimChartPropertyCharZero k) : AllCodimEtaleOfGoodCharZero k := by
+  intro X _ _ _ _ s _ y hy B U _ hyU a ha h _ _ hfix hbranch A F Q₁ hxU hgood
+  letI : IsFinite (Palomar.normalizationMap A) :=
+    schemeGlobalNormalizationMap_isFinite A k ((pointClosureIdealSheaf y).subschemeι ≫ s)
+  letI : IsFinite (pointClosureReturnMap h y hfix) := pointClosureReturnMap_isFinite h y hfix
+  letI : IsDominant (pointClosureReturnMap h y hfix) :=
+    pointClosureReturnMap_isDominant h y hfix
+  -- the affine comparison `R → S`
+  let R := Γ(X, U)
+  let P := allCodimCentrePrime U y hyU
+  let V := finitePreimageAffine h U
+  let S := Γ(X, V)
+  letI : Algebra R S := (h.app U).hom.toAlgebra
+  letI : Module.Finite R S := moduleFinite_finitePreimageAffine h U
+  letI : FaithfulSMul R S := faithfulSMul_finitePreimageAffine h U
+  let φ : R →+* S := algebraMap R S
+  have hφinj : Function.Injective φ := FaithfulSMul.algebraMap_injective R S
+  have hφfin : φ.Finite := RingHom.finite_algebraMap.mpr inferInstance
+  have hyV : y ∈ (V : X.Opens) := by
+    change h y ∈ (U : X.Opens)
+    rw [hfix]
+    exact hyU
+  haveI : Nonempty (V : X.Opens) := ⟨⟨y, hyV⟩⟩
+  let P' : Ideal S := (V.2.primeIdealOf ⟨y, hyV⟩).asIdeal
+  have hP'under : P'.under R = P := by
+    have hAlg : algebraMap R S = (h.appLE U V le_rfl).hom := by
+      change (h.app U).hom = (h.appLE U V le_rfl).hom
+      exact congr_arg CommRingCat.Hom.hom h.appLE_eq_app.symm
+    change P'.comap (algebraMap R S) = P
+    rw [hAlg]
+    have hc := congrArg PrimeSpectrum.asIdeal
+      (IsAffineOpen.comap_primeIdealOf_appLE (U : X.Opens) U.2 (V : X.Opens) V.2 le_rfl hyV)
+    refine hc.trans ?_
+    have hpt : (⟨h y, hyV⟩ : (U : X.Opens)) = ⟨y, hyU⟩ := Subtype.ext hfix
+    rw [hpt]
+  have hP'min : P' ∈ (P.map φ).minimalPrimes :=
+    mem_minimalPrimes_map_of_liesOver P P' hP'under
+  -- finite-type structures over `k`
+  letI : Algebra k R :=
+    ((s.appLE ⊤ U (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).toAlgebra
+  haveI : Algebra.FiniteType k R := by
+    apply RingHom.finiteType_algebraMap.mp
+    change ((s.appLE ⊤ U (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).FiniteType
+    exact (s.finiteType_appLE (isAffineOpen_top _) U.2 (by simp)).comp
+      (Scheme.ΓSpecIso (.of k)).symm.commRingCatIsoToRingEquiv.finite.finiteType
+  letI : Algebra k S :=
+    ((s.appLE ⊤ V (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).toAlgebra
+  haveI : Algebra.FiniteType k S := by
+    apply RingHom.finiteType_algebraMap.mp
+    change ((s.appLE ⊤ V (by simp)).hom.comp (Scheme.ΓSpecIso (.of k)).inv.hom).FiniteType
+    exact (s.finiteType_appLE (isAffineOpen_top _) V.2 (by simp)).comp
+      (Scheme.ΓSpecIso (.of k)).symm.commRingCatIsoToRingEquiv.finite.finiteType
+  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing k R
+  haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing k S
+  have hPfg : P.FG := (IsNoetherian.noetherian P)
+  have hPSfg : (P.map φ).FG := (IsNoetherian.noetherian (P.map φ))
+  -- the two normalized blow-ups and the finite map between them
+  let b : P.map φ := mappedCenterElement φ P a
+  have hb : (b : S) ≠ 0 := fun hz => ha (hφinj (by simpa [b, mappedCenterElement] using hz))
+  letI : IsIntegral (reesProj P) := reesProj_isIntegral P a ha
+  letI : IsIntegral (reesProj (P.map φ)) := reesProj_isIntegral (P.map φ) b hb
+  let Y := Palomar.normalization (reesProj P)
+  let XS := Palomar.normalization (reesProj (P.map φ))
+  let FS : XS ⟶ Y := normalizedReesProjMap φ hφinj hφfin P a ha
+  letI : IsFinite FS := normalizedReesProjMap_isFinite k φ hφinj hφfin P hPfg a ha
+  letI : IsDominant FS := normalizedReesProjMap_isDominant φ hφinj hφfin P a ha
+  let βY : Y ⟶ Spec (.of R) := normalizedReesProjToSpec P a ha
+  let αS : XS ⟶ Spec (.of S) := normalizedReesProjToSpec (P.map φ) b hb
+  have hsq : FS ≫ βY = αS ≫ Spec.map (CommRingCat.ofHom φ) :=
+    normalizedReesProjToSpec_comm φ hφinj hφfin P a ha
+  -- a dominating exceptional divisor upstairs
+  obtain ⟨d', hd'⟩ := exists_normalizedRees_divisorPoint_over_minimalPrime k (P.map φ) hPSfg
+    b hb P' hP'min
+  -- maps to the ambient scheme
+  let ιU : Spec (.of R) ⟶ X := U.2.fromSpec
+  let ιV : Spec (.of S) ⟶ X := V.2.fromSpec
+  haveI : IsOpenImmersion ιV := V.2.isOpenImmersion_fromSpec
+  haveI : IsOpenImmersion ιU := U.2.isOpenImmersion_fromSpec
+  have hUV : Spec.map (CommRingCat.ofHom φ) ≫ ιU = ιV ≫ h := by
+    have hφ : CommRingCat.ofHom φ = h.appLE U V le_rfl := by
+      change CommRingCat.ofHom (h.app U).hom = _
+      rw [CommRingCat.ofHom_hom]
+      exact h.appLE_eq_app.symm
+    rw [hφ]
+    exact IsAffineOpen.SpecMap_appLE_fromSpec h U.2 V.2 le_rfl
+  let β' : Y ⟶ X := βY ≫ ιU
+  let αX : XS ⟶ X := αS ≫ ιV
+  have hsqX : FS ≫ β' = αX ≫ h := by
+    simp only [β', αX, ← Category.assoc, hsq]
+    rw [Category.assoc, hUV, Category.assoc]
+  have hαd : αX d'.1 = y := by
+    change ιV (αS d'.1) = y
+    have h1 : αS d'.1 = V.2.primeIdealOf ⟨y, hyV⟩ := hd'
+    rw [h1]
+    exact V.2.fromSpec_primeIdealOf ⟨y, hyV⟩
+  -- finite type over `k` of the upper blow-up
+  letI : IsFinite (Palomar.normalizationMap (reesProj (P.map φ))) :=
+    reesProj_absoluteNormalizationMap_isFinite k (P.map φ) hPSfg b hb
+  letI : LocallyOfFiniteType (reesProjToSpecField (k := k) (P.map φ)) :=
+    reesProjToSpecField_locallyOfFiniteType k (P.map φ) hPSfg
+  let sXS : XS ⟶ Spec (.of k) :=
+    Palomar.normalizationMap (reesProj (P.map φ)) ≫ reesProjToSpecField (k := k) (P.map φ)
+  haveI : LocallyOfFiniteType sXS := inferInstance
+  haveI : IsLocallyNoetherian XS := LocallyOfFiniteType.isLocallyNoetherian sXS
+  letI : IsFinite (Palomar.normalizationMap (reesProj P)) :=
+    reesProj_absoluteNormalizationMap_isFinite k P hPfg a ha
+  letI : LocallyOfFiniteType (reesProjToSpecField (k := k) P) :=
+    reesProjToSpecField_locallyOfFiniteType k P hPfg
+  let sY : Y ⟶ Spec (.of k) :=
+    Palomar.normalizationMap (reesProj P) ≫ reesProjToSpecField (k := k) P
+  haveI : LocallyOfFiniteType sY := inferInstance
+  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian sY
+  -- the closure `D'` of `d'`, its normalization `Z`, and the map to `A`
+  let D' := (pointClosureIdealSheaf d'.1).subscheme
+  let ιD : D' ⟶ XS := (pointClosureIdealSheaf d'.1).subschemeι
+  let ψD : D' ⟶ A := pointClosureSubschemeMap αX d'.1 y hαd
+  haveI : IsDominant ψD := pointClosureSubschemeMap_isDominant αX d'.1 y hαd
+  letI : IsFinite (Palomar.normalizationMap D') :=
+    schemeGlobalNormalizationMap_isFinite D' k (ιD ≫ sXS)
+  let Z := Palomar.normalization D'
+  let νD : Z ⟶ D' := Palomar.normalizationMap D'
+  let ψ : Z ⟶ A := νD ≫ ψD
+  haveI : IsDominant ψ := inferInstance
+  let ψν : Z ⟶ Palomar.normalization A := normalDominantNormalizationLift ψ
+  have hψν : ψν ≫ Palomar.normalizationMap A = ψ := normalDominantNormalizationLift_comp ψ
+  -- the open `A ∩ V` and the universally closed corestriction of `ψD`
+  let ιA : A ⟶ X := (pointClosureIdealSheaf y).subschemeι
+  have hψD : ψD ≫ ιA = ιD ≫ αX := pointClosureSubschemeMap_subschemeι αX d'.1 y hαd
+  let W' : A.Opens := ιA ⁻¹ᵁ (V : X.Opens)
+  let j : W'.toScheme ⟶ A := W'.ι
+  have hrangeD : Set.range ψD ⊆ Set.range j := by
+    rintro _ ⟨w, rfl⟩
+    rw [Scheme.Opens.range_ι]
+    change ιA (ψD w) ∈ (V : X.Opens)
+    have h1 : ιA (ψD w) = αX (ιD w) := by
+      rw [← Scheme.Hom.comp_apply, hψD, Scheme.Hom.comp_apply]
+    rw [h1]
+    have hmem : ιV (αS (ιD w)) ∈ Set.range ιV := ⟨_, rfl⟩
+    rw [V.2.range_fromSpec] at hmem
+    exact hmem
+  let τ : D' ⟶ W'.toScheme := IsOpenImmersion.lift j ψD hrangeD
+  have hτ : τ ≫ j = ψD := IsOpenImmersion.lift_fac j ψD hrangeD
+  have hrangeW : Set.range (j ≫ ιA) ⊆ Set.range ιV := by
+    rintro _ ⟨w, rfl⟩
+    have hw : ιA (j w) ∈ (V : X.Opens) := w.2
+    rw [V.2.range_fromSpec]
+    exact hw
+  let κ : W'.toScheme ⟶ Spec (.of S) := IsOpenImmersion.lift ιV (j ≫ ιA) hrangeW
+  have hκ : κ ≫ ιV = j ≫ ιA := IsOpenImmersion.lift_fac ιV (j ≫ ιA) hrangeW
+  haveI : IsSeparated κ := by
+    have : IsSeparated (κ ≫ ιV) := by rw [hκ]; infer_instance
+    exact IsSeparated.of_comp κ ιV
+  have hτκ : τ ≫ κ = ιD ≫ αS := by
+    rw [← cancel_mono ιV, Category.assoc, hκ, ← Category.assoc, hτ, hψD, Category.assoc]
+  letI : IsProper (reesProjToSpec (P.map φ)) := reesProjToSpec_isProper (P.map φ) hPSfg
+  haveI : UniversallyClosed (ιD ≫ αS) := by
+    change UniversallyClosed (ιD ≫ (Palomar.normalizationMap (reesProj (P.map φ)) ≫
+      reesProjToSpec (P.map φ)))
+    infer_instance
+  haveI : UniversallyClosed τ := by
+    have : UniversallyClosed (τ ≫ κ) := by rw [hτκ]; infer_instance
+    exact UniversallyClosed.of_comp_of_isSeparated τ κ
+  -- a point of `Z` over `Q₁`, then a codimension-one one
+  let νA := Palomar.normalizationMap A
+  let q := pointClosureReturnMap h y hfix
+  have hq : q ≫ ιA = ιA ≫ h := pointClosureSubschemeMap_subschemeι h y y hfix
+  have hF : F ≫ νA = νA ≫ q := schemeGlobalNormalizationLift_comp q
+  have hQ₁V : νA Q₁.1 ∈ Set.range j := by
+    rw [Scheme.Opens.range_ι]
+    change h (ιA (νA Q₁.1)) ∈ (U : X.Opens)
+    have h1 : h (ιA (νA Q₁.1)) = ιA (νA (F Q₁.1)) := by
+      rw [← Scheme.Hom.comp_apply, ← hq, Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply νA q,
+        ← hF, Scheme.Hom.comp_apply]
+    rw [h1]
+    exact hxU
+  have hcommZ : ψν ≫ νA = νD ≫ τ ≫ j := by rw [hψν, hτ]
+  obtain ⟨z₀, hz₀⟩ := mem_range_of_dominant_lift_finite_comp νA j νD τ ψν hcommZ Q₁.1 hQ₁V
+  haveI : LocallyOfFiniteType (νD ≫ ιD ≫ sXS) := inferInstance
+  haveI : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian (νD ≫ ιD ≫ sXS)
+  obtain ⟨z, hzQ, -⟩ := exists_schemeDivisorPoint_over ψν Q₁ z₀ hz₀
+  -- the points `E₀ ∈ X_S` and `E ∈ Y`
+  let e₀ : SchemeDivisorPoint D' :=
+    ⟨νD z.1, coheight_apply_eq_one_of_finite_of_locallyOfFiniteType k (ιD ≫ sXS) νD z⟩
+  let E₀ : XS := ιD e₀.1
+  have hd'E₀ : d'.1 ⤳ E₀ := pointClosure_specializes d'.1 e₀.1
+  have hcohE₀ : Order.coheight E₀ = 2 :=
+    SchemeDivisorPoint.closureDivisor_coheight_of_finiteType k sXS d' e₀
+  let d : SchemeDivisorPoint Y := d'.mapFiniteDominantNormal FS
+  let E : Y := FS E₀
+  have hdE : d.1 ⤳ E := hd'E₀.map FS.continuous
+  have hcohE : Order.coheight E = 2 :=
+    (coheight_apply_eq_of_finite_dominant_normal FS E₀).trans hcohE₀
+  have hβd : β' d.1 = y := by
+    change β' (FS d'.1) = y
+    rw [← Scheme.Hom.comp_apply, hsqX, Scheme.Hom.comp_apply, hαd, hfix]
+  have hαE₀ : αX E₀ = ιA (νA Q₁.1) := by
+    change αX (ιD (νD z.1)) = _
+    rw [← Scheme.Hom.comp_apply ιD αX, ← hψD, Scheme.Hom.comp_apply, ← hzQ,
+      ← Scheme.Hom.comp_apply ψν νA, hψν]
+    rfl
+  have hβE : β' E = ιA (νA (F Q₁.1)) := by
+    change β' (FS E₀) = _
+    rw [← Scheme.Hom.comp_apply, hsqX, Scheme.Hom.comp_apply, hαE₀,
+      ← Scheme.Hom.comp_apply ιA h, ← hq, Scheme.Hom.comp_apply,
+      ← Scheme.Hom.comp_apply νA q, ← hF, Scheme.Hom.comp_apply]
+  -- the good-point data at `E`
+  obtain ⟨hyx, hAdvr, hall⟩ := hgood
+  have hgoodE : AllCodimGoodAt 1 β' y B d E hdE := hall d hβd E hdE hβE hcohE
+  -- étaleness of `F_S` at divisors other than `d'` through `E`
+  haveI : IsIntegrallyClosed R := IsNormalScheme.component_integrallyClosed U
+  haveI : IsIntegrallyClosed S := IsNormalScheme.component_integrallyClosed V
+  have hunram : ∀ w : SchemeDivisorPoint XS, FS w.1 ⤳ FS E₀ → FS w.1 ≠ FS d'.1 →
+      (FS.stalkMap w.1).hom.FormallyEtale := by
+    intro w hwE hwd
+    let wY : SchemeDivisorPoint Y := w.mapFiniteDominantNormal FS
+    have hne : wY ≠ d := fun heq => hwd (congrArg Subtype.val heq)
+    obtain ⟨hnot, hnotB⟩ := hgoodE.isolated wY hwE hne
+    have hoffY : ¬ P ≤ (βY wY.1).asIdeal := by
+      intro hle
+      apply hnot
+      have hsp : (⟨P, inferInstance⟩ : Spec (.of R)) ⤳ βY wY.1 :=
+        (PrimeSpectrum.le_iff_specializes _ _).mp hle
+      have hy' : ιU ⟨P, inferInstance⟩ = y := U.2.fromSpec_primeIdealOf ⟨y, hyU⟩
+      rw [← hy']
+      exact hsp.map ιU.continuous
+    have hoffS : ¬ P.map φ ≤ (αS w.1).asIdeal := by
+      intro hle
+      apply hoffY
+      have h1 : βY wY.1 = Spec.map (CommRingCat.ofHom φ) (αS w.1) := by
+        change βY (FS w.1) = _
+        rw [← Scheme.Hom.comp_apply, hsq, Scheme.Hom.comp_apply]
+      rw [h1]
+      intro r hr
+      exact hle (Ideal.mem_map_of_mem φ hr)
+    have hbijY : Function.Bijective (βY.stalkMap (FS w.1)).hom :=
+      normalizedReesToSpec_stalkMap_bijective P a ha (FS w.1) hoffY
+    have hbijS : Function.Bijective (αS.stalkMap w.1).hom :=
+      normalizedReesToSpec_stalkMap_bijective (P.map φ) b hb w.1 hoffS
+    rw [formallyEtale_stalkMap_iff_of_square FS αS βY (Spec.map (CommRingCat.ofHom φ)) hsq w.1
+      hbijS hbijY]
+    have hbijV : Function.Bijective (ιV.stalkMap (αS w.1)).hom :=
+      ConcreteCategory.bijective_of_isIso _
+    have hbijU : Function.Bijective
+        (ιU.stalkMap (Spec.map (CommRingCat.ofHom φ) (αS w.1))).hom :=
+      ConcreteCategory.bijective_of_isIso _
+    rw [formallyEtale_stalkMap_iff_of_square (Spec.map (CommRingCat.ofHom φ)) ιV ιU h hUV
+      (αS w.1) hbijV hbijU]
+    have hcoh : Order.coheight (ιV (αS w.1)) = 1 := by
+      rw [← coheight_eq_of_stalkMap_bijective ιV _ hbijV,
+        ← coheight_eq_of_stalkMap_bijective αS _ hbijS]
+      exact w.2
+    apply hbranch ⟨ιV (αS w.1), hcoh⟩
+    change h (ιV (αS w.1)) ∉ B
+    rw [← Scheme.Hom.comp_apply ιV h, ← hUV, Scheme.Hom.comp_apply]
+    have h2 : Spec.map (CommRingCat.ofHom φ) (αS w.1) = βY (FS w.1) := by
+      rw [← Scheme.Hom.comp_apply, ← hsq, Scheme.Hom.comp_apply]
+    rw [h2]
+    exact hnotB
+  -- the chart at `E`
+  letI : IsFinite (Spec.map (CommRingCat.ofHom φ)) := affineSpecMap_isFinite φ hφfin
+  letI : IsDominant (Spec.map (CommRingCat.ofHom φ)) := affineSpecMap_isDominant φ hφinj
+  obtain ⟨hD'dvr, hram1⟩ := hchart sY FS d' E₀ hd'E₀ hcohE₀ hgoodE.principal
+    hgoodE.divisor_dvr hunram
+  -- the closure `D` of `d` and the two paths `Z ⟶ A`
+  let D := (pointClosureIdealSheaf d.1).subscheme
+  let ιDY : D ⟶ Y := (pointClosureIdealSheaf d.1).subschemeι
+  let ψD' : D' ⟶ D := pointClosureSubschemeMap FS d'.1 d.1 rfl
+  let ψDA : D ⟶ A := pointClosureSubschemeMap β' d.1 y hβd
+  have hψD'ι : ψD' ≫ ιDY = ιD ≫ FS := pointClosureSubschemeMap_subschemeι FS d'.1 d.1 rfl
+  have hψDAι : ψDA ≫ ιA = ιDY ≫ β' := pointClosureSubschemeMap_subschemeι β' d.1 y hβd
+  have hclos : ψD' ≫ ψDA = ψD ≫ q := by
+    rw [← cancel_mono ιA]
+    calc (ψD' ≫ ψDA) ≫ ιA = ιD ≫ FS ≫ β' := by
+          rw [Category.assoc, hψDAι, ← Category.assoc, hψD'ι, Category.assoc]
+      _ = ιD ≫ αX ≫ h := by rw [hsqX]
+      _ = (ψD ≫ q) ≫ ιA := by
+          rw [Category.assoc ψD q ιA, hq, ← Category.assoc ψD ιA h, hψD]
+          simp only [αX, Category.assoc]
+  have hpath : νD ≫ ψD' ≫ ψDA = ψν ≫ F ≫ νA := by
+    rw [hclos, hF, ← Category.assoc ψν νA q, hψν, ← Category.assoc]
+  -- the points on the two paths
+  let eD : D := ψD' e₀.1
+  have heDι : ιDY eD = E := by
+    change ιDY (ψD' e₀.1) = FS (ιD e₀.1)
+    rw [← Scheme.Hom.comp_apply, hψD'ι, Scheme.Hom.comp_apply]
+  -- discrete valuation stalks
+  haveI : IsDiscreteValuationRing (closureStalk XS hd'E₀) := hD'dvr
+  haveI : IsDomain (D'.presheaf.stalk e₀.1) := inferInstance
+  haveI : IsDiscreteValuationRing (D'.presheaf.stalk e₀.1) :=
+    IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing
+      (pointClosureStalkEquiv d'.1 e₀.1 hd'E₀)
+  haveI : IsDiscreteValuationRing (closureStalk Y hdE) := hgoodE.divisor_dvr
+  have hdeD : d.1 ⤳ ιDY eD := heDι ▸ hdE
+  haveI : IsDomain (D.presheaf.stalk eD) := inferInstance
+  haveI : IsDiscreteValuationRing (D.presheaf.stalk eD) :=
+    IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing
+      (pointClosureStalkEquiv' d.1 eD heDι hdE)
+  haveI : IsIntegrallyClosed (D'.presheaf.stalk (νD z.1)) :=
+    inferInstanceAs (IsIntegrallyClosed (D'.presheaf.stalk e₀.1))
+  -- path one: `μ`
+  have hνD : pointRamificationIdx νD z.1 = 1 :=
+    pointRamificationIdx_eq_one_of_bijective νD z.1 (ConcreteCategory.bijective_of_isIso _)
+  have hψD' : pointRamificationIdx ψD' e₀.1 = 1 := by
+    rw [pointRamificationIdx_pointClosureSubschemeMap FS d'.1 d.1 rfl e₀.1 hd'E₀]
+    exact hram1
+  have hψDA : ∃ b : ℕ, pointRamificationIdx ψDA eD = 1 ^ b := by
+    obtain ⟨b, hb'⟩ := hgoodE.primary
+    refine ⟨b, ?_⟩
+    rw [pointRamificationIdx_pointClosureSubschemeMap β' d.1 y hβd eD hdeD,
+      closureFibreMultiplicity_eq_of_eq β' heDι hdeD hdE]
+    exact hb'
+  obtain ⟨b, hbμ⟩ := hψDA
+  -- Noetherian sources make every map quasi-compact
+  haveI : CompactSpace D' := by
+    have : QuasiCompact (ιD ≫ αS) := by
+      change QuasiCompact (ιD ≫ (Palomar.normalizationMap (reesProj (P.map φ)) ≫
+        reesProjToSpec (P.map φ)))
+      infer_instance
+    exact QuasiCompact.compactSpace_of_compactSpace (ιD ≫ αS)
+  haveI : IsLocallyNoetherian D' := LocallyOfFiniteType.isLocallyNoetherian (ιD ≫ sXS)
+  haveI : IsNoetherian D' := ⟨⟩
+  haveI : CompactSpace Z := QuasiCompact.compactSpace_of_compactSpace νD
+  haveI : IsNoetherian Z := ⟨⟩
+  have hinjψD' : Function.Injective (ψD'.stalkMap e₀.1).hom := by
+    haveI : IsDominant ψD' := pointClosureSubschemeMap_isDominant FS d'.1 d.1 rfl
+    exact stalkMap_injective_of_dominant_integral ψD' e₀.1
+  have hpath1 : pointRamificationIdx (νD ≫ ψD' ≫ ψDA) z.1 = 1 ^ b := by
+    rw [pointRamificationIdx_comp νD (ψD' ≫ ψDA) z.1
+        (ConcreteCategory.bijective_of_isIso (νD.stalkMap z.1)).1, hνD, mul_one]
+    change pointRamificationIdx (ψD' ≫ ψDA) e₀.1 = 1 ^ b
+    rw [pointRamificationIdx_comp ψD' ψDA e₀.1 hinjψD', hψD', mul_one]
+    exact hbμ
+  -- path two
+  haveI : IsLocallyNoetherian (Palomar.normalization A) :=
+    LocallyOfFiniteType.isLocallyNoetherian (νA ≫ ιA ≫ s)
+  let Qt : SchemeDivisorPoint (Palomar.normalization A) := Q₁.mapFiniteDominantNormal F
+  haveI : IsDiscreteValuationRing ((Palomar.normalization A).presheaf.stalk (F Q₁.1)) := by
+    change IsDiscreteValuationRing ((Palomar.normalization A).presheaf.stalk Qt.1)
+    exact Qt.stalk_isDiscreteValuationRing
+  haveI : IsDiscreteValuationRing ((Palomar.normalization A).presheaf.stalk (ψν z.1)) := by
+    rw [hzQ]
+    exact Q₁.stalk_isDiscreteValuationRing
+  haveI : IsIntegrallyClosed (A.presheaf.stalk (νA (F Q₁.1))) := by
+    haveI : IsDiscreteValuationRing (closureStalk X hyx) := hAdvr
+    exact IsIntegrallyClosed.of_equiv (pointClosureStalkEquiv y (νA (F Q₁.1)) hyx)
+  have hνA : pointRamificationIdx νA (F Q₁.1) = 1 :=
+    pointRamificationIdx_eq_one_of_bijective νA (F Q₁.1)
+      (ConcreteCategory.bijective_of_isIso (νA.stalkMap (F Q₁.1)))
+  have hinjψν : Function.Injective (ψν.stalkMap z.1).hom :=
+    stalkMap_injective_of_dominant_integral ψν z.1
+  have hinjF : Function.Injective (F.stalkMap (ψν z.1)).hom :=
+    stalkMap_injective_of_dominant_integral F (ψν z.1)
+  have hpath2 : pointRamificationIdx (ψν ≫ F ≫ νA) z.1 =
+      pointRamificationIdx F Q₁.1 * pointRamificationIdx ψν z.1 := by
+    haveI : IsDiscreteValuationRing
+        ((Palomar.normalization A).presheaf.stalk ((ψν ≫ F) z.1)) := by
+      rw [Scheme.Hom.comp_apply, hzQ]
+      infer_instance
+    rw [← Category.assoc, pointRamificationIdx_comp (ψν ≫ F) νA z.1
+        (by rw [Scheme.Hom.stalkMap_comp]; exact hinjψν.comp hinjF)]
+    change pointRamificationIdx νA (F (ψν z.1)) * _ = _
+    rw [hzQ, hνA, one_mul, pointRamificationIdx_comp ψν F z.1 hinjψν, hzQ]
+  have hdvd : schemeDivisorRamificationIdx F Q₁ ∣ 1 ^ b := by
+    rw [← hpath1, hpath, hpath2]
+    exact Dvd.intro _ rfl
+  have he : schemeDivisorRamificationIdx F Q₁ = 1 :=
+    Nat.dvd_one.mp (by simpa only [one_pow] using hdvd)
+  exact formallyEtale_of_ramificationIdx_eq_one_of_charZero k (νA ≫ ιA ≫ s) F Q₁ he
+
+#print axioms formallyEtale_of_ramificationIdx_eq_one_of_charZero
+#print axioms allCodimEtaleOfGoodCharZero_of_chart
+
+/-- **L1** in characteristic zero. -/
+theorem allCodimEtaleOfGoodCharZero (k : Type u) [Field k] [CharZero k] :
+    AllCodimEtaleOfGoodCharZero k :=
+  allCodimEtaleOfGoodCharZero_of_chart k (allCodimChartPropertyCharZero k)
+
+#print axioms allCodimEtaleOfGoodCharZero
+
+end
+end Pcf

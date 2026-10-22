@@ -630,6 +630,31 @@ theorem toBoundingChart : BoundingChart R S a p := by
   have ha : a ∈ nonZeroDivisors R :=
     mem_nonZeroDivisors_of_ringKrullDim_eq_two_of_quotient_eq_one
       h.dim_base h.dim_divisor
+  letI : IsRegularRing R :=
+    isRegularRing_of_isRegularLocalRing_of_isIntegrallyClosed_dim_two R h.dim_base
+  letI : IsRegularRing (R ⧸ Ideal.span {a}) :=
+    isRegularRing_of_isRegularLocalRing_of_ringKrullDim_eq_one
+      (R ⧸ Ideal.span {a}) h.dim_divisor
+  have hEt : ∀ w : PrimeSpectrum S,
+      algebraMap R S a ∉ w.asIdeal → Algebra.IsEtaleAt R w.asIdeal := by
+    intro w hw
+    rcases eq_or_ne w.asIdeal.height 0 with h0 | hne
+    · exact isEtaleAt_height_zero_of_charZero_of_integral w h0
+    · have h1 : 1 ≤ w.asIdeal.height := Order.one_le_iff_ne_zero.mpr hne
+      refine h.purity inferInstance inferInstance inferInstance w
+        { source_isDomain :=
+            IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors _)
+          source_isIntegrallyClosed :=
+            isIntegrallyClosed_of_isLocalization (Localization.AtPrime w.asIdeal)
+              w.asIdeal.primeCompl w.asIdeal.primeCompl_le_nonZeroDivisors
+          target_isRegular := inferInstance
+          quasiFinite := inferInstance
+          equalDimension := (height_under_eq_of_finite_of_normal (R := R) w.asIdeal).symm
+          positiveDimension := h1
+          unramifiedCodimensionOne := ?_ }
+      intro w' hw' hw'1
+      refine h.unramified_codim_one w' hw'1 fun hmem => hw ?_
+      exact (PrimeSpectrum.le_iff_specializes w' w).mpr hw' hmem
   exact
     { noetherian_base := inferInstance
       noetherian_cover := inferInstance
@@ -644,7 +669,6 @@ theorem toBoundingChart : BoundingChart R S a p := by
       normal := fun w =>
         isIntegrallyClosed_of_isLocalization (Localization.AtPrime w.asIdeal)
           w.asIdeal.primeCompl w.asIdeal.primeCompl_le_nonZeroDivisors
-      tame := h.tame
       dim_eq := fun w ↦
         (height_under_eq_of_finite_of_normal (R := R) w.asIdeal).symm
       generic_etale := isEtaleAt_height_zero_of_charZero_of_integral
@@ -656,7 +680,14 @@ theorem toBoundingChart : BoundingChart R S a p := by
       prime := h.minimal.1.1
       minimal := h.minimal
       purity := h.purity
-      abhyankar := h.abhyankar }
+      standardPieces := fun y hy => by
+        exact h.abhyankar inferInstance ha
+          inferInstance
+          (Module.Finite.base_change R (Localization.Away a) S)
+          hEt
+          (isIntegralClosure_localizationAway_of_finite_of_integrallyClosed a
+            (map_mem_nonZeroDivisors _ (FaithfulSMul.algebraMap_injective R S) ha))
+          h.tame y hy }
 
 /-- The quotient-ring map cut out by the chosen divisor and its selected inverse-image
 component.  Naming this map makes the later localization and stalk interfaces independent

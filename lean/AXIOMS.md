@@ -15,6 +15,20 @@ conditional.  The headline actual-scheme theorem constructs those layers and
 leaves only the local purity and Abhyankar packages as mathematical
 inputs beyond its stated geometric and PCF hypotheses.
 
+## Theorem A feature branch (2026-10-22)
+
+`Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` and
+`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF` prove the two cases of
+`paper-p.tex`, Theorem `thm:A`, from the finite normalized weighted
+postcritical set on the original scheme. The positive-characteristic case
+assumes prime-to-`p` monodromy. Both prove the recursive assertion on
+original reduced subvariety returns in every codimension. The bridge
+`Pcf.isWeightedNormalizedPCFDownstairs_iff` identifies the downstairs
+condition with weighted PCF of the normalization lift by finite fibres.
+All three declarations print only `propext`, `Classical.choice`, and
+`Quot.sound`; no domain axiom or `sorry` is in their dependency closures.
+See [THEOREM-A.md](THEOREM-A.md) for the exact audit.
+
 ## 2026-10-16: purity and Abhyankar are proved; the headline assumes nothing further
 
 The two local literature inputs listed below as the "only literature packages" are no longer

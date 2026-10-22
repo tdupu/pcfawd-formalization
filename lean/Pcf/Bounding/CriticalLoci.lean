@@ -155,6 +155,72 @@ theorem formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero
     (X.presheaf.stalk (f (genericPoint X)))
     (X.presheaf.stalk (genericPoint X))
 
+/-- Separability of the extension of function fields induced by a dominant
+endomorphism. The algebra structure is the actual map on generic stalks.
+This is the characteristic-free separability condition in `paper-p.tex`,
+Definition `def:prime-to-p`. -/
+def IsGenericallySeparable
+    {X : Scheme.{u}} (f : X ⟶ X) [IsDominant f] [IsIntegral X] : Prop := by
+  have hgp : f (genericPoint X) = genericPoint X :=
+    map_genericPoint_eq_of_isDominant f
+  let e := (X.presheaf.stalkCongr (Inseparable.of_eq hgp)).commRingCatIsoToRingEquiv
+  have hfield : IsField (X.presheaf.stalk (f (genericPoint X))) :=
+    e.toMulEquiv.isField (Field.toIsField _)
+  letI : Field (X.presheaf.stalk (f (genericPoint X))) := hfield.toField
+  letI := (f.stalkMap (genericPoint X)).hom.toAlgebra
+  exact Algebra.IsSeparable (X.presheaf.stalk (f (genericPoint X)))
+    (X.presheaf.stalk (genericPoint X))
+
+set_option linter.style.haveILetI false in
+/-- A finite dominant generically separable self-map is formally étale at
+the generic point, in any characteristic. This is the part of the existing
+characteristic-zero construction used by the prime-to-`p` route. -/
+theorem formallyEtale_stalkMap_genericPoint_of_finite_dominant_separable
+    {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f] [IsIntegral X]
+    (hsep : IsGenericallySeparable f) :
+    (f.stalkMap (genericPoint X)).hom.FormallyEtale := by
+  have hgp : f (genericPoint X) = genericPoint X :=
+    map_genericPoint_eq_of_isDominant f
+  let e := (X.presheaf.stalkCongr (Inseparable.of_eq hgp)).commRingCatIsoToRingEquiv
+  have hfield : IsField (X.presheaf.stalk (f (genericPoint X))) :=
+    e.toMulEquiv.isField (Field.toIsField _)
+  letI : Field (X.presheaf.stalk (f (genericPoint X))) := hfield.toField
+  letI := (f.stalkMap (genericPoint X)).hom.toAlgebra
+  letI : Algebra.IsSeparable (X.presheaf.stalk (f (genericPoint X)))
+      (X.presheaf.stalk (genericPoint X)) := hsep
+  rw [RingHom.FormallyEtale]
+  exact Algebra.FormallyEtale.of_isSeparable
+    (X.presheaf.stalk (f (genericPoint X)))
+    (X.presheaf.stalk (genericPoint X))
+
+set_option linter.style.haveILetI false in
+/-- For a finite dominant self-map, generic formal étaleness implies the
+separability of its function-field extension. -/
+theorem isGenericallySeparable_of_formallyEtale_generic
+    {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f] [IsIntegral X]
+    (hetale : (f.stalkMap (genericPoint X)).hom.FormallyEtale) :
+    IsGenericallySeparable f := by
+  have hgp : f (genericPoint X) = genericPoint X :=
+    map_genericPoint_eq_of_isDominant f
+  let e := (X.presheaf.stalkCongr (Inseparable.of_eq hgp)).commRingCatIsoToRingEquiv
+  have hfield : IsField (X.presheaf.stalk (f (genericPoint X))) :=
+    e.toMulEquiv.isField (Field.toIsField _)
+  letI : Field (X.presheaf.stalk (f (genericPoint X))) := hfield.toField
+  letI := (f.stalkMap (genericPoint X)).hom.toAlgebra
+  letI : FaithfulSMul (X.presheaf.stalk (f (genericPoint X)))
+      (X.presheaf.stalk (genericPoint X)) :=
+    (faithfulSMul_iff_algebraMap_injective _ _).mpr
+      (f.stalkMap (genericPoint X)).hom.injective
+  letI : Algebra.QuasiFinite (X.presheaf.stalk (f (genericPoint X)))
+      (X.presheaf.stalk (genericPoint X)) := f.quasiFiniteAt (genericPoint X)
+  letI : Module.Finite (X.presheaf.stalk (f (genericPoint X)))
+      (X.presheaf.stalk (genericPoint X)) :=
+    Algebra.QuasiFinite.iff_of_isArtinianRing.mp inferInstance
+  rw [RingHom.FormallyEtale] at hetale
+  exact (Algebra.FormallyEtale.iff_isSeparable
+    (X.presheaf.stalk (f (genericPoint X)))
+    (X.presheaf.stalk (genericPoint X))).mp hetale
+
 /-- One formally étale stalk of a dominant finite-presentation endomorphism of an
 irreducible scheme supplies a formally étale stalk for every iterate. -/
 theorem exists_formallyEtale_stalk_iterate_of_exists

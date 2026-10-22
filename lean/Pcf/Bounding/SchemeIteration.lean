@@ -73,6 +73,63 @@ theorem divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate
         ⟨genericPoint X,
           formallyEtale_stalkMap_genericPoint_of_finite_dominant_charZero f⟩ m))
 
+set_option linter.style.haveILetI false in
+/-- Generic separability of a finite dominant self-map is preserved by
+iteration, in any characteristic. This supplies the separable part of
+`paper-p.tex`, Lemma `lem:prime-to-p-compose`; the prime-to-`p` degree
+assertion is a separate field-theoretic obligation. -/
+theorem isGenericallySeparable_pow
+    {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f] [IsIntegral X]
+    (hsep : IsGenericallySeparable f) (m : ℕ) :
+    IsGenericallySeparable (CategoryTheory.End.of f ^ m).asHom := by
+  have hgp : f (genericPoint X) = genericPoint X :=
+    map_genericPoint_eq_of_isDominant f
+  have hfg := formallyEtale_stalkMap_genericPoint_of_finite_dominant_separable f hsep
+  have hiter : ∀ n,
+      ((CategoryTheory.End.of f ^ n).asHom.stalkMap
+        (genericPoint X)).hom.FormallyEtale := by
+    intro n
+    induction n with
+    | zero =>
+        rw [pow_zero]
+        change ((𝟙 X : X ⟶ X).stalkMap (genericPoint X)).hom.FormallyEtale
+        rw [Scheme.Hom.stalkMap_id]
+        change (RingHom.id _).FormallyEtale
+        rw [RingHom.FormallyEtale]
+        infer_instance
+    | succ n ih =>
+        rw [pow_succ, CategoryTheory.End.mul_asHom]
+        change ((f ≫ (CategoryTheory.End.of f ^ n).asHom).stalkMap
+          (genericPoint X)).hom.FormallyEtale
+        rw [Scheme.Hom.stalkMap_comp]
+        change ((f.stalkMap (genericPoint X)).hom.comp
+          (((CategoryTheory.End.of f ^ n).asHom.stalkMap
+            (f (genericPoint X))).hom)).FormallyEtale
+        have hi : (((CategoryTheory.End.of f ^ n).asHom.stalkMap
+            (f (genericPoint X))).hom).FormallyEtale := by
+          rw [hgp]
+          exact ih
+        exact RingHom.FormallyEtale.comp hi hfg
+  letI : IsFinite (CategoryTheory.End.of f ^ m).asHom := isFinite_end_pow f m
+  letI : IsDominant (CategoryTheory.End.of f ^ m).asHom := isDominant_end_pow f m
+  exact isGenericallySeparable_of_formallyEtale_generic
+    (CategoryTheory.End.of f ^ m).asHom (hiter m)
+
+/-- The actual index-only divisor dynamics of a generically separable
+self-map commute with iteration. The characteristic-`p` branch comparison
+still requires residue-separability at every divisor. -/
+theorem divisorDynamicsOfFiniteDominantNormalSeparable_pow_eq_iterate
+    {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f]
+    [IsIntegral X] [IsLocallyNoetherian X] [IsNormalScheme X] [NoetherianSpace X]
+    (hsep : IsGenericallySeparable f) (m : ℕ) :
+    divisorDynamicsOfFiniteDominantNormalSeparable
+      (CategoryTheory.End.of f ^ m).asHom (isGenericallySeparable_pow f hsep m) =
+      (divisorDynamicsOfFiniteDominantNormalSeparable f hsep).iterate m := by
+  unfold divisorDynamicsOfFiniteDominantNormalSeparable
+    divisorDynamicsOfFiniteDominantNormalNoetherian
+    divisorDynamicsOfFiniteDominantNormalOfExistsFormallyEtale
+  exact divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate f _ m _
+
 #print axioms DivisorDynamics.ext_of_step_ramificationIdx
 #print axioms divisorDynamicsOfFiniteDominantNormal_pow_eq_iterate
 #print axioms divisorDynamicsOfFiniteDominantNormalCharZero_pow_eq_iterate
