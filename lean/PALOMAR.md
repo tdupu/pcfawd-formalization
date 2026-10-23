@@ -28,6 +28,19 @@ manifest and are not part of the Comparator configuration.
 
 ## Pin
 
+> **Stale for any commit after `9a20b3f` (2026-10-22).** The Theorem A
+> development of `paper-p.tex` (see [THEOREM-A.md](THEOREM-A.md)) changed
+> modules in the proof closure of the compared theorems: normalization
+> finiteness now holds over any field via the vendored
+> `Pcf/Vendor/TauCeti` modules, and `Pcf.BoundingChart` now carries the
+> Abhyankar standard-cover conclusion (field `standardPieces`) in place of the
+> `tame` and `abhyankar` fields. The Challenge, Solution, `comparator.json`
+> and `Pcf/Palomar/Statement.lean` are unchanged, and the three compared
+> theorems still print only `propext`, `Classical.choice` and `Quot.sound`.
+> The values below (file and job counts, audit counts, subtree hashes) describe
+> `c1e944e` and must be re-derived, and the Comparator re-run, before a new
+> submission.
+
 All values re-derived 2026-10-17 at commit `c1e944e` ("Remove duplicate propositions from the
 Lean development"), before this file was edited. The Challenge and the dependencies of the three
 compared statements are unchanged from `156bee7`, where they were first derived (same

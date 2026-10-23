@@ -348,8 +348,9 @@ theorem isPCF_of_orbits_subset {S : Set P} (hS : S.Finite)
 
 /-- The last dynamical step of the blow-up argument in `paper-p.tex`, proof of
 `thm:allcodim-normal`: a uniform finite support for the branch divisors of
-*all* positive iterates makes the original map PCF. The construction of that
-support from normalized blow-ups is a separate geometric obligation. -/
+*all* positive iterates makes the original map PCF. The support itself comes
+from normalized blow-ups; see `isNormalNonEtalePCF_of_uniform_iterate_support`
+and `Pcf/Bounding/AllCodimCoreAssembly.lean`. -/
 theorem isPCF_of_iterate_branch_subset {S : Set P} (hS : S.Finite)
     (h : ∀ m, 1 ≤ m → (D.iterate m).branch ⊆ S) : D.IsPCF := by
   apply D.isPCF_of_orbits_subset hS

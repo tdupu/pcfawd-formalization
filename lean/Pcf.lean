@@ -181,6 +181,7 @@ public import Pcf.Bounding.AllCodimBadFiniteCharZero
 public import Pcf.Bounding.AllCodimEtaleOfGoodCharZero
 public import Pcf.Bounding.TheoremACharZero
 public import Pcf.Bounding.TheoremAWeightedDownstairs
+public import Pcf.Bounding.TheoremADivisors
 public import Pcf.Bounding.AllCodimGoodRegularity
 public import Pcf.Bounding.AllCodimBlowupExceptionalIdealNaturality
 public import Pcf.Bounding.PrimaryFibres

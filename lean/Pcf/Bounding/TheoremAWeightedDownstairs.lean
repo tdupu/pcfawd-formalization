@@ -101,6 +101,20 @@ theorem isPCFAllSubvarieties_charP_of_downstairsPCF
   isPCFAllSubvarieties_charP_of_weightedPCF p hp k s f
     ((isWeightedNormalizedPCFDownstairs_iff k s f).mp hpcf) hmono
 
+/-- The PCF predicate at every node of `IsPCFAllSubvarieties` is the paper's
+`def:pcf`: generic separability together with finiteness of the weighted
+normalized postcritical divisors counted on `X` itself. -/
+theorem isSeparableNormalizedPCF_iff_downstairs
+    (k : Type u) [Field k]
+    {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
+    (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
+    (f : X ⟶ X) [IsFinite f] [IsDominant f] :
+    IsSeparableNormalizedPCF k s f ↔
+      IsGenericallySeparable f ∧ IsWeightedNormalizedPCFDownstairs k s f := by
+  rw [isSeparableNormalizedPCF_iff_weightedNormalLift, isWeightedNormalizedPCFDownstairs_iff]
+  exact ⟨fun ⟨hsep, hpcf⟩ => ⟨hsep, hpcf⟩, fun ⟨hsep, hpcf⟩ => ⟨hsep, hpcf⟩⟩
+
+#print axioms isSeparableNormalizedPCF_iff_downstairs
 #print axioms isWeightedNormalizedPCFDownstairs_iff
 #print axioms isPCFAllSubvarieties_charZero_of_downstairsPCF
 #print axioms isPCFAllSubvarieties_charP_of_downstairsPCF

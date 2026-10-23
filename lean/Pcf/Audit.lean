@@ -1262,7 +1262,8 @@ are all theorems, and no `Pcf.PurityData` — hence no Zariski–Nagata input �
 
 Two fields of `Pcf.PurityData` are discharged for an actual algebra, and the assumed
 local form is restated so that it matches Stacks Tag 0BMB rather than exceeding it.
-Purity itself is still assumed; see `lean/AXIOMS.md`, entry P1. -/
+Purity itself is now proved, as `Pcf.Stacks.zariskiNagataPurity` (Stacks Tag 0BMB);
+see the 2026-10-16 section of `lean/AXIOMS.md`. -/
 
 #print axioms Pcf.isClosed_nonEtaleLocus
 #print axioms Pcf.closure_eq_univ_of_primeSpectrumCodimension_eq_zero

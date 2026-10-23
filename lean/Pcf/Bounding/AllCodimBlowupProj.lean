@@ -21,8 +21,9 @@ scheme morphisms of affine Rees cones and of their principal localizations at
 degree-one generators.
 
 These are algebraic precursors. Mathlib's current `reesAlgebra` has no graded-ring
-instance, so these statements do not yet construct `Proj`, its degree-zero
-localization charts, or the blow-up morphism itself.
+instance, so this file does not construct `Proj` itself. The blow-up is Mathlib's
+`Proj` of the grading `reesGrade`, defined as `reesProj` in
+`AllCodimBlowupProjChart.lean`.
 -/
 
 @[expose] public section
@@ -77,7 +78,7 @@ def baseChangeDegreeOne (I : Ideal R) (a : I) :
 
 /-- The ring map on principal localizations of the two affine Rees cones
 at a degree-one generator. These are the localization rings underlying the
-standard `D_+(a t)` charts; the degree-zero parts are not yet constructed. -/
+standard `D_+(a t)` charts; the degree-zero parts are not constructed here. -/
 def localizedReesBaseChange (I : Ideal R) (a : I) :
     Localization.Away (baseChangeDegreeOne (S := S) I a) →+*
       Localization.Away ((reesAlgebraBaseChange (R := R) (S := S) I).toRingHom

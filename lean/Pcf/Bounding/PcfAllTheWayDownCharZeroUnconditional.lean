@@ -16,7 +16,8 @@ The existing characteristic-zero recursive theorem takes the affine
 Zariski--Nagata purity and Abhyankar statements as named inputs. Both
 are now proved in this repository. This module instantiates them to
 obtain the unconditional divisor-chain corollary of `latex/paper-p.tex`.
-It does not yet supply the higher-codimension return in Theorem `thm:A`.
+The returns in every codimension, Theorem `thm:A`, are proved in
+`Pcf/Bounding/TheoremACharZero.lean` and `Pcf/Bounding/TheoremACharP.lean`.
 -/
 
 @[expose] public section

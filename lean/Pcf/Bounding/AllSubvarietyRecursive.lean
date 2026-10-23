@@ -39,9 +39,10 @@ set_option linter.style.haveILetI false
 /-- Separable, normalized non-etale-branch PCF for an integral finite-type
 scheme over a field, in characteristic zero or positive characteristic. The
 critical locus is the actual non-etale divisor-stalk locus of the finite
-normalization lift, so inseparable residue extensions are detected. Identifying
-this locus with the paper's weighted `δ > 1` locus is a separate local-DVR
-comparison obligation. -/
+normalization lift, so inseparable residue extensions are detected. This is the
+paper's weighted `δ > 1` locus (`isSeparableNormalizedPCF_iff_weightedNormalLift`);
+`isSeparableNormalizedPCF_iff_downstairs` restates the predicate with the
+postcritical divisors counted on `X` itself, as in `def:pcf`. -/
 def IsSeparableNormalizedPCF
     (k : Type u) [Field k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]

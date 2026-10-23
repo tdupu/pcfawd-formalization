@@ -111,7 +111,7 @@ theorem ramificationIdx_self_eq_one (q : Ideal R) [q.IsPrime] : q.ramificationId
 /-- The numerical last step of `paper-p.tex`, proof of `thm:allcodim-normal`:
 an index prime to the characteristic cannot divide a pure characteristic
 power unless it is one. The geometric valuation identity that supplies the
-divisibility is a separate obligation. -/
+divisibility is proved in `allCodimEtaleOfGood_of_chart`. -/
 theorem index_eq_one_of_dvd_prime_pow {p e a : ℕ} (hp : Nat.Prime p)
     (hprimeToP : ¬p ∣ e) (hdiv : e ∣ p ^ a) : e = 1 :=
   Nat.eq_one_of_dvd_coprimes (hp.coprime_pow_of_not_dvd hprimeToP)

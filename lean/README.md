@@ -9,14 +9,14 @@ Tucker, Wang).
 | Mathlib | `v4.35.0` (rev `56a005855ea1`) |
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
-| Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**, never by number (numbers change between versions of the manuscript) |
+| Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**, never by number (numbers change between versions of the manuscript). Labels refer to `latex/paper.tex` unless marked `paper-p.tex` (the characteristic-`p` version) |
 
 ## Theorem A in both characteristics and every codimension
 
-The feature branch `codex/pcfawd-charp-allcodim` adds Theorem `thm:A` from
-the working `paper-p.tex` manuscript. Its two source-facing theorems are
+This section cites `paper-p.tex`, the characteristic-`p` version of the
+manuscript. Theorem `thm:A` of `paper-p.tex` is formalized as
 `Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` and
-`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF`. The second assumes
+`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF`; the second assumes
 prime-to-`p` monodromy. Both conclude the depth-indexed recursive property
 `Pcf.IsPCFAllSubvarieties` on original reduced point closures in every
 codimension. The proof includes the normalized Rees blow-up, generic fibre
@@ -25,7 +25,8 @@ build evidence, and axiom audit are in [THEOREM-A.md](THEOREM-A.md).
 
 ## What the paper proves, and what this development proves
 
-The paper's Theorem A (`thm:A` = `thm:general`) and Corollary `cor:pcfawd` say: every finite
+In `latex/paper.tex`, Theorem A (`thm:A` = `thm:general`; not the `thm:A` of
+`paper-p.tex` above) and Corollary `cor:pcfawd` say: every finite
 surjective post-critically finite self-map `f` of a variety over a field of characteristic
 zero is *PCF all the way down* (`def:pcfawd`) — for every preperiodic integral effective
 divisor `A` with `f^{r+s}(A) = f^r(A)`, the restriction `f^s|_{f^r(A)}` is PCF, recursively.
@@ -345,6 +346,7 @@ lean/
 │   │   └── Common/          ← shared regularity/normality lemmas (0567, 033C, 0AFS)
 │   ├── Palomar/             ← compared statement and `pcfAllTheWayDown_charZero_unconditional`
 │   ├── Vendor/              ← vendored Mathlib PR #29802 by Nailin Guan and Yongle Hu (localization of regular local rings)
+│   │   └── TauCeti/         ← vendored Tau Ceti modules: finite integral closure of polynomial rings over any field
 │   ├── Bounding/            ← thm:bounding DERIVED from purity and Abhyankar (2026-10-04)
 │   │   ├── Stacks.lean      ← supporting Tags 036W and 01JT; imports the theorem boundaries above
 │   │   ├── StandardPiece.lean ← Step 3 completed: √(aC) = (z), R/(a) → C/(z) bijective
@@ -439,7 +441,7 @@ notion, with the identification itself an assumption); **not formalized**.
 | `lem:finitely-many` | `Pcf.finite_isProperIrreducibleClosed_subset`, `Pcf.PCFGeometry.singularPrimes_finite`, `Pcf.PCFGeometry.meets_finite` | proved on a Noetherian space, for `Pcf.IsProperIrreducibleClosed` (see AXIOMS.md §C on its fidelity) |
 | `lem:restriction` / divisor part of `lem:lift` on affine normal schemes | `Pcf.affineDivisorPointEquiv`, `Pcf.height_under_eq_of_finite_of_normal`, `Pcf.affineDivisorUnder`, `Pcf.affineDivisorUnder_surjective` | proved for codimension-one points under the induced finite affine scheme map |
 | normalization divisors over a nonnormal finite-type target | `Pcf.height_under_eq_of_finite_of_finiteType`, `Pcf.heightOneUnderOfFiniteType`, `Pcf.coheight_apply_eq_one_of_finiteType`, `Pcf.schemeNormalizationUnnormalizedDynamicsOfFiniteType` | Noether normalization proves codimension preservation; the affine and scheme divisor maps, surjectivity/finite fibers, and actual two-carrier wiring are constructed once the normalization morphism and lifted self-map are supplied |
-| canonical global normalization and lifted map | `Pcf.Palomar.normalizationMap`, `schemeGlobalNormalization_isNormal`, `schemeGlobalNormalizationMap_isFinite`, `schemeNormalizationComparison_isIso`, `schemeGlobalNormalizationLift`, `schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType` | **proved** under the manuscript's finite-type characteristic-zero hypotheses: the normalization is normal and finite, the finite dominant lift exists and commutes, and the actual two-carrier divisor/critical-locus package including U1--U5 is constructed |
+| canonical global normalization and lifted map | `Pcf.Palomar.normalizationMap`, `schemeGlobalNormalization_isNormal`, `schemeGlobalNormalizationMap_isFinite`, `schemeNormalizationComparison_isIso`, `schemeGlobalNormalizationLift`, `schemeGlobalNormalizationUnnormalizedDynamicsOfFiniteType` | **proved**: the normalization is normal, and finite over any field (`schemeGlobalNormalizationMap_isFinite`, via the vendored Tau Ceti modules); under the manuscript's finite-type characteristic-zero hypotheses the finite dominant lift exists and commutes, and the actual two-carrier divisor/critical-locus package including U1--U5 is constructed |
 | ramification and finiteness on affine divisors | `Pcf.heightOnePrime_localRing_isDiscreteValuationRing`, `Pcf.heightOneRamificationIdx`, `Pcf.heightOneRamificationIdx_eq_dvrExponent`, `Pcf.finite_heightOne_ramified`, `Pcf.divisorDynamicsOfFiniteNormalSelfAlgebra` | the height-one local ring is a DVR; the canonical Mathlib index equals its usual maximal-ideal exponent; affine `DivisorDynamics` constructed, assuming generic étaleness |
 | concrete affine and scheme-stalk `crit₁` on a bounding chart | `Pcf.affineNonEtaleLocus`, `Pcf.BoundingChart.affineNonEtaleLocus_restriction_eq_empty`, `Pcf.schemeDivisorNonEtaleLocus`, `Pcf.LocalBoundingChart.schemeDivisorNonEtaleLocus_restriction_eq_empty`, `Pcf.SchemeStalkBoundingLocalizationPresentation.formallyEtale`, `Pcf.LocalBoundingChart.toGlobalQuotientSchemeStalkBoundingChartOfFiniteNormalLocalizationOfDivisors` | the critical sets are defined from the actual localized or stalk map; structural localization data and the quotient-ring square yield both coordinate isomorphisms and the arrow comparison; for honest primes `D ≤ q` and `P ≤ Q`, the actual stalk map of `Spec(S/P) → Spec(R/D)` is proved isomorphic to the canonical localized chart and inherits its purity--Abhyankar conclusion; `SchemeStalkBoundingChart.toSchemeStalkBoundingLocalizationPresentation` converts it to the exact interface consumed by the dynamics |
 | ambient morphism restricted to closed subschemes | `Scheme.IdealSheafData.quotientAppLE_subschemeMap_eq_quotientMap`, `Pcf.closedSubschemeStalkBoundingLocalizationPresentationOfAmbientMap`, `Pcf.affineIdealSheaf_le_map_of_localBoundingChart`, `Pcf.affineIdealSheafStalkBoundingLocalizationPresentation`, `Pcf.exists_principal_comap_affineBasicOpen_of_atPrime_regular_dim_two` | proved: the induced map on canonical affine quotient charts is the ordinary quotient of the ambient map on sections; on affine ambient schemes the regular local Step 0 hypotheses produce `J(⊤) = (a)`, after which a local bounding chart derives the ideal-sheaf containment, restricted morphism, and complete stalk-localization presentation |

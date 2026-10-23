@@ -1,7 +1,8 @@
 # Tau Ceti normalization-finiteness sources
 
-These nine Lean modules are copied from the local Tau Ceti checkout at
-`85ed0984159b8de1ed8c11541105bb1d89c787e4` (Apache 2.0; source headers
+These nine Lean modules are copied from Tau Ceti,
+<https://github.com/TauCetiProject/TauCeti>, at commit
+`85ed0984159b8de1ed8c11541105bb1d89c787e4` on its `main` branch (Apache 2.0; source headers
 retain the Tau Ceti copyright and authorship). Only the local import paths
 were changed from `TauCeti.*` to `Pcf.Vendor.TauCeti.*`; declaration names
 and proofs were preserved.

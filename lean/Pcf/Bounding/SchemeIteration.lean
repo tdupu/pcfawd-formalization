@@ -77,7 +77,7 @@ set_option linter.style.haveILetI false in
 /-- Generic separability of a finite dominant self-map is preserved by
 iteration, in any characteristic. This supplies the separable part of
 `paper-p.tex`, Lemma `lem:prime-to-p-compose`; the prime-to-`p` degree
-assertion is a separate field-theoretic obligation. -/
+assertion is `isPrimeToPMonodromyMap_pow_pos`. -/
 theorem isGenericallySeparable_pow
     {X : Scheme.{u}} (f : X ⟶ X) [IsFinite f] [IsDominant f] [IsIntegral X]
     (hsep : IsGenericallySeparable f) (m : ℕ) :

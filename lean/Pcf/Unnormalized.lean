@@ -65,13 +65,14 @@ the exact sequence of Kähler differentials and from Stacks Tags 02GF, 02GW, 02G
   (`ramificationIdx`, computed on the normalization, assumption A1) and for the unnormalized loci
   (`crit₀`, `crit₁`, which live on `A` itself). When `A` is regular in codimension one
   the two sets of primes coincide; in general `ν : Ã → A` is only finite-to-one on
-  primes, and this layer does not model `ν`. The existing `PCFSetup` already makes the
-  same identification for `singularPrimes` and `meets`. See `lean/AXIOMS.md` §B.8.
+  primes, and this layer does not model `ν`. The actual-scheme route applies this
+  structure on the normalization itself, where the two carriers agree. The existing
+  `PCFSetup` already makes the same identification for `singularPrimes` and `meets`.
+  See `lean/AXIOMS.md` §B.8.
 * `crit₀ 0`, `crit₁ 0` (the identity) are unconstrained; nothing below uses them.
 * `notMem_nonEtaleBranch_iterate` is the *conclusion* of Theorem `thm:bounding` for every iterate,
-  not its proof;
-  the bounding theorem itself is not formalized (purity and Abhyankar are assumed, as
-  before).
+  not its proof; the bounding theorem and its purity and Abhyankar inputs are proved in
+  `Pcf/Bounding` and `Pcf/Stacks`.
 -/
 
 @[expose] public section
@@ -86,8 +87,9 @@ predicates of Definition `def:branch-loci`, indexed by the iterate.
 `nonUnramifiedLocus m` is `Irr(crit₀(gᵐ))`, the primes of `A` at whose generic point `gᵐ` is not
 unramified, and `nonEtaleLocus m` is `Irr(crit₁(gᵐ))`, those at which `gᵐ` is not étale. The
 five `Prop` fields are Proposition `prop:loci-compare` (1)–(2) and Lemma
-`lem:tower-unnormalized` (1)–(2), the latter for `g` and `h = gⁿ`; all are assumed, see
-`lean/AXIOMS.md` §B.8. -/
+`lem:tower-unnormalized` (1)–(2), the latter for `g` and `h = gⁿ`. They are fields of this
+abstract interface; for an actual finite dominant separable self-map of a normal scheme,
+`unnormalizedDynamicsOfFiniteDominantNormalSeparable` proves them (see `lean/AXIOMS.md` §B.8). -/
 structure UnnormalizedDynamics (P : Type u) extends DivisorDynamics P where
   /-- `nonUnramifiedLocus m = Irr(crit₀(gᵐ))`: `gᵐ` is not unramified at the generic point. -/
   nonUnramifiedLocus : ℕ → Set P

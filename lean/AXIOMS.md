@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Repo | `pcf` |
+| Repo | `pcfawd-formalization` |
 | Scope | `lean/` |
 | Status | Draft |
 | Date | `2026-09-21`; amended through the scheme-level general theorem on `2026-10-07`; purity and Abhyankar proved `2026-10-16` (see the first section); phase-2 Stacks-form statements `2026-10-17` |
@@ -11,11 +11,12 @@
 
 This is the *axiom census* of the formalization, in the sense used by the
 `gq2` project.  The abstract compatibility layers remain deliberately
-conditional.  The headline actual-scheme theorem constructs those layers and
-leaves only the local purity and Abhyankar packages as mathematical
-inputs beyond its stated geometric and PCF hypotheses.
+conditional.  The headline actual-scheme theorems construct those layers. The local
+purity and Abhyankar packages, once their only remaining mathematical
+inputs, are proved (see the 2026-10-16 section), so the headline theorems
+assume nothing beyond their stated geometric and PCF hypotheses.
 
-## Theorem A feature branch (2026-10-22)
+## Theorem A of `paper-p.tex` (2026-10-22)
 
 `Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` and
 `Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF` prove the two cases of

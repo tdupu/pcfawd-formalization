@@ -1,6 +1,7 @@
 /-
-Copyright (c) 2026 Taylor Dupuy. All rights reserved.
+Copyright (c) 2026 Taylor Dupuy, Thomas Tucker, Zhuoran Wang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
 -/
 module
 
@@ -163,8 +164,9 @@ original Rees ring. This is the affine algebraic input for the closed immersion
 of the blow-up of `I.map f` into the base change of the blow-up of `I` in
 `paper-p.tex`, proof of Theorem `thm:allcodim-normal` (first paragraph).
 
-This theorem is about the Rees rings themselves. The scheme-level Proj map,
-its closed-immersion property, and normalization remain separate obligations. -/
+This theorem is about the Rees rings themselves. The scheme-level blow-up
+(`reesProj`) and the map of normalized blow-ups (`normalizedReesProjMap`) are
+built in `AllCodimBlowupProjChart.lean` and `AllCodimBlowupNormalizedLift.lean`. -/
 theorem adjoin_range_reesAlgebraMap_eq_top (f : R →+* S) (I : Ideal R) :
     Algebra.adjoin S (Set.range (reesAlgebraMap f I)) = ⊤ := by
   apply top_unique

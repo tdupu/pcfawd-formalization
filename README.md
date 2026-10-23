@@ -1,25 +1,28 @@
 # PCF all the way down
 
-A Lean 4 / Mathlib formalization of the characteristic-zero case of "PCF all the
-way down", from the manuscript
+A Lean 4 / Mathlib formalization of "PCF all the way down", from the manuscript
 
 > Taylor Dupuy, Alon Levy, Thomas Tucker and Zhuoran Wang, *PCF all the way
 > down*. Manuscript in preparation; not yet public.
 
 The manuscript is not included here yet. References in the Lean sources and documentation
-to `latex/paper.tex` and its `\label`s (for example `cor:pcfawd`) are to that manuscript.
+to `latex/paper.tex` and `latex/paper-p.tex` (its characteristic-`p` version) and their
+`\label`s (for example `cor:pcfawd`) are to that manuscript.
 
 ## What is proved
 
-The feature branch `codex/pcfawd-charp-allcodim` also contains a Lean
-formalization of Theorem `thm:A` from the working characteristic-`p`
-manuscript: characteristic zero and positive characteristic with
-prime-to-`p` monodromy, for preperiodic proper integral closed
-subvarieties in every codimension. The recursive returns use the original
-reduced subvarieties. The precise theorem names and verification record are
-in [`lean/THEOREM-A.md`](lean/THEOREM-A.md).
+**Theorem A in every characteristic and every codimension.** The development
+also formalizes Theorem `thm:A` of the characteristic-`p` version of the
+manuscript (`paper-p.tex`, not yet public):
+`Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` in characteristic zero and
+`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF` in characteristic `p > 0`
+with prime-to-`p` monodromy. Both conclude that every return on a preperiodic
+proper integral closed subvariety, in every codimension and on the original
+reduced subvariety, is separable and PCF, recursively. The statements, their
+equivalent forms and the verification record are in
+[`lean/THEOREM-A.md`](lean/THEOREM-A.md).
 
-`Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` formalizes Corollary
+**The divisor-chain theorem.** `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` formalizes Corollary
 `cor:pcfawd` of the manuscript in characteristic zero: a finite dominant
 self-map of an integral, locally Noetherian scheme with Noetherian underlying
 space, locally of finite type over a field of characteristic zero, that is PCF
@@ -65,7 +68,9 @@ lake build
 warnings in `PcfChallenge` are the `sorry`s of the three compared theorems.
 
 Palomar submission parameters: project path `lean`, Comparator configuration
-`lean/comparator.json`, metadata `lean/formalization.yaml`.
+`lean/comparator.json`, metadata `lean/formalization.yaml`. The pin recorded in
+`lean/PALOMAR.md` predates the Theorem A development and must be re-derived before
+a new submission (see the note at the top of its Pin section).
 
 ## History
 
