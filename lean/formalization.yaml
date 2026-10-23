@@ -3,7 +3,8 @@
 # additions (see PalomarRegistry/PalomarPolicy CONTRIBUTING.md, section 3).
 #
 # Prepared, not submitted. Facts about people and process were confirmed by
-# Taylor on 2026-10-15.
+# Taylor on 2026-10-15; Codex's part in writing the Lean was confirmed on
+# 2026-10-23.
 
 version: v0.4
 
@@ -41,6 +42,11 @@ project:
     only the axioms propext, Classical.choice and Quot.sound. At depth zero
     the conclusion restates the hypothesis, and the depth is not bounded by
     the dimension of X.
+
+    The repository also proves Theorem thm:A of the characteristic-p version
+    of the manuscript in both characteristics and all codimensions
+    (lean/THEOREM-A.md). Those theorems are not among the compared
+    statements.
   authors:
     # Taylor 2026-10-17: Alon Levy is an author of the manuscript, not of the
     # formalization.
@@ -65,8 +71,8 @@ sources:
     relationship: adapts
     author_endorsement: participated
     note: >
-      Formalizes Theorem A / Corollary cor:pcfawd of the manuscript in its
-      characteristic-zero form. Zariski–Nagata purity and Abhyankar's lemma,
+      The compared theorem formalizes Corollary cor:pcfawd of the manuscript
+      in its characteristic-zero form. Zariski–Nagata purity and Abhyankar's lemma,
       which the manuscript cites, are proved in the development rather than
       cited. Varieties are encoded as integral, locally Noetherian,
       Noetherian-space schemes locally of finite type over k, without
@@ -96,11 +102,22 @@ automation:
         driven by the `using-leanpowers` skill suite
         (https://github.com/tdupu/agent-skills-public, skills/using-leanpowers),
         which builds on Chris Birkbeck's mathlib-quality Claude Code plugin
-        (https://github.com/CBirkbeck/mathlib-quality).
+        (https://github.com/CBirkbeck/mathlib-quality). Claude Fable 5.1 also
+        ran as a Claude Code subagent.
       notes: >
         The Lean development was written by AI agents under the direction of
         the authors. The authors keep a per-task record of AI use privately;
         it is not part of the submitted repository.
+    # Confirmed by Taylor 2026-10-23.
+    - method: agent
+      tool_setup: >
+        OpenAI Codex desktop with OpenAI models, including a GPT-5-family
+        runtime whose exact variant was not exposed and GPT-6 Astra review
+        subagents, driven by the same `using-leanpowers` skill suite.
+      notes: >
+        Codex sessions wrote part of the Lean development, including parts of
+        the scheme-level route to the compared theorem and of the Theorem A
+        proof.
 
 review:
   # Confirmed by Taylor 2026-10-15: agents reviewed the statements.
