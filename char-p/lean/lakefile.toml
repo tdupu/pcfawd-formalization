@@ -14,3 +14,15 @@ path = "../../library"
 
 [[lean_lib]]
 name = "main"
+
+[[lean_lib]]
+name = "PaperCharPStatement"
+
+[[lean_lib]]
+name = "PaperCharPBridge"
+
+[[lean_lib]]
+name = "PaperCharPChallenge"
+
+[[lean_lib]]
+name = "PaperCharPSolution"

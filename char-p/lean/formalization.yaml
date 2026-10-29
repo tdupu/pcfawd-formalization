@@ -1,0 +1,162 @@
+# Target-specific metadata. Prepared locally; no submission or registration claimed.
+# People, source authorship, and license are inherited from the parent project's
+# recorded metadata (char-zero/lean/formalization.yaml), not newly asserted on
+# behalf of a person by this session.
+version: v0.4
+
+project:
+  name: "PCF on all subvarieties in any characteristic (Theorem A of paper-p)"
+  description: |
+    Theorem A (thm:A) of the manuscript "PCF all the way down: preperiodic
+    subvarieties in any codimension, in any characteristic", in two cases:
+    positive characteristic with monodromy not divisible by p, and
+    characteristic zero with no monodromy premise.
+
+    Hypotheses common to both selected theorems: k is a field; X is an
+    integral, locally Noetherian scheme with Noetherian underlying space;
+    s : X -> Spec k is locally of finite type; f : X -> X is finite and
+    dominant (hence surjective). k and X live in the same universe. The
+    endomorphism f need not be over k, and separatedness is not assumed. In
+    PaperCharP.Palomar.theoremA_positiveCharacteristic, p is prime, k has
+    characteristic p (CharP k p), and two premises are assumed:
+    IsWeightedNormalizedPCF f and HasPrimeToPMonodromy p f. In
+    PaperCharP.Palomar.theoremA_characteristicZero, k has characteristic zero
+    (CharZero k) and the only premise is IsWeightedNormalizedPCF f. Both
+    conclude IsPCFAllSubvarieties f.
+
+    IsWeightedNormalizedPCF f: for every lift g of f to the normalization
+    nu : X~ -> X (exactly one exists), the image under nu of the weighted
+    post-critical set of g is finite. That set consists of the points
+    g^[n+1](x), n >= 0, for codimension-one points x of X~ with
+    delta_g(x) > 1, where delta_g(x) is the stalk ramification index of the
+    maximal ideal of O_{X~,x} over O_{X~,g x} times the inseparable degree
+    of the residue field extension kappa(g x) -> kappa(x). This is the
+    paper's def:pcf with the normalized critical locus of def:crit-branch,
+    with post-critical divisors counted on X.
+
+    HasPrimeToPMonodromy p f: the stalk F of X at f(eta) (eta the generic
+    point) is a field, the function field L of X is a finite separable
+    F-algebra along the stalk map of f, and the normal closure of L/F
+    inside an algebraic closure of L has F-dimension coprime to p
+    (def:prime-to-p: separable, Galois closure of degree not divisible by p).
+
+    IsPCFAllSubvarieties f (def:pcfawd-allsubvar), required at every finite
+    depth d: at depth 0, f is separable and PCF, meaning generically
+    separable (L separable over the stalk at f(eta) along the stalk map) and
+    IsWeightedNormalizedPCF f. At depth d+1, f is separable and PCF, and for
+    every point x other than the generic point (the generic point of a proper
+    integral closed subvariety C), every r >= 0 and q >= 1 with
+    f^[r+q] x = f^[r] x, every endomorphism h of the reduced closure of
+    f^[r] x (the subvariety f^r(C)) with h followed by the closed immersion
+    equal to the closed immersion followed by f^q satisfies the depth-d
+    property. Returns are on the original, possibly nonnormal, subvarieties
+    in every codimension.
+
+    Two additional selected theorems,
+    PaperCharP.Palomar.existsUnique_isNormalizationLift and
+    PaperCharP.Palomar.exists_pointClosure_restriction, show that the
+    quantified lift exists uniquely and the quantified restriction exists,
+    so the definitions are nonvacuous; restriction uniqueness follows from
+    the closed immersion being a monomorphism.
+
+    The headline proofs apply PaperCharP.theoremA_positiveCharacteristic and
+    PaperCharP.theoremA_characteristicZero of the project's main module
+    through proved bridges (PaperCharPBridge.lean): the stated PCF,
+    separability and monodromy predicates are proved equivalent to the
+    development's, and the stated recursion is proved equivalent to the
+    development's Pcf.IsPCFAllSubvarieties, transporting every restriction
+    square to the development's actual return map.
+
+    Does not claim. The theorem types carry hypotheses and instance
+    arguments (listed above) that #print axioms cannot see; reporting only
+    propext, Quot.sound and Classical.choice is not a claim that nothing is
+    assumed. "Variety over k" is modelled by the scheme-theoretic conditions
+    above, not by a separated geometrically integral variety, and f is not
+    required to be a k-morphism; the structure map s enters only through
+    these conditions. Ramification and inseparable degree are Mathlib's
+    Ideal.ramificationIdx and Field.finInsepDegree at scheme points; they
+    are identified with the paper's e(D/E) and [kappa:kappa]_insep only at
+    codimension-one points of the normalization, where stalks are discrete
+    valuation rings. The paper's divisor sets are represented by their
+    generic points, and its recursion on dimension by quantification over
+    every finite depth. The monodromy condition is stated with Mathlib's
+    IntermediateField.normalClosure in AlgebraicClosure L, not with a
+    monodromy group. The characteristic-zero theorem is stated separately:
+    no version with p = 0 in HasPrimeToPMonodromy is selected. Nothing is
+    claimed about the necessity of the monodromy hypothesis: the
+    manuscript's examples (ex:wild, ex:frobenius-pinching,
+    ex:monodromy-loss and others), Lemma lem:allsubvar-iterate, Theorem
+    thm:allsubvar-pcfawd, the normalized blow-up argument and all other
+    results of the manuscript are built by the project's main module or the
+    shared library where formalized, but are not selected statements.
+  authors:
+    - Taylor Dupuy
+    - Thomas Tucker
+    - Zhuoran Wang
+  license: Apache-2.0
+  responsible_maintainers:
+    - Taylor Dupuy
+
+classification:
+  arxiv: ["math.DS", "math.AG", "math.NT"]
+  msc2020: ["37P55", "14E22"]
+
+sources:
+  - title: "PCF all the way down: preperiodic subvarieties in any codimension, in any characteristic"
+    type: paper
+    authors: [Taylor Dupuy, Thomas Tucker, Zhuoran Wang]
+    identifier: "Manuscript in preparation (paper-p.tex); not yet public"
+    relationship: adapts
+    author_endorsement: participated
+    note: >
+      Theorem thm:A, with Definitions def:prime-to-p, def:crit-branch,
+      def:pcf and def:pcfawd-allsubvar, of the positive-characteristic
+      manuscript by Dupuy, Tucker and Wang. The statement allows nonseparated
+      schemes and endomorphisms not over the base field, and splits the
+      characteristic-zero case into its own theorem. The manuscript text is
+      private and is not included in this public formalization repository.
+      Its full wording cannot currently be independently confirmed from a
+      public source; local agent fidelity review is not a substitute for
+      public-source or author verification.
+  - title: "PCF all the way down"
+    type: paper
+    authors: [Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang]
+    identifier: "Manuscript in preparation; not yet public"
+    relationship: background
+    note: >
+      The characteristic-zero companion manuscript, whose normalization and
+      divisor-restriction conventions the positive-characteristic manuscript
+      recalls. Its own headline results are a separate entry (char-zero/lean).
+
+automation:
+  methods:
+    - method: agent
+      tool_setup: >
+        Claude Code CLI with Anthropic models and OpenAI Codex desktop with
+        OpenAI models, as recorded in the parent project's formalization.yaml.
+        The underlying development predates this target-specific package.
+      notes: >
+        AI agents wrote the development under the direction of its authors.
+        The parent metadata records prior model and workflow provenance.
+    - method: agent
+      tool_setup: >
+        Claude Code CLI with Anthropic Claude Opus 5.5, as a subagent of an
+        orchestrating Claude Code session, using the to-palomar skill.
+      notes: >
+        The October 29 packaging session wrote the Mathlib-only Challenge,
+        its statement module, the bridge module and the Solution, copying
+        the shared Pcf.Palomar definitions verbatim from the existing
+        statement surface. Challenge theorem placeholders are intentional;
+        the Solution does not import the Challenge.
+
+review:
+  status: agent-reviewed
+  notes: >
+    The October 29 agent review compared the Challenge definitions with
+    paper-p.tex Theorem thm:A and Definitions def:prime-to-p,
+    def:crit-branch, def:pcf and def:pcfawd-allsubvar, and checked that the
+    bridge proves each stated predicate equivalent to the development's.
+    No human author review or Palomar review is claimed. Local build and
+    comparison outcomes, and remaining verification limitations, are
+    recorded in palomar-package.md. A full exact-commit Palomar preflight
+    and the subsequent editorial process remain separate requirements.

@@ -1,0 +1,15 @@
+{
+  "challenge_module": "PaperCharPChallenge",
+  "solution_module": "PaperCharPSolution",
+  "theorem_names": [
+    "PaperCharP.Palomar.theoremA_positiveCharacteristic",
+    "PaperCharP.Palomar.theoremA_characteristicZero",
+    "PaperCharP.Palomar.existsUnique_isNormalizationLift",
+    "PaperCharP.Palomar.exists_pointClosure_restriction"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

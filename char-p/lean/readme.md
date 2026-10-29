@@ -13,3 +13,8 @@ PCF premise is `Pcf.IsWeightedNormalizedPCFDownstairs`, and its recursive
 conclusion is `Pcf.IsPCFAllSubvarieties` on actual proper reduced integral
 subvariety returns. `main.lean` prints both elaborated types and transitive
 axioms.
+
+A Palomar package for the two Theorem A instances (Mathlib-only Challenge,
+Solution, statement and bridge modules) is described in
+[`palomar-package.md`](palomar-package.md). Build it with
+`lake build main PaperCharPChallenge PaperCharPSolution`.
