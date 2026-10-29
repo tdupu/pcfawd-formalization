@@ -6,39 +6,13 @@ version: v0.4
 project:
   name: "PCF all the way down"
   description: |
-    The characteristic-zero headline statements of the manuscript
-    "PCF all the way down": Theorem A (thm:A, equivalently thm:general)
-    and Corollary cor:pcfawd. Let k be a field of characteristic zero,
-    X an integral, locally Noetherian scheme with Noetherian underlying
-    space, locally of finite type over k, and f a finite dominant endomorphism.
-    The endomorphism need not be over k, and separatedness is not assumed.
+    Let k be a field of characteristic zero and let f: X → X be a finite surjective map of integral k-schemes of finite type. By the critical locus of f we mean the image in X of the critical locus of the map induced on the normalization of X. By the branch locus we mean the image of the critical locus under f.
 
-    Normalized PCF means that the lift to the normalization has only finitely
-    many points in the forward images of ramified codimension-one points;
-    ramification is measured by the stalk ramification index. Theorem A says
-    that, if f is normalized PCF, every return of an iterate of f to the
-    reduced closure of a periodic point in the forward orbit of a
-    codimension-one point is normalized PCF. The corollary proves normalized
-    PCF at every finite depth of these successive divisor returns.
+    We say that f is post-critically finite (PCF) if, for every irreducible divisor D contained in the branch locus, the forward orbit f(D) ∪ f^2(D) ∪ … is algebraic, that is, a finite union of subvarieties, taken as a closed subscheme with its reduced induced structure.
 
-    The selected declarations PaperCharZero.Palomar.theoremA and
-    PaperCharZero.Palomar.cor_pcfawd are proved through explicit statement
-    equivalences from PaperCharZero.theoremA and PaperCharZero.cor_pcfawd.
-    Two additional selected theorems establish existence and uniqueness of
-    normalization lifts and existence of point-closure restrictions, so the
-    quantified definitions are nonvacuous. Restriction uniqueness follows
-    from the closed immersion. Purity and Abhyankar inputs are proved in
-    the development, not additional assumptions of these statements.
+    We prove that if f is PCF and A is a preperiodic divisor for f with f^{r+s}(A) = f^r(A), then, setting B = f^r(A) and g = f^s, the restriction of g to B is PCF.
 
-    These four declarations are the selected results of this entry. They do
-    not claim any characteristic-p theorem. The same Lake project also
-    imports and builds, but does not select, formalizations of the
-    manuscript's bounding theorem (thm:bounding, with its literal exceptional
-    set), its supporting lemmas, the source-shaped Abhyankar and purity
-    statements, and its examples ex:squaring-PN, ex:koch, ex:dupont,
-    ex:pinched, ex:cusp, ex:smooth-restriction, ex:branch-singular and
-    ex:branch-sing-B; see palomar-package.md for their modeling choices.
-    Those additional results are not part of the compared statement.
+    This proves the PCF all the way down conjecture: restricting again to preperiodic divisors and iterating gives PCF maps at every stage.
   authors:
     - Taylor Dupuy
     - Thomas Tucker
@@ -60,14 +34,29 @@ sources:
     author_endorsement: participated
     note: >
       Theorem thm:A (equivalently thm:general) and Corollary cor:pcfawd of
-      the characteristic-zero manuscript. The statement allows nonseparated
-      schemes and endomorphisms not over the base field. The actual reduced
-      divisor-return implementation is connected to the independently
-      described Challenge by proved normalization and restriction bridges.
-      The manuscript text is private and is not included in this public
-      formalization repository. Its full wording cannot currently be
-      independently confirmed from a public source; local agent fidelity
-      review is not a substitute for public-source or author verification.
+      the characteristic-zero manuscript. The selected declarations are
+      PaperCharZero.Palomar.theoremA and PaperCharZero.Palomar.cor_pcfawd,
+      proved through explicit statement equivalences from
+      PaperCharZero.theoremA and PaperCharZero.cor_pcfawd, together with
+      PaperCharZero.Palomar.existsUnique_isNormalizationLift and
+      PaperCharZero.Palomar.exists_pointClosure_restriction, which show that
+      the quantified definitions are nonvacuous. The Lean statement is more
+      general than the abstract: X is integral, locally Noetherian with
+      Noetherian underlying space and locally of finite type over k, the
+      endomorphism is finite and dominant and need not be a morphism over k,
+      and separatedness is not assumed. PCF is normalized PCF: finiteness of
+      the forward images of the ramified codimension-one points of the lift to
+      the normalization, with ramification measured by the stalk
+      ramification index; it is proved equivalent to the definition above.
+      Purity and Abhyankar inputs are proved in the development, not assumed.
+      The same project also builds, but does not select, the bounding theorem
+      thm:bounding, the supporting lemmas, and every example of the
+      manuscript; char-zero/lean/readme.md maps each label to its
+      declarations. No characteristic-p theorem is claimed here. The
+      manuscript text is private and is not included in this public
+      repository; its full wording cannot currently be independently
+      confirmed from a public source, and local agent fidelity review is not
+      a substitute for public-source or author verification.
   - title: "The Stacks Project, Tags 0BMB, 0EYG and 0EYH"
     type: book
     identifier: "https://stacks.math.columbia.edu/tag/0BMB"
