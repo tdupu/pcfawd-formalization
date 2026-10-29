@@ -1,0 +1,117 @@
+# Target-specific metadata. Prepared locally; no submission or registration claimed.
+# People, source authorship, and license are inherited from the parent project's
+# recorded metadata, not newly asserted on behalf of a person by this session.
+version: v0.4
+
+project:
+  name: "Characteristic-zero divisor restriction and PCF all the way down"
+  description: |
+    The characteristic-zero headline statements of the manuscript
+    "PCF all the way down": Theorem A (thm:A, equivalently thm:general)
+    and Corollary cor:pcfawd. Let k be a field of characteristic zero,
+    X an integral, locally Noetherian scheme with Noetherian underlying
+    space, locally of finite type over k, and f a finite dominant endomorphism.
+    The endomorphism need not be over k, and separatedness is not assumed.
+
+    Normalized PCF means that the lift to the normalization has only finitely
+    many points in the forward images of ramified codimension-one points;
+    ramification is measured by the stalk ramification index. Theorem A says
+    that, if f is normalized PCF, every return of an iterate of f to the
+    reduced closure of a periodic point in the forward orbit of a
+    codimension-one point is normalized PCF. The corollary proves normalized
+    PCF at every finite depth of these successive divisor returns.
+
+    The selected declarations PaperCharZero.Palomar.theoremA and
+    PaperCharZero.Palomar.cor_pcfawd are proved through explicit statement
+    equivalences from PaperCharZero.theoremA and PaperCharZero.cor_pcfawd.
+    Two additional selected theorems establish existence and uniqueness of
+    normalization lifts and existence of point-closure restrictions, so the
+    quantified definitions are nonvacuous. Restriction uniqueness follows
+    from the closed immersion. Purity and Abhyankar inputs are proved in
+    the development, not additional assumptions of these statements.
+
+    These four declarations are the selected results of this entry. They do
+    not claim any characteristic-p theorem. The same Lake project also
+    imports and builds, but does not select, formalizations of the
+    manuscript's bounding theorem (thm:bounding, with its literal exceptional
+    set), its supporting lemmas, the source-shaped Abhyankar and purity
+    statements, and its examples ex:squaring-PN, ex:koch, ex:dupont,
+    ex:pinched, ex:cusp, ex:smooth-restriction, ex:branch-singular and
+    ex:branch-sing-B; see palomar-package.md for their modeling choices.
+    Those additional results are not part of the compared statement.
+  authors:
+    - Taylor Dupuy
+    - Thomas Tucker
+    - Zhuoran Wang
+  license: Apache-2.0
+  responsible_maintainers:
+    - Taylor Dupuy
+
+classification:
+  arxiv: ["math.DS", "math.AG", "math.NT"]
+  msc2020: ["37P55", "14E22"]
+
+sources:
+  - title: "PCF all the way down"
+    type: paper
+    authors: [Taylor Dupuy, Alon Levy, Thomas Tucker, Zhuoran Wang]
+    identifier: "Manuscript in preparation; not yet public"
+    relationship: adapts
+    author_endorsement: participated
+    note: >
+      Theorem thm:A (equivalently thm:general) and Corollary cor:pcfawd of
+      the characteristic-zero manuscript. The statement allows nonseparated
+      schemes and endomorphisms not over the base field. The actual reduced
+      divisor-return implementation is connected to the independently
+      described Challenge by proved normalization and restriction bridges.
+      The manuscript text is private and is not included in this public
+      formalization repository. Its full wording cannot currently be
+      independently confirmed from a public source; local agent fidelity
+      review is not a substitute for public-source or author verification.
+  - title: "The Stacks Project, Tags 0BMB, 0EYG and 0EYH"
+    type: book
+    identifier: "https://stacks.math.columbia.edu/tag/0BMB"
+    relationship: background
+    note: >
+      Purity and Abhyankar inputs used in the substantive development.
+      The compared statements do not take these results as hypotheses.
+
+automation:
+  methods:
+    - method: agent
+      tool_setup: >
+        Claude Code CLI with Anthropic models and OpenAI Codex desktop with
+        OpenAI models, as recorded in the parent project's formalization.yaml.
+        The underlying development predates this target-specific package.
+      notes: >
+        AI agents wrote the development under the direction of its authors.
+        The parent metadata records prior model and workflow provenance.
+    - method: agent
+      tool_setup: >
+        OpenAI Codex desktop, GPT-6 family, using lean-align-statement,
+        lean-fidelity, and lean-verify skills from the agent-skills repository.
+      notes: >
+        The October 28 packaging session reused the existing independently
+        stated Mathlib-only definitions and added explicit bridges from the
+        two paper-facing headline proofs. Challenge theorem placeholders are
+        intentional; the Solution does not import the Challenge.
+    - method: agent
+      tool_setup: >
+        Claude Code CLI with Anthropic Claude Opus 5.5, orchestrating
+        background subagents, each working in an isolated build copy.
+      notes: >
+        The October 28 completion session formalized the remaining
+        supporting results and examples imported by the project (not selected
+        results), and re-verified the package build, axioms, local export
+        comparison and kernel replay before this commit.
+
+review:
+  status: agent-reviewed
+  notes: >
+    The October 28 agent review inspected the selected theorem types, the
+    normalization-PCF equivalence, the actual point-closure restriction
+    transport, and the finite-depth equivalence. No new human author review
+    or Palomar review is claimed. Local build and comparison outcomes, and
+    any remaining verification limitations, are recorded in palomar-package.md.
+    A full exact-commit Palomar preflight and subsequent editorial process
+    remain separate requirements.

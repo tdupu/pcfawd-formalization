@@ -14,3 +14,9 @@ path = ".."
 
 [[lean_lib]]
 name = "main"
+
+[[lean_lib]]
+name = "PaperCharZeroChallenge"
+
+[[lean_lib]]
+name = "PaperCharZeroSolution"

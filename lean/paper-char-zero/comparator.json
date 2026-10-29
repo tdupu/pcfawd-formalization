@@ -1,0 +1,15 @@
+{
+  "challenge_module": "PaperCharZeroChallenge",
+  "solution_module": "PaperCharZeroSolution",
+  "theorem_names": [
+    "PaperCharZero.Palomar.theoremA",
+    "PaperCharZero.Palomar.cor_pcfawd",
+    "PaperCharZero.Palomar.existsUnique_isNormalizationLift",
+    "PaperCharZero.Palomar.exists_pointClosure_restriction"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

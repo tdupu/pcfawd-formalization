@@ -1,0 +1,134 @@
+module
+
+public import Pcf.PaperCharZero.SupportingNormalization
+public import Pcf.PaperCharZero.SupportingClosedSupports
+public import Pcf.PaperCharZero.SupportingRestriction
+public import Pcf.PaperCharZero.SupportingDictionary
+public import Pcf.PaperCharZero.SupportingNormalizedIndex
+public import Pcf.PaperCharZero.SupportingTower
+public import Pcf.PaperCharZero.SupportingIterates
+public import Pcf.PaperCharZero.SupportingPurity
+public import Pcf.PaperCharZero.SupportingStandardPiece
+
+/-! Compiler-derived full signatures and transitive axiom audit for the supporting additions. -/
+
+#check @Pcf.PaperCharZero.finite_orbit_iff_repeat
+#print axioms Pcf.PaperCharZero.finite_orbit_iff_repeat
+#check @Pcf.PaperCharZero.iterate_image
+#print axioms Pcf.PaperCharZero.iterate_image
+#check @Pcf.PaperCharZero.finite_forward_support_iff_repeat
+#print axioms Pcf.PaperCharZero.finite_forward_support_iff_repeat
+#check @Pcf.PaperCharZero.finite_forward_image_support_iff_repeat
+#print axioms Pcf.PaperCharZero.finite_forward_image_support_iff_repeat
+#check @Pcf.PaperCharZero.finite_forward_support_iff_preperiodic
+#print axioms Pcf.PaperCharZero.finite_forward_support_iff_preperiodic
+#check @Pcf.PaperCharZero.DivisorDynamics.criticalDivisors
+#print axioms Pcf.PaperCharZero.DivisorDynamics.criticalDivisors
+#check @Pcf.PaperCharZero.DivisorDynamics.image_criticalDivisors
+#print axioms Pcf.PaperCharZero.DivisorDynamics.image_criticalDivisors
+#check @Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_branch_preperiodic
+#print axioms Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_branch_preperiodic
+#check @Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_branch_set_preperiodic
+#print axioms Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_branch_set_preperiodic
+#check @Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_critical_set_preperiodic
+#print axioms Pcf.PaperCharZero.DivisorDynamics.isPCF_iff_critical_set_preperiodic
+#check @Pcf.PaperCharZero.NormalizationUnnormalizedDynamics.isPCF_iff_branch_preperiodic
+#print axioms Pcf.PaperCharZero.NormalizationUnnormalizedDynamics.isPCF_iff_branch_preperiodic
+#check @Pcf.PaperCharZero.NormalizationUnnormalizedDynamics.isPCF_iff_critical_preperiodic
+#print axioms Pcf.PaperCharZero.NormalizationUnnormalizedDynamics.isPCF_iff_critical_preperiodic
+#check @Pcf.PaperCharZero.schemeNormalizedCriticalDivisors
+#print axioms Pcf.PaperCharZero.schemeNormalizedCriticalDivisors
+#check @Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_branch_preperiodic
+#print axioms Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_branch_preperiodic
+#check @Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_critical_preperiodic
+#print axioms Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_critical_preperiodic
+
+#check @Pcf.PaperCharZero.divisorSupport
+#print axioms Pcf.PaperCharZero.divisorSupport
+#check @Pcf.PaperCharZero.divisor_mem_closure_iff
+#print axioms Pcf.PaperCharZero.divisor_mem_closure_iff
+#check @Pcf.PaperCharZero.mem_divisorSupport_iff
+#print axioms Pcf.PaperCharZero.mem_divisorSupport_iff
+#check @Pcf.PaperCharZero.divisorSupport_eq_iff
+#print axioms Pcf.PaperCharZero.divisorSupport_eq_iff
+#check @Pcf.PaperCharZero.isClosed_divisorSupport
+#print axioms Pcf.PaperCharZero.isClosed_divisorSupport
+#check @Pcf.PaperCharZero.image_divisorSupport
+#print axioms Pcf.PaperCharZero.image_divisorSupport
+#check @Pcf.PaperCharZero.iterate_image_divisorSupport
+#print axioms Pcf.PaperCharZero.iterate_image_divisorSupport
+#check @Pcf.PaperCharZero.schemeNormalizedCriticalDivisors_finite
+#print axioms Pcf.PaperCharZero.schemeNormalizedCriticalDivisors_finite
+#check @Pcf.PaperCharZero.isClosed_schemeNormalizedCriticalSupport
+#print axioms Pcf.PaperCharZero.isClosed_schemeNormalizedCriticalSupport
+#check @Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_critical_support_preperiodic
+#print axioms Pcf.PaperCharZero.scheme_isNormalizedPCF_iff_critical_support_preperiodic
+
+#check @Pcf.PaperCharZero.range_pointClosureSubschemeι
+#print axioms Pcf.PaperCharZero.range_pointClosureSubschemeι
+#check @Pcf.PaperCharZero.integral_effective_divisor_restriction
+#print axioms Pcf.PaperCharZero.integral_effective_divisor_restriction
+#check @Pcf.PaperCharZero.integral_effective_divisor_return
+#print axioms Pcf.PaperCharZero.integral_effective_divisor_return
+
+#check @Pcf.PaperCharZero.residueFieldMap_isSeparable_charZero
+#print axioms Pcf.PaperCharZero.residueFieldMap_isSeparable_charZero
+#check @Pcf.PaperCharZero.formallyEtale_stalkMap_iff_etale_neighborhood
+#print axioms Pcf.PaperCharZero.formallyEtale_stalkMap_iff_etale_neighborhood
+#check @Pcf.PaperCharZero.ramificationIdx_eq_one_iff_formallyEtale_charZero
+#print axioms Pcf.PaperCharZero.ramificationIdx_eq_one_iff_formallyEtale_charZero
+#check @Pcf.PaperCharZero.ramificationIdx_eq_one_iff_etale_at_divisor_charZero
+#print axioms Pcf.PaperCharZero.ramificationIdx_eq_one_iff_etale_at_divisor_charZero
+
+#check @Pcf.PaperCharZero.ramificationIdx_eq_one_of_birational_square
+#print axioms Pcf.PaperCharZero.ramificationIdx_eq_one_of_birational_square
+#check @Pcf.PaperCharZero.normalized_index_eq_one_of_etale
+#print axioms Pcf.PaperCharZero.normalized_index_eq_one_of_etale
+#check @Pcf.PaperCharZero.etale_normalized_index
+#print axioms Pcf.PaperCharZero.etale_normalized_index
+
+#check @Pcf.PaperCharZero.reducedFiberBranch_tower
+#print axioms Pcf.PaperCharZero.reducedFiberBranch_tower
+#check @Pcf.PaperCharZero.divisorSupport_union
+#print axioms Pcf.PaperCharZero.divisorSupport_union
+#check @Pcf.PaperCharZero.reducedFiberBranch_support_tower
+#print axioms Pcf.PaperCharZero.reducedFiberBranch_support_tower
+#check @Pcf.PaperCharZero.normalizedMorphismBranchSupport
+#print axioms Pcf.PaperCharZero.normalizedMorphismBranchSupport
+#check @Pcf.PaperCharZero.normalizedMorphismBranchSupport_eq_schemeNormalizedBranch
+#print axioms Pcf.PaperCharZero.normalizedMorphismBranchSupport_eq_schemeNormalizedBranch
+#check @Pcf.PaperCharZero.normalized_branch_tower
+#print axioms Pcf.PaperCharZero.normalized_branch_tower
+
+#check @Pcf.PaperCharZero.normalization_image_iterate_branch
+#print axioms Pcf.PaperCharZero.normalization_image_iterate_branch
+#check @Pcf.PaperCharZero.divisorSupport_iUnion
+#print axioms Pcf.PaperCharZero.divisorSupport_iUnion
+#check @Pcf.PaperCharZero.normalized_branch_divisors_pow
+#print axioms Pcf.PaperCharZero.normalized_branch_divisors_pow
+#check @Pcf.PaperCharZero.normalized_branch_support_pow
+#print axioms Pcf.PaperCharZero.normalized_branch_support_pow
+#check @Pcf.PaperCharZero.normalized_branch_orbit_propagation
+#print axioms Pcf.PaperCharZero.normalized_branch_orbit_propagation
+#check @Pcf.PaperCharZero.normalized_iterate_branch_subset_postcritical
+#print axioms Pcf.PaperCharZero.normalized_iterate_branch_subset_postcritical
+#check @Pcf.PaperCharZero.normalized_postcritical_support_eq_iUnion
+#print axioms Pcf.PaperCharZero.normalized_postcritical_support_eq_iUnion
+#check @Pcf.PaperCharZero.normalized_postcritical_support_pow
+#print axioms Pcf.PaperCharZero.normalized_postcritical_support_pow
+#check @Pcf.PaperCharZero.normalized_isPCF_iff_pow
+#print axioms Pcf.PaperCharZero.normalized_isPCF_iff_pow
+#check @Pcf.PaperCharZero.normalized_iterates
+#print axioms Pcf.PaperCharZero.normalized_iterates
+
+#check @Pcf.PaperCharZero.zariski_nagata_purity
+#print axioms Pcf.PaperCharZero.zariski_nagata_purity
+
+#check @Pcf.PaperCharZero.standardPiece_quotientParameterEquiv
+#print axioms Pcf.PaperCharZero.standardPiece_quotientParameterEquiv
+#check @Pcf.PaperCharZero.standardPiece_nilradical
+#print axioms Pcf.PaperCharZero.standardPiece_nilradical
+#check @Pcf.PaperCharZero.standardPiece_reductionRootEquiv
+#print axioms Pcf.PaperCharZero.standardPiece_reductionRootEquiv
+#check @Pcf.PaperCharZero.standard_piece
+#print axioms Pcf.PaperCharZero.standard_piece

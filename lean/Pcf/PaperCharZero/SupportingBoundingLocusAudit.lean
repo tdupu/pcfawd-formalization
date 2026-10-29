@@ -1,0 +1,26 @@
+module
+
+public import Pcf.PaperCharZero.SupportingBoundingLocus
+
+/-! Full signatures and axiom audit of the literal bounding-locus progress. -/
+
+#check @Pcf.PaperCharZero.boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.boundingExceptionalSet
+#check @Pcf.PaperCharZero.genericPoint_notMem_boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.genericPoint_notMem_boundingExceptionalSet
+#check @Pcf.PaperCharZero.boundingExceptionalSet_ne_univ
+#print axioms Pcf.PaperCharZero.boundingExceptionalSet_ne_univ
+#check @Pcf.PaperCharZero.reducedFiberBranch_finite_charZero
+#print axioms Pcf.PaperCharZero.reducedFiberBranch_finite_charZero
+#check @Pcf.PaperCharZero.isClosed_otherBranch_on_divisor
+#print axioms Pcf.PaperCharZero.isClosed_otherBranch_on_divisor
+#check @Pcf.PaperCharZero.finite_divisorPoints_boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.finite_divisorPoints_boundingExceptionalSet
+#check @Pcf.PaperCharZero.affineBranch_mem_reducedFiberBranch
+#print axioms Pcf.PaperCharZero.affineBranch_mem_reducedFiberBranch
+#check @Pcf.PaperCharZero.notMem_affineOtherBranch_of_notMem_boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.notMem_affineOtherBranch_of_notMem_boundingExceptionalSet
+#check @Pcf.PaperCharZero.etale_over_divisor_outside_boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.etale_over_divisor_outside_boundingExceptionalSet
+#check @Pcf.PaperCharZero.etale_at_divisor_outside_boundingExceptionalSet
+#print axioms Pcf.PaperCharZero.etale_at_divisor_outside_boundingExceptionalSet

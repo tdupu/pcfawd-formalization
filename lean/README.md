@@ -11,6 +11,16 @@ Tucker, Wang).
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
 | Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**, never by number (numbers change between versions of the manuscript). Labels refer to `latex/paper.tex` unless marked `paper-p.tex` (the characteristic-`p` version) |
 
+## Dedicated paper targets
+
+| Manuscript | Active Lake project | Entry points |
+| --- | --- | --- |
+| `latex/paper.tex` | [`paper-char-zero/`](paper-char-zero/readme.md) | `PaperCharZero.theoremA`, `PaperCharZero.cor_pcfawd` |
+
+The characteristic-zero project also imports the formalized supporting
+results and examples of `paper.tex`; see its `readme.md` and
+`validation.md`.
+
 ## Theorem A in both characteristics and every codimension
 
 This section cites `paper-p.tex`, the characteristic-`p` version of the
