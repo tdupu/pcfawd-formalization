@@ -1,0 +1,788 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
+-/
+module
+
+public import Mathlib.RingTheory.MvPolynomial.Basic
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.Polynomial.IsIntegral
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Mathlib.Algebra.Polynomial.Degree.Lemmas
+public import Mathlib.RingTheory.Adjoin.Polynomial.Basic
+public import Mathlib.Algebra.MvPolynomial.Expand
+public import Mathlib.Algebra.Polynomial.Expand
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.Algebra.CharP.Lemmas
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.Algebra.Polynomial.RingDivision
+public import Mathlib.Algebra.CharP.Reduced
+
+/-!
+# Generator calculations for `paper-p.tex`, Example `ex:frobenius-pinching`
+
+The manuscript presents `R = k[x^p]+y k[x,y]` with generators
+`x^p, y, xy, …, x^(p-1)y`. We identify the generated subalgebra with
+that additive description and with the functions whose restriction to
+`y=0` lies in `k[x^p]`. The affine plane is its normalization, and
+coordinate squaring descends to a finite surjective self-map. On the
+horizontal axis the normalization comparison is `u=x^p`, with closed
+fibres of multiplicity `p`, while the descended map is `u↦u²`.
+The global branch-divisor, PCF, and monodromy claims remain separate.
+-/
+
+@[expose] public section
+
+namespace Pcf.Examples.PaperP.FrobeniusPinchingGenerators
+
+open MvPolynomial
+open AlgebraicGeometry CategoryTheory
+
+variable (k : Type*) [Field k] (p : ℕ)
+
+abbrev Plane := MvPolynomial (Fin 2) k
+
+noncomputable def x : Plane k := X 0
+noncomputable def y : Plane k := X 1
+
+/-- The finite generating family displayed in the manuscript. -/
+noncomputable def generators : Set (Plane k) :=
+  {x k ^ p} ∪ Set.range (fun j : Fin p => x k ^ (j : ℕ) * y k)
+
+noncomputable def ring : Subalgebra k (Plane k) := Algebra.adjoin k (generators k p)
+
+theorem generators_finite : (generators k p).Finite := by
+  exact Set.finite_singleton _ |>.union (Set.finite_range _)
+
+/-- The pinched coordinate ring is a finite-type `k`-algebra. -/
+theorem ring_finiteType : Algebra.FiniteType k (ring k p) := by
+  exact Algebra.FiniteType.adjoin_of_finite (generators_finite k p)
+
+/-- Coordinate squaring on the ambient affine plane. -/
+noncomputable def square : Plane k →ₐ[k] Plane k :=
+  MvPolynomial.aeval ![x k ^ 2, y k ^ 2]
+
+/-- Specialization to the horizontal axis `y=0`. -/
+noncomputable def axis : Plane k →ₐ[k] Polynomial k :=
+  MvPolynomial.aeval ![(Polynomial.X : Polynomial k), 0]
+
+/-- Embedding of the horizontal coordinate polynomial ring. -/
+noncomputable def axisSection : Polynomial k →ₐ[k] Plane k :=
+  Polynomial.aeval (x k)
+
+@[simp] theorem axisSection_X : axisSection k (Polynomial.X : Polynomial k) = x k := by
+  simp [axisSection]
+
+@[simp] theorem axis_axisSection (a : Polynomial k) :
+    axis k (axisSection k a) = a := by
+  have h : (axis k).comp (axisSection k) = AlgHom.id k (Polynomial k) := by
+    apply Polynomial.algHom_ext
+    simp [axisSection, axis, x]
+  exact congrArg (fun f : Polynomial k →ₐ[k] Polynomial k => f a) h
+
+noncomputable def axisPowers : Subalgebra k (Polynomial k) :=
+  Algebra.adjoin k {(Polynomial.X : Polynomial k) ^ p}
+
+/-- Functions whose restriction to the horizontal axis lies in `k[x^p]`.
+The manuscript identifies this subalgebra with `k[x^p]+y k[x,y]`. -/
+noncomputable def axisPinchedRing : Subalgebra k (Plane k) :=
+  (axisPowers k p).comap (axis k)
+
+@[simp] theorem axis_x : axis k (x k) = (Polynomial.X : Polynomial k) := by
+  simp [axis, x]
+
+@[simp] theorem axis_y : axis k (y k) = 0 := by
+  simp [axis, y]
+
+/-- Every displayed generator satisfies the manuscript's axis condition. -/
+theorem ring_le_axisPinchedRing : ring k p ≤ axisPinchedRing k p := by
+  intro a ha
+  change a ∈ Algebra.adjoin k (generators k p) at ha
+  induction ha using Algebra.adjoin_induction with
+  | mem z hz =>
+      change axis k z ∈ axisPowers k p
+      rcases hz with hz | hz
+      · have hz' : z = x k ^ p := hz
+        subst z
+        rw [map_pow, axis_x]
+        exact Algebra.subset_adjoin (Set.mem_singleton _)
+      · obtain ⟨j, rfl⟩ := hz
+        simp [axisPowers, axis_y]
+  | algebraMap r =>
+      change axis k (algebraMap k (Plane k) r) ∈ axisPowers k p
+      rw [(axis k).commutes]
+      exact Subalgebra.algebraMap_mem (axisPowers k p) r
+  | add a b ha hb iha ihb =>
+      change axis k (a + b) ∈ axisPowers k p
+      rw [map_add]
+      exact add_mem iha ihb
+  | mul a b ha hb iha ihb =>
+      change axis k (a * b) ∈ axisPowers k p
+      rw [map_mul]
+      exact mul_mem iha ihb
+
+/-- Every monomial containing `y` is generated by the displayed finite family. -/
+theorem x_pow_mul_y_mem (hp : 0 < p) (a : ℕ) :
+    x k ^ a * y k ∈ ring k p := by
+  let r := a % p
+  let q := a / p
+  have hr : r < p := Nat.mod_lt a hp
+  let j : Fin p := ⟨r, hr⟩
+  have hx : x k ^ p ∈ ring k p := Algebra.subset_adjoin (Or.inl rfl)
+  have hg : x k ^ r * y k ∈ ring k p :=
+    Algebra.subset_adjoin (Or.inr ⟨j, rfl⟩)
+  have heq : a = p * q + r := by
+    dsimp [q, r]
+    simpa only [add_comm] using (Nat.mod_add_div a p).symm
+  rw [heq]
+  convert mul_mem (pow_mem hx q) hg using 1; ring
+
+theorem monomial_fin2 (m : Fin 2 →₀ ℕ) (c : k) :
+    MvPolynomial.monomial m c =
+      MvPolynomial.C c * x k ^ m 0 * y k ^ m 1 := by
+  rw [MvPolynomial.monomial_eq, mul_assoc,
+    m.prod_fintype _ (fun _ => pow_zero _), Fin.prod_univ_two]
+  rfl
+
+theorem y_mem_ring (hp : 0 < p) : y k ∈ ring k p := by
+  let j : Fin p := ⟨0, hp⟩
+  have hj : x k ^ (j : ℕ) * y k ∈ ring k p :=
+    Algebra.subset_adjoin (Or.inr ⟨j, rfl⟩)
+  simpa [j] using hj
+
+theorem y_mul_monomial_mem (hp : 0 < p) (m : Fin 2 →₀ ℕ) (c : k) :
+    y k * MvPolynomial.monomial m c ∈ ring k p := by
+  rw [monomial_fin2 k m c]
+  have hc : MvPolynomial.C c ∈ ring k p :=
+    Subalgebra.algebraMap_mem (ring k p) c
+  have hxy := x_pow_mul_y_mem k p hp (m 0)
+  have hy := pow_mem (y_mem_ring k p hp) (m 1)
+  convert mul_mem (mul_mem hc hxy) hy using 1; ring
+
+theorem y_mul_mem_ring (hp : 0 < p) (q : Plane k) :
+    y k * q ∈ ring k p := by
+  rw [MvPolynomial.as_sum q, Finset.mul_sum]
+  exact Subalgebra.sum_mem _ (fun m _ => y_mul_monomial_mem k p hp m (q.coeff m))
+
+/-- Every plane polynomial splits into its horizontal-axis value and a
+multiple of `y`. -/
+theorem axis_decomposition (q : Plane k) :
+    ∃ t : Plane k, q = axisSection k (axis k q) + y k * t := by
+  induction q using MvPolynomial.induction_on with
+  | C a =>
+      refine ⟨0, ?_⟩
+      simp [axisSection, axis]
+  | add q r hq hr =>
+      obtain ⟨u, hu⟩ := hq
+      obtain ⟨v, hv⟩ := hr
+      refine ⟨u + v, ?_⟩
+      simp only [map_add, mul_add]
+      conv_lhs => rw [hu, hv]
+      ring
+  | mul_X q i hq =>
+      obtain ⟨u, hu⟩ := hq
+      fin_cases i
+      · refine ⟨u * x k, ?_⟩
+        change q * x k = axisSection k (axis k (q * x k)) + y k * (u * x k)
+        simp only [map_mul, axis_x, axisSection_X]
+        conv_lhs => rw [hu]
+        ring
+      · refine ⟨q, ?_⟩
+        change q * y k = axisSection k (axis k (q * y k)) + y k * q
+        simp only [map_mul, axis_y, mul_zero, map_zero]
+        ring
+
+/-- The horizontal polynomial subalgebra lifts into the generated ring. -/
+theorem axisSection_mem_ring (a : Polynomial k) (ha : a ∈ axisPowers k p) :
+    axisSection k a ∈ ring k p := by
+  change a ∈ Algebra.adjoin k {(Polynomial.X : Polynomial k) ^ p} at ha
+  induction ha using Algebra.adjoin_induction with
+  | mem z hz =>
+      obtain rfl := Set.mem_singleton_iff.mp hz
+      rw [map_pow, axisSection_X]
+      exact Algebra.subset_adjoin (Or.inl rfl)
+  | algebraMap r =>
+      rw [(axisSection k).commutes]
+      exact Subalgebra.algebraMap_mem (ring k p) r
+  | add a b ha hb iha ihb =>
+      simpa only [map_add] using add_mem iha ihb
+  | mul a b ha hb iha ihb =>
+      simpa only [map_mul] using mul_mem iha ihb
+
+/-- The finite generating family is exactly the ring of functions whose
+restriction to `y=0` belongs to `k[x^p]`. -/
+theorem ring_eq_axisPinchedRing (hp : 0 < p) :
+    ring k p = axisPinchedRing k p := by
+  apply le_antisymm (ring_le_axisPinchedRing k p)
+  intro q hq
+  change axis k q ∈ axisPowers k p at hq
+  obtain ⟨t, ht⟩ := axis_decomposition k q
+  rw [ht]
+  exact add_mem (axisSection_mem_ring k p (axis k q) hq)
+    (y_mul_mem_ring k p hp t)
+
+/-- Restriction of pinched functions to the horizontal axis has image `k[x^p]`. -/
+noncomputable def axisRestriction : ring k p →ₐ[k] axisPowers k p :=
+  ((axis k).comp (ring k p).val).codRestrict (axisPowers k p)
+    (fun a => (ring_le_axisPinchedRing k p) a.property)
+
+theorem axisRestriction_surjective : Function.Surjective (axisRestriction k p) := by
+  intro a
+  refine ⟨⟨axisSection k a, axisSection_mem_ring k p a a.property⟩, ?_⟩
+  apply Subtype.ext
+  exact axis_axisSection k a
+
+/-- The branch image is cut out by functions vanishing on the horizontal axis;
+in the ambient plane these are exactly the multiples of `y`. -/
+theorem axisRestriction_eq_zero_iff (a : ring k p) :
+    axisRestriction k p a = 0 ↔
+      ∃ t : Plane k, (a : Plane k) = y k * t := by
+  constructor
+  · intro ha
+    have hzero : axis k (a : Plane k) = 0 :=
+      congrArg (fun z : axisPowers k p => (z : Polynomial k)) ha
+    obtain ⟨t, ht⟩ := axis_decomposition k (a : Plane k)
+    refine ⟨t, ?_⟩
+    simpa only [hzero, map_zero, zero_add] using ht
+  · rintro ⟨t, ht⟩
+    apply Subtype.ext
+    change axis k (a : Plane k) = 0
+    rw [ht, map_mul, axis_y, zero_mul]
+
+/-- On the normalized horizontal axis, the comparison to the pinched axis
+has coordinate homomorphism `k[x^p] ↪ k[x]`. -/
+noncomputable def axisPowersInclusion : axisPowers k p →ₐ[k] Polynomial k :=
+  (axisPowers k p).val
+
+/-- The normalized-axis coordinate `x` maps to `x^p` on the pinched axis. -/
+noncomputable def axisPowerMap : Polynomial k →ₐ[k] axisPowers k p :=
+  Polynomial.aeval ⟨(Polynomial.X : Polynomial k) ^ p,
+    Algebra.subset_adjoin (Set.mem_singleton _)⟩
+
+@[simp] theorem axisPowerMap_X :
+    axisPowerMap k p (Polynomial.X : Polynomial k) =
+      ⟨(Polynomial.X : Polynomial k) ^ p,
+        Algebra.subset_adjoin (Set.mem_singleton _)⟩ := by
+  simp [axisPowerMap]
+
+/-- In the usual polynomial coordinate, the horizontal comparison is
+substitution `x ↦ x^p`. -/
+theorem axisPowerMap_apply (q : Polynomial k) :
+    (axisPowerMap k p q : Polynomial k) = Polynomial.expand k p q := by
+  have hcomp : (axisPowersInclusion k p).comp (axisPowerMap k p) =
+      Polynomial.expand k p := by
+    apply Polynomial.algHom_ext
+    rw [Polynomial.expand_X]
+    simp [axisPowersInclusion, axisPowerMap]
+  exact congrArg (fun f : Polynomial k →ₐ[k] Polynomial k => f q) hcomp
+
+theorem axisPowerMap_X_degree :
+    (axisPowerMap k p Polynomial.X : Polynomial k).natDegree = p := by
+  simp only [axisPowerMap_X, Polynomial.natDegree_X_pow]
+
+/-- In characteristic `p`, the pullback of the closed-axis equation
+`u-a^p` is the `p`-th power of the normalized-axis equation `x-a`. -/
+theorem axis_closed_fibre_factorization [Fact p.Prime] [CharP k p] (a : k) :
+    (Polynomial.X : Polynomial k) ^ p - Polynomial.C (a ^ p) =
+      (Polynomial.X - Polynomial.C a) ^ p := by
+  rw [Polynomial.C_pow, sub_pow_char]
+
+/-- Over an algebraically closed field, the factorization holds above every
+closed point of the pinched axis. -/
+theorem axis_every_closed_fibre_factorization [Fact p.Prime] [CharP k p]
+    [IsAlgClosed k] (b : k) :
+    ∃ a : k, a ^ p = b ∧
+      (Polynomial.X : Polynomial k) ^ p - Polynomial.C b =
+        (Polynomial.X - Polynomial.C a) ^ p := by
+  obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq b (Fact.out : p.Prime).pos
+  refine ⟨a, ha, ?_⟩
+  rw [← ha]
+  exact axis_closed_fibre_factorization k p a
+
+/-- The horizontal normalization comparison has multiplicity `p` above
+the point `u=a^p`. -/
+theorem axis_closed_fibre_multiplicity [Fact p.Prime] [CharP k p] (a : k) :
+    Polynomial.rootMultiplicity a
+      ((Polynomial.X : Polynomial k) ^ p - Polynomial.C (a ^ p)) = p := by
+  rw [axis_closed_fibre_factorization k p a]
+  exact Polynomial.rootMultiplicity_X_sub_C_pow a p
+
+/-- Every closed point `u=b` of the pinched axis has a normalized preimage
+at which the comparison has multiplicity `p`. -/
+theorem axis_every_closed_fibre_multiplicity [Fact p.Prime] [CharP k p]
+    [IsAlgClosed k] (b : k) :
+    ∃ a : k, a ^ p = b ∧
+      Polynomial.rootMultiplicity a
+        ((Polynomial.X : Polynomial k) ^ p - Polynomial.C b) = p := by
+  obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq b (Fact.out : p.Prime).pos
+  refine ⟨a, ha, ?_⟩
+  rw [← ha]
+  exact axis_closed_fibre_multiplicity k p a
+
+/-- The normalization comparison is bijective on closed horizontal-axis
+points even though each closed fibre has multiplicity `p`. -/
+theorem axis_closed_point_unique [Fact p.Prime] [CharP k p]
+    [IsAlgClosed k] (b : k) : ∃! a : k, a ^ p = b := by
+  obtain ⟨a, ha⟩ := IsAlgClosed.exists_pow_nat_eq b (Fact.out : p.Prime).pos
+  refine ⟨a, ha, ?_⟩
+  intro c hc
+  exact (frobenius_inj k p) (hc.trans ha.symm)
+
+theorem axisPowerMap_injective (hp : 0 < p) :
+    Function.Injective (axisPowerMap k p) := by
+  intro a b hab
+  apply Polynomial.expand_injective (R := k) hp
+  rw [← axisPowerMap_apply k p a, ← axisPowerMap_apply k p b]
+  exact congrArg (fun q : axisPowers k p => (q : Polynomial k)) hab
+
+theorem axisPowerMap_surjective : Function.Surjective (axisPowerMap k p) := by
+  intro a
+  have ha : (a : Polynomial k) ∈ Algebra.adjoin k {(Polynomial.X : Polynomial k) ^ p} :=
+    a.property
+  rw [Algebra.adjoin_singleton_eq_range_aeval] at ha
+  obtain ⟨q, hq⟩ := ha
+  have hcomp : (axisPowersInclusion k p).comp (axisPowerMap k p) =
+      Polynomial.aeval ((Polynomial.X : Polynomial k) ^ p) := by
+    apply Polynomial.algHom_ext
+    simp [axisPowersInclusion, axisPowerMap]
+  refine ⟨q, Subtype.ext ?_⟩
+  have hq' := congrArg (fun f : Polynomial k →ₐ[k] Polynomial k => f q) hcomp
+  exact hq'.trans hq
+
+/-- The pinched horizontal axis has its own polynomial coordinate `u=x^p`. -/
+noncomputable def axisPowerEquiv (hp : 0 < p) :
+    Polynomial k ≃ₐ[k] axisPowers k p :=
+  AlgEquiv.ofBijective (axisPowerMap k p)
+    ⟨axisPowerMap_injective k p hp, axisPowerMap_surjective k p⟩
+
+/-- Polynomial squaring preserves the horizontal coordinate subring `k[x^p]`. -/
+theorem axisPowers_expand_mem {a : Polynomial k} (ha : a ∈ axisPowers k p) :
+    Polynomial.expand k 2 a ∈ axisPowers k p := by
+  change a ∈ Algebra.adjoin k {(Polynomial.X : Polynomial k) ^ p} at ha
+  induction ha using Algebra.adjoin_induction with
+  | mem z hz =>
+      obtain rfl := Set.mem_singleton_iff.mp hz
+      rw [map_pow, Polynomial.expand_X]
+      have hX : (Polynomial.X : Polynomial k) ^ p ∈ axisPowers k p :=
+        Algebra.subset_adjoin (Set.mem_singleton _)
+      convert pow_mem hX 2 using 1; ring
+  | algebraMap r =>
+      rw [(Polynomial.expand k 2).commutes]
+      exact Subalgebra.algebraMap_mem (axisPowers k p) r
+  | add a b ha hb iha ihb => simpa only [map_add] using add_mem iha ihb
+  | mul a b ha hb iha ihb => simpa only [map_mul] using mul_mem iha ihb
+
+/-- The induced map on the pinched horizontal axis. -/
+noncomputable def pinchedAxisSquare : axisPowers k p →ₐ[k] axisPowers k p :=
+  ((Polynomial.expand k 2).comp (axisPowers k p).val).codRestrict (axisPowers k p)
+    (fun a => axisPowers_expand_mem k p a.property)
+
+/-- The coordinate `u=x^p` on the pinched axis is sent to `u²`. -/
+theorem pinchedAxisSquare_u :
+    pinchedAxisSquare k p (axisPowerMap k p Polynomial.X) =
+      (axisPowerMap k p Polynomial.X) ^ 2 := by
+  apply Subtype.ext
+  simp only [axisPowerMap_X]
+  change Polynomial.expand k 2 ((Polynomial.X : Polynomial k) ^ p) =
+    ((Polynomial.X : Polynomial k) ^ p) ^ 2
+  rw [map_pow, Polynomial.expand_X]
+  ring
+
+/-- Restriction to `y=0` commutes with coordinate squaring. -/
+theorem axis_square (a : Plane k) :
+    axis k (square k a) = Polynomial.expand k 2 (axis k a) := by
+  have h : (axis k).comp (square k) = (Polynomial.expand k 2).comp (axis k) := by
+    apply MvPolynomial.algHom_ext
+    intro i
+    fin_cases i <;> simp [square, axis, x, y, Polynomial.expand_X]
+  exact congrArg (fun f : Plane k →ₐ[k] Polynomial k => f a) h
+
+/-- The finite generating family is the manuscript's additive ring
+`k[x^p] + y k[x,y]`, with `k[x^p]` represented by `axisPowers` and
+embedded into the plane by `axisSection`. -/
+theorem mem_ring_iff_exists_additive (hp : 0 < p) (q : Plane k) :
+    q ∈ ring k p ↔
+      ∃ a : Polynomial k, a ∈ axisPowers k p ∧
+        ∃ t : Plane k, q = axisSection k a + y k * t := by
+  constructor
+  · intro hq
+    have haxis : axis k q ∈ axisPowers k p :=
+      (ring_le_axisPinchedRing k p) hq
+    obtain ⟨t, ht⟩ := axis_decomposition k q
+    exact ⟨axis k q, haxis, t, ht⟩
+  · rintro ⟨a, ha, t, rfl⟩
+    exact add_mem (axisSection_mem_ring k p a ha)
+      (y_mul_mem_ring k p hp t)
+
+/-- The normalization coordinate `x` satisfies a monic equation of
+degree `p` over the pinched ring. -/
+theorem x_isIntegral (hp : 0 < p) : IsIntegral (ring k p) (x k) := by
+  let c : ring k p := ⟨x k ^ p, Algebra.subset_adjoin (Or.inl rfl)⟩
+  refine ⟨Polynomial.X ^ p - Polynomial.C c,
+    Polynomial.monic_X_pow_sub_C _ (Nat.ne_of_gt hp), ?_⟩
+  simp [c]
+
+/-- Adjoining the integral coordinate `x` to the pinched ring recovers
+the full affine plane coordinate ring. -/
+theorem adjoin_x_eq_top (hp : 0 < p) :
+    Algebra.adjoin (ring k p) {x k} = ⊤ := by
+  apply eq_top_iff.mpr
+  intro q _
+  suffices h : ∀ q : Plane k, q ∈ Algebra.adjoin (ring k p) {x k} from h q
+  intro q
+  have hbase (r : ring k p) :
+      (r : Plane k) ∈ Algebra.adjoin (ring k p) {x k} :=
+    Subalgebra.algebraMap_mem _ r
+  induction q using MvPolynomial.induction_on with
+  | C a =>
+      have hc : MvPolynomial.C a ∈ ring k p :=
+        Subalgebra.algebraMap_mem (ring k p) a
+      exact hbase ⟨MvPolynomial.C a, hc⟩
+  | add q r hq hr =>
+      exact add_mem hq hr
+  | mul_X q i hq =>
+      fin_cases i
+      · exact mul_mem hq (Algebra.subset_adjoin (Set.mem_singleton _))
+      · have hy : y k ∈ Algebra.adjoin (ring k p) {x k} :=
+          hbase ⟨y k, y_mem_ring k p hp⟩
+        exact mul_mem hq hy
+
+/-- The plane coordinate ring is finite over the pinched ring. -/
+theorem moduleFinite_plane (hp : 0 < p) :
+    Module.Finite (ring k p) (Plane k) := by
+  have h := (x_isIntegral k p hp).fg_adjoin_singleton
+  rw [adjoin_x_eq_top k p hp] at h
+  rw [Module.finite_def]
+  simpa using h
+
+/-- The pinched ring and the affine plane have the same function field:
+every plane polynomial acquires coefficients in the pinched ring after
+multiplication by `y`. -/
+theorem isFractionRing_plane (hp : 0 < p) :
+    IsFractionRing (ring k p) (FractionRing (Plane k)) := by
+  have hmap (a : ring k p) :
+      algebraMap (ring k p) (FractionRing (Plane k)) a =
+        algebraMap (Plane k) (FractionRing (Plane k)) (a : Plane k) := by
+    exact IsScalarTower.algebraMap_apply (ring k p) (Plane k)
+      (FractionRing (Plane k)) a
+  have hinj : Function.Injective
+      (algebraMap (ring k p) (FractionRing (Plane k))) := by
+    intro a b hab
+    apply Subtype.ext
+    apply IsFractionRing.injective (Plane k) (FractionRing (Plane k))
+    simpa only [hmap] using hab
+  refine (isLocalization_iff (nonZeroDivisors (ring k p))
+    (FractionRing (Plane k))).mpr ?_
+  refine ⟨fun z => isUnit_iff_ne_zero.mpr fun hz =>
+      nonZeroDivisors.coe_ne_zero z (hinj (hz.trans (map_zero _).symm)),
+    fun z => ?_, fun {a b} h => ⟨1, by rw [hinj h]⟩⟩
+  obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := Plane k) z
+  have hmem : ∀ q : Plane k, q * y k ∈ ring k p := by
+    intro q
+    simpa only [mul_comm] using y_mul_mem_ring k p hp q
+  have hy : y k ≠ 0 := MvPolynomial.X_ne_zero (1 : Fin 2)
+  have hb0 : b ≠ 0 := mem_nonZeroDivisors_iff_ne_zero.mp hb
+  have hden :
+      (⟨b * y k, hmem b⟩ : ring k p) ∈ nonZeroDivisors (ring k p) := by
+    exact mem_nonZeroDivisors_iff_ne_zero.mpr
+      (Subtype.coe_ne_coe.mp (mul_ne_zero hb0 hy))
+  refine ⟨(⟨a * y k, hmem a⟩, ⟨⟨b * y k, hmem b⟩, hden⟩), ?_⟩
+  have hbmap : algebraMap (Plane k) (FractionRing (Plane k)) b ≠ 0 :=
+    IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb
+  simp only [hmap]
+  field_simp [hbmap]
+  simp only [map_mul]
+  ring
+
+set_option linter.style.haveILetI false in
+/-- The affine plane ring is the integral closure of the pinched ring in
+their common function field. -/
+theorem plane_isIntegralClosure (hp : 0 < p) :
+    IsIntegralClosure (Plane k) (ring k p) (FractionRing (Plane k)) := by
+  haveI : IsFractionRing (ring k p) (FractionRing (Plane k)) :=
+    isFractionRing_plane k p hp
+  haveI : Module.Finite (ring k p) (Plane k) := moduleFinite_plane k p hp
+  haveI : Algebra.IsIntegral (ring k p) (Plane k) :=
+    Algebra.IsIntegral.of_finite _ _
+  letI : IsIntegrallyClosed (Plane k) := inferInstance
+  exact {
+    algebraMap_injective := IsFractionRing.injective _ _
+    isIntegral_iff := by
+      intro z
+      refine ⟨fun hz => IsIntegrallyClosed.isIntegral_iff.mp hz.tower_top, ?_⟩
+      rintro ⟨q, rfl⟩
+      exact (Algebra.IsIntegral.isIntegral (R := ring k p) q).map
+        (IsScalarTower.toAlgHom (ring k p) (Plane k) (FractionRing (Plane k))) }
+
+/-- Canonical coordinate-ring form of the normalization claim. -/
+noncomputable def plane_integralClosureEquiv (hp : 0 < p) :
+    Plane k ≃ₐ[ring k p]
+      integralClosure (ring k p) (FractionRing (Plane k)) := by
+  letI : IsIntegralClosure (Plane k) (ring k p) (FractionRing (Plane k)) :=
+    plane_isIntegralClosure k p hp
+  exact IsIntegralClosure.equiv (ring k p) (Plane k)
+    (FractionRing (Plane k))
+      (integralClosure (ring k p) (FractionRing (Plane k)))
+
+/-- The normalization scheme of the pinched ring is the affine plane,
+using the common function field identified above. -/
+noncomputable def planeSpec_integralClosureIso (hp : 0 < p) :
+    Spec (.of (Plane k)) ≅
+      Spec (.of (integralClosure (ring k p) (FractionRing (Plane k)))) :=
+  (Scheme.Spec.mapIso (plane_integralClosureEquiv k p hp).toCommRingCatIso.op).symm
+
+/-- The normalization identification is over the pinched affine scheme. -/
+theorem planeSpec_integralClosureIso_over_pinched (hp : 0 < p) :
+    (planeSpec_integralClosureIso k p hp).hom ≫
+        Spec.map (CommRingCat.ofHom
+          (algebraMap (ring k p)
+            (integralClosure (ring k p) (FractionRing (Plane k))))) =
+      Spec.map (CommRingCat.ofHom (algebraMap (ring k p) (Plane k))) := by
+  unfold planeSpec_integralClosureIso
+  simp only [Iso.symm_hom, Functor.mapIso_inv, Iso.op_inv, Scheme.Spec_map]
+  rw [← Spec.map_comp]
+  congr 1
+  apply CommRingCat.hom_ext
+  apply RingHom.ext
+  intro a
+  change (plane_integralClosureEquiv k p hp).symm
+    (algebraMap (ring k p)
+      (integralClosure (ring k p) (FractionRing (Plane k))) a) =
+    algebraMap (ring k p) (Plane k) a
+  rw [← (plane_integralClosureEquiv k p hp).commutes a,
+    AlgEquiv.symm_apply_apply]
+
+/-- For `p ≥ 2`, the horizontal coordinate `x` is absent from the
+pinched coordinate ring, so normalization changes the scheme. -/
+theorem x_not_mem_ring (hp : 2 ≤ p) : x k ∉ ring k p := by
+  intro hx
+  have haxis : (Polynomial.X : Polynomial k) ∈ axisPowers k p := by
+    have h := (ring_le_axisPinchedRing k p) hx
+    change axis k (x k) ∈ axisPowers k p at h
+    simpa only [axis_x] using h
+  rw [axisPowers, Algebra.adjoin_singleton_eq_range_aeval] at haxis
+  obtain ⟨q, hq⟩ := haxis
+  have hdeg := congrArg Polynomial.natDegree hq
+  change (Polynomial.aeval ((Polynomial.X : Polynomial k) ^ p) q).natDegree =
+    (Polynomial.X : Polynomial k).natDegree at hdeg
+  rw [← Polynomial.comp_eq_aeval, Polynomial.natDegree_comp,
+    Polynomial.natDegree_X_pow, Polynomial.natDegree_X] at hdeg
+  have hpone : p ∣ 1 := ⟨q.natDegree, by simpa only [mul_comm] using hdeg.symm⟩
+  have : p = 1 := Nat.dvd_one.mp hpone
+  omega
+
+@[simp] theorem square_x : square k (x k) = x k ^ 2 := by
+  simp [square, x]
+
+@[simp] theorem square_y : square k (y k) = y k ^ 2 := by
+  simp [square, y]
+
+theorem square_x_power : square k (x k ^ p) = (x k ^ p) ^ 2 := by
+  rw [map_pow, square_x]
+  ring
+
+theorem square_y_monomial (j : Fin p) :
+    square k (x k ^ (j : ℕ) * y k) =
+      (x k ^ (j : ℕ) * y k) ^ 2 := by
+  rw [map_mul, map_pow, square_x, square_y]
+  ring
+
+/-- The actual generator subalgebra is invariant under coordinate squaring. -/
+theorem square_mem_ring {a : Plane k} (ha : a ∈ ring k p) :
+    square k a ∈ ring k p := by
+  change a ∈ Algebra.adjoin k (generators k p) at ha
+  induction ha using Algebra.adjoin_induction with
+  | mem z hz =>
+      rcases hz with hz | hz
+      · have hz' : z = x k ^ p := hz
+        subst z
+        rw [square_x_power]
+        have hg : x k ^ p ∈ ring k p := Algebra.subset_adjoin (Or.inl rfl)
+        exact pow_mem hg 2
+      · obtain ⟨j, rfl⟩ := hz
+        rw [square_y_monomial]
+        have hg : x k ^ (j : ℕ) * y k ∈ ring k p :=
+          Algebra.subset_adjoin (Or.inr ⟨j, rfl⟩)
+        exact pow_mem hg 2
+  | algebraMap r =>
+      rw [(square k).commutes]
+      exact Subalgebra.algebraMap_mem (ring k p) r
+  | add a b ha hb iha ihb =>
+      simpa only [map_add] using add_mem iha ihb
+  | mul a b ha hb iha ihb =>
+      simpa only [map_mul] using mul_mem iha ihb
+
+/-- The descended endomorphism of the explicitly generated pinched ring. -/
+noncomputable def descendedSquare : ring k p →ₐ[k] ring k p :=
+  ((square k).comp (ring k p).val).codRestrict (ring k p)
+    (fun a => square_mem_ring k p a.property)
+
+/-- The map on the branch image is precisely the restriction of the descended map. -/
+theorem axisRestriction_descendedSquare (a : ring k p) :
+    axisRestriction k p (descendedSquare k p a) =
+      pinchedAxisSquare k p (axisRestriction k p a) := by
+  apply Subtype.ext
+  exact axis_square k (a : Plane k)
+
+theorem descendedSquare_generator_x :
+    (descendedSquare k p ⟨x k ^ p,
+      Algebra.subset_adjoin (Or.inl rfl)⟩ : Plane k) = (x k ^ p) ^ 2 := by
+  exact square_x_power k p
+
+/-- Each displayed generator is sent to its square by the descended map. -/
+theorem descendedSquare_generator (a : ring k p)
+    (ha : (a : Plane k) ∈ generators k p) : descendedSquare k p a = a ^ 2 := by
+  apply Subtype.ext
+  change square k (a : Plane k) = (a : Plane k) ^ 2
+  rcases ha with ha | ha
+  · have heq : (a : Plane k) = x k ^ p := ha
+    rw [heq]
+    exact square_x_power k p
+  · obtain ⟨j, hj⟩ := ha
+    rw [← hj]
+    exact square_y_monomial k p j
+
+/-- The descended self-map is of finite type. -/
+theorem descendedSquare_finiteType : (descendedSquare k p).toRingHom.FiniteType := by
+  apply RingHom.FiniteType.of_comp_finiteType
+    (f := algebraMap k (ring k p))
+  have heq : (descendedSquare k p).toRingHom.comp (algebraMap k (ring k p)) =
+      algebraMap k (ring k p) :=
+    RingHom.ext fun a => (descendedSquare k p).commutes a
+  rw [heq]
+  exact RingHom.finiteType_algebraMap.mpr (ring_finiteType k p)
+
+set_option linter.style.haveILetI false in
+-- The next proof uses a temporary self-algebra structure for the descended map.
+/-- The descended self-map is integral. -/
+theorem descendedSquare_isIntegral : (descendedSquare k p).toRingHom.IsIntegral := by
+  let s : Set (ring k p) := ((↑) : ring k p → Plane k) ⁻¹' generators k p
+  have hs : Algebra.adjoin k s = ⊤ := by
+    change Algebra.adjoin k (((↑) : ring k p → Plane k) ⁻¹' generators k p) = ⊤
+    unfold ring
+    exact
+      (Algebra.adjoin_adjoin_coe_preimage (R := k) (s := generators k p))
+  letI : Algebra (ring k p) (ring k p) := (descendedSquare k p).toRingHom.toAlgebra
+  have hmem : ∀ a : ring k p, a ∈ Algebra.adjoin k s →
+      a ∈ Algebra.adjoin (ring k p) s := by
+    intro a ha
+    induction ha using Algebra.adjoin_induction with
+    | mem x hx => exact Algebra.subset_adjoin hx
+    | algebraMap r =>
+        have h := Subalgebra.algebraMap_mem (Algebra.adjoin (ring k p) s)
+          (algebraMap k (ring k p) r)
+        change (descendedSquare k p) (algebraMap k (ring k p) r) ∈
+          Algebra.adjoin (ring k p) s at h
+        rw [(descendedSquare k p).commutes r] at h
+        exact h
+    | add x y hx hy ihx ihy => exact add_mem ihx ihy
+    | mul x y hx hy ihx ihy => exact mul_mem ihx ihy
+  have hs' : Algebra.adjoin (ring k p) s = ⊤ := by
+    apply eq_top_iff.mpr
+    intro a _
+    apply hmem
+    rw [hs]
+    trivial
+  have hi : ∀ a ∈ s, IsIntegral (ring k p) a := by
+    intro a ha
+    apply IsIntegral.of_pow (by norm_num : 0 < 2)
+    rw [← descendedSquare_generator k p a ha]
+    exact isIntegral_algebraMap
+  have hclosure : integralClosure (ring k p) (ring k p) = ⊤ := by
+    apply eq_top_iff.mpr
+    intro a _
+    have ha : a ∈ Algebra.adjoin (ring k p) s := by rw [hs']; trivial
+    exact (Algebra.adjoin_le (S := integralClosure (ring k p) (ring k p))
+      (fun x hx => hi x hx)) ha
+  intro a
+  exact (integralClosure_eq_top_iff.mp hclosure).isIntegral a
+
+/-- The self-map induced by coordinate squaring is finite. -/
+theorem descendedSquare_finite : (descendedSquare k p).toRingHom.Finite :=
+  (descendedSquare_isIntegral k p).to_finite (descendedSquare_finiteType k p)
+
+/-- Coordinate squaring is the standard injective expansion of multivariate polynomials. -/
+theorem square_eq_expand : square k = MvPolynomial.expand 2 := by
+  apply MvPolynomial.algHom_ext
+  intro i
+  fin_cases i <;> simp [square, x, y]
+
+theorem square_injective : Function.Injective (square k) := by
+  rw [square_eq_expand]
+  exact MvPolynomial.expand_injective (by decide : 0 < 2)
+
+theorem descendedSquare_injective : Function.Injective (descendedSquare k p) := by
+  intro a b hab
+  apply Subtype.ext
+  apply square_injective k
+  exact congrArg (fun z : ring k p => (z : Plane k)) hab
+
+/-- Every prime of the pinched ring has a preimage under the descended self-map. -/
+theorem descendedSquare_comap_surjective :
+    Function.Surjective (PrimeSpectrum.comap (descendedSquare k p).toRingHom) :=
+  (descendedSquare_isIntegral k p).comap_surjective (descendedSquare_injective k p)
+
+/-- The finite surjective self-map of the manuscript's affine pinched scheme. -/
+noncomputable def descendedSchemeMap :
+    Spec (.of (ring k p)) ⟶ Spec (.of (ring k p)) :=
+  Spec.map (CommRingCat.ofHom (descendedSquare k p).toRingHom)
+
+theorem descendedSchemeMap_finite : IsFinite (descendedSchemeMap k p) := by
+  exact (IsFinite.SpecMap_iff _).mpr (descendedSquare_finite k p)
+
+theorem descendedSchemeMap_surjective : Surjective (descendedSchemeMap k p) := by
+  rw [surjective_iff]
+  exact descendedSquare_comap_surjective k p
+
+#print axioms square_x_power
+#print axioms square_y_monomial
+#print axioms ring_le_axisPinchedRing
+#print axioms ring_finiteType
+#print axioms x_pow_mul_y_mem
+#print axioms y_mul_mem_ring
+#print axioms axis_decomposition
+#print axioms axisSection_mem_ring
+#print axioms axisRestriction_surjective
+#print axioms axisRestriction_eq_zero_iff
+#print axioms axisPowerMap_apply
+#print axioms axisPowerMap_X_degree
+#print axioms axis_closed_fibre_factorization
+#print axioms axis_every_closed_fibre_factorization
+#print axioms axis_closed_fibre_multiplicity
+#print axioms axis_every_closed_fibre_multiplicity
+#print axioms axis_closed_point_unique
+#print axioms axisPowerMap_injective
+#print axioms axisPowerMap_surjective
+#print axioms axisPowerEquiv
+#print axioms pinchedAxisSquare_u
+#print axioms axisRestriction_descendedSquare
+#print axioms ring_eq_axisPinchedRing
+#print axioms mem_ring_iff_exists_additive
+#print axioms x_isIntegral
+#print axioms adjoin_x_eq_top
+#print axioms moduleFinite_plane
+#print axioms isFractionRing_plane
+#print axioms plane_isIntegralClosure
+#print axioms plane_integralClosureEquiv
+#print axioms planeSpec_integralClosureIso
+#print axioms planeSpec_integralClosureIso_over_pinched
+#print axioms x_not_mem_ring
+#print axioms square_mem_ring
+#print axioms descendedSquare
+#print axioms descendedSquare_generator_x
+#print axioms descendedSquare_generator
+#print axioms descendedSquare_finiteType
+#print axioms descendedSquare_isIntegral
+#print axioms descendedSquare_finite
+#print axioms square_eq_expand
+#print axioms square_injective
+#print axioms descendedSquare_injective
+#print axioms descendedSquare_comap_surjective
+#print axioms descendedSchemeMap_finite
+#print axioms descendedSchemeMap_surjective
+
+end Pcf.Examples.PaperP.FrobeniusPinchingGenerators

@@ -1,0 +1,16 @@
+name = "paper_char_p"
+version = "0.1.0"
+defaultTargets = ["main"]
+packagesDir = "../../library/.lake/packages"
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "pcfawd"
+path = "../../library"
+
+[[lean_lib]]
+name = "main"

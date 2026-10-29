@@ -1,0 +1,237 @@
+/-
+Copyright (c) 2026 Taylor Dupuy, Thomas Tucker, Zhuoran Wang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Taylor Dupuy, Thomas Tucker, Zhuoran Wang
+-/
+module
+
+public import Pcf.Examples.Pinched
+public import Pcf.Examples.PaperP.BirationalAffineNormalization
+public import Pcf.Bounding.NormalSchemePCFComparison
+public import Mathlib.AlgebraicGeometry.Morphisms.IsIso
+
+/-!
+# The pinched plane is a variety, and `𝔸²` is its absolute normalization
+
+For `paper-p.tex`, Example `ex:pinched` and the unlabelled remark following it
+("Note that `X` is a variety"; "`ν : 𝔸² → X` ... is its normalization";
+"it is not normal at `o`"), with `R = {h ∈ k[z,w] : h(2,1) = h(-2,1)}`:
+
+* `pinched_isDomain`, `pinched_finiteType`: `R` is a domain of finite type
+  over `k`, so `X = Spec R` is an integral affine (hence separated) scheme of
+  finite type over `k`.
+* `pinched_isIntegral`, `pinched_moduleFinite`: `k[z,w]` is integral, hence
+  finite, over `R` (the manuscript's `(h - h(p₁))(h - h(p₂)) ∈ R`).
+* `pinched_isFractionRing`: `R ⊆ k[z,w]` is birational (`(w-1)·k[z,w] ⊆ R`).
+* `pinchedNormalizationIso`: the library's absolute normalization of `X` is
+  `𝔸²`, over `X`.
+* `pinched_not_isIntegrallyClosed`, `pinched_not_isNormalScheme`: `X` is not
+  normal.
+-/
+
+@[expose] public section
+
+namespace Pcf.Examples.PaperP.PinchedNormalization
+
+open AlgebraicGeometry CategoryTheory MvPolynomial Pcf.Examples.Pinched
+
+set_option linter.style.haveILetI false
+set_option linter.unusedSectionVars false
+
+universe u
+
+section Conductor
+
+variable {R S : Type u} [CommRing R] [IsDomain R] [CommRing S] [IsDomain S]
+  [Algebra R S] [FaithfulSMul R S]
+
+/-- If a nonzero `d ∈ R` satisfies `d·S ⊆ R`, then `R ⊆ S` is birational. -/
+theorem isFractionRing_of_conductor (d : R) (hd : d ≠ 0)
+    (h : ∀ s : S, ∃ r : R, algebraMap R S r = algebraMap R S d * s) :
+    IsFractionRing R (FractionRing S) := by
+  have hRS : Function.Injective (algebraMap R S) := FaithfulSMul.algebraMap_injective R S
+  have hinj : Function.Injective (algebraMap R (FractionRing S)) := by
+    rw [IsScalarTower.algebraMap_eq R S (FractionRing S)]
+    exact (IsFractionRing.injective S (FractionRing S)).comp hRS
+  change IsLocalization (nonZeroDivisors R) (FractionRing S)
+  rw [isLocalization_iff_isLocalizationMap]
+  refine ⟨?_, ?_, ?_⟩
+  · intro y
+    exact isUnit_iff_ne_zero.mpr (by
+      intro hy
+      exact (mem_nonZeroDivisors_iff_ne_zero.mp y.property) (hinj (by rw [map_zero]; exact hy)))
+  · intro z
+    obtain ⟨p, q, hq, hpq⟩ := IsFractionRing.div_surjective S z
+    obtain ⟨a, ha⟩ := h p
+    obtain ⟨b, hb⟩ := h q
+    have hqne : q ≠ 0 := mem_nonZeroDivisors_iff_ne_zero.mp hq
+    have hbne : b ≠ 0 := by
+      intro hb0
+      rw [hb0, map_zero] at hb
+      exact (mul_ne_zero ((map_ne_zero_iff _ hRS).mpr hd) hqne) hb.symm
+    refine ⟨(a, ⟨b, mem_nonZeroDivisors_iff_ne_zero.mpr hbne⟩), ?_⟩
+    change z * algebraMap R (FractionRing S) b = algebraMap R (FractionRing S) a
+    rw [← hpq]
+    simp only [IsScalarTower.algebraMap_apply R S (FractionRing S), ha, hb, map_mul]
+    have hqmap : algebraMap S (FractionRing S) q ≠ 0 :=
+      IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hq
+    field_simp [hqmap]
+  · intro a b hab
+    exact ⟨1, by simpa using hinj hab⟩
+
+end Conductor
+
+variable (k : Type u) [Field k] [CharZero k]
+
+/-- The pinched coordinate ring `R`, as a type with a single commutative ring
+structure (the subalgebra `pinchedAlg k`). -/
+def PinchedRing : Type u := ↥(pinchedAlg k)
+
+/-- The plane `k[z, w]`. -/
+abbrev PlaneRing := MvPolynomial (Fin 2) k
+
+noncomputable instance : CommRing (PinchedRing k) := inferInstanceAs (CommRing ↥(pinchedAlg k))
+instance pinched_isDomain : IsDomain (PinchedRing k) := inferInstanceAs (IsDomain ↥(pinchedAlg k))
+noncomputable instance : Algebra k (PinchedRing k) := inferInstanceAs (Algebra k ↥(pinchedAlg k))
+noncomputable instance : Algebra (PinchedRing k) (PlaneRing k) :=
+  inferInstanceAs (Algebra ↥(pinchedAlg k) (PlaneRing k))
+instance : IsScalarTower k (PinchedRing k) (PlaneRing k) :=
+  inferInstanceAs (IsScalarTower k ↥(pinchedAlg k) (PlaneRing k))
+
+/-- Elements of `R` are polynomials. -/
+abbrev PinchedRing.val (r : PinchedRing k) : PlaneRing k := (r : ↥(pinchedAlg k)).1
+
+omit [CharZero k] in
+theorem PinchedRing.val_mem (r : PinchedRing k) : PinchedRing.val k r ∈ pinchedAlg k :=
+  (r : ↥(pinchedAlg k)).2
+
+/-- The element of `R` given by a polynomial in the pinched subalgebra. -/
+abbrev PinchedRing.mk (h : PlaneRing k) (hh : h ∈ pinchedAlg k) : PinchedRing k :=
+  (⟨h, hh⟩ : ↥(pinchedAlg k))
+
+omit [CharZero k] in
+theorem algebraMap_pinched (r : PinchedRing k) :
+    algebraMap (PinchedRing k) (PlaneRing k) r = PinchedRing.val k r := rfl
+
+instance pinched_faithfulSMul : FaithfulSMul (PinchedRing k) (PlaneRing k) :=
+  (faithfulSMul_iff_algebraMap_injective _ _).mpr
+    (Subtype.val_injective (p := fun h => h ∈ pinchedAlg k))
+
+/-- `R` is a finitely generated `k`-algebra: it is generated by
+`w, z², z(w-1), z³ - 4z` (`adjoin_pinchedGenerators_eq`). -/
+instance pinched_finiteType : Algebra.FiniteType k (PinchedRing k) := by
+  change Algebra.FiniteType k ↥(pinchedAlg k)
+  rw [← Subalgebra.fg_iff_finiteType, ← adjoin_pinchedGenerators_eq k]
+  have hfin : (pinchedGenerators k).Finite := by
+    unfold pinchedGenerators
+    exact Set.toFinite _
+  classical
+  exact ⟨hfin.toFinset, by simp⟩
+
+instance pinched_isNoetherianRing : IsNoetherianRing (PinchedRing k) :=
+  Algebra.FiniteType.isNoetherianRing k (PinchedRing k)
+
+/-- The manuscript's integrality argument: `h` is a root of the monic
+`(T - h(p₁))(T - h(p₂)) - (h - h(p₁))(h - h(p₂))`, whose coefficients lie in `R`. -/
+instance pinched_isIntegral : Algebra.IsIntegral (PinchedRing k) (PlaneRing k) := by
+  constructor
+  intro h
+  let a : k := aeval ![(2 : k), 1] h
+  let b : k := aeval ![(-2 : k), 1] h
+  let r : PlaneRing k := (h - C a) * (h - C b)
+  have hr : r ∈ pinchedAlg k := by
+    rw [mem_pinchedAlg_iff]
+    simp [r, a, b]
+  let c₁ : PinchedRing k := algebraMap k (PinchedRing k) (a + b)
+  let c₀ : PinchedRing k := algebraMap k (PinchedRing k) (a * b) - PinchedRing.mk k r hr
+  refine ⟨Polynomial.X ^ 2 - Polynomial.C c₁ * Polynomial.X + Polynomial.C c₀, ?_, ?_⟩
+  · monicity!
+  · simp only [Polynomial.eval₂_add, Polynomial.eval₂_sub, Polynomial.eval₂_mul,
+      Polynomial.eval₂_X_pow, Polynomial.eval₂_C, Polynomial.eval₂_X]
+    have h1 : algebraMap (PinchedRing k) (PlaneRing k) c₁ = C (a + b) := rfl
+    have h0 : algebraMap (PinchedRing k) (PlaneRing k) c₀ = C (a * b) - r := rfl
+    rw [h1, h0]
+    simp only [r, C_add, C_mul]
+    ring
+
+/-- `k[z, w]` is finite over `R`. -/
+instance pinched_moduleFinite : Module.Finite (PinchedRing k) (PlaneRing k) := by
+  haveI : Algebra.FiniteType (PinchedRing k) (PlaneRing k) :=
+    Algebra.FiniteType.of_restrictScalars_finiteType k (PinchedRing k) (PlaneRing k)
+  exact Algebra.IsIntegral.finite
+
+/-- `R ⊆ k[z, w]` is birational: `(w - 1)·k[z, w] ⊆ R`. -/
+instance pinched_isFractionRing :
+    IsFractionRing (PinchedRing k) (FractionRing (PlaneRing k)) := by
+  have hd : (X 1 - 1 : PlaneRing k) ∈ pinchedAlg k := by
+    rw [mem_pinchedAlg_iff]
+    simp
+  refine isFractionRing_of_conductor (R := PinchedRing k) (S := PlaneRing k)
+    (PinchedRing.mk k (X 1 - 1) hd) ?_ ?_
+  · intro h0
+    have := congrArg (PinchedRing.val k) h0
+    change (X 1 - 1 : PlaneRing k) = 0 at this
+    have h := congrArg (aeval ![(0 : k), 0]) this
+    simp at h
+  · intro s
+    refine ⟨PinchedRing.mk k ((X 1 - 1) * s) ?_, rfl⟩
+    rw [mem_pinchedAlg_iff]
+    simp
+
+/-- **`ν : 𝔸² → X` is the normalization**: a typed isomorphism between the
+library's absolute normalization of the pinched plane and `𝔸²`.
+
+`paper-p.tex` correspondence: Example A.9 (`ex:pinched`). -/
+noncomputable def pinchedNormalizationIso :
+    Pcf.Palomar.normalization (Spec (.of (PinchedRing k))) ≅ Spec (.of (PlaneRing k)) :=
+  BirationalAffineNormalization.normalizationIsoCover (PinchedRing k) (PlaneRing k)
+
+/-- The identification is over `X`. -/
+theorem pinchedNormalizationIso_hom_comp :
+    (pinchedNormalizationIso k).hom ≫
+        Spec.map (CommRingCat.ofHom (algebraMap (PinchedRing k) (PlaneRing k))) =
+      Pcf.Palomar.normalizationMap (Spec (.of (PinchedRing k))) :=
+  BirationalAffineNormalization.normalizationIsoCover_hom_comp (PinchedRing k) (PlaneRing k)
+
+/-- `z` is integral over `R` but does not lie in `R`, so `R` is not normal. -/
+theorem pinched_not_isIntegrallyClosed : ¬ IsIntegrallyClosed (PinchedRing k) := by
+  intro hR
+  let K := FractionRing (PlaneRing k)
+  have hz : IsIntegral (PinchedRing k) (algebraMap (PlaneRing k) K (X 0)) :=
+    (Algebra.IsIntegral.isIntegral (R := PinchedRing k) (X 0 : PlaneRing k)).algebraMap
+  obtain ⟨r, hr⟩ := (isIntegrallyClosed_iff K).mp hR hz
+  rw [IsScalarTower.algebraMap_apply (PinchedRing k) (PlaneRing k) K] at hr
+  have hval : PinchedRing.val k r = X 0 := IsFractionRing.injective (PlaneRing k) K hr
+  have hmem := PinchedRing.val_mem k r
+  rw [hval, mem_pinchedAlg_iff] at hmem
+  simp at hmem
+  norm_num at hmem
+
+/-- The pinched plane is not a normal scheme. -/
+theorem pinched_not_isNormalScheme : ¬ Pcf.IsNormalScheme (Spec (.of (PinchedRing k))) := by
+  intro hN
+  haveI := hN
+  have hiso := Pcf.normalScheme_normalizationMap_isIso (Spec (.of (PinchedRing k)))
+  rw [← pinchedNormalizationIso_hom_comp k] at hiso
+  haveI : IsIso (Spec.map (CommRingCat.ofHom (algebraMap (PinchedRing k) (PlaneRing k)))) :=
+    IsIso.of_isIso_comp_left (pinchedNormalizationIso k).hom _
+  have hbij : Function.Bijective (algebraMap (PinchedRing k) (PlaneRing k)) :=
+    isIso_SpecMap_iff (f := CommRingCat.ofHom (algebraMap (PinchedRing k) (PlaneRing k))) |>.mp
+      inferInstance
+  obtain ⟨r, hr⟩ := hbij.2 (X 0)
+  have hmem := PinchedRing.val_mem k r
+  change PinchedRing.val k r = X 0 at hr
+  rw [hr, mem_pinchedAlg_iff] at hmem
+  simp at hmem
+  norm_num at hmem
+
+#print axioms pinched_finiteType
+#print axioms pinched_isIntegral
+#print axioms pinched_moduleFinite
+#print axioms pinched_isFractionRing
+#print axioms pinchedNormalizationIso
+#print axioms pinchedNormalizationIso_hom_comp
+#print axioms pinched_not_isIntegrallyClosed
+#print axioms pinched_not_isNormalScheme
+
+end Pcf.Examples.PaperP.PinchedNormalization

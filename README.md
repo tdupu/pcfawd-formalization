@@ -6,71 +6,56 @@ A Lean 4 / Mathlib formalization of "PCF all the way down", from the manuscript
 > down*. Manuscript in preparation; not yet public.
 
 The manuscript is not included here yet. References in the Lean sources and documentation
-to `latex/paper.tex` and `latex/paper-p.tex` (its characteristic-`p` version) and their
-`\label`s (for example `cor:pcfawd`) are to that manuscript.
-
-## What is proved
-
-**Theorem A in every characteristic and every codimension.** The development
-also formalizes Theorem `thm:A` of the characteristic-`p` version of the
-manuscript (`paper-p.tex`, not yet public):
-`Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF` in characteristic zero and
-`Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF` in characteristic `p > 0`
-with prime-to-`p` monodromy. Both conclude that every return on a preperiodic
-proper integral closed subvariety, in every codimension and on the original
-reduced subvariety, is separable and PCF, recursively. The statements, their
-equivalent forms and the verification record are in
-[`lean/THEOREM-A.md`](lean/THEOREM-A.md).
-
-**The divisor-chain theorem.** `Pcf.Palomar.pcfAllTheWayDown_charZero_unconditional` formalizes Corollary
-`cor:pcfawd` of the manuscript in characteristic zero: a finite dominant
-self-map of an integral, locally Noetherian scheme with Noetherian underlying
-space, locally of finite type over a field of characteristic zero, that is PCF
-on the normalization is PCF all the way down. Separatedness is not assumed, and
-the map need not be a morphism over the base field.
-
-The theorem has no hypotheses beyond those in its statement. The two classical
-results the manuscript cites are proved here in affine forms and used in the
-proof: Zariski–Nagata purity of the branch locus (Stacks Project Tag 0BMB) and
-Abhyankar's lemma for a regular divisor (Tags 0EYG/0EYH) for algebras in which
-every positive integer is invertible. The proof uses only the axioms `propext`,
-`Classical.choice` and `Quot.sound`.
-
-The precise statement, with what it does not claim, is in
-[`lean/formalization.yaml`](lean/formalization.yaml) and Entry 0 of
-[`lean/PALOMAR.md`](lean/PALOMAR.md). The census of assumed inputs and of proof routes is
-[`lean/AXIOMS.md`](lean/AXIOMS.md). The statement was reviewed by AI agents
-against the manuscript, not yet by a human author. AI use is summarized in
-`lean/formalization.yaml` (`automation`); the authors keep the per-task record privately.
+to `latex/paper.tex` (characteristic zero, divisors) and `latex/paper-p.tex` (characteristic
+`p`, every codimension) and their `\label`s (for example `cor:pcfawd`) are to its two
+versions. Declaration docstrings in `char-zero/lean` also give the current result number.
 
 ## Layout
 
+There is one folder per manuscript. Each manuscript's `lean/` folder is its own Palomar
+registry project, and both build on the shared library.
+
 | Path | Contents |
 | --- | --- |
-| `lean/` | The Lean development (Lake package `pcfawd`, library `Pcf`), which is also the Palomar registry project. |
-| `lean/PcfChallenge.lean` | The Palomar Challenge: the statement, Mathlib imports only, with the three compared theorems as `sorry`. Its definitions are identical to `lean/Pcf/Palomar/Statement.lean`. |
-| `lean/PcfSolution.lean` | The Palomar Solution: imports `Pcf.Palomar.Unconditional`, which proves the compared theorems. |
-| `lean/comparator.json`, `lean/formalization.yaml` | Palomar Comparator configuration and metadata. |
-| `.github/workflows/palomar-preflight.yml` | Manually triggered Palomar preflight. |
+| `library/` | The shared Lean development: Lake package `pcfawd`, library `Pcf`. |
+| `char-zero/lean/` | Formalization of `paper.tex`: Lake project requiring `../../library`, with its Palomar Challenge, Solution, Comparator configuration and `formalization.yaml`. See its `readme.md`. |
+| `char-zero/blueprint/` | Blueprint for `paper.tex` (in preparation). |
+| `char-p/lean/` | Formalization of `paper-p.tex`: Lake project requiring `../../library`. See its `readme.md` and [`char-p/THEOREM-A.md`](char-p/THEOREM-A.md). |
+| `char-p/blueprint/` | Blueprint for `paper-p.tex` (in preparation). |
+| `legacy/entry-0/` | The earlier single-project Palomar package, superseded by the per-manuscript projects and never registered. Not built. |
+| `.github/workflows/` | Manually triggered Palomar preflights. |
+
+## What is proved
+
+**Characteristic zero (`char-zero/lean`).** `PaperCharZero.theoremA` and
+`PaperCharZero.cor_pcfawd` formalize Theorem `thm:A` and Corollary `cor:pcfawd` of
+`paper.tex`; the project also formalizes its bounding theorem, supporting lemmas and every
+example. `char-zero/lean/readme.md` maps each manuscript label to its declarations.
+
+**Every characteristic and codimension (`char-p/lean`).** Theorem `thm:A` of
+`paper-p.tex`: `Pcf.isPCFAllSubvarieties_charP_of_downstairsPCF` in characteristic
+`p > 0` with prime-to-`p` monodromy, and `Pcf.isPCFAllSubvarieties_charZero_of_downstairsPCF`
+in characteristic zero. See [`char-p/THEOREM-A.md`](char-p/THEOREM-A.md).
+
+The proofs use only the axioms `propext`, `Classical.choice` and `Quot.sound`. Zariski–Nagata
+purity (Stacks 0BMB) and Abhyankar's lemma (Stacks 0EYG/0EYH) are proved here, not assumed.
+The census of assumed inputs and proof routes is [`library/AXIOMS.md`](library/AXIOMS.md).
+The statements were reviewed by AI agents against the manuscript, not yet by a human author.
 
 ## Building
 
-Lean `v4.35.0` and Mathlib `v4.35.0` (pinned in `lean-toolchain` and
+Lean `v4.35.0` and Mathlib `v4.35.0` (pinned in each `lean-toolchain` and
 `lake-manifest.json`).
 
 ```sh
-cd lean
-lake exe cache get
-lake build
+cd library && lake exe cache get && lake build
+cd ../char-zero/lean && lake build main PaperCharZeroChallenge PaperCharZeroSolution
+cd ../../char-p/lean && lake build
 ```
 
-`lake build` builds the default targets `Pcf`, `PcfChallenge` and `PcfSolution`. The only
-warnings in `PcfChallenge` are the `sorry`s of the three compared theorems.
-
-Palomar submission parameters: project path `lean`, Comparator configuration
-`lean/comparator.json`, metadata `lean/formalization.yaml`. The pin recorded in
-`lean/PALOMAR.md` predates the Theorem A development and must be re-derived before
-a new submission (see the note at the top of its Pin section).
+Palomar submission parameters for the characteristic-zero entry: project path
+`char-zero/lean`, Comparator configuration `char-zero/lean/comparator.json`, metadata
+`char-zero/lean/formalization.yaml`.
 
 ## History
 
@@ -88,10 +73,9 @@ and 2026-10-22, into one; the individual commits are not reproduced here.
 
 ## Palomar status
 
-Submitted on 2026-10-17 at commit `a39c378`, when the Palomar project was a separate `palomar/`
-directory requiring `../lean` by path. Verification and review passed, but Palomar's Challenge
-renderer does not accept a path dependency containing `..`, so `lean/` is now the project itself.
-Not yet registered.
+An earlier single-project package (now `legacy/entry-0/`) was submitted on 2026-10-17 and
+not registered. The characteristic-zero project is being submitted as its own entry; the
+characteristic-`p` project will be submitted separately. Nothing is registered yet.
 
 ## License
 

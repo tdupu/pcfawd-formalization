@@ -1,0 +1,20 @@
+# Lake package `pcfawd`: the shared `PCF all the way down` Lean library `Pcf`.
+# The per-manuscript Palomar projects `char-zero/lean` and `char-p/lean` require it by path.
+name = "pcfawd"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["Pcf"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+[[lean_lib]]
+name = "Pcf"
