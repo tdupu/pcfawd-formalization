@@ -5,7 +5,7 @@
 version: v0.4
 
 project:
-  name: "PCF on all subvarieties in any characteristic (Theorem A of paper-p)"
+  name: "PCF all the way down: preperiodic subvarieties in any codimension, in any characteristic"
   description: |
     Theorem A (thm:A) of the manuscript "PCF all the way down: preperiodic
     subvarieties in any codimension, in any characteristic", in two cases:
