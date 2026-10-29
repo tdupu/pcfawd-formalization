@@ -1,7 +1,7 @@
 # Validation of `paper-char-zero`
 
 Source manuscript: `paper.tex` (private, not in this repository), SHA-256
-`bfd3b71f4f792d6094372eb4649a87073e4b47428a88d361c94aec76ccf314f0`.
+`9aa74295b97417b8648087f48002fb40fd3aa4ecfd9f5508c38670114aa461a0`.
 `main.lean` SHA-256
 `683a4e90ed33421c73116843b207bdf43730abcebd3a02094716b110fcd44337`.
 Lean 4.35.0; Mathlib revision `56a005855ea17e0b0958f73ec801ae140b0a1679`.

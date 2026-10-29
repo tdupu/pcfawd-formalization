@@ -85,6 +85,17 @@ checked by build and axiom audit only):
   when these sources were committed and is not claimed here. Earlier exports
   of this package were accepted by the default kernel.
 
+Official Palomar evidence (2026-10-29):
+
+- The official preflight (`.github/workflows/palomar-preflight-char-zero.yml`) passed on
+  commit `6c803998de90fca4a477d9105761aa2b9b94ee9a`: Comparator, nanoda, the Lean default
+  kernel and con-ron accepted the solution; the shared library was recorded as the
+  contained path dependency `library`.
+- Submission `2gwpmcnugs00` at that commit passed mechanical verification, the Challenge
+  renderability check and editorial review with no blocking problem and no warning. It is
+  being replaced by a submission at a later commit that changes only the metadata title
+  to "PCF all the way down", the title of `paper.tex`; the Lean sources are unchanged.
+
 Package source SHA-256 values:
 
 | File | SHA-256 |

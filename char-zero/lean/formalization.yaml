@@ -4,7 +4,7 @@
 version: v0.4
 
 project:
-  name: "Characteristic-zero divisor restriction and PCF all the way down"
+  name: "PCF all the way down"
   description: |
     The characteristic-zero headline statements of the manuscript
     "PCF all the way down": Theorem A (thm:A, equivalently thm:general)
