@@ -144,8 +144,8 @@ theorem f_isSeparableNormalizedPCF :
 6. Near `o`, `f` is étale in codimension one (on `D(w z²) ∋ o`) but `f` is not flat at `o`.
 7. The lift `z ↦ z²` of `g` is `0`-PCF and `1`-PCF.
 
-`paper-p.tex` correspondence: Remark 2.3 (`rem:why-normalized`), Remark A.12 (`rem:pinched-
-unnormalized`). -/
+`paper-p.tex` correspondence: Remark 2.3 (`rem:why-normalized`), Remark A.12
+(`rem:pinched-unnormalized`). -/
 theorem pinched_unnormalized_remark :
     -- (1)
     Pcf.IsSeparableNormalizedPCF k (structureMap k) (fScheme k) ∧

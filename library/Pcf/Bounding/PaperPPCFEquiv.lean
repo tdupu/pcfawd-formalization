@@ -355,8 +355,8 @@ end Scheme
 from the variety's finite-type structure morphism.
 
 `paper-p.tex` correspondence: Proposition 5.1 (`prop:pcf-equiv`), item (1) of Proposition 5.1
-(`item:pcf`), item (2) of Proposition 5.1 (`item:orbits`), item (3) of Proposition 5.1 (`item:crit-
-preperiodic`). -/
+(`item:pcf`), item (2) of Proposition 5.1 (`item:orbits`), item (3) of Proposition 5.1
+(`item:crit-preperiodic`). -/
 theorem paperP_pcf_equiv_of_variety
     (k : Type u) [Field k]
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]

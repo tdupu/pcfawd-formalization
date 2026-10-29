@@ -84,7 +84,7 @@ theorem isWeightedNormalizedPCFDownstairs_iff
 /-- **Theorem A, characteristic zero**, from finiteness of postcritical
 divisors on the original scheme in the paper's normalized weighted sense.
 
-`paper-p.tex` correspondence: Theorem 1.2 (`thm:A`). -/
+`paper-p.tex` correspondence: Theorem 1.2 (`thm:A`), Theorem 9.4 (`thm:allsubvar-pcfawd`). -/
 theorem isPCFAllSubvarieties_charZero_of_downstairsPCF
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
@@ -98,7 +98,7 @@ theorem isPCFAllSubvarieties_charZero_of_downstairsPCF
 /-- **Theorem A, positive characteristic**, with the paper's downstairs
 normalized PCF condition and prime-to-`p` monodromy.
 
-`paper-p.tex` correspondence: Theorem 1.2 (`thm:A`). -/
+`paper-p.tex` correspondence: Theorem 1.2 (`thm:A`), Theorem 9.4 (`thm:allsubvar-pcfawd`). -/
 theorem isPCFAllSubvarieties_charP_of_downstairsPCF
     (p : ℕ) (hp : p.Prime) (k : Type u) [Field k] [CharP k p]
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]
@@ -461,8 +461,8 @@ noncomputable def weightedBranchLocus
 /-- Definition `def:crit-branch` for the closed loci: a finite scheme map
 takes the weighted critical locus onto the weighted branch locus.
 
-`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1) (`eq:branch-
-normalization`). -/
+`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1)
+(`eq:branch-normalization`). -/
 theorem weightedBranchLocus_eq_image_criticalLocus
     {X Y : Scheme.{u}} (f : X ⟶ Y)
     [IsFinite f] [IsDominant f]

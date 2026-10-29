@@ -30,8 +30,8 @@ set_option linter.style.haveILetI false
 monodromy condition in this case is separability of the generic field
 extension, included in `IsSeparableNormalizedPCF`.
 
-`paper-p.tex` correspondence: Theorem 8.3 (`thm:allcodim-normal`), Theorem 8.4 (`thm:normal-
-invariant`), Corollary 8.5 (`cor:normal-preperiodic`). -/
+`paper-p.tex` correspondence: Theorem 8.3 (`thm:allcodim-normal`), Theorem 8.4
+(`thm:normal-invariant`), Corollary 8.5 (`cor:normal-preperiodic`). -/
 theorem paperP_allcodim_normal_charZero
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} [IsIntegral X] [IsNormalScheme X]
@@ -49,8 +49,8 @@ theorem paperP_allcodim_normal_charZero
 /-- `paper-p.tex`, `thm:allcodim-normal`, for a periodic integral subvariety
 of a normal variety in characteristic `p`.
 
-`paper-p.tex` correspondence: Theorem 8.3 (`thm:allcodim-normal`), Theorem 8.4 (`thm:normal-
-invariant`), Corollary 8.5 (`cor:normal-preperiodic`). -/
+`paper-p.tex` correspondence: Theorem 8.3 (`thm:allcodim-normal`), Theorem 8.4
+(`thm:normal-invariant`), Corollary 8.5 (`cor:normal-preperiodic`). -/
 theorem paperP_allcodim_normal_charP
     (p : ℕ) (hp : p.Prime) (k : Type u) [Field k] [CharP k p]
     {X : Scheme.{u}} [IsIntegral X] [IsNormalScheme X]

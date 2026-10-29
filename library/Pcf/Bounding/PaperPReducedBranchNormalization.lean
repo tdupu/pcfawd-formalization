@@ -149,8 +149,8 @@ theorem weightedBranchLocus_eq_normalization_image
 induced subscheme structures represented by radical vanishing ideal
 sheaves.
 
-`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1) (`eq:branch-
-normalization`). -/
+`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1)
+(`eq:branch-normalization`). -/
 theorem weightedCritical_reducedIdeal_eq_normalization_image
     {X Y : Scheme.{u}} (f : X ⟶ Y)
     [IsFinite f] [IsDominant f]
@@ -198,8 +198,8 @@ theorem weightedBranch_reducedIdeal_eq_image_critical
 /-- The final equality of `eq:branch-normalization` with reduced
 induced subscheme structures.
 
-`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1) (`eq:branch-
-normalization`). -/
+`paper-p.tex` correspondence: Definition 2.2 (`def:crit-branch`), equation (1)
+(`eq:branch-normalization`). -/
 theorem weightedBranch_reducedIdeal_eq_normalization_image
     {X Y : Scheme.{u}} (f : X ⟶ Y)
     [IsFinite f] [IsDominant f]
