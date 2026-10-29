@@ -1114,7 +1114,9 @@ and singular only at its vertex `o`, which has codimension two. The map
 and surjective, étale over the complement of the vertex (so away from the origin),
 which is the only point over `o`, and
 `branch(f) = ∅`. For `A = V(v)` and `B = V(y,z)` the restriction is `g(u) = u²`,
-`branch(g) = {o}`, while `B ∩ branch(f) = ∅`; the branch point lies on `B ∩ Sing(Y)`. -/
+`branch(g) = {o}`, while `B ∩ branch(f) = ∅`; the branch point lies on `B ∩ Sing(Y)`.
+
+Manuscript: `ex:branch-singular` (Example 6.7), `rem:branch-bound-sharpness` (Remark 6.9). -/
 theorem ex_branch_singular :
     IsNormalScheme (cone K) ∧
     stalkSingularLocus (cone K) = {vertex K} ∧

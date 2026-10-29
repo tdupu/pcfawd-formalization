@@ -63,7 +63,9 @@ noncomputable def standardPiece_reductionRootEquiv (he : 1 ≤ e)
     (DoubleQuot.quotQuotEquivQuotOfLE (span_algebraMap_le_span_root u a he))
 
 /-- The complete ring-equivalence chain of `paper.tex`, `eq:standard-piece`.
-The final map is the existing canonical restriction equivalence. -/
+The final map is the existing canonical restriction equivalence.
+
+Manuscript: `eq:standard-piece` (equation (2)). -/
 theorem standard_piece (he : 1 ≤ e)
     [IsReduced (R ⧸ Ideal.span ({a} : Set R))] :
     Nonempty (C ⧸ I ≃+* (R ⧸ Ideal.span ({a} : Set R))[X] ⧸

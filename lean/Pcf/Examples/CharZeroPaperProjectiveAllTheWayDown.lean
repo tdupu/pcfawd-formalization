@@ -35,7 +35,9 @@ variable {K : Type u} [Field K] [CharZero K] {n : ℕ}
 attribute [local instance] MvPolynomial.gradedAlgebra
 local notation "polyGrade" => MvPolynomial.homogeneousSubmodule (Fin n ⊕ Unit) K
 
-/-- `ex:squaring-PN`: `ψ` is PCF all the way down. -/
+/-- `ex:squaring-PN`: `ψ` is PCF all the way down.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem squaringMap_pcfAllTheWayDown [NeZero n] :
     SchemePCFAllTheWayDown K projStructureMap (squaringMap (K := K) (n := n)) :=
   pcfAllTheWayDown_charZero_proved K _ _

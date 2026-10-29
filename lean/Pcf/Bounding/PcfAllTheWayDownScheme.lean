@@ -33,7 +33,9 @@ set_option linter.style.haveILetI false
 
 /-- PCF on the canonical normalization, with the characteristic-zero structure
 obtained from the actual structure morphism. The normalization PCF equivalence
-identifies this with the paper's normalized branch-locus definition. -/
+identifies this with the paper's normalized branch-locus definition.
+
+Manuscript: `def:pcf` (Definition 3.1). -/
 def IsNormalizedPCFOfFiniteType
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -75,7 +77,9 @@ theorem isNormalizedPCFOfFiniteType_pow_iff
 
 /-- Normalized PCF descends along an actual finite dominant commuting cover.
 Both structure morphisms are used only to obtain finite normalizations and
-characteristic zero; compatibility of those structure morphisms is unnecessary. -/
+characteristic zero; compatibility of those structure morphisms is unnecessary.
+
+Manuscript: `lem:covers` (Lemma 5.5). -/
 theorem isNormalizedPCFOfFiniteType_of_cover
     (k : Type u) [Field k] [CharZero k]
     {X Y : Scheme.{u}} (sX : X ⟶ Spec (.of k)) (sY : Y ⟶ Spec (.of k))

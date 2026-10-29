@@ -248,7 +248,9 @@ theorem chartPerm_apply [NeZero n] (i : Fin n ⊕ Unit) :
   · exact ⟨0, by simp [chartPerm, otherIndex]⟩
 
 /-- `ex:squaring-PN`: the actual divisorial ramification index of `ψ` along each
-coordinate hyperplane is exactly two. -/
+coordinate hyperplane is exactly two.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem squaringMap_ramificationIdx_hyperplane [CharZero K] [NeZero n] (i : Fin n ⊕ Unit) :
     schemeDivisorRamificationIdx (squaringMap (K := K) (n := n)) (hyperplaneDivisor i) = 2 := by
   classical

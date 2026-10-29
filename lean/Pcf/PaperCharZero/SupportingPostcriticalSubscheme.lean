@@ -65,7 +65,9 @@ noncomputable def postcriticalIdealSheaf (hpcf : Pcf.IsNormalizedPCF k g) :
     A.IdealSheafData :=
   Scheme.IdealSheafData.vanishingIdeal (postcriticalCloseds k g hpcf)
 
-/-- `PC(f)` as a closed subscheme with its reduced induced structure. -/
+/-- `PC(f)` as a closed subscheme with its reduced induced structure.
+
+Manuscript: `def:pcf` (Definition 3.1). -/
 noncomputable abbrev postcriticalSubscheme (hpcf : Pcf.IsNormalizedPCF k g) : Scheme.{u} :=
   (postcriticalIdealSheaf k g hpcf).subscheme
 

@@ -117,7 +117,9 @@ theorem SchemeDivisorPoint.mapFiniteDominantFiniteType_finite_fiber
 
 /-- Scheme-level `lem:lift`: the canonical divisor pushforward is surjective and has
 finite fibres.  This simultaneously records existence of a divisor above every target
-divisor and finiteness of all such divisors. -/
+divisor and finiteness of all such divisors.
+
+Manuscript: `lem:lift` (Lemma 2.1). -/
 theorem finiteDominantFiniteType_divisor_lift :
     Function.Surjective (fun x : SchemeDivisorPoint X ↦
       x.mapFiniteDominantFiniteType f k) ∧

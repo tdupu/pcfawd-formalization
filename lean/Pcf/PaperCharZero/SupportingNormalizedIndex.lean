@@ -107,7 +107,9 @@ theorem normalized_index_eq_one_of_etale
 /-- `lem:etale-normalized-index`, with the universal quantifier over all
 normalization branches over the specified source divisor. The regularity
 assumption is retained verbatim; the preceding stronger theorem shows it is
-unnecessary for this index-one conclusion. -/
+unnecessary for this index-one conclusion.
+
+Manuscript: `lem:etale-normalized-index` (Lemma 2.5). -/
 theorem etale_normalized_index
     (k : Type u) [Field k] [CharZero k]
     {X Y : Scheme.{u}} [IsIntegral X] [IsIntegral Y]

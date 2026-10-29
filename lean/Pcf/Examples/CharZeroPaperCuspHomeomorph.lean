@@ -98,7 +98,9 @@ theorem normalizationMap_eq :
   rw [← parameterLineNormalizationIso_comm, Iso.inv_hom_id_assoc]
 
 /-- `rem:why-normalized`: the canonical normalization map of the cusp
-`y² = x³` is a homeomorphism of underlying topological spaces. -/
+`y² = x³` is a homeomorphism of underlying topological spaces.
+
+Manuscript: `rem:why-normalized` (Remark 2.3). -/
 theorem normalizationMap_isHomeomorph :
     IsHomeomorph (Palomar.normalizationMap (cusp k)) := by
   rw [normalizationMap_eq]
@@ -114,7 +116,9 @@ instance normalizationMap_surjective : Surjective (Palomar.normalizationMap (cus
   rw [normalizationMap_eq]; infer_instance
 
 /-- `rem:why-normalized`: the canonical normalization map of the cusp is not
-branched; its normalized branch support is empty. -/
+branched; its normalized branch support is empty.
+
+Manuscript: `rem:why-normalized` (Remark 2.3). -/
 theorem normalizationMap_branch_empty :
     normalizedMorphismBranchSupport (Palomar.normalizationMap (cusp k)) = ∅ :=
   normalizedMorphismBranchSupport_empty_of_factor _ _ (𝟙 _) (Category.id_comp _)

@@ -456,7 +456,9 @@ theorem ambient_pcf_nonEtale :
   rw [ambient_nonEtaleBranch, divisorPostcritical_of_fixed _ _ (ambient_branch_fixed k)]
   exact ((Set.finite_singleton _).insert _).image _
 
-/-- **`ex:pinched`: the three divisorial branch loci of `f` coincide.** -/
+/-- **`ex:pinched`: the three divisorial branch loci of `f` coincide.**
+
+Manuscript: `ex:pinched` (Example 4.4). -/
 theorem ambient_three_branch_loci :
     normalizedMorphismBranchSupport (ambientMap k) =
         divisorSupport (nonreducedFibreBranch (ambientMap k)) ∧

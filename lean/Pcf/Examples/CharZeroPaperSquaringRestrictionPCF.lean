@@ -93,7 +93,9 @@ theorem hyperplane_invariantClosureMap_isPCF [CharZero K] [NeZero m] (i : Fin m 
 
 /-- `ex:squaring-PN`, the restriction clause in full: under the canonical identification
 of `ℙ^{N-1}` with the reduced closure subscheme of `H_i`, the actual restriction of `ψ`
-to `H_i` is coordinatewise squaring on `ℙ^{N-1}`, and it is PCF. -/
+to `H_i` is coordinatewise squaring on `ℙ^{N-1}`, and it is PCF.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem hyperplane_restriction_squaring_isPCF [CharZero K] (i : Fin (m + 1) ⊕ Unit) :
     (hyperplaneSubschemeIso (K := K) i).hom ≫
         (hyperplaneDivisor (K := K) (n := m + 1) i).invariantClosureMap squaringMap

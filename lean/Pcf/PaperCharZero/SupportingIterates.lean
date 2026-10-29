@@ -140,7 +140,9 @@ theorem normalized_isPCF_iff_pow (m : ℕ) (hm : 1 ≤ m) :
 
 /-- All four assertions of `prop:iterates` in one source-facing theorem.
 The postcritical statement retains equality of the actual divisor sets, which
-is stronger than equality of their supports. -/
+is stronger than equality of their supports.
+
+Manuscript: `prop:iterates` (Proposition 5.3). -/
 theorem normalized_iterates (m : ℕ) (hm : 1 ≤ m) :
     (normalizedMorphismBranchSupport (End.of f ^ m).asHom =
       ⋃ i ∈ Set.Iio m, (fun x : X => f x)^[i] '' normalizedMorphismBranchSupport f) ∧

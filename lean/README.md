@@ -9,7 +9,7 @@ Tucker, Wang).
 | Mathlib | `v4.35.0` (rev `56a005855ea1`) |
 | Build | `lake build` from this directory |
 | Assumed inputs | [AXIOMS.md](AXIOMS.md) |
-| Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**, never by number (numbers change between versions of the manuscript). Labels refer to `latex/paper.tex` unless marked `paper-p.tex` (the characteristic-`p` version) |
+| Manuscript | *PCF all the way down*, cited below **by its LaTeX `\label`s**. Declaration docstrings in the `paper-char-zero` target also give the result number in the current version of `paper.tex`, in parentheses; the label is authoritative if numbers change. Labels refer to `latex/paper.tex` unless marked `paper-p.tex` (the characteristic-`p` version) |
 
 ## Dedicated paper targets
 

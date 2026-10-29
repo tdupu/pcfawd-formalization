@@ -229,7 +229,9 @@ in `W`. Then every point of `U` lies in the image of an étale `φ : Spec R → 
 with `R` Noetherian and a nonzerodivisor `a ∈ R` with `R/aR` regular, such that
 `D ×_U Spec R ≅ Spec (R/aR)` over `Spec R` (equivalently `φ*D = V(a)` as ideal
 sheaves), and `V ×_U Spec R ≅ ∐_i Spec R[z]/(z^{e_i} - u_i a)` over `Spec R` for
-finitely many units `u_i` and integers `e_i ≥ 1` invertible in `R`. -/
+finitely many units `u_i` and integers `e_i ≥ 1` invertible in `R`.
+
+Manuscript: `thm:abhyankar` (Theorem 6.2). -/
 theorem abhyankar_lemma (X : Scheme.{u}) [IsLocallyNoetherian X]
     (D : X.IdealSheafData) (hD : IsEffectiveCartier D) (hDreg : IsRegularScheme D.subscheme)
     {Y : Scheme.{u}} (f : Y ⟶ complementOpen D) [IsFinite f] [Etale f]

@@ -28,7 +28,9 @@ namespace Pcf.PaperCharZero
 Noetherian schemes, with exactly the stated local hypotheses. This is the
 proved scheme-level Stacks `0BMB` theorem with its conclusion transported to
 Mathlib's `Etale` predicate on an open neighborhood. It holds in every
-characteristic and does not require global finite type, normality, or regularity. -/
+characteristic and does not require global finite type, normality, or regularity.
+
+Manuscript: `thm:purity` (Theorem 6.1). -/
 theorem zariski_nagata_purity
     {X Y : Scheme.{u}} [IsLocallyNoetherian X] [IsLocallyNoetherian Y]
     (h : X ⟶ Y) (x : X)

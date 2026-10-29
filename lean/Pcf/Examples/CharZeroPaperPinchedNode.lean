@@ -457,7 +457,9 @@ instance nodalStructureMap_locallyOfFiniteType : LocallyOfFiniteType (nodalStruc
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
   exact RingHom.finiteType_algebraMap.mpr inferInstance
 
-/-- **`ex:pinched`: `g` is PCF for the normalized branch locus.** -/
+/-- **`ex:pinched`: `g` is PCF for the normalized branch locus.**
+
+Manuscript: `ex:pinched` (Example 4.4). -/
 theorem line_isNormalizedPCF : IsNormalizedPCFOfFiniteType k (nodalStructureMap k) (gScheme k) :=
   isNormalizedPCF_of_conj k (.of (NodalRing k)) (nodalStructureMap k) (lineParam k)
     (lineNormalizationIso k) (lineNormalizationIso_comm k) (gScheme k) (lineSquaring k)
@@ -666,7 +668,9 @@ def fiberRingQ : (pointQ k).asIdeal.Fiber (SquaringSource (gStar k)) ≃+* DualN
   (fiberRingEquivQuotient (S := SquaringSource (gStar k)) (pointQ k).asIdeal).trans ((fiberQuotEquiv k).trans
     (CharZeroPaperPinchedCone.nodeFiberEquivDual (K := k)).toRingEquiv)
 
-/-- **`ex:pinched`: the scheme fibre `g⁻¹(Q)` is `Spec k[d]/(d²)`.** -/
+/-- **`ex:pinched`: the scheme fibre `g⁻¹(Q)` is `Spec k[d]/(d²)`.**
+
+Manuscript: `ex:pinched` (Example 4.4). -/
 def fiberQ_iso : (gScheme k).fiber (pointQ k) ≅ Spec (.of (DualNumber k)) :=
   Arrow.leftFunc.mapIso
       (Spec.fiberToSpecResidueFieldIso (NodalRing k) (SquaringSource (gStar k)) (pointQ k)) ≪≫
@@ -860,12 +864,16 @@ theorem not_finite_of_orbit {B : Set (SchemeDivisorPoint (nodalCurve k))}
   intro n
   exact Set.mem_iUnion.mpr ⟨n, pointQ k, ⟨pointDivisor k 4, hB, rfl⟩, rfl⟩
 
-/-- **`ex:pinched`: `g` is not PCF for the nonreduced-fibre branch locus.** -/
+/-- **`ex:pinched`: `g` is not PCF for the nonreduced-fibre branch locus.**
+
+Manuscript: `ex:pinched` (Example 4.4). -/
 theorem not_pcf_nonreducedFibre :
     ¬ (divisorPostcritical (gScheme k) (nonreducedFibreBranch (gScheme k))).Finite :=
   not_finite_of_orbit k (pointQ_mem_reducedFiberBranch k)
 
-/-- **`ex:pinched`: `g` is not PCF for the non-étale branch locus.** -/
+/-- **`ex:pinched`: `g` is not PCF for the non-étale branch locus.**
+
+Manuscript: `ex:pinched` (Example 4.4). -/
 theorem not_pcf_nonEtale :
     ¬ (divisorPostcritical (gScheme k) (nonEtaleBranch (gScheme k))).Finite :=
   not_finite_of_orbit k (pointQ_mem_nonEtaleBranch k)

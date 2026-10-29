@@ -94,7 +94,10 @@ noncomputable section
 /-- Theorem `thm:A` = `thm:general` of `latex/paper.tex`: the return on the
 reduced image of a preperiodic integral effective divisor is PCF. The
 `SchemeDivisorPoint` is the generic point of such a divisor; `r` and `p` are
-the paper's `r` and `s`. -/
+the paper's `r` and `s`.
+
+Manuscript: `thm:A` (Theorem 1.1), `thm:normal-invariant` (Theorem 7.1),
+`cor:normal-preperiodic` (Corollary 7.2), `thm:general` (Theorem 8.1). -/
 theorem theoremA
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -118,7 +121,9 @@ theorem theoremA
 
 /-- Corollary `cor:pcfawd` of `latex/paper.tex`: normalized PCF holds on every
 successive reduced divisor return. The induction is on the length of the chain;
-the manuscript's dimension drop bounds the length of any actual chain. -/
+the manuscript's dimension drop bounds the length of any actual chain.
+
+Manuscript: `conj:pcfawd` (Conjecture 3.4), `cor:pcfawd` (Corollary 8.2). -/
 theorem cor_pcfawd
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]

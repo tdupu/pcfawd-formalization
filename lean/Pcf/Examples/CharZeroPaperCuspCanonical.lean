@@ -251,7 +251,9 @@ theorem X_mem_planeOriginIdeal (i : Fin 2) : MvPolynomial.X i ∈ planeOriginIde
   simp [planeOriginIdeal]
 
 /-- `ex:cusp`: the actual closed cusp `B` meets the actual normalized ambient branch
-support `Z = V(x)` exactly at the origin. -/
+support `Z = V(x)` exactly at the origin.
+
+Manuscript: `ex:cusp` (Example 6.5). -/
 theorem cusp_inter_normalized_ambient_branch [CharZero k] :
     Set.range (cuspImmersion k) ∩ normalizedMorphismBranchSupport (ambientMap k) =
       {planeOrigin k} := by
@@ -369,7 +371,9 @@ theorem cuspOrigin_localization_not_integrallyClosed
 
 set_option backward.isDefEq.respectTransparency false in
 /-- `ex:cusp`: `(0,0) ∈ Sing(B)`. The actual local ring of the cusp at the origin is
-not a regular local ring. -/
+not a regular local ring.
+
+Manuscript: `ex:cusp` (Example 6.5). -/
 theorem cuspOrigin_not_regular :
     ¬ IsRegularLocalRing ((cusp k).presheaf.stalk (cuspOrigin k)) := by
   intro hreg
@@ -385,7 +389,9 @@ theorem cuspOrigin_not_regular :
 /-! ### The strict inclusion -/
 
 /-- `ex:cusp`: `Branch(g) = ∅ ⊊ B ∩ Z`, for the actual canonical normalized branch
-supports, with both sides regarded as subsets of the ambient target plane. -/
+supports, with both sides regarded as subsets of the ambient target plane.
+
+Manuscript: `ex:cusp` (Example 6.5). -/
 theorem normalized_branch_strict_inclusion [CharZero k] :
     (cuspImmersion k) '' normalizedMorphismBranchSupport (parametrization k) ⊂
       Set.range (cuspImmersion k) ∩ normalizedMorphismBranchSupport (ambientMap k) := by

@@ -44,7 +44,9 @@ structure PCFAllTheWayDownLocalTheorems : Prop where
 /-- The actual scheme-level meaning of PCF all the way down: normalized PCF holds at
 the root and recursively on every reduced closure of every preperiodic divisor, with its
 actual return map, through every finite depth.  The dimension theorem shows that actual
-branches terminate. -/
+branches terminate.
+
+Manuscript: `def:pcfawd` (Definition 3.3). -/
 def SchemePCFAllTheWayDown
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]

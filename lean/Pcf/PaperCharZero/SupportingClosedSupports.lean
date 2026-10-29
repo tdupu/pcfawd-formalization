@@ -130,7 +130,9 @@ theorem isClosed_schemeNormalizedCriticalSupport :
   isClosed_divisorSupport _ (schemeNormalizedCriticalDivisors_finite k g)
 
 /-- `prop:pcf-equiv`, (1) ⇔ (3), with literal images of the union of the
-critical integral effective divisors inside the original scheme. -/
+critical integral effective divisors inside the original scheme.
+
+Manuscript: `prop:pcf-equiv` (Proposition 5.1). -/
 theorem scheme_isNormalizedPCF_iff_critical_support_preperiodic : IsNormalizedPCF k g ↔
     ∃ r s : ℕ, 0 < s ∧
       (fun x : A => g x)^[r + s] '' divisorSupport (schemeNormalizedCriticalDivisors k g) =

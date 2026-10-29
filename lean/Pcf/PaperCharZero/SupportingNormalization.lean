@@ -53,13 +53,17 @@ variable (k : Type u) [Field k] [CharZero k]
   [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)]
 
 /-- The critical integral effective divisors downstairs, computed using the actual
-ramification indices on the canonical normalization (`def:crit-branch`). -/
+ramification indices on the canonical normalization (`def:crit-branch`).
+
+Manuscript: `def:crit-branch` (Definition 2.2). -/
 noncomputable def schemeNormalizedCriticalDivisors : Set (SchemeDivisorPoint A) :=
   Pcf.NormalizationUnnormalizedDynamics.criticalLocus
     (schemeGlobalNormalizationUnnormalizedDynamics k g).toNormalizationUnnormalizedDynamics
 
 /-- `prop:pcf-equiv`, (1) ⇔ (2), for actual finite dominant scheme maps in
-characteristic zero. The source's divisors are represented by codimension-one points. -/
+characteristic zero. The source's divisors are represented by codimension-one points.
+
+Manuscript: `prop:pcf-equiv` (Proposition 5.1). -/
 theorem scheme_isNormalizedPCF_iff_branch_preperiodic : IsNormalizedPCF k g ↔
     ∀ Q ∈ schemeNormalizedBranch k g, ∃ r s : ℕ, 0 < s ∧
       (schemeDivisorMap g (coheight_apply_eq_one_of_finiteType g k))^[r + s] Q =

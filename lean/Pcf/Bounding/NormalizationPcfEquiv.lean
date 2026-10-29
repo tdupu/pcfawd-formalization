@@ -170,12 +170,16 @@ variable (k : Type u) [Field k] [CharZero k]
   [∀ U : A.affineOpens, Algebra.FiniteType k Γ(A, U)]
 
 /-- The paper's normalized branch locus using the canonical normalization and
-its actual lifted morphism. No downstairs ramification weights are chosen. -/
+its actual lifted morphism. No downstairs ramification weights are chosen.
+
+Manuscript: `def:crit-branch` (Definition 2.2). -/
 noncomputable def schemeNormalizedBranch : Set (SchemeDivisorPoint A) :=
   (schemeGlobalNormalizationUnnormalizedDynamics k g).branch
 
 /-- The paper's postcritical set, using the normalized branch locus and the
-actual downstairs divisor pushforward. -/
+actual downstairs divisor pushforward.
+
+Manuscript: `def:pcf` (Definition 3.1). -/
 noncomputable def schemeNormalizedPostcriticalSet : Set (SchemeDivisorPoint A) :=
   (schemeGlobalNormalizationUnnormalizedDynamics k g).postcriticalSet
 
@@ -207,6 +211,7 @@ theorem schemeNormalizedPostcriticalSet_eq_iUnion :
     (schemeGlobalNormalizationUnnormalizedDynamics k g).normalized.ramificationIdx Q =
       schemeDivisorRamificationIdx (schemeGlobalNormalizationLift g) Q := rfl
 
+/-- Manuscript: `eq:branch-normalization` (equation (1)). -/
 theorem schemeNormalizedBranch_eq_normalization_image :
     schemeNormalizedBranch k g =
       (schemeGlobalNormalizationUnnormalizedDynamics k g).normalization ''

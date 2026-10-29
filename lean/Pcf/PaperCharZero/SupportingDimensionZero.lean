@@ -57,7 +57,9 @@ theorem dimension_zero_isNormalizedPCFOfFiniteType
 
 /-- Once `n` bounds the dimension, the all-depth definition is equivalent to
 checking precisely that many divisor descents. The zero-dimensional case is
-automatic by `dimension_zero_isNormalizedPCFOfFiniteType`. -/
+automatic by `dimension_zero_isNormalizedPCFOfFiniteType`.
+
+Manuscript: `def:pcfawd` (Definition 3.3). -/
 theorem pcfAllTheWayDown_iff_at_dimension_bound
     (k : Type u) [Field k] [CharZero k]
     (n : ℕ) {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]
@@ -81,7 +83,9 @@ theorem pcfAllTheWayDown_iff_at_dimension_bound
             (Pcf.SchemePCFDescentBranch.isEmpty_succ_of_topologicalKrullDim_le_of_le
               k s f hX hnd) ih
 
-/-- In dimension zero, the manuscript's PCFAWD predicate is vacuous. -/
+/-- In dimension zero, the manuscript's PCFAWD predicate is vacuous.
+
+Manuscript: `def:pcfawd` (Definition 3.3). -/
 theorem dimension_zero_isPCFAllTheWayDown
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s]

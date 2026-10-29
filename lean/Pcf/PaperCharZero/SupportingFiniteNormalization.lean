@@ -26,7 +26,9 @@ namespace Pcf.PaperCharZero
 
 /-- `lem:finitely-many`: a proper closed subset of an integral Noetherian scheme
 contains only finitely many integral effective divisors, expressed by literal
-containment of each divisor's closed support. -/
+containment of each divisor's closed support.
+
+Manuscript: `lem:finitely-many` (Lemma 6.3). -/
 theorem finite_integral_effective_divisors_in_closed
     {X : Scheme.{u}} [IsIntegral X] [NoetherianSpace X]
     (Z : Set X) (hclosed : IsClosed Z) (hproper : Z ≠ Set.univ) :
@@ -52,7 +54,9 @@ theorem finite_integral_effective_divisor_subschemes_in_closed
 normalization. The upstairs PC set is computed using the actual lifted map and
 its stalk ramification indices. The downstairs PC set is independently defined
 by forward iterates. Normalization finiteness and finite divisor fibers are
-proved inputs of the canonical package, not hypotheses of this theorem. -/
+proved inputs of the canonical package, not hypotheses of this theorem.
+
+Manuscript: `lem:normalization` (Lemma 5.4). -/
 theorem normalization_postcritical_and_pcf
     (k : Type u) [Field k] [CharZero k]
     {X : Scheme.{u}} [IsIntegral X] [IsLocallyNoetherian X] [NoetherianSpace X]

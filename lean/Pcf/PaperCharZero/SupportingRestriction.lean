@@ -45,7 +45,9 @@ The image divisor is represented by the actual image generic point. Both
 subschemes use the canonical radical vanishing ideal of the point closure.
 The equality of supports and commuting square certify that the morphism in
 the conclusion is the restriction of `f`, rather than an unrelated finite map.
-No normality or characteristic assumption is required. -/
+No normality or characteristic assumption is required.
+
+Manuscript: `lem:restriction` (Lemma 3.2). -/
 theorem integral_effective_divisor_restriction
     (k : Type u) [Field k] (f : X ⟶ Y)
     [IsFinite f] [IsDominant f] [IsIntegral X] [IsIntegral Y]

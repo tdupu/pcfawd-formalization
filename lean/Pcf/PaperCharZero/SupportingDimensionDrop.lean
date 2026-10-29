@@ -590,7 +590,9 @@ theorem topologicalKrullDim_pointClosure {X : Scheme.{u}} (x : X) :
 
 /-- **Exact dimension drop** (`lem:restriction`, sentence before `def:pcfawd`): for an
 integral scheme locally of finite type over a field, the reduced closure of every
-integral effective divisor has dimension exactly one less than the ambient scheme. -/
+integral effective divisor has dimension exactly one less than the ambient scheme.
+
+Manuscript: `lem:restriction` (Lemma 3.2). -/
 theorem divisorClosure_dimension_add_one_eq
     (k : Type u) [Field k] {X : Scheme.{u}} [IsIntegral X]
     (s : X ⟶ Spec (.of k)) [LocallyOfFiniteType s] (A : SchemeDivisorPoint X) :

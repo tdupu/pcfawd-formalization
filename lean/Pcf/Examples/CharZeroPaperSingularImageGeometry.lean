@@ -1278,7 +1278,9 @@ end Canonical
 critical line, the canonical normalized branch support of `g` is the origin of `B`;
 `Z` (the branch support of `f` other than `B`) is empty; the target plane `Y` has empty
 singular locus; and the origin lies in `Sing(B)`. Hence the branch point of `g` lies
-outside `(B ∩ Z) ∪ (B ∩ Sing Y)` and is accounted for only by `Sing(B)`. -/
+outside `(B ∩ Z) ∪ (B ∩ Sing Y)` and is accounted for only by `Sing(B)`.
+
+Manuscript: `ex:branch-sing-B` (Example 6.8). -/
 theorem sing_term_necessary [CharZero K] [IsAlgClosed K] (a z : K) (ha : a ^ 2 = -3)
     (hz : h a z = 0) :
     haveI := cuspB_isIntegral a ha

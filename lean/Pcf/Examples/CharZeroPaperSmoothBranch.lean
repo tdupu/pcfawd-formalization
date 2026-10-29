@@ -417,7 +417,9 @@ theorem mem_parabola_range_iff (p : plane K) :
   simp [parabolaIdeal, Ideal.span_le]
 
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual parabola and normalized ambient branch support meet only at the origin. -/
+/-- The actual parabola and normalized ambient branch support meet only at the origin.
+
+Manuscript: `ex:smooth-restriction` (Example 6.6). -/
 theorem parabola_inter_normalized_ambient_branch [CharZero K] :
     Set.range (parabolaImmersion K) ∩ normalizedMorphismBranchSupport (ambientMap K) =
       {origin K} := by
@@ -447,7 +449,9 @@ theorem parabola_inter_normalized_ambient_branch [CharZero K] :
     exact (originIdeal K).mul_mem_left (C (X : Polynomial K)) hy
 
 /-- `ex:smooth-restriction`: strict inclusion for actual normalized branch
-supports, with both sides regarded as subsets of the ambient target scheme. -/
+supports, with both sides regarded as subsets of the ambient target scheme.
+
+Manuscript: `ex:smooth-restriction` (Example 6.6), `rem:branch-bound-sharpness` (Remark 6.9). -/
 theorem normalized_branch_strict_inclusion [CharZero K] :
     (parabolaImmersion K) '' normalizedMorphismBranchSupport (restrictionMap K) ⊂
       Set.range (parabolaImmersion K) ∩ normalizedMorphismBranchSupport (ambientMap K) := by
@@ -474,7 +478,9 @@ theorem parabola_stalk_regular (p : parabola K) :
     (by rw [Scheme.Hom.smoothLocus_eq_top]; trivial)
 
 /-- The parabola and coordinate axis have identical first-order defining ideals
-at the origin. This is the explicit tangent-equation certificate. -/
+at the origin. This is the explicit tangent-equation certificate.
+
+Manuscript: `ex:smooth-restriction` (Example 6.6). -/
 theorem tangent_ideals_equal :
     parabolaIdeal K ⊔ originIdeal K ^ 2 = axisIdeal K ⊔ originIdeal K ^ 2 := by
   have hy : C (X : Polynomial K) ∈ originIdeal K := Ideal.subset_span (by simp)

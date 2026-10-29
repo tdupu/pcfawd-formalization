@@ -132,7 +132,9 @@ theorem normalizedMorphismBranchSupport_eq_schemeNormalizedBranch
 of the bottom branch support and the actual image of the upper branch support.
 All three schemes may be nonnormal. Finite type over the field supplies finite
 normalizations; no branch equality is an input. This stronger form works in
-every characteristic, including the paper's characteristic-zero setting. -/
+every characteristic, including the paper's characteristic-zero setting.
+
+Manuscript: `lem:tower` (Lemma 5.2). -/
 theorem normalized_branch_tower
     (k : Type u) [Field k]
     {X Y Z : Scheme.{u}} [IsIntegral X] [IsIntegral Y] [IsIntegral Z]

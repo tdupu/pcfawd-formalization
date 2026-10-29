@@ -460,7 +460,9 @@ characteristic zero (here: integral normal schemes, `Y` of finite type over `k` 
 `A` be an integral effective divisor of `X`, `B = f(A)`, `g = f|_A : A → B`, `Z` the union of
 the branch divisors of `f` other than `B`, and `Σ = (B ∩ Z) ∪ (B ∩ Sing Y) ∪ Sing B`
 (`boundingExceptionalSet`). Then `Σ` is a proper closed subset of `B`, and `g` is étale at the
-generic point of every integral effective divisor of `A` whose image is not contained in `Σ`. -/
+generic point of every integral effective divisor of `A` whose image is not contained in `Σ`.
+
+Manuscript: `thm:bounding` (Theorem 6.4). -/
 theorem bounding_theorem
     (k : Type u) [Field k] [CharZero k]
     {X Y : Scheme.{u}} [IsIntegral X] [IsIntegral Y]

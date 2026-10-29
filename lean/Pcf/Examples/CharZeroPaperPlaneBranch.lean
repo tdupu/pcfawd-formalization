@@ -167,7 +167,9 @@ theorem kochMap_iterate_step [CharZero K] (m : ℕ) (i : Fin 6) :
   | zero => rfl
   | succ m ih => rw [Function.iterate_succ_apply, Function.iterate_succ_apply, kochMap_step, ih]
 
-/-- `ex:koch`: the normalized branch divisors are `H_2, M_2, M_1`. -/
+/-- `ex:koch`: the normalized branch divisors are `H_2, M_2, M_1`.
+
+Manuscript: `ex:koch` (Example 4.2). -/
 theorem kochMap_branch [CharZero K] :
     schemeNormalizedBranch K (kochMap (K := K)) =
       {sixLineDivisor 2, sixLineDivisor 5, sixLineDivisor 4} := by
@@ -189,7 +191,9 @@ theorem kochMap_branch [CharZero K] :
     · exact ⟨_, hstep 1, Or.inr (Or.inl rfl)⟩
     · exact ⟨_, hstep 2, Or.inr (Or.inr rfl)⟩
 
-/-- `ex:koch`: the postcritical set is exactly the six lines. -/
+/-- `ex:koch`: the postcritical set is exactly the six lines.
+
+Manuscript: `ex:koch` (Example 4.2). -/
 theorem kochMap_postcritical [CharZero K] :
     schemeNormalizedPostcriticalSet K (kochMap (K := K)) = Set.range sixLineDivisor := by
   rw [schemeNormalizedPostcriticalSet_eq_iUnion, kochMap_branch]
@@ -215,7 +219,9 @@ theorem kochMap_postcritical [CharZero K] :
     · exact Or.inr (Or.inl rfl)
     · exact Or.inr (Or.inr rfl)
 
-/-- `ex:koch`: the Belk–Koch map is PCF for the paper's normalized branch locus. -/
+/-- `ex:koch`: the Belk–Koch map is PCF for the paper's normalized branch locus.
+
+Manuscript: `ex:koch` (Example 4.2). -/
 theorem kochMap_isPCF [CharZero K] : IsNormalizedPCF K (kochMap (K := K)) := by
   unfold IsNormalizedPCF
   rw [kochMap_postcritical]
@@ -266,7 +272,9 @@ theorem dupontForms_jacobian_mem_iff [CharZero K]
     · exact Or.inr (Or.inr h)
 
 /-- `ex:dupont`: the normalized critical divisors are exactly the lines
-`L⁻¹(H_i)`. -/
+`L⁻¹(H_i)`.
+
+Manuscript: `ex:dupont` (Example 4.3). -/
 theorem dupontMap_criticalDivisors [CharZero K] :
     schemeNormalizedCriticalDivisors K (dupontMap (K := K)) = Set.range criticalLineDivisor := by
   ext P
@@ -336,7 +344,9 @@ theorem dupontMap_iterate_step [CharZero K] (m : ℕ) (i : Fin 6) :
   | succ m ih => rw [Function.iterate_succ_apply, Function.iterate_succ_apply, dupontMap_step, ih]
 
 /-- `ex:dupont`: the postcritical set consists exactly of the three `H_i` and the
-three `M_i`. -/
+three `M_i`.
+
+Manuscript: `ex:dupont` (Example 4.3). -/
 theorem dupontMap_postcritical [CharZero K] :
     schemeNormalizedPostcriticalSet K (dupontMap (K := K)) = Set.range sixLineDivisor := by
   rw [schemeNormalizedPostcriticalSet_eq_iUnion, dupontMap_branch]
@@ -362,7 +372,9 @@ theorem dupontMap_postcritical [CharZero K] :
     · exact Or.inr (Or.inl rfl)
     · exact Or.inr (Or.inr rfl)
 
-/-- `ex:dupont`: Dupont's map is PCF for the paper's normalized branch locus. -/
+/-- `ex:dupont`: Dupont's map is PCF for the paper's normalized branch locus.
+
+Manuscript: `ex:dupont` (Example 4.3). -/
 theorem dupontMap_isPCF [CharZero K] : IsNormalizedPCF K (dupontMap (K := K)) := by
   unfold IsNormalizedPCF
   rw [dupontMap_postcritical]

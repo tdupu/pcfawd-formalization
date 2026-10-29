@@ -419,7 +419,9 @@ For `f = (F,G)`, the source divisor `A_z` and `g = f|_{A_z}`, there is an integr
 divisor `Q` of `A_z` over the origin `o` of `B` at which `g` is not étale; `o` lies in `Σ`
 and in `Sing B`, but the image of the closure of `Q` is not contained in
 `(B ∩ Z) ∪ (B ∩ Sing Y)`. So the étaleness conclusion of `bounding_theorem` would be false
-with the third term removed. -/
+with the third term removed.
+
+Manuscript: `ex:branch-sing-B` (Example 6.8), `rem:branch-bound-sharpness` (Remark 6.9). -/
 theorem singB_term_cannot_be_dropped [CharZero K] [IsAlgClosed K] (a z : K) (ha : a ^ 2 = -3)
     (hz : h a z = 0) :
     haveI := planeMap_isFinite a ha

@@ -77,7 +77,9 @@ theorem ramificationIdx_eq_one_iff_formallyEtale_charZero
 /-- `lem:dictionary`: ramification index one is equivalent to the existence
 of an open neighborhood of the divisor generic point on which the actual
 morphism is étale. Finite presentation of the morphism follows from the
-finite map and locally Noetherian target; it is not an extra hypothesis. -/
+finite map and locally Noetherian target; it is not an extra hypothesis.
+
+Manuscript: `lem:dictionary` (Lemma 2.4). -/
 theorem ramificationIdx_eq_one_iff_etale_at_divisor_charZero
     (k : Type u) [Field k] [CharZero k] (s : Y ⟶ Spec (.of k))
     (f : X ⟶ Y) [IsFinite f] [IsDominant f]

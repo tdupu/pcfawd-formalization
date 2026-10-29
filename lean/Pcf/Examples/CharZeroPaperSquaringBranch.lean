@@ -110,7 +110,9 @@ theorem squaringMap_divisorMap_hyperplane [CharZero K] [NeZero n] (i : Fin n ⊕
       hyperplaneDivisor i :=
   Subtype.ext (squaringMap_hyperplane i)
 
-/-- `ex:squaring-PN`: the normalized branch divisors are exactly the `H_i`. -/
+/-- `ex:squaring-PN`: the normalized branch divisors are exactly the `H_i`.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem squaringMap_branch [CharZero K] [NeZero n] :
     schemeNormalizedBranch K (squaringMap (K := K) (n := n)) = Set.range hyperplaneDivisor := by
   ext E
@@ -170,7 +172,9 @@ theorem squaringMap_postcritical [CharZero K] [NeZero n] :
   · rintro ⟨i, rfl⟩
     exact ⟨0, _, ⟨i, rfl⟩, rfl⟩
 
-/-- `ex:squaring-PN`: `ψ` is PCF for the paper's normalized branch locus. -/
+/-- `ex:squaring-PN`: `ψ` is PCF for the paper's normalized branch locus.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem squaringMap_isPCF [CharZero K] [NeZero n] :
     IsNormalizedPCF K (squaringMap (K := K) (n := n)) := by
   unfold IsNormalizedPCF
@@ -201,7 +205,9 @@ theorem squaringMap_divisorMap_diagonal [CharZero K] {a b : Fin n ⊕ Unit} (hab
 
 /-- `ex:squaring-PN`: the invariant divisor `D = V(x_a - x_b)` is not a
 normalized branch divisor of any iterate `ψ^m`; periodic integral effective
-divisors need not be postcritical. -/
+divisors need not be postcritical.
+
+Manuscript: `ex:squaring-PN` (Example 4.1). -/
 theorem diagonal_not_mem_branch_pow [CharZero K] [NeZero n] {a b : Fin n ⊕ Unit}
     (hab : a ≠ b) (m : ℕ) :
     diagonalDivisor (K := K) hab ∉
