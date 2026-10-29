@@ -1,19 +1,19 @@
 # Validation of `paper-char-zero`
 
 Source manuscript: `paper.tex` (private, not in this repository), SHA-256
-`9b2fee2d7c2a63f30c895d3e044406c3aa8b7594ea42addc7062aa6bb8bc4c3d`.
+`bfd3b71f4f792d6094372eb4649a87073e4b47428a88d361c94aec76ccf314f0`.
 `main.lean` SHA-256
-`074411d0fe0e68649c9655734eb8e419d8a394eadae245c1d307ba6f01664d2e`.
+`683a4e90ed33421c73116843b207bdf43730abcebd3a02094716b110fcd44337`.
 Lean 4.35.0; Mathlib revision `56a005855ea17e0b0958f73ec801ae140b0a1679`.
 
 On 2026-10-28, `lake build main PaperCharZeroChallenge PaperCharZeroSolution`
-succeeded from this directory with 4472 jobs and no errors. The same command
+succeeded from this directory with 4479 jobs and no errors. The same command
 succeeded in the authors' private development checkout, whose copies of this
-project's Lean files, the 66 `Pcf/PaperCharZero` modules and the 31
+project's Lean files, the 67 `Pcf/PaperCharZero` modules and the 36
 `CharZeroPaper*` example modules are byte-identical to these. `lake build` of
 the parent `lean/` library also succeeded here (4059 jobs).
 
-Every one of the 2103 `#print axioms` results in the package build is a subset
+Every one of the 2123 `#print axioms` results in the package build is a subset
 of `propext`, `Classical.choice`, `Quot.sound`. In particular
 `PaperCharZero.theoremA`, `PaperCharZero.cor_pcfawd`, and the four selected
 `PaperCharZero.Palomar` Solution declarations print exactly these three. The

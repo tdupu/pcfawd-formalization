@@ -15,6 +15,13 @@ public import Pcf.PaperCharZero.SupportingDimensionZero
 public import Pcf.PaperCharZero.SupportingIterates
 public import Pcf.PaperCharZero.SupportingPurity
 public import Pcf.PaperCharZero.SupportingAbhyankar
+public import Pcf.Examples.CharZeroPaperPlaneMinor
+public import Pcf.Examples.CharZeroPaperSquaringChartJacobian
+public import Pcf.Examples.CharZeroPaperCuspSourceLine
+public import Pcf.Examples.CharZeroPaperSingularImageNormalizedBranch
+public import Pcf.Examples.CharZeroPaperPinchedRestriction
+public import Pcf.Bounding.DivisorLiftInto
+public import Pcf.PaperCharZero.SupportingStandardPieceCanonical
 public import Pcf.PaperCharZero.SupportingStandardPiece
 public import Pcf.PaperCharZero.SupportingFiniteNormalization
 public import Pcf.PaperCharZero.SupportingFiniteNormalizationAudit
