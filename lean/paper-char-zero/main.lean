@@ -52,6 +52,7 @@ public import Pcf.Examples.CharZeroPaperConeBranch
 public import Pcf.Examples.CharZeroPaperConeCharts
 public import Pcf.Examples.CharZeroPaperConeEtale
 public import Pcf.PaperCharZero.SupportingPostcriticalSupport
+public import Pcf.PaperCharZero.SupportingPostcriticalSubscheme
 public import Pcf.PaperCharZero.SupportingBoundingLocus
 public import Pcf.PaperCharZero.SupportingBoundingLocusAudit
 public import Pcf.PaperCharZero.SupportingBoundingClosed
@@ -61,6 +62,7 @@ public import Pcf.PaperCharZero.SupportingFiberProduct
 public import Pcf.PaperCharZero.SupportingFiberProductAudit
 public import Pcf.PaperCharZero.SupportingDimensionOne
 public import Pcf.PaperCharZero.SupportingDimensionOneAudit
+public import Pcf.PaperCharZero.SupportingDimensionDrop
 public import Pcf.PaperCharZero.SupportingClassicalCurve
 
 /-!

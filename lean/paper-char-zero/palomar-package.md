@@ -64,10 +64,13 @@ environment limitation, not a successful comparison or a theorem rejection.
 Local export comparison and kernel-replay results below cannot replace
 Palomar's full workflow.
 
-Local evidence recorded on 2026-10-28 for the committed sources:
+Local evidence recorded on 2026-10-28 for the sources of commit
+`2fdf7115e039c04ffe4b9213a31f6fda13cc1e81` (the follow-up commit adding the
+dimension-drop and postcritical-subscheme modules changes `main` and was
+checked by build and axiom audit only):
 
 - `lake build main PaperCharZeroChallenge PaperCharZeroSolution` passed here
-  (4469 jobs). All four selected Solution proofs printed exactly the permitted
+  (4469 jobs; 4472 after the dimension-drop follow-up commit). All four selected Solution proofs printed exactly the permitted
   three axioms.
 - Because `PaperCharZeroSolution` imports `main`, the Solution export was
   regenerated (`lake env leanexport PaperCharZeroSolution`), SHA-256

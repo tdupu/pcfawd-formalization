@@ -22,6 +22,8 @@ Theorem names below are prefixed `Pcf.PaperCharZero.` (support) or
 | `lem:dictionary` | `ramificationIdx_eq_one_iff_etale_at_divisor_charZero` | Source normality is not needed. |
 | `lem:etale-normalized-index` | `etale_normalized_index` | Every normalization branch above the divisor. |
 | `lem:restriction` | `integral_effective_divisor_restriction` | Reduced image, codimension one, integral, finite surjective restriction. |
+| Dimension drop before `def:pcfawd` | `DimensionDrop.divisorClosure_dimension_add_one_eq`, `DimensionDrop.pointClosure_dimension_add_codim_eq` | `dim A + 1 = dim X` for the reduced closure of a divisor; the general codimension formula. |
+| `def:pcf` (PC(f) as a closed subset) | `postcriticalSubscheme`, `irreducibleComponents_postcriticalSubscheme` | Under PCF, PC(f) is a reduced closed subscheme whose components are the postcritical divisors. |
 | `lem:tower` | `normalized_branch_tower` | Exact equality for composable finite dominant maps. |
 | `lem:normalization` | `normalization_postcritical_and_pcf` | Both assertions. |
 | `lem:covers` | `Pcf.isNormalizedPCFOfFiniteType_of_cover` | Finite-type scheme form. |
